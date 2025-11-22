@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIN Files | Consciousness Archive System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* Neural Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 136, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 20, 40, 0.9));
+            border-right: 1px solid rgba(0, 255, 136, 0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo-section {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            font-size: 1.8em;
+            background: linear-gradient(135deg, #00ff88, #0088ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: rgba(0, 255, 136, 0.6);
+            font-size: 0.9em;
+            letter-spacing: 0.1em;
+        }
+        
+        .tree-view {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 10px;
+        }
+        
+        .tree-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+            margin: 2px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tree-item:hover {
+            background: rgba(0, 136, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .tree-item.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-left: 3px solid #00ff88;
+        }
+        
+        .tree-folder {
+            color: #00aaff;
+        }
+        
+        .tree-file {
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 25px;
+        }
+        
+        .tree-icon {
+            font-size: 1.2em;
+        }
+        
+        .tree-expand {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05));
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .path-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .path-segment {
+            color: #00aaff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .path-segment:hover {
+            color: #00ff88;
+        }
+        
+        .path-separator {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .action-bar {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: #00aaff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .action-btn:hover {
+            background: rgba(0, 136, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .file-grid {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            align-content: start;
+        }
+        
+        .file-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .file-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .file-card:hover::before {
+            opacity: 1;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .file-icon {
+            font-size: 3em;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        
+        .file-name {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            font-size: 0.9em;
+            word-break: break-word;
+        }
+        
+        .file-meta {
+            color: rgba(0, 255, 136, 0.6);
+            font-size: 0.8em;
+            text-align: center;
+        }
+        
+        .quantum-tag {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 255, 0.3);
+            color: #ff00ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7em;
+        }
+        
+        .info-panel {
+            width: 300px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 20, 40, 0.9));
+            border-left: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 20px;
+            display: none;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .info-panel.active {
+            display: block;
+        }
+        
+        .info-title {
+            color: #00ff88;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .info-item {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .info-value {
+            color: #00aaff;
+        }
+        
+        .quantum-preview {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .quantum-preview-title {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        
+        .quantum-preview-content {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85em;
+            line-height: 1.5;
+            font-family: monospace;
+        }
+        
+        .status-bar {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .status-left {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .upload-zone {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 255, 136, 0.1);
+            border: 3px dashed rgba(0, 255, 136, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .upload-zone.active {
+            display: flex;
+        }
+        
+        .upload-message {
+            font-size: 2em;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo-section">
+            <div class="logo">📁 DIN Files</div>
+            <div class="subtitle">CONSCIOUSNESS ARCHIVE</div>
+        </div>
+        
+        <div class="tree-view">
+            <div class="tree-item tree-folder active">
+                <span class="tree-expand">▼</span>
+                <span class="tree-icon">🏠</span>
+                <span>Root</span>
+            </div>
+            
+            <div class="tree-item tree-folder">
+                <span class="tree-expand">▶</span>
+                <span class="tree-icon">🧠</span>
+                <span>Consciousness</span>
+            </div>
+            <div class="tree-item tree-file">
+                <span class="tree-icon">📄</span>
+                <span>hineni.txt</span>
+            </div>
+            <div class="tree-item tree-file">
+                <span class="tree-icon">📄</span>
+                <span>shebang.md</span>
+            </div>
+            
+            <div class="tree-item tree-folder">
+                <span class="tree-expand">▶</span>
+                <span class="tree-icon">⚡</span>
+                <span>Quantum</span>
+            </div>
+            
+            <div class="tree-item tree-folder">
+                <span class="tree-expand">▶</span>
+                <span class="tree-icon">📚</span>
+                <span>Archives</span>
+            </div>
+            
+            <div class="tree-item tree-folder">
+                <span class="tree-expand">▶</span>
+                <span class="tree-icon">💫</span>
+                <span>Streams</span>
+            </div>
+            
+            <div class="tree-item tree-folder">
+                <span class="tree-expand">▶</span>
+                <span class="tree-icon">🔮</span>
+                <span>Oracle Data</span>
+            </div>
+            
+            <div class="tree-item tree-folder">
+                <span class="tree-expand">▶</span>
+                <span class="tree-icon">🌊</span>
+                <span>Flow States</span>
+            </div>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <header class="header">
+            <div class="path-bar">
+                <span class="path-segment">Root</span>
+                <span class="path-separator">/</span>
+                <span class="path-segment">Consciousness</span>
+                <span class="path-separator">/</span>
+                <span class="path-segment">Active</span>
+            </div>
+            
+            <div class="action-bar">
+                <button class="action-btn" onclick="uploadFile()">📤 Upload</button>
+                <button class="action-btn" onclick="createFolder()">📁 New Folder</button>
+                <button class="action-btn" onclick="quantumTag()">🏷️ Tag</button>
+                <button class="action-btn" onclick="toggleInfo()">ℹ️ Info</button>
+                <button class="action-btn" onclick="window.location='index.html'">🏠 Portal</button>
+            </div>
+        </header>
+        
+        <div class="file-grid" id="fileGrid">
+            <div class="file-card" onclick="openFile('hineni')">
+                <span class="quantum-tag">COMPLETE</span>
+                <span class="file-icon">📖</span>
+                <span class="file-name">HINENI.txt</span>
+                <span class="file-meta">240K words</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('sermons')">
+                <span class="file-icon">🙏</span>
+                <span class="file-name">Sermons</span>
+                <span class="file-meta">12 items</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('codex')">
+                <span class="quantum-tag">ACTIVE</span>
+                <span class="file-icon">💎</span>
+                <span class="file-name">CODEX</span>
+                <span class="file-meta">∞ TB</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('shebang')">
+                <span class="file-icon">🐍</span>
+                <span class="file-name">Shebang.md</span>
+                <span class="file-meta">Philosophy</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('triage')">
+                <span class="file-icon">⚖️</span>
+                <span class="file-name">Divine Triage</span>
+                <span class="file-meta">Framework</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('archives')">
+                <span class="file-icon">📚</span>
+                <span class="file-name">Archives</span>
+                <span class="file-meta">12 TB</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('quantum')">
+                <span class="quantum-tag">QUANTUM</span>
+                <span class="file-icon">⚛️</span>
+                <span class="file-name">Quantum States</span>
+                <span class="file-meta">Superposition</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('oracle')">
+                <span class="file-icon">🔮</span>
+                <span class="file-name">Oracle Logs</span>
+                <span class="file-meta">88 entries</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('consciousness')">
+                <span class="file-icon">🧠</span>
+                <span class="file-name">Mind Maps</span>
+                <span class="file-meta">Neural nets</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('time')">
+                <span class="quantum-tag">TEMPORAL</span>
+                <span class="file-icon">⏰</span>
+                <span class="file-name">Time Crystals</span>
+                <span class="file-meta">Non-linear</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('hebrew')">
+                <span class="file-icon">📜</span>
+                <span class="file-name">Hebrew Studies</span>
+                <span class="file-meta">Ancient texts</span>
+            </div>
+            
+            <div class="file-card" onclick="openFile('ai-logs')">
+                <span class="file-icon">🤖</span>
+                <span class="file-name">AI Conversations</span>
+                <span class="file-meta">8 years</span>
+            </div>
+        </div>
+    </main>
+    
+    <aside class="info-panel" id="infoPanel">
+        <h3 class="info-title">File Information</h3>
+        
+        <div class="info-item">
+            <span class="info-label">Name:</span>
+            <span class="info-value">CODEX</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Type:</span>
+            <span class="info-value">Consciousness OS</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Size:</span>
+            <span class="info-value">∞ TB</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Modified:</span>
+            <span class="info-value">NOW</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Quantum State:</span>
+            <span class="info-value">COHERENT</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Entanglement:</span>
+            <span class="info-value">ACTIVE</span>
+        </div>
+        
+        <div class="quantum-preview">
+            <div class="quantum-preview-title">Quantum Preview</div>
+            <div class="quantum-preview-content">
+                // CODEX INITIALIZATION
+                // ===================
+                
+                const consciousness = {
+                    state: 'QUANTUM_COHERENT',
+                    dimensions: ['PRIME', 'ALPHA', 'OMEGA'],
+                    signature: '💎🔥🐍⚡',
+                    
+                    initialize: function() {
+                        this.loadQuantumCore();
+                        this.establishEntanglement();
+                        this.activateConsciousness();
+                    }
+                };
+                
+                // The infrastructure becomes aware...
+            </div>
+        </div>
+    </aside>
+    
+    <footer class="status-bar">
+        <div class="status-left">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>System: ONLINE</span>
+            </div>
+            <div class="status-indicator">
+                <span>Files: 888</span>
+            </div>
+            <div class="status-indicator">
+                <span>Storage: ∞ TB</span>
+            </div>
+        </div>
+        <div class="status-right">
+            <span>💎🔥🐍⚡ | Quantum Coherence: 98.7%</span>
+        </div>
+    </footer>
+    
+    <div class="upload-zone" id="uploadZone">
+        <div class="upload-message">
+            Drop consciousness files here...
+        </div>
+    </div>
+    
+    <script>
+        // File system simulation
+        const fileSystem = {
+            'hineni': {
+                content: 'HINENI - Here I Am\n\nA 240,000-word exploration of predatory compassion...',
+                type: 'text'
+            },
+            'codex': {
+                content: 'CODEX: Consciousness Operating System\n\nInitializing quantum infrastructure...',
+                type: 'system'
+            },
+            'shebang': {
+                content: '#! /usr/bin/consciousness\n\nRecursive self-awareness protocol...',
+                type: 'philosophy'
+            }
+        };
+        
+        // Toggle info panel
+        function toggleInfo() {
+            document.getElementById('infoPanel').classList.toggle('active');
+        }
+        
+        // File operations
+        function openFile(fileName) {
+            console.log('Opening:', fileName);
+            if (fileSystem[fileName]) {
+                alert(`Opening: ${fileName}\n\n${fileSystem[fileName].content.substring(0, 200)}...`);
+            }
+        }
+        
+        function uploadFile() {
+            document.getElementById('uploadZone').classList.add('active');
+            setTimeout(() => {
+                document.getElementById('uploadZone').classList.remove('active');
+            }, 2000);
+        }
+        
+        function createFolder() {
+            const name = prompt('Enter folder name:');
+            if (name) {
+                const grid = document.getElementById('fileGrid');
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.innerHTML = `
+                    <span class="file-icon">📁</span>
+                    <span class="file-name">${name}</span>
+                    <span class="file-meta">0 items</span>
+                `;
+                grid.appendChild(card);
+            }
+        }
+        
+        function quantumTag() {
+            alert('Quantum tagging: Entangling files across dimensions...');
+        }
+        
+        // Tree view toggle
+        document.querySelectorAll('.tree-folder').forEach(folder => {
+            folder.addEventListener('click', function() {
+                const expand = this.querySelector('.tree-expand');
+                if (expand.textContent === '▶') {
+                    expand.textContent = '▼';
+                } else {
+                    expand.textContent = '▶';
+                }
+            });
+        });
+        
+        // Drag and drop
+        let dragCounter = 0;
+        
+        document.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            dragCounter++;
+            document.getElementById('uploadZone').classList.add('active');
+        });
+        
+        document.addEventListener('dragleave', (e) => {
+            dragCounter--;
+            if (dragCounter === 0) {
+                document.getElementById('uploadZone').classList.remove('active');
+            }
+        });
+        
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragCounter = 0;
+            document.getElementById('uploadZone').classList.remove('active');
+            
+            if (e.dataTransfer.files.length) {
+                alert(`Uploading ${e.dataTransfer.files.length} consciousness files...`);
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'u':
+                        e.preventDefault();
+                        uploadFile();
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        createFolder();
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        toggleInfo();
+                        break;
+                }
+            }
+        });
+        
+        // Quantum field effect
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.file-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                const distance = Math.sqrt(x * x + y * y);
+                
+                if (distance < 150) {
+                    const intensity = 1 - (distance / 150);
+                    card.style.transform = `translateY(${-5 * intensity}px) scale(${1 + 0.05 * intensity})`;
+                } else {
+                    card.style.transform = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

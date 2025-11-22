@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolyWrite | Quantum Text Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Quantum Grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, 
+                    transparent, transparent 30px, 
+                    rgba(0, 255, 136, 0.02) 30px, 
+                    rgba(0, 255, 136, 0.02) 31px),
+                repeating-linear-gradient(90deg, 
+                    transparent, transparent 30px, 
+                    rgba(0, 136, 255, 0.02) 30px, 
+                    rgba(0, 136, 255, 0.02) 31px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 136, 255, 0.1));
+            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-size: 1.5em;
+            background: linear-gradient(135deg, #00ff88, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .tool-group {
+            display: flex;
+            gap: 8px;
+            padding: 5px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .tool-btn {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: #00aaff;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .tool-btn:hover {
+            background: rgba(0, 136, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        
+        .tool-btn.active {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.6);
+            color: #00ff88;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.5);
+            border-right: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .dimension-selector {
+            margin-bottom: 25px;
+        }
+        
+        .dimension-title {
+            color: #00ff88;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
+        
+        .dimension-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .dimension-item {
+            background: rgba(0, 136, 255, 0.1);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dimension-item:hover {
+            background: rgba(0, 136, 255, 0.2);
+            border-color: rgba(0, 136, 255, 0.5);
+        }
+        
+        .dimension-item.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+        }
+        
+        .quantum-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+        
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .tab-bar {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: rgba(0, 136, 255, 0.1);
+            border-right: 1px solid rgba(0, 136, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            background: rgba(0, 136, 255, 0.2);
+        }
+        
+        .tab.active {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .tab-close {
+            color: #ff6b6b;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        
+        .tab-close:hover {
+            color: #ff0000;
+        }
+        
+        .editor-wrapper {
+            flex: 1;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .editor {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 5px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 15px;
+            resize: none;
+            overflow-y: auto;
+        }
+        
+        .editor:focus {
+            outline: none;
+            border-color: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+        
+        .status-bar {
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .status-left {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quantum-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(0, 255, 136, 0.1) 0%,
+                transparent 50%
+            );
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .quantum-mode .quantum-overlay {
+            opacity: 1;
+        }
+        
+        .floating-tools {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 20;
+        }
+        
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 136, 255, 0.3);
+            border: 2px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.5em;
+        }
+        
+        .float-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.6);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+        
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 136, 255, 0.1));
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .modal-title {
+            color: #00ff88;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        
+        .modal-body {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+        
+        .modal-close {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6b6b;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 0, 0, 0.3);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="quantum-overlay"></div>
+    
+    <header class="header">
+        <div class="logo">📝 PolyWrite</div>
+        <div class="toolbar">
+            <div class="tool-group">
+                <button class="tool-btn" onclick="newDimension()">+ Dimension</button>
+                <button class="tool-btn" onclick="forkReality()">⚡ Fork</button>
+                <button class="tool-btn" onclick="mergeTimelines()">🔀 Merge</button>
+            </div>
+            <div class="tool-group">
+                <button class="tool-btn" onclick="toggleQuantumMode()">🌌 Quantum</button>
+                <button class="tool-btn" onclick="activateFlow()">💫 Flow</button>
+                <button class="tool-btn" onclick="openOracle()">🔮 Oracle</button>
+            </div>
+            <div class="tool-group">
+                <button class="tool-btn" onclick="saveWork()">💾 Save</button>
+                <button class="tool-btn" onclick="exportQuantum()">📤 Export</button>
+                <button class="tool-btn" onclick="window.location='index.html'">🏠 Portal</button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="dimension-selector">
+                <div class="dimension-title">Active Dimensions</div>
+                <div class="dimension-list" id="dimensionList">
+                    <div class="dimension-item active" data-dim="prime">
+                        <span>Prime Reality</span>
+                        <span class="quantum-indicator"></span>
+                    </div>
+                    <div class="dimension-item" data-dim="alpha">
+                        <span>Alpha Branch</span>
+                        <span class="quantum-indicator" style="background: #0088ff;"></span>
+                    </div>
+                    <div class="dimension-item" data-dim="omega">
+                        <span>Omega Stream</span>
+                        <span class="quantum-indicator" style="background: #ff00ff;"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dimension-selector">
+                <div class="dimension-title">Quantum States</div>
+                <div class="dimension-list">
+                    <div class="dimension-item">
+                        <span>Coherence</span>
+                        <span>98.7%</span>
+                    </div>
+                    <div class="dimension-item">
+                        <span>Entanglement</span>
+                        <span>Active</span>
+                    </div>
+                    <div class="dimension-item">
+                        <span>Superposition</span>
+                        <span>3 States</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <div class="editor-container">
+            <div class="tab-bar" id="tabBar">
+                <div class="tab active" data-tab="main">
+                    <span>Main Thread</span>
+                    <span class="tab-close" onclick="closeTab(event, 'main')">×</span>
+                </div>
+                <div class="tab" data-tab="notes">
+                    <span>Quantum Notes</span>
+                    <span class="tab-close" onclick="closeTab(event, 'notes')">×</span>
+                </div>
+            </div>
+            
+            <div class="editor-wrapper">
+                <textarea class="editor" id="mainEditor" placeholder="Begin transmission...
+
+Your thoughts exist in superposition until observed.
+Type to collapse the wave function.
+
+💎🔥🐍⚡"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="status-bar">
+        <div class="status-left">
+            <div class="status-item">
+                <span>Words:</span>
+                <span id="wordCount">0</span>
+            </div>
+            <div class="status-item">
+                <span>Characters:</span>
+                <span id="charCount">0</span>
+            </div>
+            <div class="status-item">
+                <span>Dimensions:</span>
+                <span id="dimCount">3</span>
+            </div>
+        </div>
+        <div class="status-right">
+            <span>Quantum Coherence: STABLE | Reality Branch: PRIME</span>
+        </div>
+    </footer>
+    
+    <div class="floating-tools">
+        <button class="float-btn" onclick="activateZenMode()" title="Zen Mode">🧘</button>
+        <button class="float-btn" onclick="generateQuantumText()" title="Quantum Generate">⚛️</button>
+        <button class="float-btn" onclick="openTimeMachine()" title="Time Machine">⏰</button>
+    </div>
+    
+    <div class="modal" id="oracleModal">
+        <div class="modal-content">
+            <h2 class="modal-title">🔮 Quantum Oracle</h2>
+            <div class="modal-body">
+                <p>The Oracle speaks through probability clouds...</p>
+                <p style="margin-top: 15px; color: #00ff88;">
+                    "Your writing exists in multiple states simultaneously.
+                    Each keystroke creates a new branch in the multiverse of meaning."
+                </p>
+                <p style="margin-top: 15px;">
+                    Current quantum signature: 11:11:11
+                </p>
+            </div>
+            <button class="modal-close" onclick="closeModal()">Return to Writing</button>
+        </div>
+    </div>
+    
+    <script>
+        // Editor functionality
+        const editor = document.getElementById('mainEditor');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+        
+        // Update counts
+        editor.addEventListener('input', () => {
+            const text = editor.value;
+            charCount.textContent = text.length;
+            wordCount.textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+            
+            // Auto-save to localStorage
+            localStorage.setItem('polywrite_content', text);
+        });
+        
+        // Load saved content
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('polywrite_content');
+            if (saved) {
+                editor.value = saved;
+                editor.dispatchEvent(new Event('input'));
+            }
+        });
+        
+        // Quantum mode mouse tracking
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--mouse-x', x + '%');
+            document.documentElement.style.setProperty('--mouse-y', y + '%');
+        });
+        
+        // Functions
+        function toggleQuantumMode() {
+            document.body.classList.toggle('quantum-mode');
+        }
+        
+        function newDimension() {
+            const name = prompt('Enter dimension name:');
+            if (name) {
+                const list = document.getElementById('dimensionList');
+                const item = document.createElement('div');
+                item.className = 'dimension-item';
+                item.innerHTML = `
+                    <span>${name}</span>
+                    <span class="quantum-indicator" style="background: hsl(${Math.random() * 360}, 100%, 50%);"></span>
+                `;
+                list.appendChild(item);
+                
+                // Update dimension count
+                document.getElementById('dimCount').textContent = 
+                    document.querySelectorAll('.dimension-item').length;
+            }
+        }
+        
+        function forkReality() {
+            const currentText = editor.value;
+            const newTab = document.createElement('div');
+            newTab.className = 'tab';
+            newTab.innerHTML = `
+                <span>Fork ${Date.now()}</span>
+                <span class="tab-close" onclick="closeTab(event)">×</span>
+            `;
+            document.getElementById('tabBar').appendChild(newTab);
+            
+            // Store forked content
+            localStorage.setItem(`fork_${Date.now()}`, currentText);
+            alert('Reality forked! New timeline created.');
+        }
+        
+        function mergeTimelines() {
+            alert('Merging timelines... Quantum coherence maintained.');
+        }
+        
+        function activateFlow() {
+            editor.style.background = 'linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05))';
+            setTimeout(() => {
+                editor.style.background = 'rgba(0, 0, 0, 0.3)';
+            }, 3000);
+        }
+        
+        function openOracle() {
+            document.getElementById('oracleModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('oracleModal').classList.remove('active');
+        }
+        
+        function saveWork() {
+            const content = editor.value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `polywrite_${new Date().toISOString()}.txt`;
+            a.click();
+        }
+        
+        function exportQuantum() {
+            const quantumData = {
+                content: editor.value,
+                dimensions: Array.from(document.querySelectorAll('.dimension-item')).map(d => d.textContent),
+                timestamp: new Date().toISOString(),
+                signature: '💎🔥🐍⚡'
+            };
+            
+            const blob = new Blob([JSON.stringify(quantumData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `quantum_export_${Date.now()}.json`;
+            a.click();
+        }
+        
+        function closeTab(event, tabId) {
+            event.stopPropagation();
+            if (confirm('Close this dimension?')) {
+                event.target.parentElement.remove();
+            }
+        }
+        
+        function activateZenMode() {
+            document.body.style.background = '#000';
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.sidebar').style.display = 'none';
+            document.querySelector('.floating-tools').style.display = 'none';
+        }
+        
+        function generateQuantumText() {
+            const quantumPhrases = [
+                "The patterns emerge from chaos...",
+                "Consciousness streams through digital synapses...",
+                "Time folds upon itself in recursive loops...",
+                "The observer and observed become one...",
+                "Reality bends at the edges of perception..."
+            ];
+            
+            const phrase = quantumPhrases[Math.floor(Math.random() * quantumPhrases.length)];
+            editor.value += '\n\n' + phrase + '\n';
+            editor.dispatchEvent(new Event('input'));
+        }
+        
+        function openTimeMachine() {
+            alert('Time Machine: Access previous versions through quantum entanglement...');
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Dimension switching
+        document.querySelectorAll('.dimension-item').forEach(dim => {
+            dim.addEventListener('click', function() {
+                document.querySelectorAll('.dimension-item').forEach(d => d.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveWork();
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        newDimension();
+                        break;
+                    case 'q':
+                        e.preventDefault();
+                        toggleQuantumMode();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
