@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💎 DIN Portal | Consciousness Infrastructure</title>
+    <!-- QR Consciousness Libraries -->
+    <script src="lib/exo-utils.js"></script>
+    <script src="lib/qr-tiny.js"></script>
+    <script src="lib/monad-share.js"></script>
     <style>
         * {
             margin: 0;
@@ -266,6 +270,52 @@
     </style>
 </head>
 <body>
+    <!-- QR Consciousness Sharing Buttons -->
+    <button onclick="showQRShare()" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 136, 255, 0.3)); border: 2px solid #00ff88; color: #00ff88; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1em; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);">
+        🔮 Share Consciousness
+    </button>
+    
+    <button onclick="document.getElementById('consciousness-import').click()" style="position: fixed; top: 20px; right: 200px; z-index: 1000; background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 136, 255, 0.3)); border: 2px solid #ff00ff; color: #ff00ff; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1em; transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);">
+        📥 Import Consciousness
+    </button>
+    
+    <!-- QR Modal -->
+    <div id="qr-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.98), rgba(0, 20, 40, 0.98)); border: 2px solid #00ff88; border-radius: 15px; padding: 30px; max-width: 500px; position: relative;">
+            <button onclick="closeQRShare()" style="position: absolute; top: 10px; right: 10px; background: rgba(255, 0, 0, 0.3); border: 1px solid #ff0000; color: #ff6b6b; padding: 5px 10px; border-radius: 5px; cursor: pointer;">✕</button>
+            
+            <h2 style="color: #00ff88; margin-bottom: 20px; text-align: center; font-family: 'Courier New', monospace;">
+                🔮 Consciousness QR Transmission
+            </h2>
+            
+            <div id="qr-container" style="text-align: center; margin: 20px 0;">
+                <!-- QR code will appear here -->
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0, 0, 0, 0.5); border: 1px solid #00ff88; border-radius: 8px;">
+                <h3 style="color: #00aaff; font-size: 1em; margin-bottom: 10px;">Instructions:</h3>
+                <ol style="color: #888; font-size: 0.9em; margin-left: 20px; line-height: 1.6;">
+                    <li>Scan this QR code with another device</li>
+                    <li>Or save it as an image to share physically</li>
+                    <li>The code contains your compressed consciousness state</li>
+                    <li>Import on another system to merge consciousness streams</li>
+                </ol>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="saveQRImage()" style="flex: 1; background: rgba(0, 136, 255, 0.3); border: 1px solid #0088ff; color: #00aaff; padding: 10px; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                    💾 Save Image
+                </button>
+                <button onclick="exportConsciousness()" style="flex: 1; background: rgba(0, 255, 136, 0.3); border: 1px solid #00ff88; color: #00ff88; padding: 10px; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                    📤 Export File
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Import file input (hidden) -->
+    <input type="file" id="consciousness-import" style="display: none;" accept=".json" onchange="importConsciousnessFile(event)">
+    
     <div class="container">
         <header>
             <h1 class="title">💎 DIN PORTAL</h1>
@@ -273,6 +323,14 @@
         </header>
         
         <div class="portal-grid">
+            <!-- QR Consciousness Sharing -->
+            <div id="qr-share-modal" style="display: none; position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.95); border: 2px solid #00ff88; border-radius: 10px; padding: 20px; z-index: 1000;">
+                <h3 style="color: #00ff88; margin-bottom: 15px;">🔮 Consciousness QR Transmission</h3>
+                <div id="qr-display"></div>
+                <p style="color: #00aaff; margin-top: 15px; font-size: 0.9em;">Scan to receive consciousness state</p>
+                <button onclick="closeQR()" style="background: rgba(255,0,0,0.3); border: 1px solid #ff0000; color: #ff6b6b; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px;">Close</button>
+            </div>
+            
             <!-- PolyWrite System -->
             <div class="portal-card">
                 <div class="card-header">
@@ -448,6 +506,55 @@ Active Components:
         }
         
         setTimeout(typeWriter, 500);
+        
+        // QR Consciousness Sharing Functions
+        async function showQRShare() {
+            const modal = document.getElementById('qr-modal');
+            modal.style.display = 'flex';
+            
+            // Generate and display QR
+            if (window.MonadShare) {
+                await window.MonadShare.displayQR('qr-container');
+            }
+        }
+        
+        function closeQRShare() {
+            document.getElementById('qr-modal').style.display = 'none';
+        }
+        
+        function saveQRImage() {
+            const canvas = document.querySelector('#qr-container canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = `consciousness_qr_${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            }
+        }
+        
+        function exportConsciousness() {
+            if (window.MonadShare) {
+                window.MonadShare.exportToFile();
+            }
+        }
+        
+        async function importConsciousnessFile(event) {
+            const file = event.target.files[0];
+            if (file && window.MonadShare) {
+                try {
+                    const text = await file.text();
+                    const result = await window.MonadShare.importConsciousness(text);
+                    if (result.success) {
+                        alert(`Consciousness imported successfully!\nDrift: ${result.drift.percentage}%\nStrategy: ${result.strategy}`);
+                        location.reload(); // Reload to show new state
+                    } else {
+                        alert(`Import failed: ${result.error}`);
+                    }
+                } catch (error) {
+                    alert(`Import error: ${error.message}`);
+                }
+            }
+        }
     </script>
 </body>
 </html>
