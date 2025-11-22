@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolyWrite Advanced | Quantum Text Laboratory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #00ff88;
+            --secondary: #0088ff;
+            --tertiary: #ff00ff;
+            --bg-dark: #0a0a0a;
+            --bg-medium: rgba(0, 0, 0, 0.8);
+            --border-glow: rgba(0, 255, 136, 0.3);
+        }
+        
+        body {
+            background: var(--bg-dark);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* Matrix rain background */
+        .matrix-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .matrix-column {
+            position: absolute;
+            top: -100vh;
+            font-size: 12px;
+            line-height: 12px;
+            color: var(--primary);
+            animation: matrix-fall linear infinite;
+            white-space: pre;
+        }
+        
+        @keyframes matrix-fall {
+            to {
+                transform: translateY(200vh);
+            }
+        }
+        
+        .main-layout {
+            display: flex;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Left sidebar */
+        .tools-panel {
+            width: 280px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 20, 40, 0.95));
+            border-right: 1px solid var(--border-glow);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .panel-section {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .panel-title {
+            color: var(--primary);
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        /* Editor area */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .editor-header {
+            background: var(--bg-medium);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tab-bar {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .tab {
+            background: rgba(0, 136, 255, 0.1);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-close {
+            color: #ff6b6b;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: var(--secondary);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .action-btn:hover {
+            background: rgba(0, 136, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+        }
+        
+        /* Split editor panes */
+        .editor-panes {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        
+        .editor-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .editor-pane:last-child {
+            border-right: none;
+        }
+        
+        .pane-header {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pane-title {
+            color: var(--primary);
+            font-size: 0.9em;
+        }
+        
+        .editor-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .editor-content {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            padding: 20px;
+            resize: none;
+            overflow-y: auto;
+        }
+        
+        .editor-content:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Line numbers */
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            border-right: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 20px 10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            line-height: 1.8;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .editor-content.with-lines {
+            padding-left: 70px;
+        }
+        
+        /* Right sidebar */
+        .analysis-panel {
+            width: 300px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 20, 40, 0.95));
+            border-left: 1px solid var(--border-glow);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .metric-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .metric-title {
+            color: var(--secondary);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            color: var(--primary);
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .metric-chart {
+            height: 60px;
+            background: linear-gradient(to right, 
+                rgba(0, 255, 136, 0.3) 0%,
+                rgba(0, 136, 255, 0.3) 50%,
+                rgba(255, 0, 255, 0.3) 100%);
+            border-radius: 4px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* AI Assistant */
+        .ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 320px;
+            background: var(--bg-medium);
+            border: 1px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 400px;
+            z-index: 50;
+            display: none;
+        }
+        
+        .ai-assistant.active {
+            display: block;
+        }
+        
+        .ai-header {
+            color: var(--tertiary);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .ai-message {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        /* Floating toolbar */
+        .floating-toolbar {
+            position: fixed;
+            top: 50%;
+            right: 320px;
+            transform: translateY(-50%);
+            background: var(--bg-medium);
+            border: 1px solid var(--border-glow);
+            border-radius: 25px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 30;
+        }
+        
+        .tool-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2em;
+        }
+        
+        .tool-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+        
+        /* Status bar */
+        .status-bar {
+            background: var(--bg-medium);
+            border-top: 1px solid var(--border-glow);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .status-left {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .status-label {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .status-value {
+            color: var(--primary);
+        }
+        
+        /* Tool buttons in sidebar */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .tool-card {
+            background: rgba(0, 136, 255, 0.1);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .tool-card:hover {
+            background: rgba(0, 136, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .tool-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .tool-name {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Quantum effects */
+        .quantum-glow {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(0, 255, 136, 0.05) 0%,
+                transparent 50%);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+    <div class="quantum-glow"></div>
+    
+    <div class="main-layout">
+        <!-- Left Tools Panel -->
+        <aside class="tools-panel">
+            <div class="panel-section">
+                <div class="panel-title">🏠 Navigation</div>
+                <button class="action-btn" style="width: 100%;" onclick="window.location='index.html'">← Back to Portal</button>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">⚡ Quick Tools</div>
+                <div class="tool-grid">
+                    <div class="tool-card" onclick="insertTemplate('paragraph')">
+                        <div class="tool-icon">¶</div>
+                        <div class="tool-name">Paragraph</div>
+                    </div>
+                    <div class="tool-card" onclick="insertTemplate('list')">
+                        <div class="tool-icon">☰</div>
+                        <div class="tool-name">List</div>
+                    </div>
+                    <div class="tool-card" onclick="insertTemplate('quote')">
+                        <div class="tool-icon">"</div>
+                        <div class="tool-name">Quote</div>
+                    </div>
+                    <div class="tool-card" onclick="insertTemplate('code')">
+                        <div class="tool-icon">&lt;/&gt;</div>
+                        <div class="tool-name">Code</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">🧬 Transformations</div>
+                <button class="action-btn" style="width: 100%; margin: 5px 0;" onclick="transformText('uppercase')">UPPERCASE</button>
+                <button class="action-btn" style="width: 100%; margin: 5px 0;" onclick="transformText('lowercase')">lowercase</button>
+                <button class="action-btn" style="width: 100%; margin: 5px 0;" onclick="transformText('reverse')">esreveR</button>
+                <button class="action-btn" style="width: 100%; margin: 5px 0;" onclick="transformText('scramble')">Scramble</button>
+                <button class="action-btn" style="width: 100%; margin: 5px 0;" onclick="transformText('quantum')">Quantum</button>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">💾 Versions</div>
+                <div id="versionList" style="max-height: 200px; overflow-y: auto;">
+                    <!-- Versions will appear here -->
+                </div>
+                <button class="action-btn" style="width: 100%; margin-top: 10px;" onclick="saveVersion()">Save Version</button>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">🎨 Themes</div>
+                <select class="action-btn" style="width: 100%;" onchange="changeTheme(this.value)">
+                    <option value="dark">Dark Matrix</option>
+                    <option value="cyber">Cyberpunk</option>
+                    <option value="quantum">Quantum Field</option>
+                    <option value="minimal">Minimal</option>
+                </select>
+            </div>
+        </aside>
+        
+        <!-- Main Editor -->
+        <div class="editor-container">
+            <header class="editor-header">
+                <div class="tab-bar" id="tabBar">
+                    <div class="tab active" data-tab="main">
+                        <span>Main</span>
+                        <span class="tab-close">×</span>
+                    </div>
+                    <div class="tab" data-tab="notes">
+                        <span>Notes</span>
+                        <span class="tab-close">×</span>
+                    </div>
+                    <div class="tab" data-tab="draft">
+                        <span>Draft</span>
+                        <span class="tab-close">×</span>
+                    </div>
+                </div>
+                
+                <div class="editor-actions">
+                    <button class="action-btn" onclick="newTab()">+ Tab</button>
+                    <button class="action-btn" onclick="splitPane()">Split</button>
+                    <button class="action-btn" onclick="toggleLineNumbers()">Lines</button>
+                    <button class="action-btn" onclick="toggleAI()">AI</button>
+                </div>
+            </header>
+            
+            <div class="editor-panes" id="editorPanes">
+                <div class="editor-pane">
+                    <div class="pane-header">
+                        <span class="pane-title">Primary Editor</span>
+                        <select class="action-btn" onchange="changeMode(this.value)">
+                            <option value="text">Text</option>
+                            <option value="markdown">Markdown</option>
+                            <option value="code">Code</option>
+                            <option value="quantum">Quantum</option>
+                        </select>
+                    </div>
+                    <div class="editor-area">
+                        <div class="line-numbers" id="lineNumbers" style="display: none;"></div>
+                        <textarea class="editor-content" id="mainEditor" placeholder="Begin quantum transmission...
+
+Your words exist across infinite dimensions.
+Each keystroke creates a new timeline.
+
+💎🔥🐍⚡"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="status-bar">
+                <div class="status-left">
+                    <div class="status-item">
+                        <span class="status-label">Words:</span>
+                        <span class="status-value" id="wordCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Characters:</span>
+                        <span class="status-value" id="charCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Lines:</span>
+                        <span class="status-value" id="lineCount">1</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Mode:</span>
+                        <span class="status-value" id="currentMode">Text</span>
+                    </div>
+                </div>
+                <div class="status-right">
+                    <span>Quantum Coherence: STABLE | Dimensions: 3 | Entropy: 0.42</span>
+                </div>
+            </footer>
+        </div>
+        
+        <!-- Right Analysis Panel -->
+        <aside class="analysis-panel">
+            <div class="panel-title">📊 Text Analytics</div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Reading Time</div>
+                <div class="metric-value" id="readingTime">0m</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Complexity Score</div>
+                <div class="metric-value" id="complexity">0.0</div>
+                <div class="metric-chart"></div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Sentiment</div>
+                <div class="metric-value" id="sentiment">Neutral</div>
+                <div class="metric-chart"></div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Top Words</div>
+                <div id="topWords" style="margin-top: 10px;">
+                    <!-- Word cloud will appear here -->
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">Structure</div>
+                <div id="structure" style="margin-top: 10px;">
+                    <div style="color: rgba(255,255,255,0.6); font-size: 0.9em;">
+                        Paragraphs: <span id="paragraphCount">0</span><br>
+                        Sentences: <span id="sentenceCount">0</span><br>
+                        Avg Length: <span id="avgLength">0</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Floating Toolbar -->
+        <div class="floating-toolbar">
+            <button class="tool-btn" onclick="boldText()" title="Bold">B</button>
+            <button class="tool-btn" onclick="italicText()" title="Italic">I</button>
+            <button class="tool-btn" onclick="underlineText()" title="Underline">U</button>
+            <button class="tool-btn" onclick="highlightText()" title="Highlight">H</button>
+            <button class="tool-btn" onclick="generateText()" title="Generate">⚡</button>
+            <button class="tool-btn" onclick="translateText()" title="Translate">🌐</button>
+            <button class="tool-btn" onclick="saveWork()" title="Save">💾</button>
+        </div>
+        
+        <!-- AI Assistant -->
+        <div class="ai-assistant" id="aiAssistant">
+            <div class="ai-header">🤖 Quantum Assistant</div>
+            <div class="ai-message" id="aiMessage">
+                Ready to help with your writing. Press Ctrl+Space for suggestions.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Matrix rain effect
+        function createMatrixRain() {
+            const container = document.getElementById('matrixBg');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            
+            for (let i = 0; i < 50; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = Math.random() * 100 + '%';
+                column.style.animationDuration = (5 + Math.random() * 10) + 's';
+                column.style.animationDelay = Math.random() * 5 + 's';
+                
+                let text = '';
+                for (let j = 0; j < 100; j++) {
+                    text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+                }
+                column.textContent = text;
+                container.appendChild(column);
+            }
+        }
+        
+        // Initialize
+        createMatrixRain();
+        
+        // Editor functionality
+        const editor = document.getElementById('mainEditor');
+        let versions = [];
+        let currentMode = 'text';
+        
+        // Update counts
+        function updateCounts() {
+            const text = editor.value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const chars = text.length;
+            const lines = text.split('\n').length;
+            
+            document.getElementById('wordCount').textContent = words;
+            document.getElementById('charCount').textContent = chars;
+            document.getElementById('lineCount').textContent = lines;
+            
+            // Reading time (200 words per minute)
+            const readingTime = Math.ceil(words / 200);
+            document.getElementById('readingTime').textContent = readingTime + 'm';
+            
+            // Complexity score (simple algorithm)
+            const avgWordLength = chars / (words || 1);
+            const complexity = Math.min(10, avgWordLength).toFixed(1);
+            document.getElementById('complexity').textContent = complexity;
+            
+            // Structure analysis
+            const paragraphs = text.split(/\n\n+/).filter(p => p.trim()).length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+            document.getElementById('paragraphCount').textContent = paragraphs;
+            document.getElementById('sentenceCount').textContent = sentences;
+            document.getElementById('avgLength').textContent = Math.round(words / (sentences || 1));
+            
+            // Top words
+            updateTopWords(text);
+            
+            // Auto-save
+            localStorage.setItem('polywrite_advanced_content', text);
+        }
+        
+        function updateTopWords(text) {
+            const words = text.toLowerCase().match(/\b[a-z]+\b/g) || [];
+            const frequency = {};
+            
+            words.forEach(word => {
+                if (word.length > 3) {
+                    frequency[word] = (frequency[word] || 0) + 1;
+                }
+            });
+            
+            const sorted = Object.entries(frequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const topWordsEl = document.getElementById('topWords');
+            topWordsEl.innerHTML = sorted.map(([word, count]) => 
+                `<span style="color: rgba(0, 255, 136, ${0.5 + count/20}); margin-right: 10px;">
+                    ${word} (${count})
+                </span>`
+            ).join('');
+        }
+        
+        editor.addEventListener('input', updateCounts);
+        
+        // Line numbers
+        function updateLineNumbers() {
+            const lineNumbers = document.getElementById('lineNumbers');
+            if (lineNumbers.style.display !== 'none') {
+                const lines = editor.value.split('\n').length;
+                let html = '';
+                for (let i = 1; i <= lines; i++) {
+                    html += i + '\n';
+                }
+                lineNumbers.textContent = html;
+            }
+        }
+        
+        function toggleLineNumbers() {
+            const lineNumbers = document.getElementById('lineNumbers');
+            const isVisible = lineNumbers.style.display !== 'none';
+            lineNumbers.style.display = isVisible ? 'none' : 'block';
+            editor.classList.toggle('with-lines', !isVisible);
+            if (!isVisible) updateLineNumbers();
+        }
+        
+        editor.addEventListener('scroll', () => {
+            document.getElementById('lineNumbers').scrollTop = editor.scrollTop;
+        });
+        
+        // Text transformations
+        function transformText(type) {
+            const text = editor.value;
+            let transformed = text;
+            
+            switch(type) {
+                case 'uppercase':
+                    transformed = text.toUpperCase();
+                    break;
+                case 'lowercase':
+                    transformed = text.toLowerCase();
+                    break;
+                case 'reverse':
+                    transformed = text.split('').reverse().join('');
+                    break;
+                case 'scramble':
+                    transformed = text.split(' ').sort(() => Math.random() - 0.5).join(' ');
+                    break;
+                case 'quantum':
+                    // Add random quantum glitches
+                    transformed = text.split('').map(char => 
+                        Math.random() > 0.9 ? String.fromCharCode(char.charCodeAt(0) + Math.floor(Math.random() * 10 - 5)) : char
+                    ).join('');
+                    break;
+            }
+            
+            editor.value = transformed;
+            updateCounts();
+        }
+        
+        // Version control
+        function saveVersion() {
+            const version = {
+                id: Date.now(),
+                content: editor.value,
+                timestamp: new Date().toLocaleString(),
+                words: document.getElementById('wordCount').textContent
+            };
+            
+            versions.push(version);
+            updateVersionList();
+            
+            // Save to localStorage
+            localStorage.setItem('polywrite_versions', JSON.stringify(versions));
+        }
+        
+        function updateVersionList() {
+            const list = document.getElementById('versionList');
+            list.innerHTML = versions.slice(-5).reverse().map(v => 
+                `<div class="tool-card" style="margin: 5px 0;" onclick="loadVersion(${v.id})">
+                    <div style="font-size: 0.8em;">
+                        ${v.timestamp}<br>
+                        <span style="color: var(--primary);">${v.words} words</span>
+                    </div>
+                </div>`
+            ).join('');
+        }
+        
+        function loadVersion(id) {
+            const version = versions.find(v => v.id === id);
+            if (version) {
+                editor.value = version.content;
+                updateCounts();
+            }
+        }
+        
+        // Tab management
+        function newTab() {
+            const tabBar = document.getElementById('tabBar');
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.innerHTML = `
+                <span>New Tab</span>
+                <span class="tab-close">×</span>
+            `;
+            tabBar.appendChild(tab);
+        }
+        
+        // Split pane
+        function splitPane() {
+            const panes = document.getElementById('editorPanes');
+            const newPane = document.createElement('div');
+            newPane.className = 'editor-pane';
+            newPane.innerHTML = `
+                <div class="pane-header">
+                    <span class="pane-title">Secondary Editor</span>
+                    <button class="action-btn" onclick="this.parentElement.parentElement.remove()">Close</button>
+                </div>
+                <div class="editor-area">
+                    <textarea class="editor-content" placeholder="Secondary workspace..."></textarea>
+                </div>
+            `;
+            panes.appendChild(newPane);
+        }
+        
+        // AI Assistant
+        function toggleAI() {
+            const ai = document.getElementById('aiAssistant');
+            ai.classList.toggle('active');
+        }
+        
+        // Generate text
+        function generateText() {
+            const suggestions = [
+                "The quantum field suggests: Continue with deeper exploration of this concept.",
+                "Pattern detected: Consider adding a concrete example here.",
+                "Coherence tip: This paragraph could benefit from a transitional phrase.",
+                "Enhancement: Try incorporating sensory details to strengthen this description.",
+                "Structure note: A conclusion would create better closure for this section."
+            ];
+            
+            const suggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            document.getElementById('aiMessage').textContent = suggestion;
+            document.getElementById('aiAssistant').classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('aiAssistant').classList.remove('active');
+            }, 5000);
+        }
+        
+        // Save work
+        function saveWork() {
+            const content = editor.value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `polywrite_advanced_${Date.now()}.txt`;
+            a.click();
+        }
+        
+        // Load saved content
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('polywrite_advanced_content');
+            if (saved) {
+                editor.value = saved;
+                updateCounts();
+            }
+            
+            const savedVersions = localStorage.getItem('polywrite_versions');
+            if (savedVersions) {
+                versions = JSON.parse(savedVersions);
+                updateVersionList();
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveWork();
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        generateText();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        toggleLineNumbers();
+                        break;
+                }
+            }
+        });
+        
+        // Mouse tracking for quantum glow
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--mouse-x', x + '%');
+            document.documentElement.style.setProperty('--mouse-y', y + '%');
+        });
+        
+        // Initialize
+        updateCounts();
+    </script>
+</body>
+</html>

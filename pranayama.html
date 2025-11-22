@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pranayama | Consciousness Breathing Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Breathing particle field */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 255, 136, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px;
+            max-width: 900px;
+            width: 90%;
+        }
+        
+        .title {
+            font-size: 3em;
+            background: linear-gradient(135deg, #00ff88, #0088ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); }
+            50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(0, 136, 255, 0.7)); }
+        }
+        
+        .subtitle {
+            color: rgba(0, 255, 136, 0.7);
+            font-size: 1.1em;
+            letter-spacing: 0.2em;
+            margin-bottom: 40px;
+        }
+        
+        .breathing-circle {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .outer-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            animation: pulse-ring 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.6; }
+        }
+        
+        .inner-circle {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.2), transparent);
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: breathe 4s ease-in-out infinite;
+            position: relative;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(0.8); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .breath-text {
+            font-size: 1.8em;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            transition: opacity 0.5s;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 136, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.active {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.6);
+            color: #00ff88;
+        }
+        
+        .pattern-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .pattern-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05));
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+        
+        .pattern-card.active {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 136, 255, 0.2));
+            border-color: #00ff88;
+        }
+        
+        .pattern-name {
+            font-size: 1.2em;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        
+        .pattern-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .pattern-timing {
+            color: #00aaff;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            color: #00ff88;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .home-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.6);
+            color: #00ff88;
+        }
+        
+        .timer {
+            font-size: 3em;
+            color: #00ff88;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+        
+        .phase-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .phase {
+            padding: 5px 15px;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+        
+        .phase.active {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+            color: #00ff88;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <a href="index.html" class="home-btn">🏠 Portal</a>
+    
+    <div class="container">
+        <h1 class="title">🌬️ Pranayama</h1>
+        <div class="subtitle">CONSCIOUSNESS BREATHING</div>
+        
+        <div class="breathing-circle">
+            <div class="outer-ring"></div>
+            <div class="inner-circle">
+                <div class="breath-text" id="breathText">Ready</div>
+            </div>
+        </div>
+        
+        <div class="phase-indicator">
+            <div class="phase" id="inhalePhase">Inhale</div>
+            <div class="phase" id="holdPhase">Hold</div>
+            <div class="phase" id="exhalePhase">Exhale</div>
+            <div class="phase" id="pausePhase">Pause</div>
+        </div>
+        
+        <div class="timer" id="timer">00:00</div>
+        
+        <div class="controls">
+            <button class="control-btn" id="startBtn" onclick="toggleBreathing()">Start</button>
+            <button class="control-btn" onclick="resetSession()">Reset</button>
+            <button class="control-btn" onclick="toggleSound()">🔊 Sound</button>
+        </div>
+        
+        <div class="pattern-selector">
+            <div class="pattern-card active" onclick="selectPattern('box')">
+                <div class="pattern-name">📦 Box Breathing</div>
+                <div class="pattern-description">Equal inhale, hold, exhale, pause</div>
+                <div class="pattern-timing">4-4-4-4</div>
+            </div>
+            
+            <div class="pattern-card" onclick="selectPattern('wimhof')">
+                <div class="pattern-name">❄️ Wim Hof</div>
+                <div class="pattern-description">Power breathing technique</div>
+                <div class="pattern-timing">30 breaths + hold</div>
+            </div>
+            
+            <div class="pattern-card" onclick="selectPattern('478')">
+                <div class="pattern-name">😴 4-7-8 Relaxation</div>
+                <div class="pattern-description">Calming breath for sleep</div>
+                <div class="pattern-timing">4-7-8-0</div>
+            </div>
+            
+            <div class="pattern-card" onclick="selectPattern('coherent')">
+                <div class="pattern-name">💗 Coherent Breathing</div>
+                <div class="pattern-description">Heart-brain coherence</div>
+                <div class="pattern-timing">5-0-5-0</div>
+            </div>
+            
+            <div class="pattern-card" onclick="selectPattern('fire')">
+                <div class="pattern-name">🔥 Breath of Fire</div>
+                <div class="pattern-description">Energizing rapid breathing</div>
+                <div class="pattern-timing">Rapid cycles</div>
+            </div>
+            
+            <div class="pattern-card" onclick="selectPattern('custom')">
+                <div class="pattern-name">⚙️ Custom Pattern</div>
+                <div class="pattern-description">Set your own timing</div>
+                <div class="pattern-timing">Variable</div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Session Time</div>
+                <div class="stat-value" id="sessionTime">0:00</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Breath Count</div>
+                <div class="stat-value" id="breathCount">0</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Current Pattern</div>
+                <div class="stat-value" id="currentPattern">Box</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Coherence</div>
+                <div class="stat-value" id="coherence">98.7%</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Particle system
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Breathing system
+        let isBreathing = false;
+        let currentPattern = 'box';
+        let breathingInterval;
+        let sessionInterval;
+        let breathCounter = 0;
+        let sessionStartTime;
+        let soundEnabled = false;
+        
+        const patterns = {
+            'box': { inhale: 4, hold1: 4, exhale: 4, hold2: 4, name: 'Box' },
+            '478': { inhale: 4, hold1: 7, exhale: 8, hold2: 0, name: '4-7-8' },
+            'coherent': { inhale: 5, hold1: 0, exhale: 5, hold2: 0, name: 'Coherent' },
+            'wimhof': { inhale: 2, hold1: 0, exhale: 2, hold2: 0, name: 'Wim Hof' },
+            'fire': { inhale: 1, hold1: 0, exhale: 1, hold2: 0, name: 'Fire' },
+            'custom': { inhale: 4, hold1: 4, exhale: 4, hold2: 4, name: 'Custom' }
+        };
+        
+        function selectPattern(pattern) {
+            currentPattern = pattern;
+            document.querySelectorAll('.pattern-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.pattern-card').classList.add('active');
+            document.getElementById('currentPattern').textContent = patterns[pattern].name;
+            
+            if (isBreathing) {
+                stopBreathing();
+                startBreathing();
+            }
+        }
+        
+        function toggleBreathing() {
+            if (isBreathing) {
+                stopBreathing();
+            } else {
+                startBreathing();
+            }
+        }
+        
+        function startBreathing() {
+            isBreathing = true;
+            breathCounter = 0;
+            sessionStartTime = Date.now();
+            document.getElementById('startBtn').textContent = 'Stop';
+            document.getElementById('startBtn').classList.add('active');
+            
+            // Start session timer
+            sessionInterval = setInterval(updateSessionTime, 1000);
+            
+            // Start breathing cycle
+            runBreathingCycle();
+        }
+        
+        function stopBreathing() {
+            isBreathing = false;
+            document.getElementById('startBtn').textContent = 'Start';
+            document.getElementById('startBtn').classList.remove('active');
+            document.getElementById('breathText').textContent = 'Ready';
+            clearInterval(sessionInterval);
+            clearInterval(breathingInterval);
+            
+            // Reset phase indicators
+            document.querySelectorAll('.phase').forEach(phase => {
+                phase.classList.remove('active');
+            });
+        }
+        
+        function runBreathingCycle() {
+            if (!isBreathing) return;
+            
+            const pattern = patterns[currentPattern];
+            let totalTime = 0;
+            
+            // Inhale phase
+            setPhase('inhale');
+            animateTimer(pattern.inhale);
+            totalTime += pattern.inhale * 1000;
+            
+            setTimeout(() => {
+                if (!isBreathing) return;
+                
+                // Hold phase
+                if (pattern.hold1 > 0) {
+                    setPhase('hold');
+                    animateTimer(pattern.hold1);
+                    totalTime += pattern.hold1 * 1000;
+                    
+                    setTimeout(() => {
+                        if (!isBreathing) return;
+                        continueExhale();
+                    }, pattern.hold1 * 1000);
+                } else {
+                    continueExhale();
+                }
+            }, pattern.inhale * 1000);
+            
+            function continueExhale() {
+                // Exhale phase
+                setPhase('exhale');
+                animateTimer(pattern.exhale);
+                totalTime += pattern.exhale * 1000;
+                
+                setTimeout(() => {
+                    if (!isBreathing) return;
+                    
+                    // Pause phase
+                    if (pattern.hold2 > 0) {
+                        setPhase('pause');
+                        animateTimer(pattern.hold2);
+                        totalTime += pattern.hold2 * 1000;
+                        
+                        setTimeout(() => {
+                            if (!isBreathing) return;
+                            breathCounter++;
+                            document.getElementById('breathCount').textContent = breathCounter;
+                            runBreathingCycle();
+                        }, pattern.hold2 * 1000);
+                    } else {
+                        breathCounter++;
+                        document.getElementById('breathCount').textContent = breathCounter;
+                        runBreathingCycle();
+                    }
+                }, pattern.exhale * 1000);
+            }
+        }
+        
+        function setPhase(phase) {
+            // Update phase indicators
+            document.querySelectorAll('.phase').forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            // Update text and active phase
+            switch(phase) {
+                case 'inhale':
+                    document.getElementById('breathText').textContent = 'Inhale';
+                    document.getElementById('inhalePhase').classList.add('active');
+                    // Expand animation
+                    document.querySelector('.inner-circle').style.animation = 'breathe 4s ease-in-out infinite';
+                    break;
+                case 'hold':
+                    document.getElementById('breathText').textContent = 'Hold';
+                    document.getElementById('holdPhase').classList.add('active');
+                    break;
+                case 'exhale':
+                    document.getElementById('breathText').textContent = 'Exhale';
+                    document.getElementById('exhalePhase').classList.add('active');
+                    break;
+                case 'pause':
+                    document.getElementById('breathText').textContent = 'Pause';
+                    document.getElementById('pausePhase').classList.add('active');
+                    break;
+            }
+            
+            if (soundEnabled) {
+                playSound(phase);
+            }
+        }
+        
+        function animateTimer(seconds) {
+            let remaining = seconds;
+            const timerEl = document.getElementById('timer');
+            
+            const updateTimer = () => {
+                if (remaining > 0 && isBreathing) {
+                    timerEl.textContent = `00:${String(remaining).padStart(2, '0')}`;
+                    remaining--;
+                    setTimeout(updateTimer, 1000);
+                }
+            };
+            
+            updateTimer();
+        }
+        
+        function updateSessionTime() {
+            const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('sessionTime').textContent = 
+                `${minutes}:${String(seconds).padStart(2, '0')}`;
+            
+            // Update coherence (mock calculation)
+            const coherence = 95 + Math.sin(elapsed / 10) * 5;
+            document.getElementById('coherence').textContent = coherence.toFixed(1) + '%';
+        }
+        
+        function resetSession() {
+            stopBreathing();
+            breathCounter = 0;
+            document.getElementById('breathCount').textContent = '0';
+            document.getElementById('sessionTime').textContent = '0:00';
+            document.getElementById('timer').textContent = '00:00';
+            document.getElementById('coherence').textContent = '98.7%';
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            event.target.textContent = soundEnabled ? '🔇 Mute' : '🔊 Sound';
+        }
+        
+        function playSound(phase) {
+            // Audio context for generating tones
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Different frequencies for different phases
+            switch(phase) {
+                case 'inhale':
+                    oscillator.frequency.value = 440; // A4
+                    break;
+                case 'hold':
+                    oscillator.frequency.value = 528; // C5
+                    break;
+                case 'exhale':
+                    oscillator.frequency.value = 396; // G4
+                    break;
+                case 'pause':
+                    oscillator.frequency.value = 340; // F4
+                    break;
+            }
+            
+            gainNode.gain.value = 0.1;
+            oscillator.start();
+            
+            // Fade out
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        // Custom pattern dialog
+        function showCustomDialog() {
+            if (currentPattern === 'custom') {
+                const inhale = prompt('Inhale duration (seconds):', '4');
+                const hold1 = prompt('Hold after inhale (seconds):', '4');
+                const exhale = prompt('Exhale duration (seconds):', '4');
+                const hold2 = prompt('Hold after exhale (seconds):', '4');
+                
+                if (inhale && exhale) {
+                    patterns.custom = {
+                        inhale: parseInt(inhale) || 4,
+                        hold1: parseInt(hold1) || 0,
+                        exhale: parseInt(exhale) || 4,
+                        hold2: parseInt(hold2) || 0,
+                        name: 'Custom'
+                    };
+                }
+            }
+        }
+        
+        // Add click handler for custom pattern
+        document.addEventListener('DOMContentLoaded', () => {
+            const customCard = document.querySelector('.pattern-card:last-child');
+            customCard.addEventListener('click', showCustomDialog);
+        });
+    </script>
+</body>
+</html>

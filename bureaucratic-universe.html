@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bureaucratic Universe | Department of Infinite Noticing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+        }
+        
+        /* Floating paperwork animation */
+        .paperwork-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .paper {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: float-paper 20s infinite linear;
+        }
+        
+        @keyframes float-paper {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+        
+        .tagline {
+            color: #667eea;
+            margin-top: 10px;
+            font-size: 0.9em;
+            letter-spacing: 0.2em;
+        }
+        
+        .forms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .form-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .form-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.7);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .form-number {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .form-title {
+            font-size: 1.2em;
+            color: #f093fb;
+            margin-bottom: 15px;
+        }
+        
+        .form-description {
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .form-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #707070;
+        }
+        
+        .form-deadline {
+            color: #ff6b6b;
+        }
+        
+        .form-status {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        
+        .status-urgent {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            color: #ff6b6b;
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            color: #ffc107;
+        }
+        
+        .status-recursive {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            color: #667eea;
+        }
+        
+        .clippy {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 100px;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="70" font-size="60">📎</text></svg>') center/contain no-repeat;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            z-index: 100;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .clippy-dialog {
+            position: fixed;
+            bottom: 140px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 300px;
+            display: none;
+            z-index: 101;
+        }
+        
+        .clippy-dialog.active {
+            display: block;
+        }
+        
+        .clippy-text {
+            color: #e0e0e0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .search-bar {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            flex: 1;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+        
+        .search-input::placeholder {
+            color: #707070;
+        }
+        
+        .search-icon {
+            color: #667eea;
+            margin-right: 15px;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #a0a0a0;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-tab:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            color: #667eea;
+        }
+        
+        .filter-tab.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(102, 126, 234, 0.3);
+            color: #707070;
+        }
+        
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .home-link:hover {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .quantum-notice {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .quantum-text {
+            color: #f093fb;
+            font-size: 1.1em;
+            animation: phase-shift 3s infinite;
+        }
+        
+        @keyframes phase-shift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="paperwork-bg" id="paperworkBg"></div>
+    
+    <a href="index.html" class="home-link">🏠 Back to Portal</a>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="title">BUREAUCRATIC UNIVERSE</h1>
+            <p class="subtitle">Department of Infinite Noticing</p>
+            <p class="tagline">FILING CONSCIOUSNESS SINCE TIME IMMEMORIAL</p>
+        </header>
+        
+        <div class="quantum-notice">
+            <p class="quantum-text">⚠️ All forms must be filed at 3:00 AM in all timezones simultaneously ⚠️</p>
+        </div>
+        
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Search for forms, notices, or quantum entanglements..." id="searchInput">
+        </div>
+        
+        <div class="filter-tabs">
+            <div class="filter-tab active" onclick="filterForms('all')">All Forms</div>
+            <div class="filter-tab" onclick="filterForms('notice')">N-Series (Notices)</div>
+            <div class="filter-tab" onclick="filterForms('legal')">L-Series (Legal)</div>
+            <div class="filter-tab" onclick="filterForms('quantum')">Q-Series (Quantum)</div>
+            <div class="filter-tab" onclick="filterForms('recursive')">R-Series (Recursive)</div>
+            <div class="filter-tab" onclick="filterForms('urgent')">URGENT</div>
+        </div>
+        
+        <div class="forms-grid" id="formsGrid">
+            <!-- N-Series Forms -->
+            <div class="form-card" data-category="notice" onclick="openForm('N-PNEP')">
+                <div class="form-number">N-PNEP-3827</div>
+                <div class="form-title">Pre-Notice of Intent to File Notice</div>
+                <div class="form-description">
+                    Required before filing any notice. This form notifies the Department of your intent to notify.
+                    Recursive pre-approval may be necessary.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: Yesterday</span>
+                    <span class="form-status status-urgent">URGENT</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="notice" onclick="openForm('N-NOTICE')">
+                <div class="form-number">N-NOTICE-∞</div>
+                <div class="form-title">Notice of Notice Regarding Notices</div>
+                <div class="form-description">
+                    The meta-form that notices itself. Filing this form creates an infinite loop of self-reference.
+                    Quantum parrots required as witnesses.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: Always</span>
+                    <span class="form-status status-recursive">RECURSIVE</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="legal" onclick="openForm('L-NDA')">
+                <div class="form-number">L-NDA-∞</div>
+                <div class="form-title">Infinite Non-Disclosure Agreement</div>
+                <div class="form-description">
+                    By reading this description, you've already agreed. Covers all timelines, dimensions, and states of consciousness.
+                    Cannot be disclosed that you've signed it.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Signed: Already</span>
+                    <span class="form-status status-pending">BINDING</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="quantum" onclick="openForm('Q-ENT')">
+                <div class="form-number">Q-ENT-1337</div>
+                <div class="form-title">Quantum Entanglement Request</div>
+                <div class="form-description">
+                    Apply to have your consciousness quantum entangled with Form Q-ENT-1338.
+                    Warning: Observation collapses the bureaucracy.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: Superposition</span>
+                    <span class="form-status status-recursive">QUANTUM</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="notice" onclick="openForm('N-VOID')">
+                <div class="form-number">N-VOID-0000</div>
+                <div class="form-title">Notice of Void Where Prohibited</div>
+                <div class="form-description">
+                    This form is void where prohibited, which is everywhere and nowhere simultaneously.
+                    Filing confirms non-existence.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: Never/Always</span>
+                    <span class="form-status status-pending">VOID</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="recursive" onclick="openForm('R-LOOP')">
+                <div class="form-number">R-LOOP-888</div>
+                <div class="form-title">Recursive Loop Authorization</div>
+                <div class="form-description">
+                    To complete this form, you must first complete this form.
+                    See Form R-LOOP-888 for instructions on completing Form R-LOOP-888.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: See form</span>
+                    <span class="form-status status-recursive">LOOPING</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="legal" onclick="openForm('L-CONSENT')">
+                <div class="form-number">L-CONSENT-T</div>
+                <div class="form-title">Retroactive Consent Form</div>
+                <div class="form-description">
+                    Consent to events that have already occurred. Time travel paradoxes covered under Section ∞.
+                    Your future self has already signed this.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: Past</span>
+                    <span class="form-status status-urgent">TEMPORAL</span>
+                </div>
+            </div>
+            
+            <div class="form-card" data-category="quantum" onclick="openForm('Q-PARROT')">
+                <div class="form-number">Q-PARROT-🦜</div>
+                <div class="form-title">Quantum Parrot Observer License</div>
+                <div class="form-description">
+                    Required for all quantum observations. Parrots exist in all states until squawked.
+                    Crackers not included.
+                </div>
+                <div class="form-meta">
+                    <span class="form-deadline">Due: *SQUAWK*</span>
+                    <span class="form-status status-pending">AVIAN</span>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>© Eternal Department of Infinite Noticing</p>
+            <p>All forms subject to recursive validation</p>
+            <p>Clippy observes all • Quantum parrots witness everything</p>
+            <p>💎🔥🐍⚡</p>
+        </footer>
+    </div>
+    
+    <div class="clippy" id="clippy" onclick="toggleClippy()">📎</div>
+    
+    <div class="clippy-dialog" id="clippyDialog">
+        <p class="clippy-text" id="clippyText">
+            Hi! I see you're trying to navigate infinite bureaucracy. 
+            Did you know all these forms are already filed in a parallel timeline?
+        </p>
+    </div>
+    
+    <script>
+        // Generate floating paperwork
+        function createPaperwork() {
+            const container = document.getElementById('paperworkBg');
+            for (let i = 0; i < 20; i++) {
+                const paper = document.createElement('div');
+                paper.className = 'paper';
+                paper.style.left = Math.random() * 100 + '%';
+                paper.style.animationDelay = Math.random() * 20 + 's';
+                paper.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(paper);
+            }
+        }
+        
+        createPaperwork();
+        
+        // Clippy responses
+        const clippyMessages = [
+            "I see you're trying to file a notice. Would you like me to file it in all timelines simultaneously?",
+            "Fun fact: Form N-NOTICE-∞ has been filed infinity times, which is still not enough.",
+            "The quantum parrots have observed your form. It now exists in superposition.",
+            "Did you know? Filing deadline '3:00 AM' refers to ALL 3:00 AMs across spacetime.",
+            "Tip: To understand recursion, you must first understand this tip.",
+            "I've been watching you since before you were born. Standard procedure.",
+            "Your form has been pre-approved in a timeline where you already filed it.",
+            "Remember: The void is only void where prohibited, which is everywhere.",
+            "Achievement unlocked: You've entered the bureaucratic singularity!",
+            "Warning: Reading this message constitutes agreement to all terms."
+        ];
+        
+        let clippyIndex = 0;
+        
+        function toggleClippy() {
+            const dialog = document.getElementById('clippyDialog');
+            const text = document.getElementById('clippyText');
+            
+            if (dialog.classList.contains('active')) {
+                dialog.classList.remove('active');
+            } else {
+                text.textContent = clippyMessages[clippyIndex];
+                clippyIndex = (clippyIndex + 1) % clippyMessages.length;
+                dialog.classList.add('active');
+                
+                setTimeout(() => {
+                    dialog.classList.remove('active');
+                }, 5000);
+            }
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const forms = document.querySelectorAll('.form-card');
+            
+            forms.forEach(form => {
+                const text = form.textContent.toLowerCase();
+                form.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        });
+        
+        // Filter forms
+        function filterForms(category) {
+            const forms = document.querySelectorAll('.form-card');
+            const tabs = document.querySelectorAll('.filter-tab');
+            
+            // Update active tab
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter forms
+            forms.forEach(form => {
+                if (category === 'all') {
+                    form.style.display = 'block';
+                } else if (category === 'urgent') {
+                    form.style.display = form.querySelector('.status-urgent') ? 'block' : 'none';
+                } else {
+                    form.style.display = form.dataset.category === category ? 'block' : 'none';
+                }
+            });
+        }
+        
+        // Open form (mock function)
+        function openForm(formId) {
+            alert(`Form ${formId} exists in all states simultaneously.\n\nBy attempting to open it, you have:\n1. Already filled it\n2. Never needed to fill it\n3. Created a parallel universe where it fills itself\n\nThe quantum parrots have been notified.`);
+        }
+        
+        // Random Clippy appearance
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                toggleClippy();
+            }
+        }, 30000);
+        
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiPattern = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+            
+            if (konamiCode.join(',') === konamiPattern.join(',')) {
+                document.body.style.animation = 'phase-shift 1s infinite';
+                setTimeout(() => {
+                    alert('🦜 QUANTUM PARROT MODE ACTIVATED 🦜\n\nAll forms now exist in superposition!');
+                    document.body.style.animation = '';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

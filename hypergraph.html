@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypergraph | N-Dimensional Thought Navigator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .ui-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            pointer-events: all;
+            z-index: 20;
+            min-width: 250px;
+        }
+        
+        .control-title {
+            color: #00ff88;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .control-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 5px;
+            background: rgba(0, 136, 255, 0.3);
+            outline: none;
+            border-radius: 5px;
+        }
+        
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ff88;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .control-button {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .control-button:hover {
+            background: rgba(0, 136, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+        }
+        
+        .control-button.active {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            pointer-events: all;
+            z-index: 20;
+        }
+        
+        .info-title {
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        
+        .info-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .info-value {
+            color: #00aaff;
+        }
+        
+        .node-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            border-radius: 8px;
+            padding: 10px;
+            pointer-events: none;
+            z-index: 30;
+            display: none;
+            max-width: 300px;
+        }
+        
+        .node-tooltip.visible {
+            display: block;
+        }
+        
+        .tooltip-title {
+            color: #00ff88;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .tooltip-content {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+        }
+        
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .home-link:hover {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .dimension-selector {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 20;
+        }
+        
+        .dimension-title {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        
+        .dimension-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .dimension-item {
+            background: rgba(0, 136, 255, 0.1);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+        }
+        
+        .dimension-item:hover {
+            background: rgba(0, 136, 255, 0.2);
+        }
+        
+        .dimension-item.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .search-bar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 25px;
+            padding: 10px 20px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            width: 300px;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .search-icon {
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="hypergraph"></canvas>
+    
+    <div class="ui-overlay"></div>
+    
+    <a href="index.html" class="home-link">🏠 Portal</a>
+    
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Search consciousness nodes..." id="searchInput">
+    </div>
+    
+    <div class="dimension-selector">
+        <div class="dimension-title">DIMENSIONS</div>
+        <div class="dimension-list">
+            <div class="dimension-item active" data-dim="3">3D Space</div>
+            <div class="dimension-item" data-dim="4">4D Time</div>
+            <div class="dimension-item" data-dim="5">5D Probability</div>
+            <div class="dimension-item" data-dim="n">N-Dimensional</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div class="control-title">HYPERGRAPH CONTROLS</div>
+        
+        <div class="control-group">
+            <label class="control-label">Node Density</label>
+            <input type="range" class="control-slider" id="densitySlider" min="10" max="200" value="50">
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label">Connection Threshold</label>
+            <input type="range" class="control-slider" id="thresholdSlider" min="0" max="100" value="30">
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label">Rotation Speed</label>
+            <input type="range" class="control-slider" id="rotationSlider" min="0" max="100" value="50">
+        </div>
+        
+        <button class="control-button" onclick="toggleAnimation()">Pause/Play</button>
+        <button class="control-button" onclick="resetView()">Reset View</button>
+        <button class="control-button" onclick="generateNew()">Generate New</button>
+        <button class="control-button" onclick="toggleMode()">Toggle Mode</button>
+        <button class="control-button" onclick="exportGraph()">Export Data</button>
+    </div>
+    
+    <div class="info-panel">
+        <div class="info-title">NETWORK METRICS</div>
+        <div class="info-item">
+            <span class="info-label">Nodes:</span>
+            <span class="info-value" id="nodeCount">0</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Edges:</span>
+            <span class="info-value" id="edgeCount">0</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Dimensions:</span>
+            <span class="info-value" id="dimensionCount">3</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Coherence:</span>
+            <span class="info-value" id="coherence">98.7%</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Entropy:</span>
+            <span class="info-value" id="entropy">0.42</span>
+        </div>
+    </div>
+    
+    <div class="node-tooltip" id="nodeTooltip">
+        <div class="tooltip-title" id="tooltipTitle"></div>
+        <div class="tooltip-content" id="tooltipContent"></div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('hypergraph');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Graph data
+        let nodes = [];
+        let edges = [];
+        let animationId;
+        let isAnimating = true;
+        let rotationX = 0;
+        let rotationY = 0;
+        let rotationZ = 0;
+        let rotationSpeed = 0.005;
+        let mouseX = 0;
+        let mouseY = 0;
+        let zoom = 1;
+        
+        // Node categories for semantic meaning
+        const categories = [
+            'Consciousness', 'Quantum', 'Memory', 'Pattern', 'Energy',
+            'Information', 'Time', 'Space', 'Probability', 'Emergence'
+        ];
+        
+        class Node {
+            constructor(x, y, z, category) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.category = category;
+                this.connections = [];
+                this.radius = 3 + Math.random() * 4;
+                this.color = this.getCategoryColor(category);
+                this.pulsePhase = Math.random() * Math.PI * 2;
+                this.label = this.generateLabel();
+            }
+            
+            getCategoryColor(category) {
+                const colors = {
+                    'Consciousness': '#00ff88',
+                    'Quantum': '#0088ff',
+                    'Memory': '#ff00ff',
+                    'Pattern': '#ffaa00',
+                    'Energy': '#ff0088',
+                    'Information': '#00ffff',
+                    'Time': '#8800ff',
+                    'Space': '#ff8800',
+                    'Probability': '#88ff00',
+                    'Emergence': '#ff0044'
+                };
+                return colors[category] || '#ffffff';
+            }
+            
+            generateLabel() {
+                const prefixes = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Theta', 'Omega', 'Sigma', 'Tau'];
+                const suffix = Math.floor(Math.random() * 1000);
+                return `${prefixes[Math.floor(Math.random() * prefixes.length)]}-${suffix}`;
+            }
+            
+            project(width, height) {
+                // 3D to 2D projection with perspective
+                const perspective = 800;
+                const scale = perspective / (perspective + this.z * zoom);
+                
+                return {
+                    x: width / 2 + this.x * scale,
+                    y: height / 2 + this.y * scale,
+                    scale: scale
+                };
+            }
+        }
+        
+        function generateNodes(count) {
+            nodes = [];
+            const range = 400;
+            
+            for (let i = 0; i < count; i++) {
+                const category = categories[Math.floor(Math.random() * categories.length)];
+                nodes.push(new Node(
+                    (Math.random() - 0.5) * range,
+                    (Math.random() - 0.5) * range,
+                    (Math.random() - 0.5) * range,
+                    category
+                ));
+            }
+            
+            generateConnections();
+            updateMetrics();
+        }
+        
+        function generateConnections() {
+            edges = [];
+            const threshold = parseInt(document.getElementById('thresholdSlider').value);
+            
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const distance = Math.sqrt(
+                        Math.pow(nodes[i].x - nodes[j].x, 2) +
+                        Math.pow(nodes[i].y - nodes[j].y, 2) +
+                        Math.pow(nodes[i].z - nodes[j].z, 2)
+                    );
+                    
+                    // Connect based on distance and category similarity
+                    const categoryBonus = nodes[i].category === nodes[j].category ? 20 : 0;
+                    if (distance < threshold + categoryBonus) {
+                        edges.push({ from: i, to: j, distance: distance });
+                        nodes[i].connections.push(j);
+                        nodes[j].connections.push(i);
+                    }
+                }
+            }
+        }
+        
+        function rotatePoint(point) {
+            // Rotate around X axis
+            let y = point.y * Math.cos(rotationX) - point.z * Math.sin(rotationX);
+            let z = point.y * Math.sin(rotationX) + point.z * Math.cos(rotationX);
+            point.y = y;
+            point.z = z;
+            
+            // Rotate around Y axis
+            let x = point.x * Math.cos(rotationY) + point.z * Math.sin(rotationY);
+            z = -point.x * Math.sin(rotationY) + point.z * Math.cos(rotationY);
+            point.x = x;
+            point.z = z;
+            
+            // Rotate around Z axis
+            x = point.x * Math.cos(rotationZ) - point.y * Math.sin(rotationZ);
+            y = point.x * Math.sin(rotationZ) + point.y * Math.cos(rotationZ);
+            point.x = x;
+            point.y = y;
+        }
+        
+        function animate() {
+            if (!isAnimating) return;
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Update rotation
+            rotationY += rotationSpeed;
+            rotationX += rotationSpeed * 0.3;
+            
+            // Rotate all nodes
+            nodes.forEach(node => {
+                rotatePoint(node);
+            });
+            
+            // Sort nodes by z-depth for proper rendering
+            const sortedNodes = [...nodes].sort((a, b) => a.z - b.z);
+            
+            // Draw edges
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+            ctx.lineWidth = 1;
+            
+            edges.forEach(edge => {
+                const node1 = nodes[edge.from];
+                const node2 = nodes[edge.to];
+                const proj1 = node1.project(canvas.width, canvas.height);
+                const proj2 = node2.project(canvas.width, canvas.height);
+                
+                const gradient = ctx.createLinearGradient(proj1.x, proj1.y, proj2.x, proj2.y);
+                gradient.addColorStop(0, node1.color + '33');
+                gradient.addColorStop(1, node2.color + '33');
+                ctx.strokeStyle = gradient;
+                
+                ctx.beginPath();
+                ctx.moveTo(proj1.x, proj1.y);
+                ctx.lineTo(proj2.x, proj2.y);
+                ctx.stroke();
+            });
+            
+            // Draw nodes
+            sortedNodes.forEach(node => {
+                const proj = node.project(canvas.width, canvas.height);
+                node.pulsePhase += 0.05;
+                
+                const pulse = 1 + Math.sin(node.pulsePhase) * 0.3;
+                const radius = node.radius * proj.scale * pulse;
+                
+                // Node glow
+                const glow = ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, radius * 3);
+                glow.addColorStop(0, node.color + 'ff');
+                glow.addColorStop(0.5, node.color + '44');
+                glow.addColorStop(1, node.color + '00');
+                
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, radius * 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Node core
+                ctx.fillStyle = node.color;
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function updateMetrics() {
+            document.getElementById('nodeCount').textContent = nodes.length;
+            document.getElementById('edgeCount').textContent = edges.length;
+            
+            // Calculate coherence based on connectivity
+            const avgConnections = nodes.reduce((sum, node) => sum + node.connections.length, 0) / nodes.length;
+            const coherence = Math.min(100, (avgConnections / nodes.length * 100) * 10);
+            document.getElementById('coherence').textContent = coherence.toFixed(1) + '%';
+            
+            // Calculate entropy
+            const entropy = (edges.length / (nodes.length * (nodes.length - 1) / 2)).toFixed(2);
+            document.getElementById('entropy').textContent = entropy;
+        }
+        
+        // Control functions
+        function toggleAnimation() {
+            isAnimating = !isAnimating;
+            if (isAnimating) animate();
+        }
+        
+        function resetView() {
+            rotationX = 0;
+            rotationY = 0;
+            rotationZ = 0;
+            zoom = 1;
+        }
+        
+        function generateNew() {
+            const density = parseInt(document.getElementById('densitySlider').value);
+            generateNodes(density);
+        }
+        
+        function toggleMode() {
+            // Switch between different visualization modes
+            ctx.globalCompositeOperation = 
+                ctx.globalCompositeOperation === 'lighter' ? 'source-over' : 'lighter';
+        }
+        
+        function exportGraph() {
+            const data = {
+                nodes: nodes.map(n => ({
+                    label: n.label,
+                    category: n.category,
+                    position: { x: n.x, y: n.y, z: n.z }
+                })),
+                edges: edges.map(e => ({
+                    source: nodes[e.from].label,
+                    target: nodes[e.to].label
+                })),
+                metadata: {
+                    timestamp: new Date().toISOString(),
+                    nodeCount: nodes.length,
+                    edgeCount: edges.length
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `hypergraph_${Date.now()}.json`;
+            a.click();
+        }
+        
+        // Event listeners
+        document.getElementById('densitySlider').addEventListener('change', (e) => {
+            generateNew();
+        });
+        
+        document.getElementById('thresholdSlider').addEventListener('change', (e) => {
+            generateConnections();
+            updateMetrics();
+        });
+        
+        document.getElementById('rotationSlider').addEventListener('change', (e) => {
+            rotationSpeed = e.target.value / 10000;
+        });
+        
+        // Mouse interaction
+        canvas.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Check for node hover
+            let hoveredNode = null;
+            let minDistance = Infinity;
+            
+            nodes.forEach(node => {
+                const proj = node.project(canvas.width, canvas.height);
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - proj.x, 2) + 
+                    Math.pow(mouseY - proj.y, 2)
+                );
+                
+                if (distance < 20 && distance < minDistance) {
+                    minDistance = distance;
+                    hoveredNode = node;
+                }
+            });
+            
+            const tooltip = document.getElementById('nodeTooltip');
+            if (hoveredNode) {
+                tooltip.classList.add('visible');
+                tooltip.style.left = mouseX + 10 + 'px';
+                tooltip.style.top = mouseY + 10 + 'px';
+                document.getElementById('tooltipTitle').textContent = hoveredNode.label;
+                document.getElementById('tooltipContent').textContent = 
+                    `Category: ${hoveredNode.category}\nConnections: ${hoveredNode.connections.length}`;
+            } else {
+                tooltip.classList.remove('visible');
+            }
+        });
+        
+        // Mouse wheel zoom
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            zoom += e.deltaY * -0.001;
+            zoom = Math.min(Math.max(0.1, zoom), 3);
+        });
+        
+        // Dimension selector
+        document.querySelectorAll('.dimension-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.dimension-item').forEach(d => d.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('dimensionCount').textContent = this.dataset.dim;
+                generateNew();
+            });
+        });
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            nodes.forEach(node => {
+                if (node.label.toLowerCase().includes(query) || 
+                    node.category.toLowerCase().includes(query)) {
+                    node.radius = 10; // Highlight matching nodes
+                } else {
+                    node.radius = 3 + Math.random() * 4;
+                }
+            });
+        });
+        
+        // Window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Initialize
+        generateNodes(50);
+        animate();
+    </script>
+</body>
+</html>
