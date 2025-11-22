@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRĀNAWARE v0.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            color: #888;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-header {
+            font-size: 1.1em;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+        
+        .level-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 5px;
+            border-radius: 10px;
+        }
+        
+        .level-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            user-select: none;
+        }
+        
+        .level-btn:focus {
+            outline: none;
+        }
+        
+        .level-btn.selected {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+        
+        .protocol-group {
+            display: none;
+        }
+        
+        .protocol-group.active {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .protocol-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            user-select: none;
+        }
+        
+        .protocol-btn:focus {
+            outline: none;
+        }
+        
+        .protocol-btn:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.6);
+            transform: translateX(5px);
+        }
+        
+        .protocol-btn.selected {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+        
+        .protocol-btn h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            color: #667eea;
+        }
+        
+        .protocol-btn .ratio {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        
+        .protocol-btn p {
+            font-size: 0.9em;
+            color: #aaa;
+            line-height: 1.4;
+        }
+        
+        .duration-select {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .duration-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            user-select: none;
+        }
+        
+        .duration-btn:focus {
+            outline: none;
+        }
+        
+        .duration-btn:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.6);
+        }
+        
+        .duration-btn.selected {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            font-weight: 500;
+            user-select: none;
+        }
+        
+        .btn:focus {
+            outline: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .safety-check {
+            margin-bottom: 20px;
+        }
+        
+        .safety-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            user-select: none;
+        }
+        
+        .safety-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .safety-item label {
+            font-size: 0.9em;
+            cursor: pointer;
+            line-height: 1.4;
+            color: #bbb;
+        }
+        
+        .safety-note {
+            font-size: 0.85em;
+            color: #888;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .breath-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            position: relative;
+        }
+        
+        .breath-circle {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.2));
+            border: 3px solid rgba(102, 126, 234, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 60px rgba(102, 126, 234, 0.3);
+        }
+        
+        .breath-circle.inhale {
+            transform: scale(1.4);
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.3));
+            box-shadow: 0 0 80px rgba(102, 126, 234, 0.5);
+        }
+        
+        .breath-circle.hold {
+            transform: scale(1.2);
+        }
+        
+        .breath-circle.exhale {
+            transform: scale(0.8);
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.1));
+            box-shadow: 0 0 40px rgba(102, 126, 234, 0.2);
+        }
+        
+        .phase-label {
+            font-size: 2em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 40px;
+        }
+        
+        .timer-display {
+            font-size: 1.2em;
+            color: #888;
+            margin-top: 20px;
+        }
+        
+        .session-info {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .probe-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .probe-overlay.active {
+            display: flex;
+        }
+        
+        .probe-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+        }
+        
+        .probe-question {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .probe-hint {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 25px;
+        }
+        
+        .probe-timer {
+            font-size: 3em;
+            margin-bottom: 30px;
+            color: #fff;
+            font-weight: 300;
+        }
+        
+        .probe-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .probe-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1em;
+            user-select: none;
+        }
+        
+        .probe-btn:focus {
+            outline: none;
+        }
+        
+        .probe-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .help-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+        
+        .help-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(102, 126, 234, 0.4);
+            color: #aaa;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            display: none;
+            user-select: none;
+        }
+        
+        .help-btn:focus {
+            outline: none;
+        }
+        
+        .help-btn.active {
+            display: block;
+        }
+        
+        .help-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            color: #e0e0e0;
+        }
+        
+        .emergency-btn {
+            background: rgba(220, 53, 69, 0.15);
+            border: 2px solid rgba(220, 53, 69, 0.5);
+            color: #ff6b6b;
+        }
+        
+        .emergency-btn:hover {
+            background: rgba(220, 53, 69, 0.3);
+            border-color: #dc3545;
+            color: #fff;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .summary-text {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            color: #aaa;
+        }
+        
+        .pause-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        
+        .pause-overlay.active {
+            display: flex;
+        }
+        
+        .pause-content {
+            text-align: center;
+        }
+        
+        .pause-content h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+        
+        .pause-content p {
+            font-size: 1.2em;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        
+        .grounding-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+        
+        .grounding-overlay.active {
+            display: flex;
+        }
+        
+        .grounding-content {
+            text-align: center;
+        }
+        
+        .grounding-title {
+            font-size: 1.5em;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        
+        .grounding-subtitle {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PRĀNAWARE</h1>
+            <p>v0.1 — Breath Awareness OS</p>
+        </div>
+
+        <!-- Setup Screen -->
+        <div id="setupScreen" class="screen active">
+            <div class="card">
+                <div class="section-header">Choose Protocol</div>
+                
+                <div class="level-toggle">
+                    <button class="level-btn selected" data-level="beginner">Beginner</button>
+                    <button class="level-btn" data-level="advanced">Advanced</button>
+                </div>
+                
+                <div class="protocol-group active" id="beginnerProtocols">
+                    <div class="protocol-btn" data-protocol="box">
+                        <h3>Box Breathing</h3>
+                        <div class="ratio">4 sec each phase</div>
+                        <p>Foundation practice for stability</p>
+                    </div>
+                    <div class="protocol-btn" data-protocol="extended">
+                        <h3>Extended Exhale</h3>
+                        <div class="ratio">4 sec in, 8 sec out</div>
+                        <p>Activates calm response</p>
+                    </div>
+                    <div class="protocol-btn" data-protocol="sama">
+                        <h3>Sama Vṛtti</h3>
+                        <div class="ratio">6 sec each phase</div>
+                        <p>Balanced, deeper presence</p>
+                    </div>
+                </div>
+                
+                <div class="protocol-group" id="advancedProtocols">
+                    <div class="protocol-btn" data-protocol="deep-box">
+                        <h3>Deep Box</h3>
+                        <div class="ratio">10 sec each phase</div>
+                        <p>Extended equal ratio practice</p>
+                    </div>
+                    <div class="protocol-btn" data-protocol="master-box">
+                        <h3>Master Box</h3>
+                        <div class="ratio">15 sec each phase</div>
+                        <p>Advanced sustained awareness</p>
+                    </div>
+                    <div class="protocol-btn" data-protocol="visama">
+                        <h3>Viṣama Vṛtti (1:4:2:1)</h3>
+                        <div class="ratio">6-24-12-6 sec</div>
+                        <p>Classical advanced ratio work</p>
+                    </div>
+                    <div class="protocol-btn" data-protocol="deep-sama">
+                        <h3>Deep Sama Vṛtti</h3>
+                        <div class="ratio">12 sec each phase</div>
+                        <p>Deep equal parts practice</p>
+                    </div>
+                </div>
+
+                <div class="section-header">Duration</div>
+                <div class="duration-select">
+                    <button class="duration-btn" data-duration="5">5 min</button>
+                    <button class="duration-btn" data-duration="10">10 min</button>
+                    <button class="duration-btn" data-duration="15">15 min</button>
+                    <button class="duration-btn" data-duration="20">20 min</button>
+                </div>
+
+                <button class="btn" id="continueBtn" disabled>Continue</button>
+            </div>
+        </div>
+
+        <!-- Safety Screen -->
+        <div id="safetyScreen" class="screen">
+            <div class="card">
+                <div class="section-header">Quick Safety Check</div>
+                <div class="safety-check">
+                    <div class="safety-item">
+                        <input type="checkbox" id="check1">
+                        <label for="check1">No pregnancy or chest pain</label>
+                    </div>
+                    <div class="safety-item">
+                        <input type="checkbox" id="check2">
+                        <label for="check2">No uncontrolled blood pressure or glaucoma</label>
+                    </div>
+                    <div class="safety-item">
+                        <input type="checkbox" id="check3">
+                        <label for="check3">I'll stop if dizzy, in pain, or panicking</label>
+                    </div>
+                    <div class="safety-item">
+                        <input type="checkbox" id="check4">
+                        <label for="check4">I understand this requires continuous awareness</label>
+                    </div>
+                </div>
+                <div class="safety-note">
+                    You'll be asked random questions during practice to check if you're present. This isn't a test - it's how we build real awareness.
+                </div>
+                <button class="btn" id="startBtn" disabled>Begin Practice</button>
+            </div>
+        </div>
+
+        <!-- Practice Screen -->
+        <div id="practiceScreen" class="screen">
+            <div class="card">
+                <div class="breath-circle-container">
+                    <div class="session-info" id="sessionInfo">Session active</div>
+                    <div class="breath-circle" id="breathCircle"></div>
+                    <div class="phase-label" id="phaseLabel">Prepare</div>
+                    <div class="timer-display" id="timerDisplay">--:--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Screen -->
+        <div id="summaryScreen" class="screen">
+            <div class="card">
+                <h2 style="margin-bottom: 30px; font-weight: 300; text-align: center;">Session Complete</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="cyclesCompleted">0</div>
+                        <div class="stat-label">Cycles</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="awarenessScore">0%</div>
+                        <div class="stat-label">Presence</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="driftCount">0</div>
+                        <div class="stat-label">Drift</div>
+                    </div>
+                </div>
+                <div class="summary-text" id="summaryText"></div>
+                <button class="btn" id="newSessionBtn">New Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Buttons -->
+    <div class="help-buttons">
+        <button class="help-btn emergency-btn" id="emergencyBtn" title="Feeling overwhelmed? Click for immediate grounding">
+            ⚠️ Need to Ground?
+        </button>
+        <button class="help-btn" id="endBtn">End Session Early</button>
+    </div>
+
+    <!-- Probe Overlay -->
+    <div class="probe-overlay" id="probeOverlay">
+        <div class="probe-content">
+            <div class="probe-question">Where is the sensation strongest?</div>
+            <div class="probe-hint">Take a moment and notice</div>
+            <div class="probe-timer" id="probeTimer">5</div>
+            <div class="probe-options">
+                <button class="probe-btn" data-response="chest">Chest</button>
+                <button class="probe-btn" data-response="belly">Belly</button>
+                <button class="probe-btn" data-response="throat">Throat</button>
+                <button class="probe-btn" data-response="nostrils">Nostrils</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div class="pause-overlay" id="pauseOverlay">
+        <div class="pause-content">
+            <h2>Session Paused</h2>
+            <p>Awareness drift detected. Take a breath and return to presence.</p>
+            <button class="btn" id="resumeBtn" style="max-width: 300px; margin: 0 auto;">Resume Practice</button>
+        </div>
+    </div>
+
+    <!-- Grounding Overlay -->
+    <div class="grounding-overlay" id="groundingOverlay">
+        <div class="grounding-content">
+            <div class="grounding-title">Emergency Grounding</div>
+            <div class="grounding-subtitle">Follow the breath - 3 simple box cycles</div>
+            <div class="breath-circle" id="groundCircle"></div>
+            <div class="phase-label" id="groundPhase" style="margin-top: 40px;">Prepare</div>
+            <div class="timer-display" id="groundProgress" style="margin-top: 20px;">Cycle 0 of 3</div>
+        </div>
+    </div>
+
+    <script>
+        const protocols = {
+            box: { name: 'Box Breathing', phases: [4, 4, 4, 4] },
+            extended: { name: 'Extended Exhale', phases: [4, 0, 8, 0] },
+            sama: { name: 'Sama Vṛtti', phases: [6, 6, 6, 6] },
+            'deep-box': { name: 'Deep Box', phases: [10, 10, 10, 10] },
+            'master-box': { name: 'Master Box', phases: [15, 15, 15, 15] },
+            'visama': { name: 'Viṣama Vṛtti', phases: [6, 24, 12, 6] },
+            'deep-sama': { name: 'Deep Sama Vṛtti', phases: [12, 12, 12, 12] }
+        };
+
+        let selectedProtocol = null;
+        let selectedDuration = null;
+        let sessionActive = false;
+        let currentPhase = 0;
+        let cycleCount = 0;
+        let probesAnswered = 0;
+        let probesMissed = 0;
+        let sessionStartTime = 0;
+        let sessionEndTime = 0;
+        let phaseTimer = null;
+        let sessionTimer = null;
+        let probeTimer = null;
+        let probeTimeout = null;
+
+        // Level toggle
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                
+                const level = btn.dataset.level;
+                document.querySelectorAll('.protocol-group').forEach(g => g.classList.remove('active'));
+                document.getElementById(level + 'Protocols').classList.add('active');
+                
+                // Deselect any selected protocol when switching levels
+                document.querySelectorAll('.protocol-btn').forEach(b => b.classList.remove('selected'));
+                selectedProtocol = null;
+                updateContinueButton();
+            });
+        });
+
+        // Setup screen
+        document.querySelectorAll('.protocol-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.protocol-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedProtocol = btn.dataset.protocol;
+                updateContinueButton();
+            });
+        });
+
+        document.querySelectorAll('.duration-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedDuration = parseInt(btn.dataset.duration);
+                updateContinueButton();
+            });
+        });
+
+        function updateContinueButton() {
+            document.getElementById('continueBtn').disabled = !(selectedProtocol && selectedDuration);
+        }
+
+        document.getElementById('continueBtn').addEventListener('click', () => {
+            showScreen('safetyScreen');
+        });
+
+        // Safety screen
+        document.querySelectorAll('.safety-item input').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const allChecked = Array.from(document.querySelectorAll('.safety-item input'))
+                    .every(cb => cb.checked);
+                document.getElementById('startBtn').disabled = !allChecked;
+            });
+        });
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            startSession();
+        });
+
+        // Practice session
+        function startSession() {
+            showScreen('practiceScreen');
+            document.getElementById('emergencyBtn').classList.add('active');
+            document.getElementById('endBtn').classList.add('active');
+            sessionActive = true;
+            currentPhase = 0;
+            cycleCount = 0;
+            probesAnswered = 0;
+            probesMissed = 0;
+            sessionStartTime = Date.now();
+            sessionEndTime = sessionStartTime + (selectedDuration * 60 * 1000);
+            
+            // Preparation phase
+            const circle = document.getElementById('breathCircle');
+            const label = document.getElementById('phaseLabel');
+            
+            label.textContent = 'Ready';
+            circle.className = 'breath-circle';
+            
+            setTimeout(() => {
+                label.textContent = 'Begin';
+                circle.className = 'breath-circle inhale';
+                
+                setTimeout(() => {
+                    scheduleNextProbe();
+                    runBreathCycle();
+                    updateSessionTimer();
+                }, 1000);
+            }, 1500);
+        }
+
+        function runBreathCycle() {
+            if (!sessionActive) return;
+
+            const protocol = protocols[selectedProtocol];
+            const phaseNames = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+            const phaseClasses = ['inhale', 'hold', 'exhale', 'hold'];
+            const phaseDuration = protocol.phases[currentPhase];
+
+            if (phaseDuration === 0) {
+                currentPhase = (currentPhase + 1) % 4;
+                runBreathCycle();
+                return;
+            }
+
+            const circle = document.getElementById('breathCircle');
+            const label = document.getElementById('phaseLabel');
+
+            circle.className = 'breath-circle ' + phaseClasses[currentPhase];
+            label.textContent = phaseNames[currentPhase];
+
+            phaseTimer = setTimeout(() => {
+                currentPhase = (currentPhase + 1) % 4;
+                if (currentPhase === 0) cycleCount++;
+                runBreathCycle();
+            }, phaseDuration * 1000);
+        }
+
+        function scheduleNextProbe() {
+            if (!sessionActive) return;
+            const delay = (45 + Math.random() * 45) * 1000;
+            probeTimeout = setTimeout(showProbe, delay);
+        }
+
+        function showProbe() {
+            if (!sessionActive) return;
+
+            sessionActive = false;
+            clearTimeout(phaseTimer);
+            document.getElementById('probeOverlay').classList.add('active');
+
+            let timeLeft = 5;
+            document.getElementById('probeTimer').textContent = timeLeft;
+
+            probeTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('probeTimer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(probeTimer);
+                    probesMissed++;
+                    hideProbe();
+                    showPause();
+                }
+            }, 1000);
+        }
+
+        document.querySelectorAll('.probe-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                clearInterval(probeTimer);
+                probesAnswered++;
+                hideProbe();
+                sessionActive = true;
+                runBreathCycle();
+                scheduleNextProbe();
+            });
+        });
+
+        function hideProbe() {
+            document.getElementById('probeOverlay').classList.remove('active');
+        }
+
+        function showPause() {
+            document.getElementById('pauseOverlay').classList.add('active');
+        }
+
+        document.getElementById('resumeBtn').addEventListener('click', () => {
+            document.getElementById('pauseOverlay').classList.remove('active');
+            sessionActive = true;
+            runBreathCycle();
+            scheduleNextProbe();
+        });
+
+        function updateSessionTimer() {
+            function updateDisplay() {
+                const now = Date.now();
+                const remaining = Math.max(0, Math.floor((sessionEndTime - now) / 1000));
+
+                if (remaining <= 0) {
+                    endSession();
+                    return;
+                }
+
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            updateDisplay();
+            sessionTimer = setInterval(updateDisplay, 1000);
+        }
+
+        function endSession(fromGround = false) {
+            sessionActive = false;
+            clearTimeout(phaseTimer);
+            clearTimeout(probeTimeout);
+            clearInterval(sessionTimer);
+            clearInterval(probeTimer);
+            document.getElementById('emergencyBtn').classList.remove('active');
+            document.getElementById('endBtn').classList.remove('active');
+
+            const totalProbes = probesAnswered + probesMissed;
+            const awarenessPercent = totalProbes > 0 ? Math.round((probesAnswered / totalProbes) * 100) : 100;
+
+            document.getElementById('cyclesCompleted').textContent = cycleCount;
+            document.getElementById('awarenessScore').textContent = awarenessPercent + '%';
+            document.getElementById('driftCount').textContent = probesMissed;
+
+            let summaryMsg = '';
+            if (fromGround) {
+                summaryMsg = 'Grounding complete. You took care of yourself when needed - that\'s awareness too.';
+            } else if (awarenessPercent >= 90) {
+                summaryMsg = 'Exceptional presence. Your awareness remained stable throughout the session.';
+            } else if (awarenessPercent >= 70) {
+                summaryMsg = 'Good session. Some drift occurred, but you maintained solid presence overall.';
+            } else {
+                summaryMsg = 'Session complete. Consider shorter durations to build sustained awareness.';
+            }
+            document.getElementById('summaryText').textContent = summaryMsg;
+
+            showScreen('summaryScreen');
+        }
+
+        // Emergency ground - NEW CLEANER VERSION
+        document.getElementById('emergencyBtn').addEventListener('click', () => {
+            sessionActive = false;
+            clearTimeout(phaseTimer);
+            clearTimeout(probeTimeout);
+            clearInterval(sessionTimer);
+            clearInterval(probeTimer);
+            hideProbe();
+            document.getElementById('pauseOverlay').classList.remove('active');
+            
+            // Show grounding overlay
+            document.getElementById('groundingOverlay').classList.add('active');
+            
+            const circle = document.getElementById('groundCircle');
+            const label = document.getElementById('groundPhase');
+            const progress = document.getElementById('groundProgress');
+            
+            let groundPhase = 0;
+            let groundCycles = 0;
+            const groundPattern = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+            const groundClasses = ['inhale', 'hold', 'exhale', 'hold'];
+            
+            function groundBreath() {
+                circle.className = 'breath-circle ' + groundClasses[groundPhase];
+                label.textContent = groundPattern[groundPhase];
+                progress.textContent = `Cycle ${groundCycles + 1} of 3`;
+                
+                setTimeout(() => {
+                    groundPhase = (groundPhase + 1) % 4;
+                    if (groundPhase === 0) {
+                        groundCycles++;
+                        if (groundCycles >= 3) {
+                            document.getElementById('groundingOverlay').classList.remove('active');
+                            endSession(true);
+                            return;
+                        }
+                    }
+                    groundBreath();
+                }, 4000);
+            }
+            
+            groundBreath();
+        });
+
+        // End session early
+        document.getElementById('endBtn').addEventListener('click', () => {
+            if (confirm('End this session early?')) {
+                endSession();
+            }
+        });
+
+        // New session
+        document.getElementById('newSessionBtn').addEventListener('click', () => {
+            selectedProtocol = null;
+            selectedDuration = null;
+            document.querySelectorAll('.protocol-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.safety-item input').forEach(cb => cb.checked = false);
+            document.getElementById('emergencyBtn').classList.remove('active');
+            document.getElementById('endBtn').classList.remove('active');
+            showScreen('setupScreen');
+        });
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

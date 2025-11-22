@@ -1,0 +1,69 @@
+{
+  "name": "suite-foundation",
+  "version": "0.1.0",
+  "description": "Portable, open, local-first app suite",
+  "main": "main.js",
+  "scripts": {
+    "start": "cross-env PORTABLE_MODE=1 electron .",
+    "dev": "cross-env PORTABLE_MODE=1 electron . --dev",
+    "doctor": "node scripts/doctor.js",
+    "build": "electron-builder",
+    "portable-win": "cross-env PORTABLE_MODE=1 electron-builder --win portable",
+    "portable-mac": "cross-env PORTABLE_MODE=1 electron-builder --mac",
+    "portable-linux": "cross-env PORTABLE_MODE=1 electron-builder --linux AppImage",
+    "start:nogpu": "cross-env DISABLE_GPU=1 PORTABLE_MODE=1 electron .",
+    "smoke": "node scripts/smoke.js",
+    "ci:preflight": "npm ci && npm run doctor && npm run smoke"
+  },
+  "build": {
+    "appId": "com.suite.foundation",
+    "productName": "Suite Foundation",
+    "asar": true,
+    "files": [
+      "**/*",
+      "!dist/**"
+    ],
+    "extraResources": [
+      {
+        "from": "apps",
+        "to": "apps"
+      },
+      {
+        "from": "README.html",
+        "to": "README.html"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "hardenedRuntime": true,
+      "entitlements": "entitlements.mac.plist",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "category": "Utility"
+    }
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^30.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "dependencies": {}
+}

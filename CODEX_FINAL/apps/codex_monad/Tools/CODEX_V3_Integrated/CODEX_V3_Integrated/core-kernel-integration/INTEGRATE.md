@@ -1,0 +1,1 @@
+See INTEGRATE.md in previous package; loader contract unchanged.

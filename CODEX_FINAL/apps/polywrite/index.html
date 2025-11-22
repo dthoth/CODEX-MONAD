@@ -1,0 +1,3148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PolyWrite2 Pro Enhanced - Fixed Version</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #4caf50;
+            --primary-hover: #45a049;
+            --secondary-color: #2196f3;
+            --danger-color: #f44336;
+            --danger-hover: #d32f2f;
+            --warning-color: #ff9800;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #ccc;
+            --editor-bg: #ffffff;
+            --toolbar-bg: #f8f9fa;
+            --sidebar-bg: #f1f1f1;
+            --active-file-bg: #d8d9ff;
+            --hover-bg: #ddd;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+            --line-number-bg: #f0f0f0;
+            --line-number-color: #666;
+            --project-bg: #e8f5e8;
+            --project-border: #4caf50;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --border-color: #404040;
+            --editor-bg: #2d2d2d;
+            --toolbar-bg: #333333;
+            --sidebar-bg: #262626;
+            --active-file-bg: #404080;
+            --hover-bg: #404040;
+            --shadow: 0 2px 4px rgba(0,0,0,0.3);
+            --line-number-bg: #404040;
+            --line-number-color: #999;
+            --project-bg: #2a3a2a;
+            --project-border: #4caf50;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: 0.4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--secondary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .layout-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            background: var(--sidebar-bg);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editors-grid {
+            display: grid;
+            gap: 12px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .editors-grid.layout-2x2 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        .editors-grid.layout-1x3 {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
+        }
+
+        .editors-grid.layout-3x1 {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr;
+        }
+
+        .editors-grid.layout-2x1-1x2 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        .editors-grid.layout-2x1-1x2 .editor-container:nth-child(3) {
+            grid-column: 1 / -1;
+        }
+
+        .editors-grid.layout-auto {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Dynamic layout for 4+ editors */
+        .editors-grid.layout-dynamic {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-auto-rows: minmax(200px, 1fr);
+            gap: 12px;
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            background: var(--editor-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .editor-container:hover {
+            border-color: var(--secondary-color);
+            box-shadow: var(--shadow);
+        }
+
+        .editor-container.focused {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        .editor-container.drop-target {
+            border-color: var(--primary-color);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .editor-header {
+            background: var(--toolbar-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 40px;
+            cursor: move;
+        }
+
+        .editor-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .editor-title:hover {
+            background: var(--hover-bg);
+        }
+
+        .editor-title-input {
+            background: var(--bg-color);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 2px 4px;
+            border-radius: 3px;
+            width: 120px;
+        }
+
+        .editor-label {
+            background: var(--secondary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .file-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6c757d;
+        }
+
+        .file-indicator.saved {
+            background: #28a745;
+        }
+
+        .file-indicator.unsaved {
+            background: var(--warning-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .editor-controls {
+            display: flex;
+            gap: 3px;
+        }
+
+        .editor-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .editor-btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .toolbar {
+            background: var(--toolbar-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 2px;
+            padding-right: 6px;
+            border-right: 1px solid var(--border-color);
+            margin-right: 6px;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+            margin-right: 0;
+        }
+
+        .toolbar button, .toolbar select {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 3px 6px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.3s;
+            font-size: 11px;
+        }
+
+        .toolbar button:hover, .toolbar select:hover {
+            background: var(--hover-bg);
+        }
+
+        .toolbar button.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .editor-content {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        .line-numbers {
+            background: var(--line-number-bg);
+            color: var(--line-number-color);
+            padding: 15px 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            user-select: none;
+            border-right: 1px solid var(--border-color);
+            width: 40px;
+            text-align: right;
+            overflow: hidden;
+            white-space: pre;
+        }
+
+        .editor {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            resize: none;
+            background: var(--editor-bg);
+            color: var(--text-color);
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-y: auto;
+        }
+
+        .editor.code-mode {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+        }
+
+        .editor:focus {
+            outline: none;
+        }
+
+        .editor-footer {
+            background: var(--toolbar-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 5px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .file-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 1px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            font-size: 12px;
+            position: relative;
+        }
+
+        .file-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .file-item.active {
+            background: var(--active-file-bg);
+            border-color: var(--secondary-color);
+        }
+
+        .file-item.unsaved {
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .file-icon {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+            flex-shrink: 0;
+        }
+
+        .file-name {
+            flex: 1;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-status {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #28a745;
+            margin-left: 4px;
+        }
+
+        .file-status.unsaved {
+            background: var(--warning-color);
+            animation: pulse 2s infinite;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .file-item:hover .file-actions {
+            opacity: 1;
+        }
+
+        .file-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 2px;
+            transition: all 0.3s;
+            font-size: 10px;
+        }
+
+        .file-action-btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .button {
+            background: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+
+        .button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .button.secondary {
+            background: var(--secondary-color);
+        }
+
+        .button.danger {
+            background: var(--danger-color);
+        }
+
+        .button.small {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 0;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 13px;
+        }
+
+        .utility-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .utility-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .utility-btn:hover {
+            background: #1976d2;
+        }
+
+        .workspace-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .workspace-tab {
+            padding: 4px 8px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .workspace-tab.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Project Management Styles */
+        .project-item {
+            background: var(--project-bg);
+            border: 1px solid var(--project-border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--project-border);
+            background: var(--project-bg);
+        }
+
+        .project-header:hover {
+            background: var(--hover-bg);
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .project-meta {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .project-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        .project-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-header:hover .project-actions {
+            opacity: 1;
+        }
+
+        .project-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 3px;
+            border-radius: 2px;
+            transition: all 0.3s;
+            font-size: 10px;
+        }
+
+        .project-action-btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .project-files {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .project-files.expanded {
+            max-height: 400px;
+            padding: 8px;
+        }
+
+        .project-file-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 11px;
+        }
+
+        .project-file-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .project-file-item.active {
+            background: var(--active-file-bg);
+        }
+
+        .project-file-item.unsaved {
+            border-left: 2px solid var(--warning-color);
+        }
+
+        .project-empty {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            opacity: 0.6;
+            font-size: 11px;
+        }
+
+        .file-count-badge {
+            background: var(--secondary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1024px) {
+            .editors-grid {
+                grid-template-columns: 1fr !important;
+                grid-template-rows: auto auto auto !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .sidebar {
+                order: 2;
+                max-height: 300px;
+            }
+            
+            .main-content {
+                order: 1;
+                height: 70vh;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PolyWrite2 Pro v1.1.1 - Fixed Edition</h1>
+        <div class="header-controls">
+            <div class="control-group">
+                <span>Dark</span>
+                <label class="switch">
+                    <input id="darkModeToggle" type="checkbox" title="Toggle dark mode">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-group">
+                <span>Auto</span>
+                <label class="switch">
+                    <input id="autosaveToggle" type="checkbox" checked title="Toggle autosave">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-group">
+                <span>Lines</span>
+                <label class="switch">
+                    <input id="lineNumbersToggle" type="checkbox" title="Toggle line numbers">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button class="button secondary small" onclick="showModal('settingsModal')" title="Open settings">⚙️</button>
+        </div>
+    </div>
+
+    <div class="layout-container">
+        <div class="sidebar">
+            <!-- Workspace Tabs -->
+            <div class="workspace-tabs">
+                <div class="workspace-tab active" onclick="switchWorkspace('general')">📝 General</div>
+                <div class="workspace-tab" onclick="switchWorkspace('projects')">🚀 Projects</div>
+            </div>
+
+            <!-- General Workspace Content -->
+            <div id="generalWorkspace" class="workspace-content">
+                <!-- File Browser -->
+                <h3>📁 Files <span id="generalFileCount" class="file-count-badge">0</span></h3>
+                <input type="text" class="search-box" id="fileSearch" placeholder="Search files...">
+                <ul id="fileList" class="file-list"></ul>
+                
+                <!-- Quick Actions -->
+                <div style="margin-top: 15px;">
+                    <button class="button small" onclick="createNewFile()" title="Create a new file">📄 New</button>
+                    <button class="button secondary small" onclick="showModal('importModal')" title="Import files from computer">📥 Import</button>
+                    <button class="button secondary small" onclick="exportAllFiles()" title="Export all files in current workspace">📤 Export</button>
+                    <button class="button secondary small" onclick="importAllData()" title="Import complete backup">📦 Import All</button>
+                </div>
+                
+                <!-- Save Actions -->
+                <div style="margin-top: 10px;">
+                    <button class="button small" onclick="saveAllFiles()" title="Save all unsaved files">💾 Save All</button>
+                    <button class="button secondary small" onclick="exportAllData()" title="Export everything to file">📦 Export All Data</button>
+                </div>
+                
+                <!-- Clear Actions -->
+                <div style="margin-top: 10px;">
+                    <button class="button danger small" onclick="clearAllEditors()" title="Clear all editor content">🗑️ Clear Editors</button>
+                    <button class="button danger small" onclick="clearAllData()" title="Clear all data and reset app">💥 Clear All Data</button>
+                </div>
+            </div>
+
+            <!-- Projects Workspace Content -->
+            <div id="projectsWorkspace" class="workspace-content hidden">
+                <!-- Project Browser -->
+                <h3>🚀 Projects <span id="projectCount" class="file-count-badge">0</span></h3>
+                <input type="text" class="search-box" id="projectSearch" placeholder="Search projects...">
+                <div id="projectList"></div>
+                
+                <!-- Project Actions -->
+                <div style="margin-top: 15px;">
+                    <button class="button small" onclick="showModal('newProjectModal')" title="Create a new project">🆕 New Project</button>
+                    <button class="button secondary small" onclick="exportAllProjects()" title="Export all projects">📤 Export All</button>
+                </div>
+                
+                <!-- Data Management -->
+                <div style="margin-top: 10px;">
+                    <button class="button secondary small" onclick="exportAllData()" title="Export everything to file">📦 Export All Data</button>
+                    <button class="button danger small" onclick="clearAllData()" title="Clear all data and reset app">💥 Clear All</button>
+                </div>
+            </div>
+
+            <!-- Utility Tools -->
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                <h4 style="margin: 0 0 8px 0; font-size: 13px;">🛠️ Quick Tools</h4>
+                <div class="utility-buttons">
+                    <button class="utility-btn" onclick="insertTimestamp()">📅 Time</button>
+                    <button class="utility-btn" onclick="insertRandomNumber()">🎲 Random</button>
+                    <button class="utility-btn" onclick="insertUUID()">🔑 UUID</button>
+                    <button class="utility-btn" onclick="insertDivider()">➖ Divider</button>
+                </div>
+            </div>
+
+            <!-- Layout Controls -->
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                <h4 style="margin: 0 0 8px 0; font-size: 13px;">📐 Layout</h4>
+                <div class="utility-buttons">
+                    <button class="utility-btn" onclick="setLayout('2x2')">2×2</button>
+                    <button class="utility-btn" onclick="setLayout('1x3')">1×3</button>
+                    <button class="utility-btn" onclick="setLayout('3x1')">3×1</button>
+                    <button class="utility-btn" onclick="setLayout('2x1-1x2')">2+1</button>
+                    <button class="utility-btn" onclick="setLayout('dynamic')">Auto</button>
+                </div>
+                <button class="button small" style="margin-top: 5px;" onclick="addNewEditor()">➕ Editor</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="editors-grid layout-2x1-1x2" id="editorsGrid">
+                <!-- Editor 1 - Podcast Notes -->
+                <div class="editor-container" data-editor-id="1" data-workspace="general">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <div class="editor-label" onclick="app.editEditorTitle(1)" title="Click to edit editor title">PODCAST</div>
+                            <div class="file-indicator"></div>
+                            <span id="title-1">No file loaded</span>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="editor-btn" onclick="showFileSelector(1)" title="Load file into this editor">📂</button>
+                            <button class="editor-btn" onclick="saveEditorContent(1)" title="Save current content">💾</button>
+                            <button class="editor-btn" onclick="showSaveAsModal(1)" title="Save as new file">📝</button>
+                            <button class="editor-btn" onclick="toggleCodeMode(1)" title="Toggle code/text mode">💻</button>
+                            <button class="editor-btn" onclick="clearEditor(1)" title="Clear editor content">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="toolbar">
+                        <div class="toolbar-group">
+                            <button onclick="execCommandForEditor(1, 'bold')" title="Bold"><b>B</b></button>
+                            <button onclick="execCommandForEditor(1, 'italic')" title="Italic"><i>I</i></button>
+                            <button onclick="execCommandForEditor(1, 'underline')" title="Underline"><u>U</u></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button onclick="insertLinkInEditor(1)" title="Link">🔗</button>
+                            <button onclick="insertTimestampInEditor(1)" title="Timestamp">⏰</button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <div class="line-numbers" id="lines-1" style="display: none;"></div>
+                        <div id="editor-1" class="editor" contenteditable="true" spellcheck="true"
+                             onfocus="setFocusedEditor(1)"
+                             oninput="updateEditorStats(1)"
+                             placeholder="Podcast notes and insights..."></div>
+                    </div>
+                    <div class="editor-footer">
+                        <div id="stats-1">Words: 0 | Chars: 0</div>
+                        <div id="saved-1">Never saved</div>
+                    </div>
+                </div>
+
+                <!-- Editor 2 - Ideas & Notes -->
+                <div class="editor-container" data-editor-id="2" data-workspace="general">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <div class="editor-label" onclick="app.editEditorTitle(2)" title="Click to edit editor title">IDEAS</div>
+                            <div class="file-indicator"></div>
+                            <span id="title-2">No file loaded</span>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="editor-btn" onclick="showFileSelector(2)" title="Load file into this editor">📂</button>
+                            <button class="editor-btn" onclick="saveEditorContent(2)" title="Save current content">💾</button>
+                            <button class="editor-btn" onclick="showSaveAsModal(2)" title="Save as new file">📝</button>
+                            <button class="editor-btn" onclick="toggleCodeMode(2)" title="Toggle code/text mode">💻</button>
+                            <button class="editor-btn" onclick="clearEditor(2)" title="Clear editor content">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="toolbar">
+                        <div class="toolbar-group">
+                            <button onclick="execCommandForEditor(2, 'bold')" title="Bold"><b>B</b></button>
+                            <button onclick="execCommandForEditor(2, 'italic')" title="Italic"><i>I</i></button>
+                            <button onclick="execCommandForEditor(2, 'underline')" title="Underline"><u>U</u></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button onclick="insertLinkInEditor(2)" title="Link">🔗</button>
+                            <button onclick="insertRandomInEditor(2)" title="Random Number">🎲</button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <div class="line-numbers" id="lines-2" style="display: none;"></div>
+                        <div id="editor-2" class="editor" contenteditable="true" spellcheck="true"
+                             onfocus="setFocusedEditor(2)"
+                             oninput="updateEditorStats(2)"
+                             placeholder="Random ideas and inspiration..."></div>
+                    </div>
+                    <div class="editor-footer">
+                        <div id="stats-2">Words: 0 | Chars: 0</div>
+                        <div id="saved-2">Never saved</div>
+                    </div>
+                </div>
+
+                <!-- Editor 3 - Main/Overflow -->
+                <div class="editor-container" data-editor-id="3" data-workspace="general">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <div class="editor-label" onclick="app.editEditorTitle(3)" title="Click to edit editor title">MAIN</div>
+                            <div class="file-indicator"></div>
+                            <span id="title-3">No file loaded</span>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="editor-btn" onclick="showFileSelector(3)" title="Load file into this editor">📂</button>
+                            <button class="editor-btn" onclick="saveEditorContent(3)" title="Save current content">💾</button>
+                            <button class="editor-btn" onclick="showSaveAsModal(3)" title="Save as new file">📝</button>
+                            <button class="editor-btn" onclick="toggleCodeMode(3)" title="Toggle code/text mode">💻</button>
+                            <button class="editor-btn" onclick="clearEditor(3)" title="Clear editor content">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="toolbar">
+                        <div class="toolbar-group">
+                            <button onclick="execCommandForEditor(3, 'undo')" title="Undo">↶</button>
+                            <button onclick="execCommandForEditor(3, 'redo')" title="Redo">↷</button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button onclick="execCommandForEditor(3, 'bold')" title="Bold"><b>B</b></button>
+                            <button onclick="execCommandForEditor(3, 'italic')" title="Italic"><i>I</i></button>
+                            <button onclick="execCommandForEditor(3, 'underline')" title="Underline"><u>U</u></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button onclick="execCommandForEditor(3, 'insertOrderedList')" title="Numbered List">1️⃣</button>
+                            <button onclick="execCommandForEditor(3, 'insertUnorderedList')" title="Bullet List">•</button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button onclick="formatBlockInEditor(3, 'h1')" title="H1">H1</button>
+                            <button onclick="formatBlockInEditor(3, 'h2')" title="H2">H2</button>
+                            <button onclick="formatBlockInEditor(3, 'p')" title="P">P</button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <div class="line-numbers" id="lines-3" style="display: none;"></div>
+                        <div id="editor-3" class="editor" contenteditable="true" spellcheck="true"
+                             onfocus="setFocusedEditor(3)"
+                             oninput="updateEditorStats(3)"
+                             placeholder="Main workspace - copy-pasta, overflow, projects..."></div>
+                    </div>
+                    <div class="editor-footer">
+                        <div id="stats-3">Words: 0 | Chars: 0</div>
+                        <div id="saved-3">Never saved</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button class="modal-close" onclick="hideModal('settingsModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label>Autosave Interval (seconds)</label>
+                <input type="number" id="autosaveInterval" value="30" min="10" max="300">
+            </div>
+            <div class="form-group">
+                <label>Random Number Range</label>
+                <input type="text" id="randomRange" value="1-1000" placeholder="e.g., 1-1000">
+            </div>
+            <div class="form-group">
+                <label>Timestamp Format</label>
+                <select id="timestampFormat">
+                    <option value="datetime">Full Date & Time</option>
+                    <option value="date">Date Only</option>
+                    <option value="time">Time Only</option>
+                    <option value="iso">ISO Format</option>
+                </select>
+            </div>
+            <button class="button" onclick="saveSettings()">Save Settings</button>
+        </div>
+    </div>
+
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📥 Import Text Files</h3>
+                <button class="modal-close" onclick="hideModal('importModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label>Select Files (.txt, .html, .md)</label>
+                <input type="file" id="fileInput" multiple accept=".txt,.html,.md">
+                <small style="color: #666; font-size: 11px; margin-top: 5px; display: block;">
+                    For complete backup restoration, use "Import All Data" button instead.
+                </small>
+            </div>
+            <button class="button" onclick="importFiles()">Import Files</button>
+        </div>
+    </div>
+
+    <div id="fileSelectorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📂 Select File to Load</h3>
+                <button class="modal-close" onclick="hideModal('fileSelectorModal')">×</button>
+            </div>
+            <div id="fileSelectorList" class="file-list" style="max-height: 300px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+        </div>
+    </div>
+
+    <div id="saveAsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Save As New File</h3>
+                <button class="modal-close" onclick="hideModal('saveAsModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label>File Name</label>
+                <input type="text" id="saveAsFileName" placeholder="Enter file name..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+            <div class="form-group">
+                <label>Save To</label>
+                <select id="saveAsDestination" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <option value="general">📝 General Files</option>
+                    <option value="project">🚀 Project (select below)</option>
+                </select>
+            </div>
+            <div class="form-group" id="projectSelectGroup" style="display: none;">
+                <label>Project</label>
+                <select id="saveAsProject" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+                <button class="button secondary" onclick="hideModal('saveAsModal')">Cancel</button>
+                <button class="button" onclick="saveAsNewFile()">Save As</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Project Modal -->
+    <div id="newProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🆕 Create New Project</h3>
+                <button class="modal-close" onclick="hideModal('newProjectModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label>Project Name</label>
+                <input type="text" id="newProjectName" placeholder="Enter project name..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+            <div class="form-group">
+                <label>Description (optional)</label>
+                <textarea id="newProjectDescription" placeholder="Describe your project..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; height: 80px; resize: vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Project Type</label>
+                <select id="newProjectType" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <option value="writing">✍️ Writing Project</option>
+                    <option value="research">🔬 Research Project</option>
+                    <option value="creative">🎨 Creative Project</option>
+                    <option value="business">💼 Business Project</option>
+                    <option value="other">📋 Other</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+                <button class="button secondary" onclick="hideModal('newProjectModal')">Cancel</button>
+                <button class="button" onclick="createNewProject()">Create Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div id="editProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✏️ Edit Project</h3>
+                <button class="modal-close" onclick="hideModal('editProjectModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label>Project Name</label>
+                <input type="text" id="editProjectName" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="editProjectDescription" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; height: 80px; resize: vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Project Type</label>
+                <select id="editProjectType" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <option value="writing">✍️ Writing Project</option>
+                    <option value="research">🔬 Research Project</option>
+                    <option value="creative">🎨 Creative Project</option>
+                    <option value="business">💼 Business Project</option>
+                    <option value="other">📋 Other</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+                <button class="button secondary" onclick="hideModal('editProjectModal')">Cancel</button>
+                <button class="button" onclick="saveProjectEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced PolyWrite2 Pro with Fixed Project Management
+        class PolyWritePro {
+            constructor() {
+                this.files = {};
+                this.projects = {};
+                this.editorFiles = {};
+                this.editorFileHistory = {};
+                this.editorTitles = {};
+                this.focusedEditor = 1;
+                this.currentWorkspace = 'general';
+                this.autosaveEnabled = true;
+                this.autosaveInterval = 30000;
+                this.autosaveTimer = null;
+                this.lineNumbersEnabled = false;
+                this.settings = this.loadSettings();
+                this.editorCount = 3;
+                this.editorModes = {};
+                this.pendingEditorForFileSelector = null;
+                this.pendingEditorForSaveAs = null;
+                this.currentEditingProject = null;
+                this.changeDetectionTimers = {};
+                this.lastKnownContent = {};
+                this.expandedProjects = {};
+                this.lineNumberUpdateTimers = {};
+                this.init();
+            }
+
+            generateUUID() {
+                if (crypto && crypto.randomUUID) {
+                    return crypto.randomUUID();
+                }
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+
+            init() {
+                this.loadData();
+                this.setupEventListeners();
+                this.setupDragAndDrop();
+                this.applySettings();
+                this.startAutosave();
+                
+                for (let i = 1; i <= this.editorCount; i++) {
+                    this.editorFileHistory[i] = [];
+                    if (!this.editorTitles[i]) {
+                        const defaultTitles = {1: 'PODCAST', 2: 'IDEAS', 3: 'MAIN'};
+                        this.editorTitles[i] = defaultTitles[i] || 'NEW';
+                    }
+                }
+                
+                if (Object.keys(this.files).length === 0 && Object.keys(this.projects).length === 0) {
+                    this.createSampleData();
+                }
+                
+                this.updateUI();
+            }
+
+            createSampleData() {
+                const timestamp = new Date().toLocaleString();
+                
+                this.createFile('Podcast Notes - ' + timestamp,
+                    `<h2>Podcast Notes - ${timestamp}</h2>
+                    <p><strong>Show:</strong> </p>
+                    <p><strong>Episode:</strong> </p>
+                    <p><strong>Key Points:</strong></p>
+                    <ul>
+                        <li></li>
+                    </ul>`, 'general');
+                
+                this.createFile('Daily Ideas - ' + timestamp,
+                    `<h2>Ideas & Inspiration - ${timestamp}</h2>
+                    <p>Random thoughts and creative sparks...</p>
+                    <hr>
+                    <p></p>`, 'general');
+                
+                const sampleProjectId = this.createProject('Sample Writing Project',
+                    'A sample project to demonstrate the new project management features.', 'writing');
+                
+                this.createFile('Chapter 1 - Introduction',
+                    `<h1>Chapter 1: Introduction</h1>
+                    <p>This is the beginning of something great...</p>`, 'projects', sampleProjectId);
+                
+                this.createFile('Character Notes',
+                    `<h2>Character Development</h2>
+                    <p><strong>Main Character:</strong></p>
+                    <ul>
+                        <li>Name: </li>
+                        <li>Age: </li>
+                        <li>Background: </li>
+                    </ul>`, 'projects', sampleProjectId);
+            }
+
+            createProject(name, description = '', type = 'writing') {
+                const projectId = this.generateUUID();
+                const project = {
+                    id: projectId,
+                    name: name,
+                    description: description,
+                    type: type,
+                    created: new Date(),
+                    modified: new Date(),
+                    fileIds: []
+                };
+                
+                this.projects[projectId] = project;
+                this.saveData();
+                this.updateUI();
+                return projectId;
+            }
+
+            editProject(projectId, name, description, type) {
+                const project = this.projects[projectId];
+                if (!project) return;
+                
+                project.name = name;
+                project.description = description;
+                project.type = type;
+                project.modified = new Date();
+                
+                this.saveData();
+                this.updateUI();
+            }
+
+            deleteProject(projectId) {
+                if (!confirm('Delete this project? All files in this project will be moved to General workspace.')) {
+                    return;
+                }
+                
+                const project = this.projects[projectId];
+                if (!project) return;
+                
+                project.fileIds.forEach(fileId => {
+                    if (this.files[fileId]) {
+                        this.files[fileId].workspace = 'general';
+                        this.files[fileId].projectId = null;
+                        this.files[fileId].modified = new Date();
+                    }
+                });
+                
+                delete this.projects[projectId];
+                delete this.expandedProjects[projectId];
+                
+                this.saveData();
+                this.updateUI();
+            }
+
+            duplicateProject(projectId) {
+                const project = this.projects[projectId];
+                if (!project) return;
+                
+                const newName = prompt('Enter name for duplicate project:', project.name + ' (Copy)');
+                if (!newName) return;
+                
+                const newProjectId = this.createProject(newName, project.description, project.type);
+                
+                project.fileIds.forEach(fileId => {
+                    const file = this.files[fileId];
+                    if (file) {
+                        const newFileName = file.name + ' (Copy)';
+                        this.createFile(newFileName, file.content, 'projects', newProjectId);
+                    }
+                });
+            }
+
+            addFileToProject(fileId, projectId) {
+                const project = this.projects[projectId];
+                const file = this.files[fileId];
+                
+                if (!project || !file) return;
+                
+                if (file.projectId) {
+                    const currentProject = this.projects[file.projectId];
+                    if (currentProject) {
+                        currentProject.fileIds = currentProject.fileIds.filter(id => id !== fileId);
+                        currentProject.modified = new Date();
+                    }
+                }
+                
+                if (!project.fileIds.includes(fileId)) {
+                    project.fileIds.push(fileId);
+                }
+                
+                file.projectId = projectId;
+                file.workspace = 'projects';
+                file.modified = new Date();
+                project.modified = new Date();
+                
+                this.saveData();
+                this.updateUI();
+            }
+
+            removeFileFromProject(fileId) {
+                const file = this.files[fileId];
+                if (!file) return;
+                
+                if (file.projectId) {
+                    const project = this.projects[file.projectId];
+                    if (project) {
+                        project.fileIds = project.fileIds.filter(id => id !== fileId);
+                        project.modified = new Date();
+                    }
+                }
+                
+                file.projectId = null;
+                file.workspace = 'general';
+                file.modified = new Date();
+                
+                this.saveData();
+                this.updateUI();
+            }
+
+            toggleProjectExpansion(projectId) {
+                this.expandedProjects[projectId] = !this.expandedProjects[projectId];
+                this.saveData();
+                this.updateProjectList();
+            }
+
+            createFile(name, content = '', workspace = null, projectId = null) {
+                const fileId = this.generateUUID();
+                const file = {
+                    id: fileId,
+                    name: name,
+                    content: content,
+                    workspace: workspace || this.currentWorkspace,
+                    projectId: projectId,
+                    created: new Date(),
+                    modified: new Date(),
+                    saved: true
+                };
+                
+                this.files[fileId] = file;
+                
+                if (projectId && this.projects[projectId]) {
+                    if (!this.projects[projectId].fileIds.includes(fileId)) {
+                        this.projects[projectId].fileIds.push(fileId);
+                    }
+                    this.projects[projectId].modified = new Date();
+                }
+                
+                this.saveData();
+                this.updateUI();
+                return fileId;
+            }
+
+            // Fixed line numbers function
+            updateLineNumbers(editorId) {
+                if (!this.lineNumbersEnabled) return;
+                
+                const editor = document.getElementById(`editor-${editorId}`);
+                const lineNumbers = document.getElementById(`lines-${editorId}`);
+                
+                if (!editor || !lineNumbers) return;
+                
+                // Clear existing timer
+                if (this.lineNumberUpdateTimers[editorId]) {
+                    clearTimeout(this.lineNumberUpdateTimers[editorId]);
+                }
+                
+                // Debounce line number updates
+                this.lineNumberUpdateTimers[editorId] = setTimeout(() => {
+                    const content = editor.innerHTML || '';
+                    
+                    // Create a temporary div to measure height
+                    const temp = document.createElement('div');
+                    temp.style.cssText = `
+                        position: absolute;
+                        visibility: hidden;
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+                        font-family: ${editor.style.fontFamily || getComputedStyle(editor).fontFamily};
+                        font-size: ${editor.style.fontSize || getComputedStyle(editor).fontSize};
+                        line-height: ${editor.style.lineHeight || getComputedStyle(editor).lineHeight};
+                        width: ${editor.clientWidth}px;
+                        padding: 15px;
+                    `;
+                    temp.innerHTML = content || '&nbsp;';
+                    document.body.appendChild(temp);
+                    
+                    const tempHeight = temp.offsetHeight;
+                    const lineHeight = parseFloat(getComputedStyle(editor).lineHeight);
+                    const estimatedLines = Math.max(Math.ceil(tempHeight / lineHeight), 1);
+                    
+                    document.body.removeChild(temp);
+                    
+                    // Generate line numbers
+                    const numbers = [];
+                    for (let i = 1; i <= Math.max(estimatedLines, 10); i++) {
+                        numbers.push(i);
+                    }
+                    
+                    lineNumbers.textContent = numbers.join('\n');
+                }, 100);
+            }
+
+            setupEventListeners() {
+                document.getElementById('fileSearch').addEventListener('input', (e) => {
+                    this.filterFiles(e.target.value);
+                });
+
+                document.getElementById('projectSearch').addEventListener('input', (e) => {
+                    this.filterProjects(e.target.value);
+                });
+
+                document.getElementById('saveAsDestination').addEventListener('change', (e) => {
+                    const projectGroup = document.getElementById('projectSelectGroup');
+                    if (e.target.value === 'project') {
+                        projectGroup.style.display = 'block';
+                        this.populateProjectSelect();
+                    } else {
+                        projectGroup.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('autosaveToggle').addEventListener('change', (e) => {
+                    this.autosaveEnabled = e.target.checked;
+                    if (this.autosaveEnabled) {
+                        this.startAutosave();
+                    } else {
+                        this.stopAutosave();
+                    }
+                });
+
+                document.getElementById('darkModeToggle').addEventListener('change', (e) => {
+                    document.body.setAttribute('data-theme', e.target.checked ? 'dark' : 'light');
+                    this.settings.theme = e.target.checked ? 'dark' : 'light';
+                    this.saveSettings();
+                });
+
+                document.getElementById('lineNumbersToggle').addEventListener('change', (e) => {
+                    this.lineNumbersEnabled = e.target.checked;
+                    this.settings.lineNumbers = this.lineNumbersEnabled;
+                    this.saveSettings();
+                    this.toggleLineNumbers();
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch(e.key) {
+                            case 's':
+                                e.preventDefault();
+                                this.saveEditorContent(this.focusedEditor);
+                                break;
+                            case 'n':
+                                e.preventDefault();
+                                if (this.currentWorkspace === 'projects') {
+                                    showModal('newProjectModal');
+                                } else {
+                                    this.createNewFile();
+                                }
+                                break;
+                            case 't':
+                                e.preventDefault();
+                                this.insertTimestampInEditor(this.focusedEditor);
+                                break;
+                            case 'r':
+                                e.preventDefault();
+                                this.insertRandomInEditor(this.focusedEditor);
+                                break;
+                        }
+                    }
+                });
+            }
+
+            setupDragAndDrop() {
+                document.addEventListener('dragstart', (e) => {
+                    if (e.target.closest('.file-item') || e.target.closest('.project-file-item')) {
+                        const fileId = e.target.closest('.file-item, .project-file-item').dataset.fileId;
+                        e.dataTransfer.setData('text/plain', fileId);
+                    }
+                });
+
+                this.refreshEditorDropZones();
+            }
+
+            setupEditorDropZone(editor, editorId) {
+                editor.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    editor.classList.add('drop-target');
+                });
+
+                editor.addEventListener('dragleave', (e) => {
+                    if (!editor.contains(e.relatedTarget)) {
+                        editor.classList.remove('drop-target');
+                    }
+                });
+
+                editor.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    editor.classList.remove('drop-target');
+                    const fileId = e.dataTransfer.getData('text/plain');
+                    if (fileId) {
+                        this.loadFileToEditor(editorId, fileId);
+                    }
+                });
+            }
+
+            refreshEditorDropZones() {
+                document.querySelectorAll('.editor-container').forEach(editor => {
+                    const editorId = editor.dataset.editorId;
+                    if (editorId) {
+                        this.setupEditorDropZone(editor, parseInt(editorId));
+                    }
+                });
+            }
+
+            populateProjectSelect() {
+                const select = document.getElementById('saveAsProject');
+                select.innerHTML = '';
+                
+                Object.values(this.projects).forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = project.name;
+                    select.appendChild(option);
+                });
+            }
+
+            switchWorkspace(workspace) {
+                this.currentWorkspace = workspace;
+                
+                document.querySelectorAll('.workspace-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[onclick="switchWorkspace('${workspace}')"]`).classList.add('active');
+                
+                document.getElementById('generalWorkspace').classList.toggle('hidden', workspace !== 'general');
+                document.getElementById('projectsWorkspace').classList.toggle('hidden', workspace !== 'projects');
+                
+                this.updateUI();
+            }
+
+            updateUI() {
+                this.updateCounts();
+                if (this.currentWorkspace === 'general') {
+                    this.updateFileList();
+                } else {
+                    this.updateProjectList();
+                }
+                this.updateAllEditorUIs();
+            }
+
+            updateCounts() {
+                const generalFiles = Object.values(this.files).filter(f => f.workspace === 'general');
+                const projectCount = Object.keys(this.projects).length;
+                
+                document.getElementById('generalFileCount').textContent = generalFiles.length;
+                document.getElementById('projectCount').textContent = projectCount;
+            }
+
+            updateProjectList() {
+                const projectList = document.getElementById('projectList');
+                projectList.innerHTML = '';
+                
+                const searchTerm = document.getElementById('projectSearch').value.toLowerCase();
+                
+                const projects = Object.values(this.projects);
+                if (projects.length === 0) {
+                    projectList.innerHTML = '<div class="project-empty">No projects yet. Create your first project!</div>';
+                    return;
+                }
+                
+                projects
+                    .filter(project => !searchTerm || project.name.toLowerCase().includes(searchTerm))
+                    .sort((a, b) => b.modified - a.modified)
+                    .forEach(project => {
+                        const projectDiv = document.createElement('div');
+                        projectDiv.className = 'project-item';
+                        
+                        const isExpanded = this.expandedProjects[project.id];
+                        const validFiles = project.fileIds.filter(id => this.files[id]);
+                        const fileCount = validFiles.length;
+                        
+                        // Clean up invalid file references
+                        if (validFiles.length !== project.fileIds.length) {
+                            project.fileIds = validFiles;
+                            this.saveData();
+                        }
+                        
+                        const projectFiles = validFiles.map(id => this.files[id]);
+                        
+                        const typeIcons = {
+                            writing: '✍️',
+                            research: '🔬',
+                            creative: '🎨',
+                            business: '💼',
+                            other: '📋'
+                        };
+                        
+                        projectDiv.innerHTML = `
+                            <div class="project-header" onclick="app.toggleProjectExpansion('${project.id}')">
+                                <div class="project-info">
+                                    <div class="project-name">${typeIcons[project.type] || '📋'} ${project.name}</div>
+                                    <div class="project-meta">${fileCount} files • ${project.description || 'No description'}</div>
+                                </div>
+                                <div class="project-actions" onclick="event.stopPropagation()">
+                                    <button class="project-action-btn" onclick="app.editProjectModal('${project.id}')" title="Edit Project">✏️</button>
+                                    <button class="project-action-btn" onclick="app.duplicateProject('${project.id}')" title="Duplicate">📋</button>
+                                    <button class="project-action-btn" onclick="app.deleteProject('${project.id}')" title="Delete">🗑️</button>
+                                </div>
+                                <button class="project-toggle ${isExpanded ? 'expanded' : ''}">▶</button>
+                            </div>
+                            <div class="project-files ${isExpanded ? 'expanded' : ''}">
+                                ${fileCount === 0 ? 
+                                    '<div style="padding: 15px; text-align: center; color: #666; font-size: 11px;">No files in this project yet</div>' :
+                                    projectFiles.map(file => `
+                                        <div class="project-file-item ${file.saved ? '' : 'unsaved'}"
+                                             data-file-id="${file.id}"
+                                             draggable="true"
+                                             onclick="app.loadFileToEditor(app.focusedEditor, '${file.id}')">
+                                            <div class="file-icon">📄</div>
+                                            <div class="file-name">${file.name}</div>
+                                            <div class="file-status ${file.saved ? '' : 'unsaved'}"></div>
+                                            <div class="file-actions" onclick="event.stopPropagation()">
+                                                <button class="file-action-btn" onclick="app.removeFileFromProject('${file.id}')" title="Remove from project">↗️</button>
+                                                <button class="file-action-btn" onclick="app.renameFile('${file.id}')" title="Rename">✏️</button>
+                                                <button class="file-action-btn" onclick="app.duplicateFile('${file.id}')" title="Duplicate">📋</button>
+                                                <button class="file-action-btn" onclick="app.deleteFile('${file.id}')" title="Delete">🗑️</button>
+                                            </div>
+                                        </div>
+                                    `).join('')
+                                }
+                            </div>
+                        `;
+                        
+                        projectList.appendChild(projectDiv);
+                    });
+            }
+
+            updateFileList() {
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                
+                const searchTerm = document.getElementById('fileSearch').value.toLowerCase();
+                
+                const generalFiles = Object.values(this.files).filter(file =>
+                    file.workspace === 'general' &&
+                    (!searchTerm || file.name.toLowerCase().includes(searchTerm))
+                );
+
+                if (generalFiles.length === 0) {
+                    fileList.innerHTML = '<div class="project-empty">No files yet. Create your first file!</div>';
+                    return;
+                }
+
+                generalFiles.sort((a, b) => b.modified - a.modified).forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = `file-item ${file.saved ? '' : 'unsaved'}`;
+                    li.dataset.fileId = file.id;
+                    li.draggable = true;
+                    
+                    li.innerHTML = `
+                        <div class="file-icon">📄</div>
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-status ${file.saved ? '' : 'unsaved'}"></div>
+                        <div class="file-actions">
+                            <button class="file-action-btn" onclick="app.renameFile('${file.id}')" title="Rename">✏️</button>
+                            <button class="file-action-btn" onclick="app.duplicateFile('${file.id}')" title="Duplicate">📋</button>
+                            <button class="file-action-btn" onclick="app.deleteFile('${file.id}')" title="Delete">🗑️</button>
+                        </div>
+                    `;
+                    
+                    li.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('file-action-btn')) {
+                            this.loadFileToEditor(this.focusedEditor, file.id);
+                        }
+                    });
+                    
+                    fileList.appendChild(li);
+                });
+            }
+
+            filterFiles(searchTerm) {
+                this.updateFileList();
+            }
+
+            filterProjects(searchTerm) {
+                this.updateProjectList();
+            }
+
+            editProjectModal(projectId) {
+                const project = this.projects[projectId];
+                if (!project) return;
+                
+                this.currentEditingProject = projectId;
+                document.getElementById('editProjectName').value = project.name;
+                document.getElementById('editProjectDescription').value = project.description || '';
+                document.getElementById('editProjectType').value = project.type;
+                
+                showModal('editProjectModal');
+            }
+
+            saveAsNewFile() {
+                const editorId = this.pendingEditorForSaveAs;
+                if (!editorId) return;
+                
+                const fileName = document.getElementById('saveAsFileName').value.trim();
+                const destination = document.getElementById('saveAsDestination').value;
+                
+                if (!fileName) {
+                    alert('Please enter a file name.');
+                    return;
+                }
+                
+                let workspace = 'general';
+                let projectId = null;
+                
+                if (destination === 'project') {
+                    const selectedProjectId = document.getElementById('saveAsProject').value;
+                    if (!selectedProjectId) {
+                        alert('Please select a project.');
+                        return;
+                    }
+                    workspace = 'projects';
+                    projectId = selectedProjectId;
+                }
+                
+                const existingFile = Object.values(this.files).find(f =>
+                    f.name === fileName &&
+                    f.workspace === workspace &&
+                    f.projectId === projectId
+                );
+                
+                if (existingFile) {
+                    if (!confirm(`A file named "${fileName}" already exists. Replace it?`)) {
+                        return;
+                    }
+                    this.cleanupFileReferences(existingFile.id);
+                    delete this.files[existingFile.id];
+                }
+                
+                const editor = document.getElementById(`editor-${editorId}`);
+                const content = editor.innerHTML;
+                
+                const newFileId = this.createFile(fileName, content, workspace, projectId);
+                
+                this.editorFiles[editorId] = newFileId;
+                this.addToEditorHistory(editorId, newFileId);
+                this.lastKnownContent[editorId] = this.normalizeContent(content);
+                
+                this.updateEditorUI(editorId);
+                this.markFileAsActive(newFileId);
+                document.getElementById(`saved-${editorId}`).textContent =
+                    `Saved as "${fileName}" at ${new Date().toLocaleTimeString()}`;
+                
+                hideModal('saveAsModal');
+                this.pendingEditorForSaveAs = null;
+            }
+
+            loadFileToEditor(editorId, fileId) {
+                const file = this.files[fileId];
+                if (!file) return;
+
+                const currentFileId = this.editorFiles[editorId];
+                const isDifferentFile = currentFileId !== fileId;
+                
+                if (isDifferentFile && currentFileId) {
+                    this.addToEditorHistory(editorId, currentFileId);
+                }
+                
+                this.editorFiles[editorId] = fileId;
+                const editor = document.getElementById(`editor-${editorId}`);
+                editor.innerHTML = file.content;
+                
+                this.lastKnownContent[editorId] = this.normalizeContent(file.content);
+                
+                if (isDifferentFile) {
+                    this.addToEditorHistory(editorId, fileId);
+                }
+                
+                this.updateEditorUI(editorId);
+                this.updateEditorStats(editorId);
+                this.markFileAsActive(fileId);
+                
+                // Update line numbers if enabled
+                if (this.lineNumbersEnabled) {
+                    this.updateLineNumbers(editorId);
+                }
+            }
+
+            saveEditorContent(editorId) {
+                const content = document.getElementById(`editor-${editorId}`).innerHTML;
+                const fileId = this.editorFiles[editorId];
+                
+                if (fileId && this.files[fileId]) {
+                    const file = this.files[fileId];
+                    file.content = content;
+                    file.modified = new Date();
+                    file.saved = true;
+                    
+                    // Update project modified time if file belongs to a project
+                    if (file.projectId && this.projects[file.projectId]) {
+                        this.projects[file.projectId].modified = new Date();
+                    }
+                    
+                    this.lastKnownContent[editorId] = this.normalizeContent(content);
+                    
+                    this.saveData();
+                    this.updateUI();
+                    this.updateEditorUI(editorId);
+                    document.getElementById(`saved-${editorId}`).textContent =
+                        `Saved at ${new Date().toLocaleTimeString()}`;
+                } else {
+                    this.showSaveAsModal(editorId);
+                }
+            }
+
+            saveData() {
+                const data = {
+                    files: this.files,
+                    projects: this.projects,
+                    editorFiles: this.editorFiles,
+                    editorFileHistory: this.editorFileHistory,
+                    editorTitles: this.editorTitles,
+                    expandedProjects: this.expandedProjects
+                };
+                localStorage.setItem('polywrite_enhanced_v2', JSON.stringify(data));
+            }
+
+            loadData() {
+                const saved = localStorage.getItem('polywrite_enhanced_v2');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        this.files = data.files || {};
+                        this.projects = data.projects || {};
+                        this.editorFiles = data.editorFiles || {};
+                        this.editorFileHistory = data.editorFileHistory || {};
+                        this.editorTitles = data.editorTitles || {};
+                        this.expandedProjects = data.expandedProjects || {};
+                        
+                        Object.values(this.files).forEach(file => {
+                            file.created = new Date(file.created);
+                            file.modified = new Date(file.modified);
+                        });
+                        
+                        Object.values(this.projects).forEach(project => {
+                            project.created = new Date(project.created);
+                            project.modified = new Date(project.modified);
+                        });
+                    } catch (e) {
+                        console.error('Failed to load data:', e);
+                        this.files = {};
+                        this.projects = {};
+                    }
+                }
+            }
+
+            addToEditorHistory(editorId, fileId) {
+                if (!this.editorFileHistory[editorId]) {
+                    this.editorFileHistory[editorId] = [];
+                }
+                
+                const history = this.editorFileHistory[editorId];
+                if (history.length > 0 && history[0] === fileId) {
+                    return;
+                }
+                
+                this.editorFileHistory[editorId] = history.filter(id => id !== fileId);
+                this.editorFileHistory[editorId].unshift(fileId);
+                this.editorFileHistory[editorId] = this.editorFileHistory[editorId].slice(0, 5);
+            }
+
+            markFileAsActive(fileId) {
+                document.querySelectorAll('.file-item, .project-file-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+                if (fileItem) {
+                    fileItem.classList.add('active');
+                }
+            }
+
+            markFileAsUnsaved(fileId) {
+                if (this.files[fileId]) {
+                    this.files[fileId].saved = false;
+                    this.updateFileItemUI(fileId);
+                    
+                    Object.keys(this.editorFiles).forEach(editorId => {
+                        if (this.editorFiles[editorId] === fileId) {
+                            this.updateEditorUI(editorId);
+                        }
+                    });
+                }
+            }
+
+            updateFileItemUI(fileId) {
+                const fileItems = document.querySelectorAll(`[data-file-id="${fileId}"]`);
+                fileItems.forEach(fileItem => {
+                    const file = this.files[fileId];
+                    if (!file) return;
+                    
+                    const statusIndicator = fileItem.querySelector('.file-status');
+                    
+                    if (file.saved) {
+                        fileItem.classList.remove('unsaved');
+                        if (statusIndicator) statusIndicator.classList.remove('unsaved');
+                    } else {
+                        fileItem.classList.add('unsaved');
+                        if (statusIndicator) statusIndicator.classList.add('unsaved');
+                    }
+                });
+            }
+
+            cleanupFileReferences(fileId) {
+                Object.keys(this.editorFiles).forEach(editorId => {
+                    if (this.editorFiles[editorId] === fileId) {
+                        delete this.editorFiles[editorId];
+                        this.updateEditorUI(parseInt(editorId));
+                    }
+                });
+                
+                Object.keys(this.editorFileHistory).forEach(editorId => {
+                    this.editorFileHistory[editorId] = this.editorFileHistory[editorId]
+                        .filter(id => id !== fileId);
+                });
+                
+                Object.keys(this.lastKnownContent).forEach(editorId => {
+                    if (this.editorFiles[editorId] === fileId) {
+                        delete this.lastKnownContent[editorId];
+                    }
+                });
+            }
+
+            deleteFile(fileId) {
+                if (confirm('Are you sure you want to delete this file?')) {
+                    const file = this.files[fileId];
+                    
+                    if (file && file.projectId) {
+                        const project = this.projects[file.projectId];
+                        if (project) {
+                            project.fileIds = project.fileIds.filter(id => id !== fileId);
+                            project.modified = new Date();
+                        }
+                    }
+                    
+                    this.cleanupFileReferences(fileId);
+                    delete this.files[fileId];
+                    
+                    this.saveData();
+                    this.updateUI();
+                }
+            }
+
+            renameFile(fileId) {
+                const file = this.files[fileId];
+                if (!file) return;
+                
+                const newName = prompt('Enter new file name:', file.name);
+                
+                if (newName && newName !== file.name) {
+                    file.name = newName;
+                    file.modified = new Date();
+                    
+                    if (file.projectId && this.projects[file.projectId]) {
+                        this.projects[file.projectId].modified = new Date();
+                    }
+                    
+                    this.saveData();
+                    this.updateUI();
+                    this.updateAllEditorUIs();
+                }
+            }
+
+            duplicateFile(fileId) {
+                const file = this.files[fileId];
+                if (!file) return;
+                
+                const newName = prompt('Enter name for duplicate:', file.name + ' (Copy)');
+                
+                if (newName) {
+                    this.createFile(newName, file.content, file.workspace, file.projectId);
+                }
+            }
+
+            updateEditorUI(editorId) {
+                const fileId = this.editorFiles[editorId];
+                const titleElement = document.getElementById(`title-${editorId}`);
+                const indicatorElement = document.querySelector(`[data-editor-id="${editorId}"] .file-indicator`);
+                
+                if (fileId && this.files[fileId]) {
+                    const file = this.files[fileId];
+                    titleElement.textContent = file.name;
+                    indicatorElement.className = file.saved ? 'file-indicator saved' : 'file-indicator unsaved';
+                } else {
+                    titleElement.textContent = 'No file loaded';
+                    indicatorElement.className = 'file-indicator';
+                }
+            }
+
+            updateAllEditorUIs() {
+                for (let i = 1; i <= this.editorCount; i++) {
+                    this.updateEditorUI(i);
+                }
+            }
+
+            normalizeContent(content) {
+                return content
+                    .trim()
+                    .replace(/\s+/g, ' ')
+                    .replace(/>\s+</g, '><')
+                    .toLowerCase();
+            }
+
+            detectContentChange(editorId) {
+                if (this.changeDetectionTimers[editorId]) {
+                    clearTimeout(this.changeDetectionTimers[editorId]);
+                }
+                
+                this.changeDetectionTimers[editorId] = setTimeout(() => {
+                    const editor = document.getElementById(`editor-${editorId}`);
+                    if (!editor) return;
+                    
+                    const currentContent = this.normalizeContent(editor.innerHTML);
+                    const lastKnown = this.lastKnownContent[editorId] || '';
+                    
+                    const fileId = this.editorFiles[editorId];
+                    if (fileId && this.files[fileId] && currentContent !== lastKnown) {
+                        this.markFileAsUnsaved(fileId);
+                        this.lastKnownContent[editorId] = currentContent;
+                    }
+                }, 500);
+            }
+
+            updateEditorStats(editorId) {
+                const editor = document.getElementById(`editor-${editorId}`);
+                if (!editor) return;
+                
+                const text = editor.innerText || '';
+                const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+                const characters = text.length;
+                
+                const statsElement = document.getElementById(`stats-${editorId}`);
+                if (statsElement) {
+                    statsElement.textContent = `Words: ${words} | Chars: ${characters}`;
+                }
+
+                if (this.lineNumbersEnabled) {
+                    this.updateLineNumbers(editorId);
+                }
+
+                this.detectContentChange(editorId);
+            }
+
+            clearEditor(editorId) {
+                if (confirm('Clear this editor? Unsaved changes will be lost.')) {
+                    document.getElementById(`editor-${editorId}`).innerHTML = '';
+                    delete this.editorFiles[editorId];
+                    delete this.lastKnownContent[editorId];
+                    this.updateEditorUI(editorId);
+                    this.updateEditorStats(editorId);
+                }
+            }
+
+            showFileSelector(editorId) {
+                this.pendingEditorForFileSelector = editorId;
+                this.populateFileSelector();
+                showModal('fileSelectorModal');
+            }
+
+            showSaveAsModal(editorId) {
+                this.pendingEditorForSaveAs = editorId;
+                
+                const fileId = this.editorFiles[editorId];
+                let suggestedName = '';
+                
+                if (fileId && this.files[fileId]) {
+                    const currentName = this.files[fileId].name;
+                    suggestedName = currentName.includes('(Copy)') ? currentName : currentName + ' (Copy)';
+                } else {
+                    const editorLabels = {1: 'Podcast', 2: 'Ideas', 3: 'Main'};
+                    suggestedName = `${editorLabels[editorId] || 'Editor'} Notes - ${new Date().toLocaleDateString()}`;
+                }
+                
+                document.getElementById('saveAsFileName').value = suggestedName;
+                document.getElementById('saveAsDestination').value = this.currentWorkspace === 'projects' ? 'project' : 'general';
+                
+                const projectGroup = document.getElementById('projectSelectGroup');
+                if (this.currentWorkspace === 'projects') {
+                    projectGroup.style.display = 'block';
+                    this.populateProjectSelect();
+                } else {
+                    projectGroup.style.display = 'none';
+                }
+                
+                showModal('saveAsModal');
+                
+                setTimeout(() => {
+                    const input = document.getElementById('saveAsFileName');
+                    input.focus();
+                    input.select();
+                }, 100);
+            }
+
+            populateFileSelector() {
+                const fileList = document.getElementById('fileSelectorList');
+                fileList.innerHTML = '';
+                
+                let availableFiles = [];
+                
+                if (this.currentWorkspace === 'general') {
+                    availableFiles = Object.values(this.files).filter(f => f.workspace === 'general');
+                } else {
+                    availableFiles = Object.values(this.files).filter(f => f.workspace === 'projects');
+                }
+                
+                if (availableFiles.length === 0) {
+                    fileList.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No files available. Create a new file first.</div>';
+                    return;
+                }
+                
+                availableFiles.forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = 'file-item';
+                    li.style.cursor = 'pointer';
+                    
+                    let displayName = file.name;
+                    if (file.projectId && this.projects[file.projectId]) {
+                        displayName = `${this.projects[file.projectId].name} / ${file.name}`;
+                    }
+                    
+                    li.innerHTML = `
+                        <div class="file-icon">📄</div>
+                        <div class="file-name">${displayName}</div>
+                        <div class="file-status ${file.saved ? '' : 'unsaved'}"></div>
+                    `;
+                    
+                    li.addEventListener('click', () => {
+                        this.loadFileToEditor(this.pendingEditorForFileSelector, file.id);
+                        hideModal('fileSelectorModal');
+                        this.pendingEditorForFileSelector = null;
+                    });
+                    
+                    fileList.appendChild(li);
+                });
+            }
+
+            loadSettings() {
+                const saved = localStorage.getItem('polywrite_settings_enhanced_v2');
+                return saved ? JSON.parse(saved) : {
+                    theme: 'light',
+                    autosaveInterval: 30,
+                    randomRange: '1-1000',
+                    timestampFormat: 'datetime',
+                    lineNumbers: false
+                };
+            }
+
+            saveSettings() {
+                localStorage.setItem('polywrite_settings_enhanced_v2', JSON.stringify(this.settings));
+            }
+
+            applySettings() {
+                document.body.setAttribute('data-theme', this.settings.theme);
+                document.getElementById('darkModeToggle').checked = this.settings.theme === 'dark';
+                document.getElementById('autosaveInterval').value = this.settings.autosaveInterval;
+                document.getElementById('randomRange').value = this.settings.randomRange;
+                document.getElementById('timestampFormat').value = this.settings.timestampFormat;
+                document.getElementById('lineNumbersToggle').checked = this.settings.lineNumbers;
+                
+                this.autosaveInterval = this.settings.autosaveInterval * 1000;
+                this.lineNumbersEnabled = this.settings.lineNumbers;
+                
+                if (this.lineNumbersEnabled) {
+                    this.toggleLineNumbers();
+                }
+            }
+
+            startAutosave() {
+                this.stopAutosave();
+                if (this.autosaveEnabled) {
+                    this.autosaveTimer = setInterval(() => {
+                        for (let i = 1; i <= this.editorCount; i++) {
+                            const editor = document.getElementById(`editor-${i}`);
+                            const fileId = this.editorFiles[i];
+                            if (editor && editor.innerHTML.trim() && fileId && this.files[fileId]) {
+                                const file = this.files[fileId];
+                                if (!file.saved) {
+                                    this.saveEditorContent(i);
+                                }
+                            }
+                        }
+                    }, this.autosaveInterval);
+                }
+            }
+
+            stopAutosave() {
+                if (this.autosaveTimer) {
+                    clearInterval(this.autosaveTimer);
+                    this.autosaveTimer = null;
+                }
+            }
+
+            toggleLineNumbers() {
+                for (let i = 1; i <= this.editorCount; i++) {
+                    const lineNumbers = document.getElementById(`lines-${i}`);
+                    if (lineNumbers) {
+                        lineNumbers.style.display = this.lineNumbersEnabled ? 'block' : 'none';
+                        if (this.lineNumbersEnabled) {
+                            this.updateLineNumbers(i);
+                        }
+                    }
+                }
+            }
+
+            toggleCodeMode(editorId) {
+                const editor = document.getElementById(`editor-${editorId}`);
+                this.editorModes[editorId] = !this.editorModes[editorId];
+                
+                if (this.editorModes[editorId]) {
+                    editor.classList.add('code-mode');
+                } else {
+                    editor.classList.remove('code-mode');
+                }
+                
+                if (this.lineNumbersEnabled) {
+                    this.updateLineNumbers(editorId);
+                }
+            }
+
+            insertTimestampInEditor(editorId) {
+                const format = this.settings.timestampFormat || 'datetime';
+                const now = new Date();
+                let timestamp;
+                
+                switch(format) {
+                    case 'date':
+                        timestamp = now.toLocaleDateString();
+                        break;
+                    case 'time':
+                        timestamp = now.toLocaleTimeString();
+                        break;
+                    case 'iso':
+                        timestamp = now.toISOString();
+                        break;
+                    default:
+                        timestamp = now.toLocaleString();
+                }
+                
+                this.insertTextInEditor(editorId, `[${timestamp}] `);
+            }
+
+            insertRandomInEditor(editorId) {
+                const range = this.settings.randomRange || '1-1000';
+                const [min, max] = range.split('-').map(n => parseInt(n.trim()));
+                const random = Math.floor(Math.random() * (max - min + 1)) + min;
+                this.insertTextInEditor(editorId, random.toString());
+            }
+
+            insertTextInEditor(editorId, text) {
+                const editor = document.getElementById(`editor-${editorId}`);
+                editor.focus();
+                document.execCommand('insertText', false, text);
+                this.updateEditorStats(editorId);
+            }
+
+            setFocusedEditor(editorId) {
+                document.querySelectorAll('.editor-container').forEach(container => {
+                    container.classList.remove('focused');
+                });
+                
+                document.querySelector(`[data-editor-id="${editorId}"]`).classList.add('focused');
+                this.focusedEditor = editorId;
+            }
+
+            refreshEditorLayout() {
+                const editorsGrid = document.getElementById('editorsGrid');
+                const editorCount = this.editorCount;
+                
+                // Remove all existing layout classes
+                editorsGrid.className = 'editors-grid';
+                
+                // Choose the best layout based on editor count
+                if (editorCount <= 3) {
+                    editorsGrid.classList.add('layout-2x1-1x2');
+                } else if (editorCount === 4) {
+                    editorsGrid.classList.add('layout-2x2');
+                } else {
+                    editorsGrid.classList.add('layout-dynamic');
+                }
+                
+                // Force a reflow
+                editorsGrid.offsetHeight;
+                
+                // Ensure all editors are visible
+                const editors = editorsGrid.querySelectorAll('.editor-container');
+                editors.forEach(editor => {
+                    editor.style.display = 'flex';
+                });
+            }
+
+            setLayout(layoutType) {
+                const grid = document.getElementById('editorsGrid');
+                grid.className = `editors-grid layout-${layoutType}`;
+                
+                // Force a reflow to ensure layout is applied
+                grid.offsetHeight;
+                
+                // Ensure all editors remain visible
+                const editors = grid.querySelectorAll('.editor-container');
+                editors.forEach(editor => {
+                    editor.style.display = 'flex';
+                });
+            }
+
+            editEditorTitle(editorId) {
+                const titleElement = document.querySelector(`[data-editor-id="${editorId}"] .editor-label`);
+                const currentTitle = this.editorTitles[editorId] || 'EDITOR';
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = currentTitle;
+                input.className = 'editor-title-input';
+                input.maxLength = 12;
+                
+                const parent = titleElement.parentNode;
+                parent.replaceChild(input, titleElement);
+                input.focus();
+                input.select();
+                
+                const saveTitle = () => {
+                    const newTitle = input.value.trim().toUpperCase() || currentTitle;
+                    this.editorTitles[editorId] = newTitle;
+                    
+                    const newLabel = document.createElement('div');
+                    newLabel.className = 'editor-label';
+                    newLabel.textContent = newTitle;
+                    newLabel.onclick = () => this.editEditorTitle(editorId);
+                    
+                    parent.replaceChild(newLabel, input);
+                    this.saveData();
+                };
+                
+                input.addEventListener('blur', saveTitle);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveTitle();
+                    } else if (e.key === 'Escape') {
+                        const newLabel = document.createElement('div');
+                        newLabel.className = 'editor-label';
+                        newLabel.textContent = currentTitle;
+                        newLabel.onclick = () => this.editEditorTitle(editorId);
+                        parent.replaceChild(newLabel, input);
+                    }
+                });
+            }
+
+            addNewEditor() {
+                this.editorCount++;
+                const editorId = this.editorCount;
+                
+                const editorsGrid = document.getElementById('editorsGrid');
+                const newEditor = document.createElement('div');
+                newEditor.className = 'editor-container';
+                newEditor.dataset.editorId = editorId;
+                newEditor.dataset.workspace = this.currentWorkspace;
+                
+                this.editorTitles[editorId] = 'NEW';
+                
+                newEditor.innerHTML = `
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <div class="editor-label" onclick="app.editEditorTitle(${editorId})" title="Click to edit editor title">NEW</div>
+                            <div class="file-indicator"></div>
+                            <span id="title-${editorId}">No file loaded</span>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="editor-btn" onclick="showFileSelector(${editorId})" title="Load File">📂</button>
+                            <button class="editor-btn" onclick="saveEditorContent(${editorId})" title="Save">💾</button>
+                            <button class="editor-btn" onclick="showSaveAsModal(${editorId})" title="Save As">📝</button>
+                            <button class="editor-btn" onclick="toggleCodeMode(${editorId})" title="Code Mode">💻</button>
+                            <button class="editor-btn" onclick="removeEditor(${editorId})" title="Remove">❌</button>
+                        </div>
+                    </div>
+                    <div class="toolbar">
+                        <div class="toolbar-group">
+                            <button onclick="execCommandForEditor(${editorId}, 'bold')" title="Bold"><b>B</b></button>
+                            <button onclick="execCommandForEditor(${editorId}, 'italic')" title="Italic"><i>I</i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button onclick="insertLinkInEditor(${editorId})" title="Link">🔗</button>
+                            <button onclick="insertTimestampInEditor(${editorId})" title="Timestamp">⏰</button>
+                        </div>
+                    </div>
+                    <div class="editor-content">
+                        <div class="line-numbers" id="lines-${editorId}" style="display: ${this.lineNumbersEnabled ? 'block' : 'none'};"></div>
+                        <div id="editor-${editorId}" class="editor" contenteditable="true" spellcheck="true" 
+                             onfocus="setFocusedEditor(${editorId})" 
+                             oninput="updateEditorStats(${editorId})"
+                             placeholder="New editor workspace..."></div>
+                    </div>
+                    <div class="editor-footer">
+                        <div id="stats-${editorId}">Words: 0 | Chars: 0</div>
+                        <div id="saved-${editorId}">Never saved</div>
+                    </div>
+                `;
+                
+                editorsGrid.appendChild(newEditor);
+                this.editorFileHistory[editorId] = [];
+                
+                // Force layout refresh for new editors
+                this.refreshEditorLayout();
+                this.refreshEditorDropZones();
+                
+                if (this.lineNumbersEnabled) {
+                    this.updateLineNumbers(editorId);
+                }
+                
+                // Focus the new editor
+                this.setFocusedEditor(editorId);
+                
+                // Scroll new editor into view
+                setTimeout(() => {
+                    newEditor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+
+            removeEditor(editorId) {
+                if (this.editorCount <= 3) {
+                    alert('Cannot remove - minimum 3 editors required');
+                    return;
+                }
+                
+                if (confirm('Remove this editor? Any unsaved changes will be lost.')) {
+                    document.querySelector(`[data-editor-id="${editorId}"]`).remove();
+                    delete this.editorFiles[editorId];
+                    delete this.editorFileHistory[editorId];
+                    delete this.editorModes[editorId];
+                    delete this.lastKnownContent[editorId];
+                    
+                    if (this.changeDetectionTimers[editorId]) {
+                        clearTimeout(this.changeDetectionTimers[editorId]);
+                        delete this.changeDetectionTimers[editorId];
+                    }
+                    
+                    if (this.lineNumberUpdateTimers[editorId]) {
+                        clearTimeout(this.lineNumberUpdateTimers[editorId]);
+                        delete this.lineNumberUpdateTimers[editorId];
+                    }
+                    
+                    this.editorCount--;
+                    
+                    // Refresh layout after removal
+                    this.refreshEditorLayout();
+                    
+                    this.saveData();
+                }
+            }
+
+            insertTimestamp() {
+                this.insertTimestampInEditor(this.focusedEditor);
+            }
+
+            insertRandomNumber() {
+                this.insertRandomInEditor(this.focusedEditor);
+            }
+
+            insertUUID() {
+                const uuid = this.generateUUID();
+                this.insertTextInEditor(this.focusedEditor, uuid);
+            }
+
+            insertDivider() {
+                const divider = '\n' + '─'.repeat(50) + '\n';
+                this.insertTextInEditor(this.focusedEditor, divider);
+            }
+
+            exportAllFiles() {
+                const format = prompt('Export format (html/txt/md):', 'html');
+                if (format && ['html', 'txt', 'md'].includes(format)) {
+                    if (this.currentWorkspace === 'general') {
+                        const files = Object.values(this.files).filter(f => f.workspace === 'general');
+                        files.forEach(file => this.exportFile(file.id, format));
+                        alert(`Exported ${files.length} files as ${format.toUpperCase()}`);
+                    } else {
+                        const files = Object.values(this.files).filter(f => f.workspace === 'projects');
+                        files.forEach(file => this.exportFile(file.id, format));
+                        alert(`Exported ${files.length} project files as ${format.toUpperCase()}`);
+                    }
+                }
+            }
+
+            exportAllProjects() {
+                const format = prompt('Export format (html/txt/md):', 'html');
+                if (format && ['html', 'txt', 'md'].includes(format)) {
+                    let totalFiles = 0;
+                    Object.values(this.projects).forEach(project => {
+                        project.fileIds.forEach(fileId => {
+                            if (this.files[fileId]) {
+                                this.exportFile(fileId, format);
+                                totalFiles++;
+                            }
+                        });
+                    });
+                    alert(`Exported ${totalFiles} files from ${Object.keys(this.projects).length} projects as ${format.toUpperCase()}`);
+                }
+            }
+
+            exportFile(fileId, format = 'html') {
+                const file = this.files[fileId];
+                if (!file) return;
+                
+                let content = file.content;
+                let mimeType = 'text/html';
+                let extension = 'html';
+                let fileName = file.name;
+                
+                if (file.projectId && this.projects[file.projectId]) {
+                    fileName = `${this.projects[file.projectId].name} - ${fileName}`;
+                }
+                
+                if (format === 'txt') {
+                    content = file.content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+                    mimeType = 'text/plain';
+                    extension = 'txt';
+                } else if (format === 'md') {
+                    content = this.htmlToMarkdown(file.content);
+                    mimeType = 'text/markdown';
+                    extension = 'md';
+                }
+                
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${fileName}.${extension}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            htmlToMarkdown(html) {
+                return html
+                    .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
+                    .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
+                    .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n')
+                    .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+                    .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+                    .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+                    .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+                    .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '[$2]($1)')
+                    .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
+                    .replace(/<br[^>]*>/gi, '\n')
+                    .replace(/<[^>]*>/g, '')
+                    .replace(/&nbsp;/g, ' ');
+            }
+
+            saveAllFiles() {
+                let savedCount = 0;
+                Object.keys(this.editorFiles).forEach(editorId => {
+                    const fileId = this.editorFiles[editorId];
+                    if (fileId && this.files[fileId] && !this.files[fileId].saved) {
+                        this.saveEditorContent(parseInt(editorId));
+                        savedCount++;
+                    }
+                });
+                
+                if (savedCount > 0) {
+                    alert(`Saved ${savedCount} file(s)`);
+                } else {
+                    alert('All files are already saved');
+                }
+            }
+
+            exportAllData() {
+                // Collect all current editor contents
+                const currentEditorContents = {};
+                for (let i = 1; i <= this.editorCount; i++) {
+                    const editor = document.getElementById(`editor-${i}`);
+                    if (editor) {
+                        currentEditorContents[i] = editor.innerHTML;
+                    }
+                }
+                
+                // Create comprehensive export data
+                const exportData = {
+                    version: '1.1.1',
+                    exportDate: new Date().toISOString(),
+                    files: this.files,
+                    projects: this.projects,
+                    settings: this.settings,
+                    editorFiles: this.editorFiles,
+                    editorFileHistory: this.editorFileHistory,
+                    editorTitles: this.editorTitles,
+                    editorCount: this.editorCount,
+                    editorModes: this.editorModes,
+                    expandedProjects: this.expandedProjects,
+                    currentWorkspace: this.currentWorkspace,
+                    currentEditorContents: currentEditorContents,
+                    lineNumbersEnabled: this.lineNumbersEnabled,
+                    autosaveEnabled: this.autosaveEnabled
+                };
+                
+                // Create and download the file
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const filename = `polywrite-backup-${timestamp}.json`;
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(`✅ Complete backup exported as ${filename}\n\nThis file contains all your files, projects, settings, and current editor states. Use "Import All Data" to restore everything.`);
+            }
+
+            clearAllEditors() {
+                if (!confirm('Clear all editor content? This will empty all editors but keep your saved files and projects.')) {
+                    return;
+                }
+                
+                // Clear all editors
+                for (let i = 1; i <= this.editorCount; i++) {
+                    const editor = document.getElementById(`editor-${i}`);
+                    if (editor) {
+                        editor.innerHTML = '';
+                        delete this.editorFiles[i];
+                        delete this.lastKnownContent[i];
+                        this.updateEditorUI(i);
+                        this.updateEditorStats(i);
+                    }
+                }
+                
+                alert('✅ All editors cleared. Your saved files and projects remain intact.');
+            }
+
+            clearAllData() {
+                if (!confirm('⚠️ CLEAR ALL DATA?\n\nThis will permanently delete:\n• All files and projects\n• All settings\n• All editor content\n• All saved data\n\nThis action cannot be undone!')) {
+                    return;
+                }
+                
+                // Double confirmation for destructive action
+                if (!confirm('Are you absolutely sure? This will reset PolyWrite to factory defaults and cannot be undone.')) {
+                    return;
+                }
+                
+                // Clear all localStorage
+                localStorage.removeItem('polywrite_enhanced_v2');
+                localStorage.removeItem('polywrite_settings_enhanced_v2');
+                
+                // Clear all timers
+                Object.values(this.changeDetectionTimers).forEach(timer => clearTimeout(timer));
+                Object.values(this.lineNumberUpdateTimers).forEach(timer => clearTimeout(timer));
+                this.stopAutosave();
+                
+                // Reset all data
+                this.files = {};
+                this.projects = {};
+                this.editorFiles = {};
+                this.editorFileHistory = {};
+                this.editorTitles = {};
+                this.editorModes = {};
+                this.expandedProjects = {};
+                this.lastKnownContent = {};
+                this.changeDetectionTimers = {};
+                this.lineNumberUpdateTimers = {};
+                this.currentWorkspace = 'general';
+                this.editorCount = 3;
+                this.focusedEditor = 1;
+                
+                // Reset settings to defaults
+                this.settings = {
+                    theme: 'light',
+                    autosaveInterval: 30,
+                    randomRange: '1-1000',
+                    timestampFormat: 'datetime',
+                    lineNumbers: false
+                };
+                
+                // Clear all editors
+                for (let i = 1; i <= 20; i++) { // Clear up to 20 editors
+                    const editor = document.getElementById(`editor-${i}`);
+                    if (editor) {
+                        editor.innerHTML = '';
+                    }
+                }
+                
+                // Remove any extra editors (keep only first 3)
+                const editorsGrid = document.getElementById('editorsGrid');
+                const allEditors = editorsGrid.querySelectorAll('.editor-container');
+                allEditors.forEach((editor, index) => {
+                    if (index >= 3) {
+                        editor.remove();
+                    }
+                });
+                
+                // Reset editor titles
+                this.editorTitles = {1: 'PODCAST', 2: 'IDEAS', 3: 'MAIN'};
+                
+                // Reset UI
+                this.switchWorkspace('general');
+                this.applySettings();
+                this.updateUI();
+                this.updateAllEditorUIs();
+                
+                // Reset layout
+                this.setLayout('2x1-1x2');
+                
+                alert('✅ All data cleared! PolyWrite has been reset to factory defaults.');
+            }
+
+            importAllData() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (event) => {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const importData = JSON.parse(e.target.result);
+                            
+                            // Validate import data
+                            if (!importData.version || !importData.files || !importData.projects) {
+                                alert('❌ Invalid backup file format.');
+                                return;
+                            }
+                            
+                            if (!confirm(`Import data from ${importData.exportDate}?\n\nThis will replace all current data with the backup data.`)) {
+                                return;
+                            }
+                            
+                            // Import all data
+                            this.files = importData.files || {};
+                            this.projects = importData.projects || {};
+                            this.settings = importData.settings || this.settings;
+                            this.editorFiles = importData.editorFiles || {};
+                            this.editorFileHistory = importData.editorFileHistory || {};
+                            this.editorTitles = importData.editorTitles || {};
+                            this.editorModes = importData.editorModes || {};
+                            this.expandedProjects = importData.expandedProjects || {};
+                            this.currentWorkspace = importData.currentWorkspace || 'general';
+                            this.editorCount = importData.editorCount || 3;
+                            this.lineNumbersEnabled = importData.lineNumbersEnabled || false;
+                            this.autosaveEnabled = importData.autosaveEnabled !== undefined ? importData.autosaveEnabled : true;
+                            
+                            // Restore date objects
+                            Object.values(this.files).forEach(file => {
+                                file.created = new Date(file.created);
+                                file.modified = new Date(file.modified);
+                            });
+                            
+                            Object.values(this.projects).forEach(project => {
+                                project.created = new Date(project.created);
+                                project.modified = new Date(project.modified);
+                            });
+                            
+                            // Restore editor contents if available
+                            if (importData.currentEditorContents) {
+                                Object.entries(importData.currentEditorContents).forEach(([editorId, content]) => {
+                                    const editor = document.getElementById(`editor-${editorId}`);
+                                    if (editor && content) {
+                                        editor.innerHTML = content;
+                                        this.lastKnownContent[editorId] = this.normalizeContent(content);
+                                    }
+                                });
+                            }
+                            
+                            // Save imported data
+                            this.saveData();
+                            this.saveSettings();
+                            
+                            // Update UI
+                            this.applySettings();
+                            this.switchWorkspace(this.currentWorkspace);
+                            this.updateUI();
+                            this.updateAllEditorUIs();
+                            
+                            // Update stats for all editors
+                            for (let i = 1; i <= this.editorCount; i++) {
+                                this.updateEditorStats(i);
+                            }
+                            
+                            alert(`✅ Data imported successfully!\n\nRestored from backup: ${importData.exportDate}`);
+                            
+                        } catch (error) {
+                            console.error('Import error:', error);
+                            alert('❌ Error importing data. Please check the file format.');
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            }
+
+            createNewFile() {
+                const name = prompt('Enter file name:', 'Untitled Document');
+                if (name) {
+                    const newFileId = this.createFile(name, '', this.currentWorkspace);
+                    
+                    // Automatically load the new file into the focused editor
+                    this.loadFileToEditor(this.focusedEditor, newFileId);
+                }
+            }
+        }
+
+        // Initialize app
+        let app = new PolyWritePro();
+
+        // Global functions for UI interactions
+        function execCommandForEditor(editorId, command, value = null) {
+            const editor = document.getElementById(`editor-${editorId}`);
+            editor.focus();
+            document.execCommand(command, false, value);
+        }
+
+        function formatBlockInEditor(editorId, tag) {
+            execCommandForEditor(editorId, 'formatBlock', tag);
+        }
+
+        function insertLinkInEditor(editorId) {
+            const url = prompt('Enter URL:');
+            if (url) {
+                execCommandForEditor(editorId, 'createLink', url);
+            }
+        }
+
+        function insertTimestampInEditor(editorId) {
+            app.insertTimestampInEditor(editorId);
+        }
+
+        function insertRandomInEditor(editorId) {
+            app.insertRandomInEditor(editorId);
+        }
+
+        function setFocusedEditor(editorId) {
+            app.setFocusedEditor(editorId);
+        }
+
+        function updateEditorStats(editorId) {
+            app.updateEditorStats(editorId);
+        }
+
+        function showFileSelector(editorId) {
+            app.showFileSelector(editorId);
+        }
+
+        function showSaveAsModal(editorId) {
+            app.showSaveAsModal(editorId);
+        }
+
+        function saveAsNewFile() {
+            app.saveAsNewFile();
+        }
+
+        function saveEditorContent(editorId) {
+            app.saveEditorContent(editorId);
+        }
+
+        function clearEditor(editorId) {
+            app.clearEditor(editorId);
+        }
+
+        function toggleCodeMode(editorId) {
+            app.toggleCodeMode(editorId);
+        }
+
+        function addNewEditor() {
+            app.addNewEditor();
+        }
+
+        function removeEditor(editorId) {
+            app.removeEditor(editorId);
+        }
+
+        function setLayout(layoutType) {
+            app.setLayout(layoutType);
+        }
+
+        function switchWorkspace(workspace) {
+            app.switchWorkspace(workspace);
+        }
+
+        function insertTimestamp() {
+            app.insertTimestamp();
+        }
+
+        function insertRandomNumber() {
+            app.insertRandomNumber();
+        }
+
+        function insertUUID() {
+            app.insertUUID();
+        }
+
+        function insertDivider() {
+            app.insertDivider();
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        function createNewFile() {
+            app.createNewFile();
+        }
+
+        function createNewProject() {
+            const name = document.getElementById('newProjectName').value.trim();
+            const description = document.getElementById('newProjectDescription').value.trim();
+            const type = document.getElementById('newProjectType').value;
+            
+            if (!name) {
+                alert('Please enter a project name.');
+                return;
+            }
+            
+            const existingProject = Object.values(app.projects).find(p => p.name === name);
+            if (existingProject) {
+                alert('A project with this name already exists.');
+                return;
+            }
+            
+            app.createProject(name, description, type);
+            
+            document.getElementById('newProjectName').value = '';
+            document.getElementById('newProjectDescription').value = '';
+            document.getElementById('newProjectType').value = 'writing';
+            
+            hideModal('newProjectModal');
+        }
+
+        function saveProjectEdit() {
+            const projectId = app.currentEditingProject;
+            if (!projectId) return;
+            
+            const name = document.getElementById('editProjectName').value.trim();
+            const description = document.getElementById('editProjectDescription').value.trim();
+            const type = document.getElementById('editProjectType').value;
+            
+            if (!name) {
+                alert('Please enter a project name.');
+                return;
+            }
+            
+            const existingProject = Object.values(app.projects).find(p =>
+                p.name === name && p.id !== projectId
+            );
+            if (existingProject) {
+                alert('A project with this name already exists.');
+                return;
+            }
+            
+            app.editProject(projectId, name, description, type);
+            app.currentEditingProject = null;
+            hideModal('editProjectModal');
+        }
+
+        function saveSettings() {
+            app.settings.autosaveInterval = parseInt(document.getElementById('autosaveInterval').value);
+            app.settings.randomRange = document.getElementById('randomRange').value;
+            app.settings.timestampFormat = document.getElementById('timestampFormat').value;
+            
+            app.saveSettings();
+            app.applySettings();
+            app.startAutosave();
+            
+            hideModal('settingsModal');
+        }
+
+        function importFiles() {
+            const fileInput = document.getElementById('fileInput');
+            const files = fileInput.files;
+            
+            for (let file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    app.createFile(file.name, e.target.result, app.currentWorkspace);
+                };
+                reader.readAsText(file);
+            }
+            
+            hideModal('importModal');
+        }
+
+        function exportAllFiles() {
+            app.exportAllFiles();
+        }
+
+        function exportAllProjects() {
+            app.exportAllProjects();
+        }
+
+        function saveAllFiles() {
+            app.saveAllFiles();
+        }
+
+        function exportAllData() {
+            app.exportAllData();
+        }
+
+        function importAllData() {
+            app.importAllData();
+        }
+
+        function clearAllEditors() {
+            app.clearAllEditors();
+        }
+
+        function clearAllData() {
+            app.clearAllData();
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

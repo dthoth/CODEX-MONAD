@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CODEX File Manifest",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "ext": {
+      "type": "string"
+    },
+    "size": {
+      "type": "number"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string"
+    },
+    "drive": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "projectRoot": {
+      "type": "string"
+    },
+    "entryPointScore": {
+      "type": "number"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "path",
+    "name",
+    "sha256"
+  ]
+}

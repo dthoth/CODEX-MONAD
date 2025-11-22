@@ -1,0 +1,1 @@
+param([string]$Path); if (-not (Test-Path $Path)) { Write-Host "Not found: $Path"; exit 1 }; $d=Get-Content -Raw -Path $Path | ConvertFrom-Json; "Legacy items: $($d.Count)" 

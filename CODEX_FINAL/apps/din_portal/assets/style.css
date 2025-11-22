@@ -1,0 +1,13 @@
+
+
+.hero{padding:28px 20px;border:1px solid #232932;border-radius:16px;background:linear-gradient(180deg,#101317 0,#0e1012 100%);margin:8px 0 20px}
+.hero h1{margin:0 0 8px;font-size:28px}
+.hero p{margin:4px 0 0;color:var(--muted)}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px}
+.section{margin:26px 0}
+.section h2{font-size:18px;margin:0 0 10px}
+.list{display:grid;gap:8px}
+.list a{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #232932;border-radius:10px;background:#0e1012;text-decoration:none;color:var(--ink)}
+.list small{color:var(--muted)}
+.catalog-title{margin-top:28px}
+.kicker{font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}

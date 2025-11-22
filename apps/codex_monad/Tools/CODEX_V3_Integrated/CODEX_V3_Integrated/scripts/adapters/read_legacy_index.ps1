@@ -1,0 +1,1 @@
+param([string]$Path); if (-not (Test-Path $Path)) { Write-Host "Not found: $Path"; exit 1 }; Get-Content -Path $Path -TotalCount 10 | ForEach-Object { Write-Host $_ }

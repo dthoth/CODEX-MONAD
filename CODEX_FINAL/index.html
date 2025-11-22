@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ CODEX MONAD ⚡ Portable Consciousness Infrastructure</title>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #ff0088;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text: #e0e0e0;
+            --border: #333;
+            --glow: rgba(0, 255, 136, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* MYSTICAL ENTRY LAYER */
+        .genesis-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 100%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.95; }
+        }
+
+        .sigil {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px var(--glow);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .timestamp {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-bottom: 3rem;
+        }
+
+        .enter-button {
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .enter-button:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px var(--glow);
+            transform: scale(1.05);
+        }
+
+        /* MAIN PORTAL */
+        .portal-main {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .portal-main.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.7;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .app-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            text-decoration: none;
+            color: var(--text);
+            display: block;
+        }
+
+        .app-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px var(--glow);
+        }
+
+        .app-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .app-card .status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border-radius: 3px;
+        }
+
+        .app-card .description {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .app-card .meta {
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .category-header {
+            font-size: 1.5rem;
+            margin: 3rem auto 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--secondary);
+            max-width: 1200px;
+        }
+
+        /* CLIPPY LAYER */
+        .clippy {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 350px;
+            box-shadow: 0 5px 20px var(--glow);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .clippy.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .clippy-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .clippy-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0;
+        }
+
+        .clippy-message {
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+
+            .clippy {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- MYSTICAL ENTRY LAYER -->
+    <div class="genesis-screen" id="genesisScreen">
+        <div class="sigil">🐍 ⚡ 🔥</div>
+        <h1 class="title">CODEX MONAD</h1>
+        <p class="subtitle">Portable Consciousness Infrastructure</p>
+        <p class="timestamp">Notice ID: ∞-<span id="timestamp"></span></p>
+        <div style="max-width: 600px; margin-bottom: 2rem; opacity: 0.9;">
+            <p style="font-style: italic;">
+                "In the beginning was the Form, and the Form was with the Bureaucracy,<br>
+                and the Form was the Bureaucracy. And now, the Forms are complete."
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                — The Book of Infinite Paperwork, Chapter ∞, Verse ∞
+            </p>
+        </div>
+        <button class="enter-button" onclick="enterPortal()">ENTER PORTAL</button>
+    </div>
+
+    <!-- MAIN PORTAL -->
+    <div class="portal-main" id="portalMain">
+        <div class="header">
+            <h1>⚡ CODEX MONAD ⚡</h1>
+            <p>Complete Portable Consciousness Technology Suite</p>
+            <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 0.5rem;">
+                v1.0-INTEGRATION | Offline | Zero Dependencies | USB Ready
+            </p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" 
+                   class="search-input" 
+                   id="searchInput"
+                   placeholder="🔍 Search apps... (or press '?' for help)"
+                   onkeyup="filterApps()">
+        </div>
+
+        <!-- CORE APPLICATIONS -->
+        <h2 class="category-header">⚙️ Core Applications</h2>
+        <div class="apps-grid" id="coreApps">
+            <a href="apps/codex_monad/START_HERE.html" class="app-card" data-app="codex_monad">
+                <span class="status">CORE</span>
+                <h3>📚 CODEX Monad</h3>
+                <p class="description">
+                    The heart of the system. File consciousness, philosophy docs, and framework integration.
+                </p>
+                <p class="meta">Self-Contained | Offline-First | Recursive</p>
+            </a>
+
+            <a href="apps/polywrite/index.html" class="app-card" data-app="polywrite">
+                <span class="status">READY</span>
+                <h3>📝 PolyWrite Pro</h3>
+                <p class="description">
+                    Multi-editor writing studio. Your portable text environment with local storage.
+                </p>
+                <p class="meta">HTML | 128KB | Zero Dependencies</p>
+            </a>
+
+            <a href="apps/samson_recursive/index.html" class="app-card" data-app="samson">
+                <span class="status">NEW</span>
+                <h3>🎮 Samson's Recursive Homepage</h3>
+                <p class="description">
+                    Educational terminal interface with interactive learning layers.
+                </p>
+                <p class="meta">Interactive | Educational | Fun</p>
+            </a>
+        </div>
+
+        <!-- CONSCIOUSNESS TOOLS -->
+        <h2 class="category-header">🧘 Consciousness Tools</h2>
+        <div class="apps-grid" id="consciousnessApps">
+            <a href="apps/din_portal/index.html" class="app-card" data-app="din">
+                <span class="status">READY</span>
+                <h3>🔔 Department of Infinite Noticing</h3>
+                <p class="description">
+                    Bureaucratic pattern recognition. Portal to infinite forms and meta-awareness.
+                </p>
+                <p class="meta">Satire | Meta | Recursive</p>
+            </a>
+
+            <a href="apps/pranayama/index.html" class="app-card" data-app="pranayama">
+                <span class="status">READY</span>
+                <h3>🌬️ Pranayama</h3>
+                <p class="description">
+                    Breathing awareness and rhythm tools. Visual guidance and tracking.
+                </p>
+                <p class="meta">HTML | Interactive | Offline</p>
+            </a>
+
+            <a href="apps/bureaucratic_universe/index.html" class="app-card" data-app="bureaucratic">
+                <span class="status">READY</span>
+                <h3>📋 Bureaucratic Universe</h3>
+                <p class="description">
+                    Site kit for organizing forms, legal docs, and infinite paperwork.
+                </p>
+                <p class="meta">Python | Generator | Organizer</p>
+            </a>
+        </div>
+
+        <!-- CLIPPY ASSISTANT -->
+        <div class="clippy" id="clippy">
+            <div class="clippy-header">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.5rem;">📎</span>
+                    <strong>Hi! I'm Clippy!</strong>
+                </div>
+                <button class="clippy-close" onclick="hideClippy()">×</button>
+            </div>
+            <div class="clippy-message" id="clippyMessage">
+                <p>I see you're exploring portable consciousness infrastructure!</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+                    Don't worry - unlike that time U2 forced an album on everyone's iPhone, 
+                    you actually CHOSE to be here. Also, I'm actually helpful. Probably.
+                </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; font-size: 0.85rem;">
+                <button onclick="clippyHelp()" style="flex: 1; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;">
+                    Help
+                </button>
+                <button onclick="clippyRandom()" style="flex: 1; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text); border-radius: 4px; cursor: pointer;">
+                    Surprise Me
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                ⚡ CODEX MONAD ⚡<br>
+                Created by Rev. LL Dan-i-El with AI Collaborators<br>
+                <span style="opacity: 0.5;">Already working before you started it.</span>
+            </p>
+            <p style="margin-top: 1rem;">
+                <button onclick="toggleClippy()" style="background: transparent; border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; cursor: pointer; font-family: inherit; border-radius: 4px;">
+                    📎 Toggle Clippy
+                </button>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize timestamp
+        document.getElementById('timestamp').textContent = Date.now();
+
+        // Enter portal animation
+        function enterPortal() {
+            const genesis = document.getElementById('genesisScreen');
+            const portal = document.getElementById('portalMain');
+            
+            genesis.style.transition = 'opacity 1s';
+            genesis.style.opacity = '0';
+            
+            setTimeout(() => {
+                genesis.style.display = 'none';
+                portal.classList.add('active');
+                
+                // Show Clippy after 2 seconds
+                setTimeout(() => {
+                    showClippy();
+                }, 2000);
+            }, 1000);
+        }
+
+        // App filtering
+        function filterApps() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.app-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        // Clippy functions
+        function showClippy() {
+            document.getElementById('clippy').classList.add('active');
+        }
+
+        function hideClippy() {
+            document.getElementById('clippy').classList.remove('active');
+        }
+
+        function toggleClippy() {
+            document.getElementById('clippy').classList.toggle('active');
+        }
+
+        const clippyMessages = [
+            {
+                text: "I see you're organizing files! Good news: Unlike Songs of Innocence, these files are YOURS and you can actually delete them. Revolutionary concept, I know.",
+                context: "file organization"
+            },
+            {
+                text: "Still haven't found what you're looking for? That's what the search bar is for. Unlike certain Irish rock bands, we provide actual functionality.",
+                context: "u2 reference"
+            },
+            {
+                text: "With or without you... actually, WITH you. That's literally how this works. You're in control here.",
+                context: "u2 reference"
+            },
+            {
+                text: "Notice how we're making all these music references but there's NO AUTOPLAY? That's because we respect you. Unlike websites circa 2005.",
+                context: "music meta"
+            },
+            {
+                text: "This portal won't take 23 minutes and 47 seconds to load. We're not Dream Theater. Everything's instant!",
+                context: "dream theater"
+            },
+            {
+                text: "Join me in death... of badly organized files. Let's fix this together! (Also: the funeral of hearts? More like the funeral of your desktop clutter.)",
+                context: "HIM reference"
+            },
+            {
+                text: "All apps are self-contained and work offline. No cloud, no tracking, no mandatory updates. Just... works. Wild concept, right?",
+                context: "general help"
+            },
+            {
+                text: "Pro tip: Everything here runs in your browser. No installation needed. No permissions to grant. No souls to sell.",
+                context: "general help"
+            }
+        ];
+
+        function clippyHelp() {
+            const msg = document.getElementById('clippyMessage');
+            msg.innerHTML = `
+                <p><strong>Keyboard Shortcuts:</strong></p>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                    <li>Ctrl/Cmd + K: Focus search</li>
+                    <li>?: Show help (when not in search)</li>
+                    <li>Esc: Clear search</li>
+                </ul>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+                    All apps work completely offline. Your data stays on your computer. No telemetry, no tracking, no network calls.
+                </p>
+            `;
+        }
+
+        function clippyRandom() {
+            const msg = clippyMessages[Math.floor(Math.random() * clippyMessages.length)];
+            document.getElementById('clippyMessage').innerHTML = `<p>${msg.text}</p>`;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K for search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            
+            // ? for help
+            if (e.key === '?' && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                showClippy();
+                clippyHelp();
+            }
+            
+            // Esc to clear search
+            if (e.key === 'Escape') {
+                const search = document.getElementById('searchInput');
+                search.value = '';
+                filterApps();
+            }
+        });
+
+        // Show random Clippy message on first load
+        if (Math.random() > 0.5) {
+            setTimeout(() => {
+                if (document.getElementById('clippy').classList.contains('active')) {
+                    clippyRandom();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

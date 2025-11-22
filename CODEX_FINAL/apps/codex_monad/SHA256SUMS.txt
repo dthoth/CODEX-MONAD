@@ -1,0 +1,56 @@
+# SHA256 Checksums for Codex Monad Seedline v0.1.0
+# Generated: 2025-10-24
+#
+# Verify with:
+#   Unix/Mac:  sha256sum -c SHA256SUMS.txt
+#   Windows:   Get-FileHash <file> -Algorithm SHA256
+#
+# NOTE: This is a PLACEHOLDER file for v0.1
+# Actual checksums will be generated when you package your distribution
+#
+# To generate checksums:
+# Unix/Mac:   find . -type f -not -path "*/\.*" -exec sha256sum {} \; > SHA256SUMS.txt
+# Windows:    Get-ChildItem -Recurse -File | Get-FileHash -Algorithm SHA256 | Format-Table -AutoSize > SHA256SUMS.txt
+
+# Core Applications
+# <checksum>  Core/PolyWrite2_Pro.html
+# <checksum>  Core/polywrite_seed.html
+# <checksum>  Core/index.html
+
+# Documentation
+# <checksum>  Docs/README.txt
+# <checksum>  Docs/SECURITY.txt
+# <checksum>  Docs/CHANGELOG.md
+# <checksum>  Docs/ROADMAP.md
+# <checksum>  Docs/index.html
+
+# Forms (DIN)
+# <checksum>  Forms/form_001.html
+# <checksum>  Forms/form_002.html
+# ... (add all 18 forms)
+
+# Tools
+# <checksum>  Tools/pranayama.html
+# <checksum>  Tools/codex_auto_keep.sh
+# <checksum>  Tools/codex_sweep.sh
+# ... (add all scripts)
+
+# Philosophy
+# <checksum>  Philosophy/Shebang/PHILOSOPHY.md
+# <checksum>  Philosophy/IRM/PHYSICS.md
+# ... (add all philosophy docs)
+
+# Assets
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  Assets/quantum-parrot.svg
+
+# System Files
+# <checksum>  START_HERE.html
+# <checksum>  README.txt
+
+# ----- END OF CHECKSUMS -----
+#
+# When generating real checksums:
+# 1. Complete the file structure
+# 2. Run checksum command
+# 3. Replace this file with output
+# 4. Verify before distribution

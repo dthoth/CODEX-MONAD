@@ -1,0 +1,12 @@
+body{margin:0;font:14px/1.5 system-ui;background:#0f1117;color:#e6eaf2}
+#toolbar{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #2a3140;background:#161a22}
+#launcher-panel{background:#0f1117;border-top:1px solid #2a3140;padding:12px}
+#launcher-panel .panel-header{display:flex;justify-content:space-between;align-items:center}
+.apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:10px}
+.app-card{border:1px solid #2a3140;border-radius:10px;padding:12px;background:#161a22;cursor:pointer;color:#e6eaf2;text-align:left}
+.app-card:hover{border-color:#3a4255}
+.hidden{display:none}
+input,button{font:inherit}
+.btn{border:1px solid #2a3140;background:#1a2030;color:#e6eaf2;padding:8px 10px;border-radius:10px;cursor:pointer}
+.btn:hover{border-color:#3a4255}
+.home{padding:16px}

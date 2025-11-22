@@ -1,0 +1,338 @@
+{
+  "OutputRoot": "E:\\\\CODEX_V3",
+  "ReadOnlySources": [
+    {
+      "name": "E_RAID_ARCHIVE",
+      "paths": [
+        "E:\\\\"
+      ]
+    }
+  ],
+  "WritableSources": [
+    {
+      "name": "C_USER",
+      "paths": [
+        "C:\\\\Users\\\\"
+      ]
+    },
+    {
+      "name": "D_ROOT",
+      "paths": [
+        "D:\\\\"
+      ]
+    }
+  ],
+  "AlwaysIncludePaths": [
+    "C:\\\\**\\\\Codex 0\\\\",
+    "C:\\\\**\\\\CODEX 0\\\\",
+    "C:\\\\**\\\\CODEX 1 - Field Test\\\\",
+    "C:\\\\**\\\\Obsidian COLLECTED CODEX DOCS\\\\",
+    "C:\\\\**\\\\codex-site\\\\",
+    "C:\\\\**\\\\Thoth Church\\\\Scripts\\\\",
+    "E:\\\\**\\\\Xcode Projects\\\\",
+    "E:\\\\**\\\\snort3-3.1.39.0\\\\",
+    "E:\\\\**\\\\Old Archive 2021\\\\Coding\\\\",
+    "E:\\\\**\\\\Effort Quotient HTML app*\\\\"
+  ],
+  "IncludeExtensions": [
+    ".ps1",
+    ".psm1",
+    ".psd1",
+    ".ps1xml",
+    ".bat",
+    ".cmd",
+    ".sh",
+    ".zsh",
+    ".bash",
+    ".fish",
+    ".sql",
+    ".lua",
+    ".py",
+    ".js",
+    ".ts",
+    ".mjs",
+    ".c",
+    ".h",
+    ".cpp",
+    ".hpp",
+    ".cs",
+    ".java",
+    ".swift",
+    ".go",
+    ".rb",
+    ".php",
+    ".rs",
+    ".scala",
+    ".kt",
+    ".gradle",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".sln",
+    ".csproj",
+    ".vcxproj",
+    ".xcodeproj",
+    ".xcworkspace",
+    ".md",
+    ".txt",
+    "CMakeLists.txt",
+    "Makefile",
+    "package.json",
+    "pyproject.toml",
+    "setup.py",
+    "Cargo.toml",
+    "go.mod",
+    "composer.json",
+    "Gemfile",
+    ".pdf",
+    ".doc",
+    ".docx",
+    ".xls",
+    ".xlsx",
+    ".ppt",
+    ".pptx",
+    ".odt",
+    ".odp",
+    ".ods",
+    ".rtf",
+    ".rtfd",
+    ".epub",
+    ".mdown",
+    ".markdown",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".tif",
+    ".tiff",
+    ".bmp",
+    ".webp",
+    ".heic",
+    ".ico",
+    ".svg",
+    ".mp3",
+    ".m4a",
+    ".aac",
+    ".wav",
+    ".flac",
+    ".ogg",
+    ".oga",
+    ".aiff",
+    ".aif",
+    ".wma",
+    ".mp4",
+    ".mkv",
+    ".mov",
+    ".avi",
+    ".wmv",
+    ".m4v",
+    ".webm",
+    ".flv",
+    ".zip",
+    ".7z",
+    ".rar",
+    ".tar",
+    ".gz",
+    ".bz2",
+    ".xz"
+  ],
+  "ExcludeFolders": [
+    "\\\\node_modules\\\\",
+    "\\\\.git\\\\",
+    "\\\\.svn\\\\",
+    "\\\\.hg\\\\",
+    "\\\\.idea\\\\",
+    "\\\\.vscode\\\\",
+    "\\\\bin\\\\",
+    "\\\\obj\\\\",
+    "\\\\target\\\\",
+    "\\\\build\\\\",
+    "\\\\dist\\\\",
+    "\\\\.tox\\\\",
+    "\\\\.pytest_cache\\\\",
+    "\\\\__pycache__\\\\",
+    "\\\\Library\\\\Caches\\\\",
+    "\\\\System Volume Information\\\\",
+    "\\\\$Recycle.Bin\\\\",
+    "\\\\AppData\\\\Local\\\\Temp\\\\"
+  ],
+  "IncludeMedia": true,
+  "MaxCopySizeMB": 102400,
+  "LargeFileHandling": "Copy",
+  "Symlink": false,
+  "Backup": {
+    "Enable": true,
+    "Target": "E:\\\\CODEX_V3\\\\_backups",
+    "Compression": "zip",
+    "IncludeManifest": true
+  },
+  "Distill": {
+    "Enable": true,
+    "EntryPointMarkers": [
+      "package.json",
+      ".sln",
+      ".xcodeproj",
+      "setup.py",
+      "pyproject.toml",
+      "CMakeLists.txt",
+      "Makefile"
+    ]
+  },
+  "Integration": {
+    "CoreKernelModulesFile": "E:\\\\CODEX_V3\\\\core-kernel\\\\codex.modules.json"
+  },
+  "LogPath": "E:\\\\CODEX_V3\\\\logs\\\\run.log",
+  "DryRun": true,
+  "Meta": {
+    "Enable": true,
+    "WriteBackIntoManifest": true,
+    "ThemeMaps": {
+      "hineni|hineni": "HINENI",
+      "shebang|#!|multi-layered consciousness|transmissions": "Shebang",
+      "love operator|\u2112|love operator": "LoveOperator",
+      "codex monad|seedline|seed line|codex monad": "CodexMonad",
+      "department of infinite noticing|din-|infinite noticing|din form|din ": "DeptInfiniteNoticing",
+      "baldwin iv|templar|king of the hipsters": "BaldwinIV_Costume",
+      "effort quotient|eq calculator": "EffortQuotient",
+      "thoth|thoth church": "ThothChurch",
+      "obsidian|vault": "ObsidianVaults",
+      "snort3|ids|intrusion detection": "Snort3",
+      "pea puffer|aquarium|daphnia|snail tank": "Aquaria",
+      "cc&r|hoa|balcony|structural|board": "HOA_Legal",
+      "nick land|ccru|accelerationism|land/ccru": "Land_CCRU",
+      "sefer yetzirah|kabbalah|halacha|heifer|ritual": "Jewish_Study_Ritual",
+      "polywrite2|polywrite|offline html writing studio": "PolyWrite2",
+      "core-kernel|kernel modules|loader": "CoreKernel",
+      "xcode": "Xcode",
+      "visual studio|\\.sln": "VisualStudio",
+      "costume pattern|linen": "Costume_Making",
+      "codex monad|codex_monad|seedline|seed line|codex monad usb|floppy": "CodexMonad",
+      "recursive self-?aggregation|rsa commentary": "RecursiveSelfAggregation",
+      "pattern codex|22\\+1 patterns|pattern 22\\+1": "PatternCodex_22plus1",
+      "ipsissimus": "Ipsissimus",
+      "onlydans": "OnlyDans",
+      "love operator|\u2112": "LoveOperator",
+      "department of infinite noticing|din-": "DeptInfiniteNoticing",
+      "hineni": "HINENI",
+      "shebang|transmissions": "Shebang",
+      "effort quotient": "EffortQuotient",
+      "thoth church": "ThothChurch",
+      "polywrite2|offline html writing studio|polywrite": "PolyWrite2",
+      "core[- ]?kernel|loader": "CoreKernel"
+    },
+    "Snippet": {
+      "Enable": true,
+      "MaxSizeKB": 64,
+      "Extensions": [
+        ".md",
+        ".txt",
+        ".rtf",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".toml",
+        ".ps1",
+        ".sh",
+        ".py",
+        ".js",
+        ".ts"
+      ],
+      "GroupBy": "theme",
+      "Output": "E:\\\\CODEX_V3\\\\notes\\\\Snippets"
+    },
+    "AI": {
+      "Enable": true,
+      "Mode": "webhook",
+      "Endpoint": "http://127.0.0.1:8765",
+      "AuthHeader": "",
+      "BatchSize": 24,
+      "Fields": [
+        "title",
+        "summary",
+        "keywords",
+        "entities",
+        "priority",
+        "fractal_path"
+      ]
+    }
+  },
+  "PreRun": {
+    "Enable": true,
+    "MaxFiles": 200000,
+    "MaxTextBytes": 1048576,
+    "Similarity": {
+      "ShingleSize": 7,
+      "MinOverlapJaccard": 0.28,
+      "SimHashHamming": 8
+    },
+    "Clustering": {
+      "Enable": true,
+      "MinClusterSize": 3,
+      "Linkage": "single",
+      "SimilarityMetric": "jaccard"
+    },
+    "ProposedLayout": {
+      "Enable": true,
+      "ApplyAutoLayout": true,
+      "BucketRules": "theme_first"
+    }
+  },
+  "Stages": {
+    "Stage1_PreRun": {
+      "Enabled": true,
+      "Script": ".\\\\scripts\\\\pre-run\\\\pre_run.ps1"
+    },
+    "Stage2_Build": {
+      "Enabled": true,
+      "Script": ".\\\\scripts\\\\run-codex.ps1"
+    }
+  },
+  "Routing": {
+    "Enable": true,
+    "Precedence": [
+      "fractal_path",
+      "themes",
+      "din_code",
+      "project",
+      "language"
+    ],
+    "FractalPath": {
+      "Enable": true,
+      "Root": "E:\\\\CODEX_V3",
+      "DefaultLeaf": "_unsorted"
+    },
+    "DIN": {
+      "Enable": true,
+      "Pattern": "DIN-\\d{3,}",
+      "Target": "notes\\\\DIN_Forms"
+    },
+    "ThemeBuckets": {
+      "ObsidianVaults": "notes\\\\Document\\\\Obsidian",
+      "DeptInfiniteNoticing": "notes\\\\Document\\\\DIN",
+      "ThothChurch": "notes\\\\Document\\\\Thoth",
+      "BaldwinIV_Costume": "notes\\\\Document\\\\Costume",
+      "Jewish_Study_Ritual": "notes\\\\Document\\\\Jewish",
+      "Land_CCRU": "notes\\\\Document\\\\Land_CCRU",
+      "Aquaria": "notes\\\\Document\\\\Aquaria",
+      "CoreKernel": "collection\\\\Text\\\\CoreKernel"
+    },
+    "ProjectFallback": "collection\\\\{language}\\\\{project}",
+    "LanguageFallback": "collection\\\\{language}\\\\_misc"
+  },
+  "Migration": {
+    "Enable": true,
+    "Adapters": [
+      {
+        "Name": "LegacyManifestV1",
+        "Detect": "codex.manifest.json",
+        "Reader": ".\\\\scripts\\\\adapters\\\\read_legacy_manifest.ps1"
+      },
+      {
+        "Name": "LegacyIndexV1",
+        "Detect": "INDEX.md",
+        "Reader": ".\\\\scripts\\\\adapters\\\\read_legacy_index.ps1"
+      }
+    ]
+  }
+}
