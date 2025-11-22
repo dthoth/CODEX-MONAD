@@ -1,0 +1,246 @@
+CODEX MONAD SEEDLINE - SECURITY & DATA HANDLING
+Version 0.1 - October 2025
+
+═══════════════════════════════════════════════════════════════════
+
+OFFLINE-FIRST ARCHITECTURE
+
+This system is designed to work COMPLETELY OFFLINE:
+• No external network calls
+• No CDN dependencies
+• No tracking or analytics
+• No telemetry of any kind
+• No auto-updates or phone-home functionality
+
+═══════════════════════════════════════════════════════════════════
+
+DATA STORAGE
+
+All data stays LOCAL on your computer:
+• Browser LocalStorage for app preferences
+• Files you create remain in your filesystem
+• No cloud sync (unless you explicitly set it up)
+• No remote databases
+• No data leaves your machine
+
+═══════════════════════════════════════════════════════════════════
+
+BROWSER SECURITY CONSIDERATIONS
+
+file:// Protocol Limitations:
+• Some browsers restrict LocalStorage under file://
+• This is a SECURITY FEATURE (protecting you!)
+• Workaround: Use app Download buttons as fallback
+• Alternative: Run a local server (Python SimpleHTTPServer)
+
+Recommended Browsers:
+• Chrome/Chromium (best compatibility)
+• Edge (good compatibility)
+• Firefox (mostly works)
+• Safari (may have storage restrictions)
+
+═══════════════════════════════════════════════════════════════════
+
+NO PERSONAL DATA COLLECTION
+
+This system collects ZERO personal information:
+• No account registration
+• No email addresses
+• No names or identifiers
+• No usage statistics
+• No crash reports
+• No behavioral tracking
+
+═══════════════════════════════════════════════════════════════════
+
+EXTERNAL DEPENDENCIES
+
+Status: NONE
+
+All CSS, JavaScript, fonts, and resources are:
+• Bundled locally in the package
+• Self-contained within HTML files
+• Never loaded from external CDNs
+• Verified to work completely offline
+
+If you add external content, ensure it's downloaded and bundled.
+
+═══════════════════════════════════════════════════════════════════
+
+BACKUP & INTEGRITY
+
+Recommended Practices:
+• Copy to TWO USB drives (redundancy)
+• Verify file integrity with SHA256SUMS.txt
+• Keep backups in separate physical locations
+• Test backups periodically
+
+Integrity Verification:
+On Unix/Mac: sha256sum -c SHA256SUMS.txt
+On Windows: Get-FileHash (PowerShell)
+
+═══════════════════════════════════════════════════════════════════
+
+SENSITIVE DATA HANDLING
+
+If you store sensitive information in this system:
+• Encrypt your USB drive
+• Use OS-level encryption (BitLocker, FileVault)
+• Don't share the drive with untrusted parties
+• Consider password-protecting important documents
+
+This system does NOT provide encryption - use OS tools.
+
+═══════════════════════════════════════════════════════════════════
+
+MALWARE SCANNING
+
+Safe Practices:
+• Download ONLY from trusted sources
+• Verify SHA256 checksums after download
+• Scan with antivirus if concerned
+• Inspect HTML/JS files (they're human-readable)
+
+All files in this system are:
+• Plain text (HTML, CSS, JS, TXT, MD)
+• Human-readable and inspectable
+• No compiled binaries
+• No obfuscated code
+
+═══════════════════════════════════════════════════════════════════
+
+BROWSER PERMISSIONS
+
+This system requests:
+• LocalStorage access (for app preferences)
+• File download capability (to save your work)
+
+This system NEVER requests:
+• Camera/microphone access
+• Location data
+• Notification permissions
+• Clipboard access (unless you explicitly paste)
+• Network access (not needed)
+
+═══════════════════════════════════════════════════════════════════
+
+SHARING & DISTRIBUTION
+
+Safe Distribution:
+• Verify integrity before sharing
+• Share only complete, unmodified folders
+• Warn recipients about browser compatibility
+• Include this SECURITY.txt file
+
+When Sharing:
+• Remove any personal documents first
+• Check for accidentally included sensitive data
+• Test on a clean system before distributing
+
+═══════════════════════════════════════════════════════════════════
+
+MODIFICATIONS & EXTENSIONS
+
+If You Modify:
+• Keep security principles intact
+• Don't add external dependencies
+• Maintain offline functionality
+• Update SHA256SUMS.txt after changes
+• Document changes in CHANGELOG.md
+
+Security Review Checklist:
+□ No external network calls
+□ No CDN dependencies  
+□ No tracking/analytics
+□ All resources bundled locally
+□ No automatic updates
+□ Code remains readable/inspectable
+
+═══════════════════════════════════════════════════════════════════
+
+PARADOX DISCLAIMER
+
+This system includes satirical "bureaucratic enlightenment" forms 
+(Department of Infinite Noticing) which are:
+• Intentionally absurd
+• For meta-awareness practice
+• Not actual legal/government documents
+• Artistic/philosophical exercises
+
+See Legal/L-DISCLAIMER-PARADOX.html for full explanation.
+
+═══════════════════════════════════════════════════════════════════
+
+THREAT MODEL
+
+What This Protects Against:
+✓ Online tracking and surveillance
+✓ Data collection by third parties
+✓ Dependency on external services
+✓ Internet connectivity requirements
+✓ Platform lock-in
+
+What This Does NOT Protect Against:
+✗ Physical theft of USB drive
+✗ Malware on your computer
+✗ Unencrypted storage (use OS encryption)
+✗ Shoulder surfing or screen recording
+✗ Social engineering attacks
+
+═══════════════════════════════════════════════════════════════════
+
+REPORTING SECURITY ISSUES
+
+If you discover a security concern:
+1. Document the specific issue
+2. Check if it's a browser limitation vs. system flaw
+3. [Add your contact method here]
+4. Allow time for assessment and response
+
+Common "Issues" That Aren't Bugs:
+• LocalStorage not working in file:// (browser security)
+• Can't load external resources (intentional design)
+• No sync between devices (offline-first architecture)
+
+═══════════════════════════════════════════════════════════════════
+
+PRIVACY PHILOSOPHY
+
+"Your data is YOUR data."
+
+This system embodies radical data sovereignty:
+• No company owns your information
+• No service can revoke access
+• No subscription required
+• No terms of service
+• No privacy policy (because we collect nothing)
+
+You are the administrator. You make the rules.
+
+═══════════════════════════════════════════════════════════════════
+
+FUTURE CONSIDERATIONS
+
+Potential Enhancements (maintaining security):
+• Optional encryption tools (PGP integration)
+• Git-based version control (local only)
+• Peer-to-peer sync (user-controlled)
+• Digital signatures (verification)
+
+Will NEVER Add:
+• Cloud services
+• Centralized servers
+• Tracking analytics
+• Mandatory updates
+• Phone-home features
+
+═══════════════════════════════════════════════════════════════════
+
+"Offline is a feature, not a limitation."
+
+🔒 Secure by design
+🏠 Data stays home
+🔓 Open and inspectable
+∞ Yours forever
+
+═══════════════════════════════════════════════════════════════════

@@ -1,0 +1,26 @@
+<div class="header">
+  <h1>Department of Infinite Noticing — Local Portal</h1>
+  <a class="btn" href="README.md" target="_blank">README</a>
+</div>
+
+<div class="kpi">
+  <div class="item">Forms: <strong>{count_forms}</strong></div>
+  <div class="item">Legal: <strong>{count_legal}</strong></div>
+  <div class="item">Other: <strong>{count_other}</strong></div>
+  <div class="item">Total: <strong>{count_total}</strong></div>
+</div>
+
+<div class="search">
+  <input id="q" placeholder="Search titles, codes, filenames…"/>
+  <div>
+    <span class="badge" data-chip="form">Forms</span>
+    <span class="badge" data-chip="legal">Legal</span>
+    <span class="badge" data-chip="other">Other</span>
+  </div>
+</div>
+
+<hr/>
+
+<div class="grid">
+{cards}
+</div>
