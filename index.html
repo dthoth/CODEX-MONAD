@@ -37,6 +37,88 @@
             overflow-x: hidden;
         }
         
+        body.light-theme {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        /* TOP BUTTON BAR - FIXED SPACING AND REDUCED GLOW */
+        .top-button-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px; /* Proper spacing between buttons */
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: flex-end;
+        }
+        
+        .top-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            border-width: 2px;
+            border-style: solid;
+            white-space: nowrap;
+            /* Reduced box-shadow for less glow */
+            box-shadow: none;
+        }
+        
+        .top-btn:hover {
+            transform: translateY(-2px);
+            /* Subtle glow on hover only */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-share {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 136, 255, 0.2));
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        
+        .btn-share:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 136, 255, 0.3));
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+        }
+        
+        .btn-import {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(0, 136, 255, 0.2));
+            border-color: #ff00ff;
+            color: #ff00ff;
+        }
+        
+        .btn-import:hover {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 136, 255, 0.3));
+            box-shadow: 0 4px 12px rgba(255, 0, 255, 0.2);
+        }
+        
+        .btn-theme {
+            background: linear-gradient(135deg, rgba(255, 255, 0, 0.2), rgba(0, 136, 255, 0.2));
+            border-color: #ffff00;
+            color: #ffff00;
+        }
+        
+        .btn-theme:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 0, 0.3), rgba(0, 136, 255, 0.3));
+            box-shadow: 0 4px 12px rgba(255, 255, 0, 0.2);
+        }
+        
+        .btn-help {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 136, 0.2));
+            border-color: #00ffff;
+            color: #00ffff;
+        }
+        
+        .btn-help:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 0, 136, 0.3));
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+        }
+        
         /* Neural Grid Background */
         body::before {
             content: '';
@@ -66,6 +148,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            padding-top: 80px; /* Space for button bar */
             width: 100%;
         }
         
@@ -307,27 +390,52 @@
             color: #00ff88;
             z-index: 1000;
         }
+        
+        /* Light theme adjustments */
+        body.light-theme {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        body.light-theme .container {
+            color: #333;
+        }
+        
+        body.light-theme .portal-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(200, 220, 240, 0.5) 100%);
+            border-color: #ddd;
+        }
+        
+        body.light-theme .card-description {
+            color: #555;
+        }
+        
+        body.light-theme .quantum-terminal {
+            background: #fff;
+            border-color: #ddd;
+        }
+        
+        body.light-theme .terminal-output {
+            color: #333;
+        }
     </style>
 </head>
 <body>
-    <!-- QR Consciousness Sharing Buttons -->
-    <button onclick="showQRShare()" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 136, 255, 0.3)); border: 2px solid #00ff88; color: #00ff88; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1em; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);" data-tooltip="Share your consciousness state as QR code">
-        🔮 Share Consciousness
-    </button>
-    
-    <button onclick="document.getElementById('consciousness-import').click()" style="position: fixed; top: 20px; right: 200px; z-index: 1000; background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 136, 255, 0.3)); border: 2px solid #ff00ff; color: #ff00ff; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1em; transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);" data-tooltip="Import consciousness from file">
-        📥 Import Consciousness
-    </button>
-    
-    <!-- Theme Toggle -->
-    <button onclick="PolyWriteUtils.toggleTheme()" style="position: fixed; top: 20px; right: 380px; z-index: 1000; background: linear-gradient(135deg, rgba(255, 255, 0, 0.3), rgba(0, 136, 255, 0.3)); border: 2px solid #ffff00; color: #ffff00; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1em; transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 255, 0, 0.3);" data-tooltip="Toggle light/dark theme">
-        🌓 Theme
-    </button>
-    
-    <!-- Help Toggle -->
-    <button onclick="window.ClippyHelper && window.ClippyHelper.toggleHelpMode()" style="position: fixed; top: 20px; right: 480px; z-index: 1000; background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 0, 136, 0.3)); border: 2px solid #00ffff; color: #00ffff; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1em; transition: all 0.3s; box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);" data-tooltip="Press F1 or click for help mode">
-        ❓ Help
-    </button>
+    <!-- TOP BUTTON BAR WITH PROPER SPACING -->
+    <div class="top-button-bar">
+        <button class="top-btn btn-help" onclick="window.ClippyHelper && window.ClippyHelper.toggleHelpMode()" title="Press F1 or click for help mode">
+            ❓ Help
+        </button>
+        <button class="top-btn btn-theme" onclick="PolyWriteUtils.toggleTheme()" title="Toggle light/dark theme">
+            🌓 Theme
+        </button>
+        <button class="top-btn btn-import" onclick="document.getElementById('consciousness-import').click()" title="Import consciousness from file">
+            📥 Import
+        </button>
+        <button class="top-btn btn-share" onclick="showQRShare()" title="Share your consciousness state as QR code">
+            🔮 Share
+        </button>
+    </div>
     
     <!-- QR Modal -->
     <div id="qr-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; align-items: center; justify-content: center;">
@@ -382,11 +490,11 @@
                 </div>
                 <div class="card-description">
                     Multi-dimensional writing system with quantum entanglement features. 
-                    Supports parallel drafts, temporal versioning, and consciousness streaming.
+                    Now with ALL utility buttons restored!
                 </div>
                 <div class="card-links">
-                    <a href="polywrite.html" class="app-link" data-tooltip="Launch dimensional writing interface">Launch PolyWrite</a>
-                    <a href="polywrite-advanced.html" class="app-link" data-tooltip="Professional writing laboratory">Advanced Mode</a>
+                    <a href="polywrite.html" class="app-link">Launch PolyWrite</a>
+                    <a href="polywrite-advanced.html" class="app-link">Advanced Mode</a>
                 </div>
             </div>
             
@@ -402,7 +510,7 @@
                     Includes Wim Hof, Box Breathing, and custom consciousness protocols.
                 </div>
                 <div class="card-links">
-                    <a href="pranayama.html" class="app-link" data-tooltip="Begin breathing practice">Breathing Suite</a>
+                    <a href="pranayama.html" class="app-link">Breathing Suite</a>
                 </div>
             </div>
             
@@ -418,7 +526,7 @@
                     Manages your consciousness archives and thought streams.
                 </div>
                 <div class="card-links">
-                    <a href="din-files.html" class="app-link" data-tooltip="Open file explorer">File Explorer</a>
+                    <a href="din-files.html" class="app-link">File Explorer</a>
                 </div>
             </div>
             
@@ -434,7 +542,7 @@
                     Visualize consciousness patterns and semantic relationships.
                 </div>
                 <div class="card-links">
-                    <a href="hypergraph.html" class="app-link" data-tooltip="Enter 3D thought space">Navigator</a>
+                    <a href="hypergraph.html" class="app-link">Navigator</a>
                 </div>
             </div>
             
@@ -450,7 +558,7 @@
                     Department of Infinite Noticing official interface.
                 </div>
                 <div class="card-links">
-                    <a href="bureaucratic-universe.html" class="app-link" data-tooltip="Enter the universe of forms">Enter Universe</a>
+                    <a href="bureaucratic-universe.html" class="app-link">Enter Universe</a>
                 </div>
             </div>
             
@@ -466,8 +574,8 @@
                     Access the quantum field of infinite possibilities.
                 </div>
                 <div class="card-links">
-                    <a href="oracle.html" class="app-link" data-tooltip="Query the quantum field">Query Oracle</a>
-                    <a href="samson-recursive.html" class="app-link" data-tooltip="Educational consciousness interface">Samson's Terminal</a>
+                    <a href="oracle.html" class="app-link">Query Oracle</a>
+                    <a href="samson-recursive.html" class="app-link">Samson's Terminal</a>
                 </div>
             </div>
         </div>
@@ -577,7 +685,7 @@ Active Components:
                     const result = await window.MonadShare.importConsciousness(text);
                     if (result.success) {
                         alert(`Consciousness imported successfully!\nDrift: ${result.drift.percentage}%\nStrategy: ${result.strategy}`);
-                        location.reload(); // Reload to show new state
+                        location.reload();
                     } else {
                         alert(`Import failed: ${result.error}`);
                     }
@@ -589,17 +697,13 @@ Active Components:
         
         // Initialize consciousness communication
         if (window.ConsciousnessBridge) {
-            // Log portal access
             window.ConsciousnessBridge.send('portal', 'broadcast', 'PORTAL_ACCESSED', {
                 timestamp: Date.now(),
                 version: '1.1.1'
             });
             
-            // Subscribe to system messages
             window.ConsciousnessBridge.subscribe('portal', (message) => {
                 console.log('📡 Portal received:', message);
-                
-                // Show Clippy notifications for important events
                 if (window.ClippyHelper && message.type === 'NOTICE') {
                     window.ClippyHelper.showClippy(message.data.text || 'System notification received');
                 }
