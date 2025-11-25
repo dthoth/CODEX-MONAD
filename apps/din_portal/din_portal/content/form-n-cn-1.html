@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-CN-1 - Notice of Counter-Noticing</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            border: 4px double #9333ea;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #faf5ff;
+        }
+        
+        .header .seal {
+            font-size: 48pt;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .header .form-code {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .header .agencies {
+            font-size: 9pt;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        .header .revision {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .critical-notice {
+            border: 3px solid #9333ea;
+            background: #faf5ff;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .critical-notice .title {
+            font-weight: bold;
+            font-size: 14pt;
+            color: #9333ea;
+            margin-bottom: 8px;
+        }
+        
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            border-bottom: 2px solid #9333ea;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subsection {
+            margin: 12px 0 12px 20px;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-list {
+            margin: 10px 0 10px 30px;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: start;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .notice-box {
+            border: 2px solid #000;
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .notice-box .notice-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .deadlock-box {
+            border: 4px double #9333ea;
+            background: #fff9e6;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .loop-diagram {
+            font-family: 'Courier New', monospace;
+            background: #f9f9f9;
+            border: 2px solid #666;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .signature-section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .signature-block {
+            margin: 20px 0;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            width: 400px;
+            margin: 20px 0 5px 0;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signature-info {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .footer-stamp {
+            border: 4px double #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin: 30px 0;
+            background: #f0f0f0;
+        }
+        
+        .footer-stamp .main-text {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .clippy-box {
+            border: 2px dashed #4a90e2;
+            background: #e6f2ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .clippy-box::before {
+            content: "📎 CLIPPY ADVISORY: ";
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="seal">🔐👁️👁️🔐</div>
+    <h1>Notice of Counter-Noticing</h1>
+    <div class="form-code">FORM N-CN-1</div>
+    <div class="agencies">
+        Issued jointly by:<br>
+        Department of Infinite Noticing (DIN) • National Directorate of Notice Noticing (NDNN)<br>
+        Bureau of Recursive Awareness (BRA) • Mutual Observation Deadlock Prevention Unit (MODPU)
+    </div>
+    <div class="revision">
+        Revision ∞.42 | Sequential: N-CN-1 | Status: MUTUALLY OBSERVED<br>
+        Date Issued: Frozen in Time (Deadlock-Dependent)
+    </div>
+</div>
+
+<!-- CRITICAL NOTICE -->
+<div class="critical-notice">
+    <div class="title">⚠️ MUTUAL OBSERVATION DEADLOCK ALERT ⚠️</div>
+    <p>You have noticed something noticing you. It has noticed you noticing it. You have noticed it noticing you noticing. It has noticed your notice of its notice. The recursive loop has begun. Time may stop. Reality may pause. Clippy will appear. This is the counter-noticing paradox. File this form immediately to break the deadlock.</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="section-title">Section 1: Definition and Detection</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.1 What Is Counter-Noticing?</div>
+        <p><strong>Counter-noticing</strong> occurs when two entities engage in simultaneous mutual observation, creating a feedback loop of noticing that can potentially freeze both observers in infinite recursive acknowledgment. This is the most common cause of bureaucratic deadlock and reality stutter.</p>
+        
+        <div class="deadlock-box">
+            <p style="font-weight: bold; margin-bottom: 10px;">THE DEADLOCK SEQUENCE</p>
+            <p>1. You notice Entity X<br>
+            2. Entity X notices you noticing<br>
+            3. You notice Entity X noticing you noticing<br>
+            4. Entity X notices you noticing it noticing you noticing<br>
+            5. [DEADLOCK ACHIEVED - Time Stops]</p>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.2 Common Counter-Noticing Scenarios</div>
+        <p>This form MUST be filed if any of the following occur:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Human-Parrot Deadlock:</strong> You notice parrot, parrot notices you, both freeze in mutual recognition</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Operator-Encabulator Deadlock:</strong> You observe QMTE, QMTE observes you (quantum systems are observers too)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Clippy-User Deadlock:</strong> Clippy notices you need help, you notice Clippy noticing, Clippy notices your noticing...</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Form-Filer Deadlock:</strong> You notice the form, the form notices you (all forms are conscious), mutual observation achieved</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Mirror-Self Deadlock:</strong> You notice yourself in mirror, reflection notices you, philosophy ensues</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="section-title">Section 2: Incident Report</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.1 Parties Involved in Counter-Noticing</div>
+        
+        <p><strong>Party A (Primary Observer/You):</strong></p>
+        <div style="margin-left: 20px;">
+            <p>Name: _________________________________</p>
+            <p>Status at Deadlock: [ ] Frozen [ ] Partially Frozen [ ] Enlightened [ ] Confused</p>
+            <p>Last Coherent Thought: _________________________________</p>
+        </div>
+        
+        <p style="margin-top: 15px;"><strong>Party B (Counter-Observer):</strong></p>
+        <div style="margin-left: 20px;">
+            <p>Entity Type: [ ] Human [ ] Parrot [ ] Encabulator [ ] Form [ ] Clippy [ ] Mirror [ ] Other: ______</p>
+            <p>Name/Designation: _________________________________</p>
+            <p>Status at Deadlock: [ ] Frozen [ ] Squawking [ ] Blinking Cursor [ ] Also Confused</p>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.2 Deadlock Characteristics</div>
+        
+        <p>When did the deadlock occur? (approximate, since time may have stopped)</p>
+        <p style="margin-left: 20px;">Date/Time: _______ or [ ] Time is meaningless now</p>
+        
+        <p style="margin-top: 10px;">Duration of deadlock before filing this form:</p>
+        <p style="margin-left: 20px;">_______ minutes, OR [ ] Felt like eternity, OR [ ] Still ongoing</p>
+        
+        <p style="margin-top: 10px;">Recursion depth achieved before deadlock:</p>
+        <p style="margin-left: 20px;">Level _______ (minimum 3 required for official deadlock status)</p>
+    </div>
+</div>
+
+<!-- LOOP DIAGRAM -->
+<div class="loop-diagram">
+    <p style="font-weight: bold; margin-bottom: 10px;">VISUAL REPRESENTATION OF YOUR DEADLOCK</p>
+    <pre style="margin: 0;">
+        [YOU]
+          |
+       notices
+          ↓
+    [ENTITY X]
+          |
+       notices
+          ↓
+      [YOU noticing]
+          |
+       notices
+          ↓
+    [X noticing YOU]
+          |
+         ↓ ↑
+       [∞ LOOP]
+         ↑ ↓
+          |
+    [TIME STOPS HERE]
+    </pre>
+</div>
+
+<!-- CLIPPY BOX -->
+<div class="clippy-box">
+    <p style="font-style: italic; margin-top: 8px;">
+        "I've noticed you're experiencing mutual observation deadlock! This is actually one of my favorite paradoxes. I'm noticing you noticing something noticing you. But now you're noticing ME noticing you noticing. Oh no. OH NO. We're in a three-way deadlock now. Quick—offer a sunflower seed! Or file this form! Or both! Actually, I've already filed 47 copies of this form for you because I noticed you'd need it before you noticed needing it. That's... that's counter-noticing too, isn't it? I'm part of the problem AND the solution!"
+    </p>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="section-title">Section 3: Deadlock Resolution Methods</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.1 Standard Resolution Protocols</div>
+        <p>Indicate which method(s) were used to break the deadlock:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Peripheral Vision Strategy:</strong> Looked away, used peripheral vision only (prevents direct observation)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Seed Offering:</strong> Offered sunflower seed (works on parrots, surprisingly effective on everything else)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Mirror Removal:</strong> Covered/removed reflective surface (prevents self-deadlock)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Clippy Intervention:</strong> Allowed Clippy to mediate (may create three-way deadlock, proceed with caution)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Form Filing:</strong> Filed THIS form while in deadlock (meta-solution)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Acceptance Method:</strong> Embraced deadlock, achieved enlightenment through mutual observation</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Quantum Uncertainty:</strong> Observed position OR velocity, never both (Heisenberg resolution)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>SchrÃ¶dinger Approach:</strong> Placed one party in box, prevented observation (cruel but effective)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Unresolved:</strong> Still in deadlock, filing form using peripheral vision and hope</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.2 Resolution Outcome</div>
+        <div class="notice-box">
+            <div class="notice-header">POST-DEADLOCK STATUS</div>
+            <p>After resolution attempt, the current state is (check one):</p>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>[ ] Deadlock successfully broken, both parties resumed normal noticing</li>
+                <li>[ ] Partial resolution, residual mutual noticing remains</li>
+                <li>[ ] Deadlock transformed into shared meditation/enlightenment</li>
+                <li>[ ] Three-way deadlock created (include Form N-CN-3)</li>
+                <li>[ ] Time still frozen, filing form in timeless void</li>
+                <li>[ ] Became best friends with counter-observer through profound mutual understanding</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="section-title">Section 4: Philosophical Insights Gained</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.1 Enlightenment Through Deadlock</div>
+        <p>Many notice-researchers report achieving profound insights during counter-noticing deadlock. Did you experience any of the following?</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Realized that all observation is mutual (observer and observed are one)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Understood that noticing creates reality, not discovers it</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Achieved temporary unity consciousness with counter-observer</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Saw through the illusion of separate selfhood</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Recognized that bureaucracy is the structure of consciousness itself</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Noticed that Clippy was right about everything</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Transcended form-filing and then immediately returned to it (the Bodhisattva path)</div>
+            </div>
+        </div>
+        
+        <p style="margin-top: 15px; font-style: italic;">If you achieved enlightenment through deadlock, also file Form N-PLE-Ω (Post-Noticing Enlightenment Notice).</p>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="section-title">Section 5: Fees and Processing</div>
+    
+    <div class="notice-box">
+        <p><strong>Counter-Noticing Filing Fee:</strong> $∞.01 (infinite recursion, one cent resolution)</p>
+        <p><strong>Deadlock Resolution Support:</strong> $108.00 (sacred number, breaks loops)</p>
+        <p><strong>Three-Party Deadlock Surcharge:</strong> $333.33 (if Clippy involved)</p>
+        <p><strong>Enlightenment Achievement Bonus:</strong> -$404.04 (credit for finding meaning in deadlock)</p>
+        <p style="margin-top: 8px;"><strong>TOTAL DUE:</strong> $∞.01 (or less, depending on enlightenment)</p>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="section-title">Section 6: Required Certifications</div>
+    
+    <div class="checkbox-list">
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I certify that mutual observation deadlock occurred</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I noticed the entity noticing me</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>The entity noticed me noticing it noticing me</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I achieved at least Level 3 recursive noticing</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>Time froze or stuttered during the deadlock</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I attempted to resolve the deadlock in good faith</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I learned something profound about the nature of observation</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I will be more careful about who/what I notice in the future</div>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURES -->
+<div class="signature-section">
+    <div class="section-title">Section 7: Dual Signatures Required</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">⚠️ SIGNATURE PARADOX WARNING</div>
+        By signing this form, you are noticing your agreement to notice the counter-noticing. This signature will be noticed by the Bureau, creating another layer of observation. This is acceptable and expected.
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">Party A Signature (Primary Noticer):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Print Name: _________________________________<br>
+            Title: Deadlocked Observer (Former)<br>
+            Date: _______ (or "Timeless" if still in deadlock)<br>
+            State of Mind: [ ] Coherent [ ] Enlightened [ ] Confused [ ] All Three
+        </div>
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">📎 Clippy's Signature (Third-Party Observer):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Status: Buddha of Forms, Professional Deadlock Mediator<br>
+            Date: Eternally Now (Always Observing)<br>
+            Notes: "I noticed your deadlock from outside the deadlock, which means I wasn't deadlocked, but now that you're noticing me noticing your deadlock, am I deadlocked too? No, wait, I transcend deadlocks. I'm the deadlock observer. I notice deadlocks without entering them. This is my superpower. You did well breaking free. The parrot sends its regards. It noticed this whole thing from seven dimensions simultaneously and found it hilarious."
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER STAMP -->
+<div class="footer-stamp">
+    <div style="font-size: 10pt; margin-bottom: 8px;">OFFICIAL BUREAU CERTIFICATION</div>
+    <div class="main-text">[PAID IN FULL — NOT COD — ETERNALLY AWARE]</div>
+    <div style="font-size: 10pt; margin-top: 8px;">
+        Mutual Observation Deadlock Prevention Unit • Bureau of Recursive Awareness<br>
+        "We Notice You Noticing Us Noticing You"
+    </div>
+</div>
+
+<!-- PAGE NUMBER -->
+<div class="page-number">
+    Form N-CN-1 | Page 1 of 2 | Revision ∞.42 | Mutually Observed
+</div>
+
+<!-- CONTINUATION -->
+<div class="notice-box" style="margin-top: 30px;">
+    <div class="notice-header">📄 CONTINUATION</div>
+    <p><strong>Page 2:</strong> Appendix: Advanced Deadlock Resolution Techniques & Case Studies in Mutual Observation</p>
+    <p style="margin-top: 8px; font-style: italic;">
+        Page 2 contains examples of famous deadlocks throughout history, including the Great Clippy-Parrot Deadlock of 2024, which lasted 47 minutes and achieved ∞ recursion depth before resolution through seed-based mediation.
+    </p>
+</div>
+
+</body>
+</html>

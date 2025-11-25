@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Salad Laboratory v5.0 HYPERREALITY | Analyzer & Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: #15151f;
+            --accent-chaos: #ff6b35;
+            --accent-clinical: #00d9ff;
+            --accent-warning: #ffd93d;
+            --accent-danger: #ff4757;
+            --accent-success: #26de81;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888aa;
+            --text-muted: #555566;
+            --border-subtle: #2a2a3a;
+            --gradient-chaos: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffd93d 100%);
+            --gradient-clinical: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+            --gradient-dilbert: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            --shadow-glow-chaos: 0 0 30px rgba(255, 107, 53, 0.3);
+            --shadow-glow-clinical: 0 0 30px rgba(0, 217, 255, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f5f5f7;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e8e8ed;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #555577;
+            --text-muted: #6b7280;
+            --border-subtle: #e0e0e6;
+            --shadow-glow-chaos: 0 8px 25px rgba(255, 107, 53, 0.15);
+            --shadow-glow-clinical: 0 8px 25px rgba(0, 153, 255, 0.15);
+        }
+
+        [data-theme="light"] body {
+            background: radial-gradient(circle at top, #e5f0ff 0%, #f5f5f7 55%, #e5e7eb 100%);
+        }
+
+        [data-theme="light"] .bg-pattern {
+            opacity: 0.015;
+        }
+
+        [data-theme="light"] .card {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+            border-color: rgba(148, 163, 184, 0.2);
+        }
+
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+
+        [data-theme="light"] .tab-btn {
+            background: rgba(248, 250, 252, 0.9);
+        }
+
+        [data-theme="light"] .tab-btn:hover {
+            background: rgba(226, 232, 240, 0.9);
+        }
+
+        [data-theme="light"] .tab-btn.active {
+            background: #0f172a;
+            color: #e5e7eb;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.5);
+        }
+
+        [data-theme="light"] .output-area {
+            background: rgba(248, 250, 252, 0.9);
+            border-color: rgba(148, 163, 184, 0.25);
+        }
+
+        [data-theme="light"] .metric-card {
+            background: #ffffff;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+        }
+
+        [data-theme="light"] .metric-card:hover {
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.1);
+            border-color: rgba(37, 99, 235, 0.4);
+        }
+
+        [data-theme="light"] .btn-primary {
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.25);
+        }
+
+        [data-theme="light"] .btn-analyze {
+            box-shadow: 0 8px 20px rgba(0, 153, 255, 0.25);
+        }
+
+        [data-theme="light"] .theme-toggle {
+            background: rgba(248, 250, 252, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        [data-theme="light"] .sci-gauge,
+        [data-theme="light"] .dilbert-gauge {
+            background: rgba(248, 250, 252, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 50px, var(--accent-chaos) 50px, var(--accent-chaos) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, var(--accent-clinical) 50px, var(--accent-clinical) 51px);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-chaos);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            animation: wobble 3s ease-in-out infinite;
+            box-shadow: var(--shadow-glow-chaos);
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-3deg) scale(1); }
+            50% { transform: rotate(3deg) scale(1.05); }
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-chaos);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+
+        .tagline-quote {
+            font-style: italic;
+            color: var(--accent-warning);
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-clinical);
+            margin-top: 1rem;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            padding: 0.35rem 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-clinical);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .toggle-icon {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="light"] .theme-toggle .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-chaos);
+            color: #000;
+            border-color: transparent;
+            box-shadow: var(--shadow-glow-chaos);
+        }
+
+        .tab-btn.active.analyzer-tab {
+            background: var(--gradient-clinical);
+            box-shadow: var(--shadow-glow-clinical);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { border-color: var(--accent-chaos); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .card-title { font-weight: 600; font-size: 1rem; }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-chaos);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        textarea::placeholder, input::placeholder { color: var(--text-muted); }
+
+        .tag-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag-checkbox { display: none; }
+
+        .tag-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.9rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tag-label:hover {
+            border-color: var(--accent-chaos);
+            color: var(--text-primary);
+        }
+
+        .tag-checkbox:checked + .tag-label {
+            background: var(--accent-chaos);
+            color: #000;
+            border-color: var(--accent-chaos);
+            font-weight: 500;
+        }
+
+        .slider-container { margin-bottom: 1.25rem; }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-chaos);
+            background: var(--bg-tertiary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 100px;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-chaos);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+        .btn {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-chaos);
+            color: #000;
+            font-size: 1rem;
+            width: 100%;
+            box-shadow: var(--shadow-glow-chaos);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-analyze {
+            background: var(--gradient-clinical);
+            box-shadow: var(--shadow-glow-clinical);
+        }
+
+        .btn-analyze:hover {
+            box-shadow: 0 8px 30px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.85rem;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-clinical);
+        }
+
+        .output-area {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-height: 200px;
+            font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.75;
+            color: var(--text-primary);
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .output-placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        /* Highlight classes */
+        .highlight-recursion { background: rgba(255, 107, 53, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-abstraction { background: rgba(0, 217, 255, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-jargon { background: rgba(255, 217, 61, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-virtue { background: rgba(38, 222, 129, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-mobius { background: rgba(255, 71, 87, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-filler { background: rgba(168, 85, 247, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-confidence { background: rgba(236, 72, 153, 0.3); border-radius: 3px; padding: 0 2px; }
+        .highlight-connective { background: rgba(59, 130, 246, 0.3); border-radius: 3px; padding: 0 2px; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: help;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-clinical);
+        }
+
+        .metric-card:hover .metric-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value.low { color: var(--accent-success); }
+        .metric-value.medium { color: var(--accent-warning); }
+        .metric-value.high { color: var(--accent-danger); }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-detail {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Tooltips */
+        .metric-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-clinical);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            width: 220px;
+            text-align: left;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+
+        .metric-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--accent-clinical);
+        }
+
+        .tooltip-title {
+            color: var(--accent-clinical);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Office Fog Index Special Styling */
+        .dilbert-gauge {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid var(--accent-purple);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .dilbert-title {
+            font-size: 0.85rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .dilbert-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-dilbert);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dilbert-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--bg-tertiary);
+            border-radius: 100px;
+            margin: 0.75rem 0;
+            overflow: hidden;
+        }
+
+        .dilbert-bar-fill {
+            height: 100%;
+            background: var(--gradient-dilbert);
+            border-radius: 100px;
+            transition: width 0.5s ease;
+        }
+
+        .dilbert-verdict {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .dilbert-explain {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        /* SCI Gauge */
+        .sci-gauge {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .sci-title {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .sci-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient-chaos);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sci-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 100px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .sci-bar-fill {
+            height: 100%;
+            background: var(--gradient-chaos);
+            border-radius: 100px;
+            transition: width 0.5s ease;
+        }
+
+        .sci-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .sci-verdict {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Archetype Detection Badge */
+        .archetype-badge {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .archetype-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .archetype-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+        
+        .archetype-confidence {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Explain This Salad Summary */
+        .salad-explanation {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 217, 61, 0.1));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+        }
+        
+        .explanation-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-chaos);
+            margin-bottom: 0.75rem;
+        }
+        
+        .explanation-body {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .explanation-tldr {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        .collapsible { margin-top: 1rem; }
+
+        .collapsible-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .collapsible-header:hover {
+            border-color: var(--accent-chaos);
+            color: var(--text-primary);
+        }
+
+        .collapsible-header .arrow {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible.open .collapsible-header .arrow {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .collapsible.open .collapsible-content { display: block; }
+
+        .examples-list {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .example-item {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--accent-chaos);
+        }
+
+        .example-item.abstraction { border-left-color: var(--accent-clinical); }
+        .example-item.jargon { border-left-color: var(--accent-warning); }
+        .example-item.virtue { border-left-color: var(--accent-success); }
+        .example-item.mobius { border-left-color: var(--accent-danger); }
+        .example-item.filler { border-left-color: var(--accent-purple); }
+        .example-item.confidence { border-left-color: var(--accent-pink); }
+        .example-item.rhetorical { border-left-color: #6366f1; }
+        .example-item.simile { border-left-color: #f472b6; }
+        .example-item.anaphora { border-left-color: #14b8a6; }
+        .example-item.recursion { border-left-color: var(--accent-chaos); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-tertiary); border-radius: 100px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 100px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-chaos); }
+
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+
+        .full-width { grid-column: 1 / -1; }
+
+        .action-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .action-row .btn { flex: 1; }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-success);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent-clinical);
+            text-decoration: none;
+        }
+
+        .mode-select {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .mode-select label {
+            margin-bottom: 0.75rem;
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .mode-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .mode-btn {
+            padding: 0.5rem 0.6rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--accent-chaos);
+            color: var(--text-primary);
+        }
+
+        .mode-btn.active {
+            background: var(--gradient-chaos);
+            color: #000;
+            border-color: transparent;
+            font-weight: 600;
+        }
+
+        .grammar-note {
+            font-size: 0.7rem;
+            color: var(--accent-success);
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(38, 222, 129, 0.1);
+            border-radius: 6px;
+            border-left: 2px solid var(--accent-success);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.75rem; }
+            .tab-btn { padding: 0.75rem 1rem; font-size: 0.9rem; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .sci-value { font-size: 3rem; }
+            .dilbert-value { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo-icon">🥗</div>
+                <h1>Word Salad Laboratory</h1>
+            </div>
+            <p class="tagline"><span class="tagline-quote">"The art of saying nothing with great confidence"</span></p>
+            <div class="header-controls">
+                <span class="version-badge">v4.5.0 CODEX Edition</span>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span class="toggle-icon">🌙</span>
+                    <span class="toggle-label">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active analyzer-tab" data-tab="analyzer">
+                <span>🔬</span> Analyzer
+            </button>
+            <button class="tab-btn" data-tab="generator">
+                <span>⚡</span> Generator
+            </button>
+        </nav>
+
+        <!-- GENERATOR TAB -->
+        <div id="generator" class="tab-content">
+            <div class="main-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚙️</div>
+                        <span class="card-title">Salad Configuration</span>
+                    </div>
+
+                    <label for="gen-topic">Topic / Seed Concept</label>
+                    <input type="text" id="gen-topic" placeholder="e.g., 'quarterly synergy', 'mindful disruption', 'blockchain feelings'">
+
+                    <!-- Hypnosis Mode Selection -->
+                    <div class="mode-select">
+                        <label>🎭 Hypnosis Mode</label>
+                        <div class="mode-grid">
+                            <button class="mode-btn active" data-mode="corporate" onclick="setMode('corporate')">
+                                💼 Corporate<br><span style="font-size:0.65rem;opacity:0.7">Enterprise fog</span>
+                            </button>
+                            <button class="mode-btn" data-mode="tech" onclick="setMode('tech')">
+                                🚀 Tech BS<br><span style="font-size:0.65rem;opacity:0.7">Disruptive pivot</span>
+                            </button>
+                            <button class="mode-btn" data-mode="consultant" onclick="setMode('consultant')">
+                                📊 Consultant<br><span style="font-size:0.65rem;opacity:0.7">McKinsey-speak</span>
+                            </button>
+                            <button class="mode-btn" data-mode="political" onclick="setMode('political')">
+                                🏛️ Political<br><span style="font-size:0.65rem;opacity:0.7">Doublespeak</span>
+                            </button>
+                            <button class="mode-btn" data-mode="therapy" onclick="setMode('therapy')">
+                                🧠 Therapy<br><span style="font-size:0.65rem;opacity:0.7">Trauma talk</span>
+                            </button>
+                            <button class="mode-btn" data-mode="wellness" onclick="setMode('wellness')">
+                                🧘 Wellness<br><span style="font-size:0.65rem;opacity:0.7">Toxic positivity</span>
+                            </button>
+                            <button class="mode-btn" data-mode="spiritual" onclick="setMode('spiritual')">
+                                ✨ Spiritual<br><span style="font-size:0.65rem;opacity:0.7">Cosmic vibes</span>
+                            </button>
+                            <button class="mode-btn" data-mode="academic" onclick="setMode('academic')">
+                                🎓 Academic<br><span style="font-size:0.65rem;opacity:0.7">Sokal-grade</span>
+                            </button>
+                            <button class="mode-btn" data-mode="mixed" onclick="setMode('mixed')">
+                                🌀 Chaos Mix<br><span style="font-size:0.65rem;opacity:0.7">All domains</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="slider-container mt-2">
+                        <div class="slider-header">
+                            <label>Confidence Level</label>
+                            <span class="slider-value" id="confidence-value">3</span>
+                        </div>
+                        <input type="range" id="confidence" min="1" max="5" value="3">
+                        <div class="sci-labels mt-1">
+                            <span>Hedging</span>
+                            <span>Absolute Certainty</span>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <label>Substance Level</label>
+                            <span class="slider-value" id="substance-value">2</span>
+                        </div>
+                        <input type="range" id="substance" min="1" max="5" value="2">
+                        <div class="sci-labels mt-1">
+                            <span>Pure Vapor</span>
+                            <span>Actual Content</span>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <label>Sentence Count</label>
+                            <span class="slider-value" id="sentences-value">5</span>
+                        </div>
+                        <input type="range" id="sentences" min="3" max="12" value="5">
+                    </div>
+
+                    <div class="collapsible" id="advanced-gen">
+                        <div class="collapsible-header">
+                            <span>🎛️</span>
+                            <span>Rhetorical Devices</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="collapsible-content">
+                            <div class="tag-grid">
+                                <input type="checkbox" id="device-recursion" class="tag-checkbox" checked>
+                                <label for="device-recursion" class="tag-label">🔄 Self-Reference</label>
+                                
+                                <input type="checkbox" id="device-tricolon" class="tag-checkbox" checked>
+                                <label for="device-tricolon" class="tag-label">📐 Tricolon</label>
+                                
+                                <input type="checkbox" id="device-metaphor" class="tag-checkbox" checked>
+                                <label for="device-metaphor" class="tag-label">🎭 Cosplay Metaphors</label>
+                                
+                                <input type="checkbox" id="device-parenthetical" class="tag-checkbox">
+                                <label for="device-parenthetical" class="tag-label">📝 Parentheticals</label>
+                                
+                                <input type="checkbox" id="device-connective" class="tag-checkbox" checked>
+                                <label for="device-connective" class="tag-label">🔗 Connective Overload</label>
+
+                                <input type="checkbox" id="device-confidence" class="tag-checkbox" checked>
+                                <label for="device-confidence" class="tag-label">💪 Confidence Markers</label>
+
+                                <input type="checkbox" id="device-mobius" class="tag-checkbox">
+                                <label for="device-mobius" class="tag-label">♾️ Paradoxes</label>
+                            </div>
+                            <div class="grammar-note">
+                                ✓ All output is grammatically correct — the sentences parse, they just don't mean anything
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary mt-3" onclick="generateSalad()">
+                        <span>🌀</span> Generate Corporate Hypnosis
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <span class="card-title">Generated Salad</span>
+                    </div>
+
+                    <div class="output-area" id="gen-output">
+                        <div class="output-placeholder">
+                            Your word salad will manifest here...<br><br>
+                            "Designed to mesmerize with complexity while delivering little substance."
+                        </div>
+                    </div>
+
+                    <div class="action-row">
+                        <button class="btn btn-secondary" onclick="copyOutput('gen-output')">📋 Copy</button>
+                        <button class="btn btn-secondary" onclick="analyzeGenerated()">🔬 Analyze</button>
+                        <button class="btn btn-secondary" onclick="exportText()">💾 Export</button>
+                    </div>
+
+                    <div id="gen-metrics" style="display: none;">
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value" id="gen-sci">0</div>
+                                <div class="metric-label">SCI Score</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="gen-dilbert">0</div>
+                                <div class="metric-label">Fog Index</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="gen-words">0</div>
+                                <div class="metric-label">Words</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYZER TAB -->
+        <div id="analyzer" class="tab-content active">
+            <div class="main-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔬</div>
+                        <span class="card-title">Text Input</span>
+                    </div>
+
+                    <label for="analyze-input">Paste Text to Analyze</label>
+                    <textarea id="analyze-input" rows="12" placeholder="Paste any text here: corporate emails, political speeches, wellness posts, consultant decks, startup pitches...
+
+The analyzer detects the persuasion patterns that make word salad work:
+
+• High confidence + low content = hypnosis
+• Buzzword density = fog machine effect  
+• Connective overload = false coherence
+• Abstract nouns = nothing to pin down
+
+'Like a meeting where jargon masks the lack of real content.'"></textarea>
+
+                    <button class="btn btn-primary btn-analyze mt-3" onclick="analyzeText()">
+                        <span>🧪</span> Analyze for Corporate Hypnosis
+                    </button>
+
+                    <div class="action-row mt-2">
+                        <button class="btn btn-secondary" onclick="loadExample('corporate')">📧 Corporate</button>
+                        <button class="btn btn-secondary" onclick="loadExample('consultant')">📊 Consultant</button>
+                        <button class="btn btn-secondary" onclick="loadExample('wellness')">🧘 Wellness</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <span class="card-title">Analysis Results</span>
+                    </div>
+
+                    <!-- Office Fog Index - THE STAR -->
+                    <div class="dilbert-gauge" id="dilbert-gauge" style="display: none;">
+                        <div class="dilbert-title">
+                            <span>🌫️</span> Office Fog Index™
+                            <span style="font-size: 0.6rem; opacity: 0.7; margin-left: 0.5rem;">(spiritually Dîlbërt)</span>
+                        </div>
+                        <div class="dilbert-value" id="dilbert-display">0</div>
+                        <div class="dilbert-bar">
+                            <div class="dilbert-bar-fill" id="dilbert-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="dilbert-verdict" id="dilbert-verdict">
+                            "Everyone is nodding and no one knows what's happening."
+                        </div>
+                        <div class="dilbert-explain">
+                            Composite of: buzzword density + connective overload + confidence markers + abstract noun ratio
+                        </div>
+                    </div>
+
+                    <!-- SCI Gauge -->
+                    <div class="sci-gauge" id="analyzer-gauge" style="display: none;">
+                        <div class="sci-title">Salad Complexity Index (SCI)</div>
+                        <div class="sci-value" id="sci-display">0.0</div>
+                        <div class="sci-bar">
+                            <div class="sci-bar-fill" id="sci-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="sci-labels">
+                            <span>Clear & Direct</span>
+                            <span>Peak Hypnosis</span>
+                        </div>
+                        <div class="sci-verdict" id="sci-verdict">Awaiting analysis...</div>
+                    </div>
+
+                    <!-- Archetype Detection Badge -->
+                    <div class="archetype-badge" id="archetype-badge" style="display: none;">
+                        <div class="archetype-label">Detected Mode</div>
+                        <div class="archetype-name" id="archetype-name">Corporate Hypnosis</div>
+                        <div class="archetype-confidence" id="archetype-confidence">92% certainty</div>
+                    </div>
+
+                    <div id="analyzer-placeholder">
+                        <div class="output-area">
+                            <div class="output-placeholder">
+                                Analysis results will appear here with highlighted patterns.<br><br>
+                                Hover over metrics to see WHY each pattern matters for persuasion.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="highlighted-output" class="output-area" style="display: none;"></div>
+
+                    <div class="legend" id="highlight-legend" style="display: none;">
+                        <div class="legend-item">
+                            <div class="legend-color highlight-jargon"></div>
+                            <span>Buzzword</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color highlight-confidence"></div>
+                            <span>Confidence</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color highlight-connective"></div>
+                            <span>Connective</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color highlight-abstraction"></div>
+                            <span>Abstract</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color highlight-virtue"></div>
+                            <span>Virtue-Mash</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color highlight-recursion"></div>
+                            <span>Self-Ref</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Metrics -->
+                <div class="card full-width" id="detailed-metrics" style="display: none;">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <span class="card-title">Detailed Breakdown</span>
+                        <span style="margin-left: auto; font-size: 0.7rem; color: var(--text-muted);">Hover for explanations</span>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Buzzword Density</div>
+                                Jargon acts as a fog machine. Listeners assume there's a plan because it sounds like there's one.
+                            </div>
+                            <div class="metric-value" id="metric-jd">0%</div>
+                            <div class="metric-label">Buzzwords</div>
+                            <div class="metric-detail">Fog machine effect</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Confidence Markers</div>
+                                High-certainty tone with low informational content. "Obviously," "clearly," "the reality is..." signals expertise without delivering it.
+                            </div>
+                            <div class="metric-value" id="metric-conf">0</div>
+                            <div class="metric-label">Confidence</div>
+                            <div class="metric-detail">Certainty signals</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Connective Density</div>
+                                Lots of "and/but/because/so/however" gluing half-thoughts together. Creates illusion of coherent argument that never arrives.
+                            </div>
+                            <div class="metric-value" id="metric-conn">0%</div>
+                            <div class="metric-label">Connectives</div>
+                            <div class="metric-detail">False coherence</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Abstraction Ratio</div>
+                                Abstract nouns glued together: frameworks, paradigms, alignments. Nothing concrete to pin down or verify.
+                            </div>
+                            <div class="metric-value" id="metric-ad">0%</div>
+                            <div class="metric-label">Abstraction</div>
+                            <div class="metric-detail">Unverifiable claims</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Virtue-Mash Compounds</div>
+                                Buzzwords glued together: "sustainable growth paradigms," "holistic alignment frameworks." Sounds impressive, means nothing.
+                            </div>
+                            <div class="metric-value" id="metric-vmq">0</div>
+                            <div class="metric-label">Virtue-Mash</div>
+                            <div class="metric-detail">Compound BS</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Self-Reference</div>
+                                Meta-talk instead of content. Talking about "frameworks" and "approaches" instead of the actual thing.
+                            </div>
+                            <div class="metric-value" id="metric-rd">0</div>
+                            <div class="metric-label">Self-Ref</div>
+                            <div class="metric-detail">Meta-talk</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Lexical Overlap</div>
+                                Word overlap between adjacent sentences. Interpretation depends on context: Low overlap + low jargon = varied vocabulary (good). Low overlap + high jargon = topic drift (bad).
+                            </div>
+                            <div class="metric-value" id="metric-coh">0%</div>
+                            <div class="metric-label">Overlap</div>
+                            <div class="metric-detail" id="metric-coh-context">Sentence connection</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-tooltip">
+                                <div class="tooltip-title">Type-Token Ratio</div>
+                                Vocabulary richness. Low TTR with high jargon = same buzzwords on repeat. High TTR can mean varied BS.
+                            </div>
+                            <div class="metric-value" id="metric-ttr">0%</div>
+                            <div class="metric-label">TTR</div>
+                            <div class="metric-detail">Vocab richness</div>
+                        </div>
+                    </div>
+
+                    <div class="collapsible mt-3" id="examples-section">
+                        <div class="collapsible-header">
+                            <span>🔍</span>
+                            <span>Detected Patterns (<span id="examples-count">0</span> found)</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="collapsible-content">
+                            <div class="examples-list" id="examples-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Explain This Salad Summary -->
+                    <div class="salad-explanation" id="salad-explanation" style="display: none;">
+                        <div class="explanation-header">💡 TL;DR — What's Actually Happening</div>
+                        <div class="explanation-body" id="explanation-body"></div>
+                    </div>
+
+                    <div class="collapsible mt-2" id="notes-section">
+                        <div class="collapsible-header">
+                            <span>📝</span>
+                            <span>Persuasion Analysis</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="collapsible-content">
+                            <div id="structural-notes" style="font-size: 0.85rem; color: var(--text-secondary);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Word Salad Laboratory v5.0 HYPERREALITY | Part of the <a href="#">CODEX</a> Suite</p>
+            <p style="margin-top: 0.5rem; font-size: 0.7rem;">A corporate hypnosis detection & generation tool. Heuristics only. SCI = structure, not sanity.</p>
+            <p style="margin-top: 0.25rem; font-size: 0.65rem; color: var(--text-muted);">Shortcuts: Ctrl+Enter (analyze/generate) · Shift+Enter (generate) · Ctrl+Shift+C (copy)</p>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast">
+        <span>✓</span>
+        <span id="toast-message">Copied to clipboard!</span>
+    </div>
+
+    <script>
+        // ============================================
+        // WORD SALAD LABORATORY v4.3
+        // "The art of saying nothing with great confidence"
+        // ============================================
+
+        let currentMode = 'corporate';
+        let currentTheme = localStorage.getItem('wsl-theme') || 'dark';
+
+        // Initialize theme on load
+        function initTheme() {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeToggle();
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('wsl-theme', currentTheme);
+            updateThemeToggle();
+        }
+
+        function updateThemeToggle() {
+            const icon = document.querySelector('.toggle-icon');
+            const label = document.querySelector('.toggle-label');
+            if (currentTheme === 'dark') {
+                // Show current state: dark mode
+                icon.textContent = '🌙';
+                label.textContent = 'Dark';
+            } else {
+                // Show current state: light mode
+                icon.textContent = '☀️';
+                label.textContent = 'Light';
+            }
+        }
+
+        // Run on load
+        initTheme();
+
+        // ============================================
+        // JARGON BANKS
+        // ============================================
+        const jargonBanks = {
+            corporate: [
+                // Core classics
+                'synergy', 'leverage', 'paradigm', 'bandwidth', 'circle back', 'touch base',
+                'move the needle', 'low-hanging fruit', 'deep dive', 'actionable insights',
+                'value proposition', 'stakeholder alignment', 'core competency', 'best practices',
+                'thought leadership', 'key takeaways', 'strategic initiative', 'north star',
+                'pipeline', 'runway', 'scalable', 'optimize', 'streamline', 'deliverables',
+                'KPIs', 'ROI', 'bottom line', 'top of mind', 'cross-functional',
+                'vertical integration', 'horizontal alignment', 'ecosystem', 'holistic approach',
+                'end-to-end', 'turnkey solution', 'value-add', 'upskill', 'synergistic paradigms',
+                'proactive synergy', 'empowerment verticals', 'utilize resources', 'paradigm shift',
+                'strategic alignment', 'leverage core competencies', 'value-added proposition',
+                'seamless integration', 'scalable solutions', 'dynamic innovation', 'robust framework',
+                // 2024 additions from research
+                'take it offline', 'ping me', 'loop in', 'sync', 'pushback', 'buy-in',
+                'drill down', 'boil the ocean', 'punt', 'put a pin in it', 'run the numbers',
+                'run it up the flagpole', 'ducks in a row', 'wheelhouse', 'fire drill',
+                'churn', 'pain point', 'touchpoint', 'smarketing', 'hyperlocal',
+                'growth mindset', 'all-hands', 'offboarding', 'quiet quitting', 'hush trips',
+                'act your wage', 'balls in the air', 'mission critical', 'headwinds',
+                'rightsizing', 'downsizing', 'negative employee feedback', 'trim the fat',
+                'voluntold', 'watercooler', 'whiteboarding', 'crushing it', 'drink the Kool-Aid',
+                'throw under the bus', 'sidebar', 'per my last email', 'herding cats'
+            ],
+            tech: [
+                // Core startup speak
+                'disrupt', 'pivot', 'iterate', 'agile', 'sprint', 'MVP', 'ship it', 'scale',
+                'growth hack', 'viral loop', 'network effects', 'moat', 'flywheel',
+                'product-market fit', '10x', 'moonshot', 'unicorn', 'blitzscaling',
+                'AI-powered', 'machine learning', 'blockchain', 'web3', 'quantum',
+                'edge computing', 'cloud-native', 'microservices', 'serverless',
+                'DevOps', 'API-first', 'full-stack', 'data-driven', 'real-time',
+                'microservice spaghetti', 'cloud cost gravity', 'API choreography',
+                'deployment pipeline', 'observability stack', 'disruptive technology',
+                'robust framework', 'platform play', 'tech stack', 'scalable architecture',
+                // Silicon Valley 2024 research additions
+                'hockey stick growth', 'Series A', 'Series D', 'decacorn', 'zebra startup',
+                'zombie startup', 'zombie unicorn', 'alpha test', 'beta test', 'dogfooding',
+                'drag-along rights', 'option pool', 'burn rate', 'runway', 'cap table',
+                'first principle thinking', 'N of 1 trial', 'limbic resonance',
+                'X for Y', 'Uber for X', 'Airbnb for X', 'frictionless', 'permissionless innovation',
+                'deflationary tokenomics', 'consensus building', 'nootropics', 'organic growth',
+                'iteration cycles', 'scrappy', 'lean', 'fail fast', 'move fast break things',
+                'prompt engineering', 'portfolio agility', 'feedforward', 'cultural detox',
+                'culture of heroics', 'effective altruism', 'accelerationism',
+                'big data', 'predictive analytics', 'data science', 'Internet of Things',
+                'autonomous', 'smart everything', 'digital transformation', 'cloud storage',
+                'SaaS', 'PaaS', 'IaaS', 'deep learning', 'neural network', 'generative AI'
+            ],
+            academic: [
+                // Classic postmodern vocabulary
+                'hermeneutic', 'epistemological', 'ontological', 'phenomenological', 'dialectical',
+                'paradigmatic', 'praxis', 'discourse', 'hegemonic', 'problematize', 'interrogate',
+                'deconstruct', 'liminal', 'intersectionality', 'positionality', 'situated knowledge',
+                'theoretical framework', 'methodology', 'normative', 'axiological', 'teleological',
+                'reify', 'operationalize', 'contextualize', 'foreground', 'privilege',
+                'discursive formation', 'hermeneutic lens', 'epistemic posture',
+                'critical apparatus', 'methodological scaffolding', 'interdisciplinary',
+                'peer-review', 'theoretical apparatus', 'citation lattice', 'post-structural',
+                // Sokal hoax inspired additions
+                'transformative hermeneutics', 'counterhegemonic narratives', 'liberatory science',
+                'emancipatory mathematics', 'privileged epistemological status', 'postmodern science',
+                'social construction', 'cognitive relativism', 'strong programme', 'multivocity',
+                'logocentrism', 'deconstructionist critique', 'ideation', 'non-linear',
+                'transgressing boundaries', 'semantic space', 'discursive practice',
+                'knowledge production', 'epistemic violence', 'subjectivity', 'alterity',
+                'otherness', 'heteronormativity', 'performativity', 'genealogy',
+                'archaeology of knowledge', 'apparatus', 'dispositif', 'textuality',
+                'intertextuality', 'rhizomatic', 'deterritorialization', 'schizoanalysis',
+                'simulacra', 'hyperreality', 'pastiche', 'metanarrative incredulity'
+            ],
+            therapy: [
+                // Clinical terms
+                'attachment pattern', 'coping repertoire', 'somatic', 'emotional bandwidth',
+                'boundary', 'inner committee', 'defense mechanism', 'trauma', 'regulation',
+                'window of tolerance', 'co-regulation', 'secure base', 'internal working model',
+                'relational template', 'affect regulation', 'mentalization', 'rupture and repair',
+                'therapeutic alliance', 'holding space', 'nervous system', 'triggered',
+                'inner child', 'shadow work', 'integration', 'embodied', 'grounded',
+                // Therapy speak research additions
+                'gaslighting', 'narcissist', 'toxic', 'trauma bonding', 'trauma dumping',
+                'boundaries', 'safe space', 'self-care', 'validate', 'emotional labor',
+                'codependent', 'enabler', 'projection', 'deflection', 'dissociation',
+                'anxious attachment', 'avoidant attachment', 'disorganized attachment',
+                'fight or flight', 'freeze response', 'fawn response', 'hypervigilance',
+                'people pleaser', 'emotional intelligence', 'empathy fatigue',
+                'burnout', 'compassion fatigue', 'secondary trauma', 'vicarious trauma',
+                'core wound', 'unpack', 'process', 'sit with', 'lean into',
+                'do the work', 'unhealed', 'dysregulated', 'activated', 'flooding',
+                'emotional flashback', 'reparenting', 'parts work', 'IFS'
+            ],
+            spiritual: [
+                // New age classics
+                'vibration', 'frequency', 'energy', 'alignment', 'manifestation', 'cosmic',
+                'chakra', 'ancestral', 'synchronicity', 'akashic records', 'light codes',
+                'ascension', 'starseed', 'soul contract', 'karmic', 'divine timing',
+                'higher self', 'source connection', 'quantum leap', 'timeline',
+                'energetic boundary', 'soul curriculum', 'sacred', 'ceremony', 'plant medicine',
+                // Wellness/spiritual research additions  
+                'law of attraction', 'raise your vibration', 'high-frequency', 'abundance mindset',
+                'manifest your destiny', 'lucky girl syndrome', 'spiritual bypassing',
+                'dark night of the soul', 'shadow self', 'ego death', 'awakening',
+                'third eye', 'pineal gland activation', 'kundalini', 'lightworker',
+                'earth angel', 'empath', 'highly sensitive person', 'intuitive',
+                'universe is sending signs', 'meant to be', 'everything happens for a reason',
+                'good vibes only', 'positive vibes', 'love and light', 'namaste',
+                'soul tribe', 'twin flame', 'soulmate', 'past life', 'regression',
+                'mercury retrograde', 'full moon energy', 'new moon intention',
+                'crystal healing', 'sound bath', 'breathwork', 'ayahuasca journey',
+                'holistic', 'integrative', 'superfood', 'detox', 'cleanse', 'toxins'
+            ],
+            consultant: [
+                // McKinsey-speak
+                'best-in-class', 'world-class', 'leading-edge', 'cutting-edge', 'bleeding-edge',
+                'blue-sky thinking', 'outside the box', 'game-changer', 'disruptive innovation',
+                'strategic inflection point', 'transformation journey', 'change management',
+                'stakeholder buy-in', 'executive sponsorship', 'maturity model', 'capability building',
+                'operating model', 'target state', 'current state assessment', 'gap analysis',
+                'roadmap', 'workstream', 'discovery phase', 'ideation', 'proof of concept',
+                'quick wins', 'lighthouse project', 'tiger team', 'war room',
+                // Consultant research additions
+                'across the detail', 'air cover', 'growling at the grizzly', 'dial up',
+                'open the kimono', 'blue thread', 'whitespace', 'swim lane',
+                'RACI matrix', 'governance structure', 'center of excellence',
+                'burning the clutch', 'driving up the mountain pass in fifth',
+                'elevate', 'double click', 'unpack this', 'socialize the idea',
+                'pressure test', 'stress test', 'net new', 'above the line', 'below the line',
+                'front of house', 'back of house', 'run the business', 'change the business',
+                'two-by-two matrix', 'three horizons', 'S-curve', 'J-curve',
+                'land and expand', 'hunter farmer model', 'account penetration',
+                'solution selling', 'challenger sales', 'spin selling', 'MEDDIC'
+            ],
+            political: [
+                // Doublespeak classics
+                'collateral damage', 'enhanced interrogation', 'extraordinary rendition',
+                'friendly fire', 'surgical strike', 'kinetic action', 'neutralize',
+                'pacification', 'regime change', 'nation building', 'stabilization',
+                'peacekeeping', 'humanitarian intervention', 'responsibility to protect',
+                'strategic stability', 'deterrence posture', 'force projection',
+                // Political euphemism research additions
+                'revenue enhancement', 'negative growth', 'right-sizing', 'restructuring',
+                'strategic redeployment', 'soft landing', 'managed decline',
+                'fiscal responsibility', 'entitlement reform', 'means testing',
+                'bipartisan solution', 'reaching across the aisle', 'common ground',
+                'stakeholder engagement', 'public-private partnership', 'regulatory framework',
+                'evidence-based policy', 'data-driven decision making', 'best available science',
+                'pro-growth', 'job creators', 'trickle down', 'rising tide lifts all boats',
+                'moral hazard', 'too big to fail', 'systemic risk', 'stress test',
+                'pivot to Asia', 'leading from behind', 'smart power', 'soft power',
+                'whole of government approach', 'interagency process', 'principals committee',
+                'messaging', 'optics', 'narratives', 'framing', 'talking points'
+            ],
+            wellness: [
+                // Toxic positivity and wellness industry speak
+                'self-care', 'self-love', 'radical acceptance', 'body positivity',
+                'mindfulness', 'present moment', 'living your truth', 'authentic self',
+                'journey', 'healing journey', 'wellness journey', 'transformation',
+                'clean eating', 'clean living', 'plant-based', 'whole foods',
+                'gut health', 'inflammation', 'anti-inflammatory', 'autoimmune protocol',
+                'intermittent fasting', 'biohacking', 'optimize', 'longevity',
+                'functional medicine', 'root cause', 'bio-individuality',
+                // Toxic positivity phrases
+                'good vibes only', 'no bad days', 'choose happiness', 'positive vibes',
+                'everything happens for a reason', 'it is what it is', 'just be positive',
+                'look on the bright side', 'at least', 'others have it worse',
+                'stay strong', 'be grateful', 'manifest positivity', 'attract abundance',
+                'high vibe tribe', 'energy vampire', 'protect your peace',
+                'main character energy', 'that girl aesthetic', 'hot girl walk',
+                'glow up', 'level up', 'boss babe', 'girl boss', 'hustle culture',
+                'rise and grind', 'sleep when youre dead', 'no excuses'
+            ]
+        };
+
+        // Abstract terms
+        // Abstract terms (corporate, political, philosophical, AND poetic/emotional)
+        const abstractTerms = [
+            // Corporate abstractions
+            'concept', 'idea', 'notion', 'principle', 'theory', 'philosophy', 'essence',
+            'nature', 'meaning', 'purpose', 'value', 'truth', 'reality', 'existence',
+            'framework', 'structure', 'system', 'process', 'method', 'approach',
+            'strategy', 'vision', 'mission', 'goal', 'objective', 'outcome', 'impact',
+            'paradigm', 'ecosystem', 'synergy', 'alignment', 'momentum', 'trajectory',
+            'narrative', 'interface', 'continuum', 'threshold', 'dynamic', 'context',
+            // Political/philosophical abstractions
+            'democracy', 'liberty', 'freedom', 'rights', 'peace', 'justice', 'equality',
+            'sovereignty', 'independence', 'autonomy', 'dignity', 'humanity', 'civilization',
+            'progress', 'prosperity', 'security', 'stability', 'order', 'unity',
+            'sacrifice', 'duty', 'honor', 'courage', 'virtue', 'righteousness',
+            'tyranny', 'oppression', 'injustice', 'dominion', 'authority', 'power',
+            'faith', 'hope', 'destiny', 'providence', 'salvation', 'redemption',
+            'loyalty', 'allegiance', 'patriotism', 'brotherhood', 'fellowship',
+            'spirit', 'soul', 'conscience', 'morality', 'ethics', 'integrity',
+            // Historical/cultural abstractions
+            'history', 'legacy', 'heritage', 'tradition', 'ancestors', 'ancestry',
+            'slave', 'slavery', 'bondage', 'chains', 'captivity', 'liberation',
+            'revolution', 'rebellion', 'resistance', 'struggle', 'movement',
+            'generation', 'generations', 'posterity', 'descendants', 'lineage',
+            // Poetic/emotional abstractions
+            'love', 'hate', 'hatefulness', 'fear', 'terror', 'shame', 'pain', 'joy', 'sorrow',
+            'grief', 'rage', 'anger', 'despair', 'longing', 'yearning', 'desire',
+            'dream', 'dreams', 'nightmare', 'wonder', 'awe', 'beauty', 'grace',
+            'darkness', 'light', 'shadow', 'silence', 'solitude', 'eternity',
+            'infinity', 'mortality', 'immortality', 'fate', 'doom', 'glory',
+            'triumph', 'defeat', 'victory', 'loss', 'absence', 'presence',
+            'memory', 'memories', 'regret', 'remorse', 'guilt', 'innocence',
+            'wisdom', 'folly', 'madness', 'sanity', 'passion', 'compassion',
+            'pride', 'humility', 'arrogance', 'dignity', 'honor', 'disgrace',
+            // Natural world as abstraction (when used metaphorically)
+            'tide', 'tides', 'ocean', 'sea', 'storm', 'fire', 'flame',
+            'dust', 'ashes', 'earth', 'sky', 'heaven', 'hell', 'abyss',
+            'dawn', 'dusk', 'twilight', 'midnight', 'daybreak', 'sunrise', 'sunset',
+            'moon', 'moons', 'sun', 'suns', 'stars', 'void', 'cosmos'
+        ];
+
+        // Confidence markers (high certainty) - corporate, classical, AND poetic
+        const confidenceMarkers = [
+            // Modern corporate confidence
+            'obviously', 'clearly', 'the reality is', 'the key is', 'simply put',
+            'at the end of the day', 'make no mistake', 'the fact is', 'the truth is',
+            'without question', 'undoubtedly', 'certainly', 'absolutely', 'fundamentally',
+            'inherently', 'essentially', 'ultimately', 'in essence', 'at its core',
+            'the bottom line is', 'let me be clear', 'to be frank', 'quite frankly',
+            'needless to say', 'it goes without saying', 'rest assured',
+            // Classical rhetorical confidence
+            'i feel confident', 'let me say', 'let me say again', 'i must say',
+            'we must', 'we shall', 'we will', 'i believe', 'i am convinced',
+            'it is clear', 'it is evident', 'it is certain', 'it is true',
+            'there can be no doubt', 'beyond doubt', 'beyond question',
+            'as we all know', 'as everyone knows', 'history shows',
+            'the world knows', 'all men know', 'every man knows',
+            'manifestly', 'assuredly', 'surely', 'indeed', 'truly', 'verily',
+            'it is a fearful thing', 'it is a distressing', 'it is a solemn',
+            'mark my words', 'hear me well', 'take note',
+            // Poetic declarations and defiance
+            'i rise', 'i will rise', 'still i rise', 'i shall', 'i will',
+            'i am', 'i stand', 'i remain', 'i endure', 'i persist', 'i prevail',
+            'i know', 'i see', 'i feel', 'i hear', 'i speak', 'i sing',
+            'nothing can', 'no one can', 'never will', 'always will',
+            'i have seen', 'i have known', 'i have lived', 'i have walked',
+            'with certainty', 'with the certainty'
+        ];
+
+        // Connectives (create false coherence)
+        const connectiveWords = [
+            'and', 'but', 'because', 'so', 'however', 'therefore', 'moreover',
+            'furthermore', 'additionally', 'meanwhile', 'consequently', 'thus',
+            'hence', 'accordingly', 'nevertheless', 'nonetheless', 'in addition',
+            'as such', 'in other words', 'that said', 'having said that',
+            'with that in mind', 'to that end', 'in light of this'
+        ];
+
+        // Adjectives and adverbs (grammatically correct)
+        const adjectives = [
+            'strategic', 'holistic', 'robust', 'dynamic', 'seamless', 'scalable',
+            'sustainable', 'transformative', 'innovative', 'comprehensive', 'integrated',
+            'synergistic', 'proactive', 'agile', 'disruptive', 'cutting-edge'
+        ];
+
+        const adverbs = [
+            'strategically', 'holistically', 'fundamentally', 'inherently', 'essentially',
+            'ultimately', 'increasingly', 'effectively', 'seamlessly', 'proactively'
+        ];
+
+        // Grammatically correct anchors
+        const anchors = [
+            "The key thing to understand here is that",
+            "At a fundamental level,",
+            "When we examine this more closely,",
+            "The underlying situation is that",
+            "What we are really talking about is",
+            "The strategic reality is that",
+            "If we are being honest,",
+            "The core issue here is that",
+            "Moving forward,",
+            "At the end of the day,"
+        ];
+
+        // Tricolon structures
+        const tricolonVerbs = ['orchestrating', 'leveraging', 'optimizing', 'synthesizing', 
+                              'navigating', 'facilitating', 'driving', 'enabling'];
+
+        // Cosplay metaphors
+        const cosplayMetaphors = {
+            subjects: ['spreadsheet', 'committee meeting', 'quarterly review', 'all-hands email', 
+                      'budget planning session', 'Slack channel', 'performance review'],
+            objects: ['meditation retreat', 'TED talk', 'vision quest', 'moonshot initiative',
+                     'spiritual awakening', 'startup pitch', 'therapy session']
+        };
+
+        // Paradox templates
+        const paradoxTemplates = [
+            "By not forcing the outcome, we actually achieve the outcome.",
+            "The more we plan, the less we need to plan.",
+            "In embracing uncertainty, we find certainty.",
+            "To move forward, sometimes we must first move backward.",
+            "The solution is, paradoxically, the problem itself.",
+            // Mobius Persuasion additions
+            "It is precisely by avoiding specificity that we demonstrate clarity.",
+            "Doing less allows us to operationalize more.",
+            "Ambiguity remains our strongest alignment tool.",
+            "The less we define, the more we accomplish.",
+            "By committing to nothing, we enable everything.",
+            "Constraints are, ultimately, the source of our freedom."
+        ];
+        
+        // Causal chains ("X impacts Y impacts Z...")
+        const causalConnectors = [
+            "which in turn shapes our",
+            "which inevitably affects the",
+            "directly reinforcing the",
+            "creating downstream implications for",
+            "fundamentally transforming our approach to",
+            "enabling a step-change in",
+            "ultimately catalyzing",
+            "driving sustainable momentum toward"
+        ];
+        
+        // Gravity wells (repeated anchor phrases)
+        const gravityWells = [
+            "moving forward",
+            "at the end of the day",
+            "if we're being honest",
+            "as we continue this journey",
+            "from a strategic perspective",
+            "the reality is",
+            "fundamentally speaking",
+            "when all is said and done"
+        ];
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function shuffle(arr) {
+            const shuffled = [...arr];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function getArticle(word) {
+            const vowels = ['a', 'e', 'i', 'o', 'u'];
+            const firstLetter = word.trim().toLowerCase()[0];
+            return vowels.includes(firstLetter) ? 'an' : 'a';
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+        }
+
+        function getModeJargon() {
+            if (currentMode === 'mixed') {
+                return [
+                    ...jargonBanks.corporate,
+                    ...jargonBanks.tech,
+                    ...jargonBanks.academic,
+                    ...jargonBanks.therapy,
+                    ...jargonBanks.spiritual,
+                    ...jargonBanks.consultant,
+                    ...jargonBanks.political,
+                    ...jargonBanks.wellness
+                ];
+            }
+            return jargonBanks[currentMode] || jargonBanks.corporate;
+        }
+
+        // ============================================
+        // GENERATOR
+        // ============================================
+
+        function generateVirtueMash() {
+            const adj = randomChoice(adjectives);
+            const nouns = ['growth paradigms', 'value creation', 'stakeholder alignment',
+                          'capability building', 'ecosystem development', 'operational excellence',
+                          'digital transformation', 'strategic alignment', 'robust frameworks'];
+            return `${adj} ${randomChoice(nouns)}`;
+        }
+
+        function generateCosplayMetaphor() {
+            const subj = randomChoice(cosplayMetaphors.subjects);
+            const obj = randomChoice(cosplayMetaphors.objects);
+            return `like ${getArticle(subj)} ${subj} trying to cosplay as ${getArticle(obj)} ${obj}`;
+        }
+
+        function generateTricolon(pool) {
+            const base = randomChoice(pool);
+            const verbs = shuffle(tricolonVerbs).slice(0, 3);
+            const nouns = shuffle(pool).slice(0, 3);
+            return `We are not just addressing ${base}; we are ${verbs[0]} ${nouns[0]}, ${verbs[1]} ${nouns[1]}, and ${verbs[2]} ${nouns[2]}.`;
+        }
+
+        function generateSentence(pool, topic, confidenceLevel, substanceLevel, devices) {
+            const anchor = randomChoice(anchors);
+            const baseTopic = topic || randomChoice(pool);
+            const jargon = randomChoice(pool);
+            
+            // Pick an adjective that doesn't already appear in the jargon (avoid "dynamic dynamic innovation")
+            let adj = randomChoice(adjectives);
+            let attempts = 0;
+            while (jargon.toLowerCase().includes(adj.toLowerCase()) && attempts < 5) {
+                adj = randomChoice(adjectives);
+                attempts++;
+            }
+            
+            // substanceLevel affects probability of adding fluff: low substance = more embellishment
+            const fluffBias = (5 - substanceLevel) * 0.1; // 1→0.4, 3→0.2, 5→0
+            
+            let sentence = `${anchor} ${baseTopic} represents ${getArticle(adj)} ${adj} ${jargon}`;
+            
+            // Add confidence markers based on level
+            if (devices.confidence && confidenceLevel >= 3) {
+                const marker = randomChoice(confidenceMarkers);
+                if (Math.random() > 0.5) {
+                    sentence = `${capitalize(marker)}, ${sentence.toLowerCase()}`;
+                }
+            }
+            
+            // Add connectives for false coherence (now with causal chains)
+            if (devices.connective && Math.random() > (0.4 + fluffBias * 0.5)) {
+                const extra = randomChoice(pool);
+                if (Math.random() > 0.5) {
+                    // Causal chain: X → Y → Z
+                    const causal = randomChoice(causalConnectors);
+                    sentence += `, ${causal} ${extra}`;
+                } else {
+                    // Classic connective
+                    const conn = randomChoice(connectiveWords);
+                    sentence += `, ${conn} this directly impacts our ${extra}`;
+                }
+            }
+            
+            // Add cosplay metaphor
+            if (devices.metaphor && Math.random() > (0.5 + fluffBias)) {
+                sentence += `, ${generateCosplayMetaphor()}`;
+            }
+            
+            // Add self-reference
+            if (devices.recursion && Math.random() > (0.6 + fluffBias * 0.5)) {
+                sentence += `, which is ${adverbs[Math.floor(Math.random() * adverbs.length)]} what we mean when we talk about ${baseTopic}`;
+            }
+            
+            // Add parenthetical
+            if (devices.parenthetical && Math.random() > (0.7 + fluffBias * 0.5)) {
+                const parentheticals = [
+                    "(and this is the critical point)",
+                    "(which, to be clear, is non-negotiable)",
+                    "(the implications of which are significant)",
+                    "(and I cannot stress this enough)"
+                ];
+                sentence += ` ${randomChoice(parentheticals)}`;
+            }
+            
+            sentence += '.';
+            return sentence;
+        }
+
+        function generateRecap(pool, topic) {
+            const base = topic || randomChoice(pool);
+            const abstract = randomChoice(abstractTerms);
+            const confidence = randomChoice(['The bottom line is', 'At the end of the day', 'Ultimately', 'The key takeaway is']);
+            return `${confidence}, this is about giving ${base} the ${abstract} it deserves while maintaining our commitment to ${generateVirtueMash()}.`;
+        }
+
+        function generateSalad() {
+            const topic = document.getElementById('gen-topic').value.trim();
+            const confidenceLevel = parseInt(document.getElementById('confidence').value);
+            const substanceLevel = parseInt(document.getElementById('substance').value);
+            const sentenceCount = parseInt(document.getElementById('sentences').value);
+            
+            const jargonPool = [...getModeJargon()];
+            if (topic) {
+                for (let i = 0; i < 3; i++) jargonPool.unshift(topic);
+            }
+
+            const devices = {
+                recursion: document.getElementById('device-recursion')?.checked,
+                tricolon: document.getElementById('device-tricolon')?.checked,
+                metaphor: document.getElementById('device-metaphor')?.checked,
+                parenthetical: document.getElementById('device-parenthetical')?.checked,
+                connective: document.getElementById('device-connective')?.checked,
+                confidence: document.getElementById('device-confidence')?.checked,
+                mobius: document.getElementById('device-mobius')?.checked
+            };
+
+            let sentences = [];
+            
+            // Gravity Well: Pick an anchor phrase that will repeat for "leadership energy"
+            const gravityWell = randomChoice(gravityWells);
+            let gravityCount = 0;
+            const maxGravity = Math.floor(sentenceCount / 3) + 1; // 1-3 uses depending on length
+
+            // Opening
+            sentences.push(generateSentence(jargonPool, topic, confidenceLevel, substanceLevel, devices));
+
+            // Tricolon
+            if (devices.tricolon && confidenceLevel >= 3) {
+                sentences.push(generateTricolon(jargonPool));
+            }
+
+            // Middle sentences
+            // substanceLevel affects probability of empty filler: low substance = more virtue-mash and paradoxes
+            const virtueMashThreshold = 0.9 - (0.15 * (5 - substanceLevel)); // 1→0.3, 3→0.6, 5→0.9
+            const paradoxThreshold = 0.95 - (0.1 * (5 - substanceLevel));    // 1→0.55, 3→0.75, 5→0.95
+            
+            for (let i = sentences.length; i < sentenceCount - 1; i++) {
+                // Gravity well injection
+                if (gravityCount < maxGravity && Math.random() > 0.7) {
+                    const base = randomChoice(jargonPool);
+                    sentences.push(`${capitalize(gravityWell)}, ${base} remains our priority.`);
+                    gravityCount++;
+                } else if (Math.random() > virtueMashThreshold) {
+                    sentences.push(`This is fundamentally about ${generateVirtueMash()}.`);
+                } else if (devices.mobius && Math.random() > paradoxThreshold) {
+                    sentences.push(randomChoice(paradoxTemplates));
+                } else {
+                    sentences.push(generateSentence(jargonPool, topic, confidenceLevel, substanceLevel, devices));
+                }
+            }
+
+            // Closing
+            sentences.push(generateRecap(jargonPool, topic));
+
+            // Clean up output: collapse multiple spaces, trim, ensure proper punctuation
+            let output = sentences.join(' ')
+                .replace(/\s+/g, ' ')           // Collapse multiple spaces
+                .replace(/\s+\./g, '.')          // Remove space before periods
+                .replace(/\s+,/g, ',')           // Remove space before commas
+                .replace(/\.\s*\./g, '.')        // Fix double periods
+                .replace(/,\s*,/g, ',')          // Fix double commas
+                .replace(/\(\s+/g, '(')          // Fix space after opening paren
+                .replace(/\s+\)/g, ')')          // Fix space before closing paren
+                .trim();
+            
+            // For longer outputs (6+ sentences), add paragraph breaks for professional appearance
+            if (sentenceCount >= 6) {
+                const sentenceArray = output.split(/(?<=[.!?])\s+(?=[A-Z0-9])/).filter(s => s.trim());
+                const breakPoint = Math.ceil(sentenceArray.length / 2);
+                output = sentenceArray.slice(0, breakPoint).join(' ').trim() + 
+                         '</p><p style="margin-top: 1em; text-indent: 0;">' + 
+                         sentenceArray.slice(breakPoint).join(' ').trim();
+                output = '<p style="text-indent: 0;">' + output + '</p>';
+            }
+            
+            document.getElementById('gen-output').innerHTML = output;
+            document.getElementById('gen-output').classList.remove('output-placeholder');
+            
+            // Get plain text version for analysis and word count
+            const plainText = document.getElementById('gen-output').innerText;
+            
+            document.getElementById('gen-metrics').style.display = 'block';
+            const analysis = analyzeTextInternal(plainText);
+            document.getElementById('gen-sci').textContent = analysis.sci.toFixed(1);
+            document.getElementById('gen-sci').className = `metric-value ${getSciClass(analysis.sci)}`;
+            document.getElementById('gen-dilbert').textContent = analysis.dilbertScore;
+            document.getElementById('gen-dilbert').className = `metric-value ${getDilbertClass(analysis.dilbertScore)}`;
+            document.getElementById('gen-words').textContent = plainText.split(/\s+/).filter(w => w.length > 0).length;
+        }
+
+        // ============================================
+        // ANALYZER
+        // ============================================
+
+        const selfReferencePatterns = [
+            /\bthis\s+is\s+(also\s+)?(fundamentally\s+)?about\b/gi,
+            /\bat\s+(its\s+)?core\b/gi,
+            /\bthe\s+nature\s+of\b/gi,
+            /\bin\s+other\s+words\b/gi,
+            /\bwhich\s+is\s+(essentially\s+)?what\s+we\s+mean\b/gi,
+            /\breturning\s+to\b/gi,
+            /\bcircl(e|ing)\s+back\b/gi,
+            /\bthe\s+essence\s+of\b/gi,
+            /\bin\s+essence\b/gi,
+            /\bwhen\s+we\s+talk\s+about\b/gi
+        ];
+
+        const virtueMashPatterns = [
+            /\b(sustainable|holistic|strategic|synergistic|integrated|transformative|innovative|agile|comprehensive|dynamic|robust|seamless)\s+\w+\s*(paradigm|creation|alignment|building|development|leadership|excellence|transformation|evolution|framework)s?\b/gi,
+            /\b\w+[-](driven|focused|centric|forward|first)\b/gi
+        ];
+
+        // Rhetorical question patterns (questions not seeking answers)
+        const rhetoricalPatterns = [
+            // "Does my X upset/offend you?" patterns (Maya Angelou style)
+            /\bdoes\s+(my|your|our|their|this|that|it|his|her)\s+\w+\s+(upset|bother|offend|disturb|trouble|concern|surprise|shock)/gi,
+            /\bdoes\s+it\s+come\s+as\s+a\s+surprise/gi,
+            // "Did you want/expect to see..." patterns
+            /\bdid\s+(you|we|they)\s+(want|think|expect|believe|hope)\s+to\s+(see|hear|find|know)/gi,
+            // "Why are you..." patterns  
+            /\bwhy\s+(do|should|would|are|is|did)\s+(you|we|they|i)\b/gi,
+            // General question openers used rhetorically
+            /\bwhat\s+(is|are|was|were)\s+(it|this|that)\s+\w*\s*(but|if not|other than)/gi,
+            /\bcan\s+(anyone|anybody|we|you|one)\s+(really|truly|honestly|deny|doubt)/gi,
+            /\bhow\s+(can|could|dare|long|much)\s+(we|you|they|one|i)\b/gi,
+            /\bwho\s+(among us|are we|is to say|can deny|would|could|dares)/gi,
+            // Questions that are really assertions
+            /\bis\s+(this|that|it)\s+not\s+\w+/gi,
+            /\bare\s+(we|you|they)\s+not\s+\w+/gi,
+            /\bshould\s+(we|i|one)\s+not\b/gi,
+            /\bdo\s+(we|you|they)\s+not\s+(see|know|understand|realize)/gi
+        ];
+
+        // Repetition/Anaphora detection function
+        function detectAnaphora(text) {
+            // Split on sentence-enders AND line breaks (for poetry)
+            const sentences = text.split(/[.!?\n]+/).filter(s => s.trim().length > 5);
+            if (sentences.length < 3) return { count: 0, openings: [], phrases: [] };
+            
+            // Get first 2-4 words of each line/sentence
+            const openings = sentences.map(s => {
+                const words = s.trim().toLowerCase().split(/\s+/).slice(0, 3).join(' ');
+                return words;
+            }).filter(o => o.length > 3);
+            
+            // Count repeated openings
+            const openingCounts = {};
+            openings.forEach(o => {
+                openingCounts[o] = (openingCounts[o] || 0) + 1;
+            });
+            
+            const repeatedOpenings = Object.entries(openingCounts)
+                .filter(([_, count]) => count >= 2)
+                .map(([pattern, count]) => ({ pattern, count }));
+            
+            // Check for repeated 2-word phrases (like "I rise")
+            const twoWordPhrases = text.toLowerCase().match(/\b(\w+\s+\w+)\b/g) || [];
+            const twoWordCounts = {};
+            twoWordPhrases.forEach(p => {
+                if (p.length >= 4 && !/^(the |a |an |to |of |in |on |at |is |it |as |or |if |so |do |be |we |he |my |no |up )/.test(p)) {
+                    twoWordCounts[p] = (twoWordCounts[p] || 0) + 1;
+                }
+            });
+            
+            const repeatedTwoWord = Object.entries(twoWordCounts)
+                .filter(([_, count]) => count >= 3)
+                .map(([pattern, count]) => ({ pattern, count }));
+            
+            // Check for repeated 3-word phrases
+            const threeWordPhrases = text.toLowerCase().match(/\b(\w+\s+\w+\s+\w+)\b/g) || [];
+            const threeWordCounts = {};
+            threeWordPhrases.forEach(p => {
+                if (p.length > 8) {
+                    threeWordCounts[p] = (threeWordCounts[p] || 0) + 1;
+                }
+            });
+            
+            const repeatedThreeWord = Object.entries(threeWordCounts)
+                .filter(([_, count]) => count >= 2)
+                .map(([pattern, count]) => ({ pattern, count }));
+            
+            // Combine all repeated phrases
+            const allPhrases = [...repeatedTwoWord, ...repeatedThreeWord]
+                .sort((a, b) => b.count - a.count);
+            
+            return {
+                count: repeatedOpenings.length + allPhrases.length,
+                openings: repeatedOpenings,
+                phrases: allPhrases
+            };
+        }
+
+        function getAllJargon() {
+            return [
+                ...jargonBanks.corporate,
+                ...jargonBanks.tech,
+                ...jargonBanks.academic,
+                ...jargonBanks.therapy,
+                ...jargonBanks.spiritual,
+                ...jargonBanks.consultant,
+                ...jargonBanks.political,
+                ...jargonBanks.wellness
+            ];
+        }
+
+        function tokenizeWords(text) {
+            return text.toLowerCase()
+                .replace(/[\u2018\u2019]/g, "'")
+                .replace(/[\u201C\u201D]/g, '"')
+                .replace(/[^a-z0-9'\s-]+/gi, ' ')
+                .split(/\s+/)
+                .filter(w => w.length > 0);
+        }
+
+        function splitSentences(text) {
+            const raw = text
+                .replace(/\s+/g, ' ')
+                .split(/(?<=[.!?])\s+(?=[A-Z])/)
+                .map(s => s.trim())
+                .filter(s => s.length > 0);
+            return raw.length > 0 ? raw : [text.trim()];
+        }
+
+        function jaccard(setA, setB) {
+            if (!setA.size && !setB.size) return 1;
+            const inter = new Set([...setA].filter(x => setB.has(x)));
+            const unionSize = setA.size + setB.size - inter.size;
+            return unionSize > 0 ? inter.size / unionSize : 0;
+        }
+
+        function analyzeTextInternal(text) {
+            const words = tokenizeWords(text);
+            const wordCount = words.length;
+            
+            if (wordCount === 0) {
+                return {
+                    sci: 0, dilbertScore: 0, recursionDepth: 0, abstractionDensity: 0,
+                    virtueMashQuotient: 0, jargonDensity: 0, jargonCount: 0,
+                    confidenceCount: 0, connectiveDensity: 0, rhetoricalCount: 0,
+                    simileCount: 0, anaphoraCount: 0, coherence: 0.5, 
+                    coherenceContext: 'neutral', topicDrift: 0, ttr: 0,
+                    detectedArchetype: 'Neutral', archetypeConfidence: 0,
+                    matches: { recursion: [], abstraction: [], jargon: [], virtue: [], confidence: [], connective: [] },
+                    rhetoricalMatches: [], simileMatches: [], anaphoraResult: { count: 0, openings: [], phrases: [] },
+                    notes: []
+                };
+            }
+
+            const allJargon = getAllJargon();
+            const matches = {
+                recursion: [], abstraction: [], jargon: [], virtue: [], confidence: [], connective: []
+            };
+
+            // 1. Recursion/Self-Reference
+            let recursionCount = 0;
+            for (const pattern of selfReferencePatterns) {
+                const found = text.match(pattern);
+                if (found) {
+                    recursionCount += found.length;
+                    matches.recursion.push(...found);
+                }
+            }
+
+            // 2. Abstraction Density
+            let abstractCount = 0;
+            for (const term of abstractTerms) {
+                const regex = new RegExp(`\\b${term}\\b`, 'gi');
+                const found = text.match(regex);
+                if (found) {
+                    abstractCount += found.length;
+                    matches.abstraction.push(...found);
+                }
+            }
+            const abstractionDensity = (abstractCount / wordCount) * 100;
+
+            // 3. Virtue-Mash
+            let virtueMashCount = 0;
+            for (const pattern of virtueMashPatterns) {
+                const found = text.match(pattern);
+                if (found) {
+                    virtueMashCount += found.length;
+                    matches.virtue.push(...found);
+                }
+            }
+
+            // 4. Jargon/Buzzword Density
+            let jargonCount = 0;
+            for (const term of allJargon) {
+                const regex = new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                const found = text.match(regex);
+                if (found) {
+                    jargonCount += found.length;
+                    matches.jargon.push(...found);
+                }
+            }
+            const jargonDensity = (jargonCount / wordCount) * 100;
+
+            // 5. Confidence Markers
+            let confidenceCount = 0;
+            for (const marker of confidenceMarkers) {
+                const regex = new RegExp(`\\b${marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                const found = text.match(regex);
+                if (found) {
+                    confidenceCount += found.length;
+                    matches.confidence.push(...found);
+                }
+            }
+
+            // 6. Connective Density
+            let connectiveCount = 0;
+            for (const conn of connectiveWords) {
+                const regex = new RegExp(`\\b${conn}\\b`, 'gi');
+                const found = text.match(regex);
+                if (found) {
+                    connectiveCount += found.length;
+                    matches.connective.push(...found);
+                }
+            }
+            const connectiveDensity = (connectiveCount / wordCount) * 100;
+
+            // 6b. Rhetorical Questions
+            let rhetoricalCount = 0;
+            const rhetoricalMatches = [];
+            for (const pattern of rhetoricalPatterns) {
+                const found = text.match(pattern);
+                if (found) {
+                    rhetoricalCount += found.length;
+                    rhetoricalMatches.push(...found);
+                }
+            }
+            
+            // 6c. Simile Detection ("like X", "as X as")
+            let simileCount = 0;
+            const simileMatches = [];
+            const similePatterns = [
+                /\blike\s+(a|an|the)?\s*\w+(\s+\w+)?(?=[\s,.])/gi,  // "like dust", "like a storm"
+                /\blike\s+i('ve|'m|\s+have|\s+am|\s+was)\s+got/gi,   // "like I've got" (Angelou style)
+                /\bas\s+\w+\s+as\s+(a|an|the)?\s*\w+/gi              // "as fierce as a lion"
+            ];
+            for (const pattern of similePatterns) {
+                const found = text.match(pattern);
+                if (found) {
+                    simileCount += found.length;
+                    simileMatches.push(...found);
+                }
+            }
+            
+            // 6d. Anaphora/Repetition
+            const anaphoraResult = detectAnaphora(text);
+
+            // 7. Local Coherence (Jaccard similarity between adjacent sentences)
+            const sentences = splitSentences(text);
+            let coherence = 0.5;
+            let topicDrift = 0;
+            if (sentences.length >= 2) {
+                const coherenceValues = [];
+                for (let i = 0; i < sentences.length - 1; i++) {
+                    const wordsA = new Set(tokenizeWords(sentences[i]).filter(w => w.length > 3));
+                    const wordsB = new Set(tokenizeWords(sentences[i + 1]).filter(w => w.length > 3));
+                    coherenceValues.push(jaccard(wordsA, wordsB));
+                }
+                coherence = coherenceValues.reduce((a, b) => a + b, 0) / coherenceValues.length;
+                // Topic drift: count sentence transitions with near-zero connection
+                topicDrift = coherenceValues.filter(v => v < 0.05).length;
+            }
+
+            // 8. TTR
+            const uniqueWords = new Set(words);
+            const ttr = (uniqueWords.size / wordCount) * 100;
+            
+            // 9. Contextual Coherence Assessment
+            // Low lexical overlap means different things depending on jargon density:
+            // - Low overlap + Low jargon = varied vocabulary (GOOD - clear writing)
+            // - Low overlap + High jargon = topic drift with buzzword padding (BAD - word salad)
+            // - High overlap + High jargon = hammering same buzzwords (BAD - repetitive BS)
+            let coherenceContext = 'neutral';
+            if (coherence < 0.15 && jargonDensity < 5) {
+                coherenceContext = 'varied_vocabulary'; // Actually good writing
+            } else if (coherence < 0.15 && jargonDensity >= 5) {
+                coherenceContext = 'topic_drift'; // Bad - classic word salad
+            } else if (coherence > 0.25 && jargonDensity >= 10) {
+                coherenceContext = 'buzzword_hammering'; // Bad - repetitive BS
+            }
+
+            // Calculate Office Fog Index (0-100)
+            // Tighter thresholds = more responsive scoring
+            const buzzNorm = Math.min(jargonDensity / 10, 1);      // was /15
+            const confNorm = Math.min(confidenceCount / 3, 1);     // was /5
+            const connNorm = Math.min(connectiveDensity / 5, 1);   // was /12
+            const absNorm = Math.min(abstractionDensity / 12, 1);  // was /20
+            
+            // Base score from components
+            let dilbertBase = (buzzNorm + confNorm + connNorm + absNorm) / 4;
+            
+            // Synergy bonus: when multiple factors are high, it compounds
+            const highCount = [buzzNorm, confNorm, connNorm, absNorm].filter(n => n > 0.7).length;
+            const synergyBonus = highCount >= 3 ? 0.1 : (highCount >= 2 ? 0.05 : 0);
+            
+            // Length normalization: short samples (<120 words) get dampened to prevent spike
+            const lengthNorm = Math.min(wordCount / 120, 1);
+            const dilbertScore = Math.round(Math.min((dilbertBase + synergyBonus) * 100, 100) * (0.7 + 0.3 * lengthNorm));
+
+            // Calculate SCI (0-5)
+            const rdNorm = Math.min(recursionCount / 5, 1);
+            const vmqNorm = Math.min(virtueMashCount / 5, 1);
+            const cohInv = 1 - coherence;
+            const sciRaw = ((rdNorm + absNorm + vmqNorm + buzzNorm + confNorm + connNorm + cohInv) / 7) * 5;
+            const sci = sciRaw * (0.6 + 0.4 * lengthNorm);  // Length-normalized
+
+            // Narrative Archetype Detection
+            // Determine the dominant "voice" of the text based on metric ratios
+            let detectedArchetype = 'Neutral';
+            let archetypeConfidence = 0;
+            
+            const archetypeScores = {
+                'Corporate Hypnosis': (jargonDensity * 2) + (connectiveDensity * 1.5) + (confidenceCount * 3) - (anaphoraResult.count * 5),
+                'Political Rhetoric': (abstractionDensity * 1.5) + (confidenceCount * 4) + (rhetoricalCount * 5) - (jargonDensity * 0.5),
+                'Wellness/Spiritual': (abstractionDensity * 1.5) - (jargonDensity * 2) + (simileCount * 3) - (confidenceCount * 2),
+                'Academic Fog': (abstractionDensity * 2) + (connectiveDensity * 2) - (simileCount * 3) - (rhetoricalCount * 2),
+                'Poetry/Literary': (anaphoraResult.count * 8) + (simileCount * 5) + (rhetoricalCount * 4) - (jargonDensity * 3),
+                'Consultant Speak': (jargonDensity * 2.5) + (virtueMashCount * 5) + (confidenceCount * 2) - (simileCount * 3)
+            };
+            
+            // Find highest scoring archetype
+            let maxScore = -Infinity;
+            for (const [archetype, score] of Object.entries(archetypeScores)) {
+                if (score > maxScore) {
+                    maxScore = score;
+                    detectedArchetype = archetype;
+                }
+            }
+            
+            // Calculate confidence (normalize against total possible)
+            const totalScore = Object.values(archetypeScores).reduce((a, b) => a + Math.max(0, b), 0);
+            archetypeConfidence = totalScore > 0 ? Math.min(Math.round((Math.max(0, maxScore) / totalScore) * 100 + 40), 99) : 50;
+            
+            // If scores are too low/neutral, mark as clear prose
+            if (maxScore < 5 && jargonDensity < 3 && abstractionDensity < 10) {
+                detectedArchetype = 'Clear Prose';
+                archetypeConfidence = 85;
+            }
+
+            // Generate persuasion-focused notes
+            const notes = [];
+            
+            if (jargonDensity > 10) {
+                notes.push(`🌫️ High buzzword fog (${jargonDensity.toFixed(0)}%): Jargon is doing more work than actual ideas. Classic fog machine effect.`);
+            }
+            if (confidenceCount > 3) {
+                if (jargonDensity < 5) {
+                    notes.push(`🎤 Strong rhetorical voice (${confidenceCount} markers): Confident, declarative tone typical of speeches and persuasive writing.`);
+                } else {
+                    notes.push(`💪 Heavy confidence markers (${confidenceCount}): High certainty tone with potentially low informational content. "Sounds decisive, commits to nothing."`);
+                }
+            }
+            if (connectiveDensity > 8) {
+                notes.push(`🔗 Connective overload (${connectiveDensity.toFixed(0)}%): Lots of glue words creating illusion of coherent argument. Clauses link but don't build.`);
+            }
+            if (abstractionDensity > 15) {
+                if (jargonDensity < 5) {
+                    notes.push(`📜 High abstraction density (${abstractionDensity.toFixed(0)}%): Many abstract concepts but low corporate jargon. May be philosophical/political rhetoric rather than word salad.`);
+                } else {
+                    notes.push(`☁️ Abstract noun density (${abstractionDensity.toFixed(0)}%): Frameworks and paradigms everywhere. Nothing concrete to verify or pin down.`);
+                }
+            }
+            
+            // Contextual coherence interpretation
+            if (coherenceContext === 'topic_drift') {
+                notes.push(`🔀 Topic drift detected (${(coherence * 100).toFixed(0)}% overlap + ${jargonDensity.toFixed(0)}% jargon): Sentences don't connect but buzzwords fill the gaps. Classic word salad structure.`);
+            } else if (coherenceContext === 'buzzword_hammering') {
+                notes.push(`🔁 Buzzword hammering (${(coherence * 100).toFixed(0)}% overlap): Same jargon repeated across sentences. Hypnotic repetition pattern.`);
+            } else if (coherenceContext === 'varied_vocabulary' && sentences.length > 2) {
+                notes.push(`✅ Varied vocabulary with low buzzword density: Rich lexical diversity without corporate jargon padding. This is either clear writing or classical rhetoric.`);
+            } else if (coherence < 0.1 && sentences.length > 1 && jargonDensity >= 3) {
+                notes.push(`🔀 Low sentence connection (${(coherence * 100).toFixed(0)}%): Topics keep restarting. Ideas don't build on each other.`);
+            }
+            
+            if (topicDrift > 2 && coherenceContext !== 'varied_vocabulary') {
+                notes.push(`⚡ High topic drift (${topicDrift} hard breaks): Multiple sentences with zero connection to what came before.`);
+            }
+            
+            if (virtueMashCount > 2) {
+                notes.push(`✨ Virtue-mash compounds (${virtueMashCount}): "Strategic synergy paradigms" and friends. Sounds impressive, means nothing.`);
+            }
+            if (recursionCount > 2) {
+                notes.push(`🔄 Self-reference (${recursionCount}): Meta-talk instead of content. Talking about "the approach" instead of the actual thing.`);
+            }
+            
+            // Detect classical rhetoric signature: high abstraction + confidence, low jargon
+            if (abstractionDensity > 10 && confidenceCount > 3 && jargonDensity < 5) {
+                notes.push(`🏛️ Classical rhetoric signature: High abstraction and confidence with minimal corporate buzzwords. This may be political oratory or philosophical discourse, not word salad.`);
+            }
+            
+            // Detect rhetorical questions
+            if (rhetoricalCount > 1) {
+                notes.push(`❓ Rhetorical questions (${rhetoricalCount}): Questions posed for effect rather than answers. Classic persuasive/poetic device.`);
+            }
+            
+            // Detect similes
+            if (simileCount > 2) {
+                notes.push(`🎭 Similes detected (${simileCount}): Figurative comparisons using "like" or "as". Poetic imagery device.`);
+            }
+            
+            // Detect anaphora/repetition
+            if (anaphoraResult.count > 0) {
+                const totalReps = anaphoraResult.openings.reduce((a, b) => a + b.count, 0) + 
+                                  anaphoraResult.phrases.reduce((a, b) => a + b.count, 0);
+                if (totalReps >= 4) {
+                    notes.push(`🔁 Anaphora/Repetition (${totalReps} repetitions): Deliberate repetition for rhythmic or emphatic effect. Key poetic and oratorical device.`);
+                    // Show specific patterns found
+                    const topPatterns = [...anaphoraResult.openings, ...anaphoraResult.phrases]
+                        .sort((a, b) => b.count - a.count)
+                        .slice(0, 3)
+                        .map(p => `"${p.pattern}" (×${p.count})`);
+                    if (topPatterns.length > 0) {
+                        notes.push(`   📝 Key repetitions: ${topPatterns.join(', ')}`);
+                    }
+                }
+            }
+            
+            // Detect poetic signature: anaphora/similes + rhetorical questions + abstraction + low jargon
+            const poeticDeviceCount = (anaphoraResult.count > 0 ? 1 : 0) + (rhetoricalCount > 0 ? 1 : 0) + (simileCount > 2 ? 1 : 0);
+            if (poeticDeviceCount >= 2 && abstractionDensity > 5 && jargonDensity < 3) {
+                notes.push(`📜 Poetry/Literary signature: Multiple literary devices (repetition, imagery, rhetorical questions) with abstract themes and no corporate jargon. This is literary expression, not word salad.`);
+            }
+            
+            if (notes.length === 0) {
+                notes.push("📋 Clear structure. Direct communication without hypnotic patterns detected.");
+            }
+
+            return {
+                sci: Math.min(sci, 5),
+                dilbertScore,
+                recursionDepth: recursionCount,
+                abstractionDensity,
+                virtueMashQuotient: virtueMashCount,
+                jargonDensity,
+                jargonCount,
+                confidenceCount,
+                connectiveDensity,
+                rhetoricalCount,
+                simileCount,
+                anaphoraCount: anaphoraResult.count,
+                coherence,
+                coherenceContext,
+                topicDrift,
+                ttr,
+                detectedArchetype,
+                archetypeConfidence,
+                matches,
+                rhetoricalMatches,
+                simileMatches,
+                anaphoraResult,
+                notes
+            };
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function highlightText(text, matches) {
+            // Escape HTML first to prevent XSS
+            let result = escapeHtml(text);
+            const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            const allMatches = [];
+            for (const m of matches.jargon.slice(0, 15)) allMatches.push({ text: m, class: 'highlight-jargon' });
+            for (const m of matches.confidence) allMatches.push({ text: m, class: 'highlight-confidence' });
+            for (const m of matches.connective.slice(0, 10)) allMatches.push({ text: m, class: 'highlight-connective' });
+            for (const m of matches.abstraction.slice(0, 8)) allMatches.push({ text: m, class: 'highlight-abstraction' });
+            for (const m of matches.virtue) allMatches.push({ text: m, class: 'highlight-virtue' });
+            for (const m of matches.recursion) allMatches.push({ text: m, class: 'highlight-recursion' });
+
+            allMatches.sort((a, b) => b.text.length - a.text.length);
+
+            const highlighted = new Set();
+            for (const match of allMatches) {
+                const key = match.text.toLowerCase();
+                if (highlighted.has(key)) continue;
+                // Escape the match text too for the regex
+                const regex = new RegExp(`\\b(${escapeRegex(escapeHtml(match.text))})\\b`, 'gi');
+                result = result.replace(regex, `<span class="${match.class}">$1</span>`);
+                highlighted.add(key);
+            }
+
+            return result;
+        }
+
+        function getSciClass(sci) {
+            if (sci < 1.5) return 'low';
+            if (sci < 3) return 'medium';
+            return 'high';
+        }
+
+        function getDilbertClass(score) {
+            if (score < 35) return 'low';
+            if (score < 65) return 'medium';
+            return 'high';
+        }
+
+        function getSciVerdict(sci) {
+            if (sci < 0.5) return "🎯 Crystal clear. No hypnosis detected.";
+            if (sci < 1) return "✅ Mostly coherent. Light jargon seasoning.";
+            if (sci < 1.5) return "😐 Light salad. Some corporate garnish.";
+            if (sci < 2) return "⚠️ Moderate hypnosis. Meaning starting to blur.";
+            if (sci < 2.5) return "🥗 Substantial fog. Getting hard to parse.";
+            if (sci < 3) return "🌀 Heavy word salad. Reality becoming negotiable.";
+            if (sci < 3.5) return "🤯 Dense linguistic vortex. Meaning has left.";
+            if (sci < 4) return "💫 Peak corporate hypnosis. TED talk energy.";
+            if (sci < 4.5) return "🌪️ Transcendent nonsense. Achievement unlocked.";
+            return "🏆 MAXIMUM SALAD. Enlightened meaninglessness.";
+        }
+
+        function getDilbertVerdict(score) {
+            if (score < 20) return "A refreshingly clear meeting. People might actually do things afterward.";
+            if (score < 35) return "Some jargon, but substance visible. Not a complete waste of time.";
+            if (score < 50) return "Classic corporate meeting. Everyone nods, few understand.";
+            if (score < 65) return "Heavy fog. Attendees emotionally alt-tabbing.";
+            if (score < 80) return "Maximum opacity. Jargon masks the complete absence of plan.";
+            return "Transcendent corporate hypnosis. Nobody knows what happened but everyone feels aligned.";
+        }
+        
+        // Generate "Explain This Salad" roast/summary
+        function generateExplanation(analysis) {
+            let explanation = '';
+            let tldr = '';
+            
+            // Determine primary persuasion mode
+            const mode = analysis.detectedArchetype;
+            const pillars = [];
+            
+            if (analysis.jargonDensity > 5) pillars.push('buzzword fog');
+            if (analysis.confidenceCount > 2) pillars.push('confidence inflation');
+            if (analysis.abstractionDensity > 10) pillars.push('strategic abstraction');
+            if (analysis.connectiveDensity > 6) pillars.push('synthetic coherence');
+            if (analysis.virtueMashQuotient > 1) pillars.push('virtue-mash compounds');
+            if (analysis.anaphoraCount > 0) pillars.push('rhythmic repetition');
+            if (analysis.simileCount > 2) pillars.push('metaphoric imagery');
+            
+            if (mode === 'Clear Prose') {
+                explanation = `This text operates in <strong>Clear Prose</strong> mode with minimal persuasion machinery. `;
+                explanation += `Direct communication without significant fog effects.`;
+                tldr = 'Says what it means. Rare.';
+            } else if (mode === 'Poetry/Literary') {
+                explanation = `This text operates in <strong>${mode}</strong> mode, `;
+                explanation += `using literary devices like ${pillars.slice(0, 3).join(', ')} for artistic effect rather than persuasion.`;
+                tldr = 'Art, not artifice. Abstractions serve meaning.';
+            } else {
+                explanation = `This text is operating in <strong>${mode}</strong> mode, `;
+                if (pillars.length > 0) {
+                    explanation += `leaning heavily on ${pillars.slice(0, 3).join(', ')}`;
+                    if (pillars.length > 3) explanation += ` (and ${pillars.length - 3} more techniques)`;
+                    explanation += '.';
+                }
+                
+                // Generate TL;DR based on archetype
+                const roasts = {
+                    'Corporate Hypnosis': 'Sounds like leadership, delivers meeting.',
+                    'Political Rhetoric': 'Certainty without commitment. Classic.',
+                    'Wellness/Spiritual': 'Vibrates high, specifies low.',
+                    'Academic Fog': 'Critiques everything, builds nothing.',
+                    'Consultant Speak': 'Frameworks all the way down.',
+                    'Neutral': 'Neither clear nor obfuscated. Purgatory.'
+                };
+                tldr = roasts[mode] || 'Something is being said. Unclear what.';
+            }
+            
+            return `${explanation}<div class="explanation-tldr"><strong>TL;DR:</strong> ${tldr}</div>`;
+        }
+
+        function analyzeText() {
+            const text = document.getElementById('analyze-input').value.trim();
+            
+            if (!text) {
+                showToast('Please enter some text to analyze');
+                return;
+            }
+
+            const analysis = analyzeTextInternal(text);
+
+            // Show Office Fog gauge
+            document.getElementById('dilbert-gauge').style.display = 'block';
+            document.getElementById('dilbert-display').textContent = analysis.dilbertScore;
+            document.getElementById('dilbert-bar').style.width = `${analysis.dilbertScore}%`;
+            document.getElementById('dilbert-verdict').textContent = getDilbertVerdict(analysis.dilbertScore);
+
+            // Show SCI gauge
+            document.getElementById('analyzer-gauge').style.display = 'block';
+            document.getElementById('sci-display').textContent = analysis.sci.toFixed(1);
+            document.getElementById('sci-bar').style.width = `${(analysis.sci / 5) * 100}%`;
+            document.getElementById('sci-verdict').textContent = getSciVerdict(analysis.sci);
+
+            // Show Archetype Badge
+            document.getElementById('archetype-badge').style.display = 'block';
+            document.getElementById('archetype-name').textContent = analysis.detectedArchetype;
+            document.getElementById('archetype-confidence').textContent = `${analysis.archetypeConfidence}% certainty`;
+
+            // Show Explain This Salad summary
+            document.getElementById('salad-explanation').style.display = 'block';
+            document.getElementById('explanation-body').innerHTML = generateExplanation(analysis);
+
+            // Show highlighted output
+            document.getElementById('analyzer-placeholder').style.display = 'none';
+            document.getElementById('highlighted-output').style.display = 'block';
+            document.getElementById('highlighted-output').innerHTML = highlightText(text, analysis.matches);
+            document.getElementById('highlight-legend').style.display = 'flex';
+
+            // Show detailed metrics
+            document.getElementById('detailed-metrics').style.display = 'block';
+            
+            document.getElementById('metric-jd').textContent = `${analysis.jargonDensity.toFixed(0)}%`;
+            document.getElementById('metric-jd').className = `metric-value ${analysis.jargonDensity > 12 ? 'high' : analysis.jargonDensity > 5 ? 'medium' : 'low'}`;
+            
+            document.getElementById('metric-conf').textContent = analysis.confidenceCount;
+            document.getElementById('metric-conf').className = `metric-value ${analysis.confidenceCount > 4 ? 'high' : analysis.confidenceCount > 1 ? 'medium' : 'low'}`;
+            
+            document.getElementById('metric-conn').textContent = `${analysis.connectiveDensity.toFixed(0)}%`;
+            document.getElementById('metric-conn').className = `metric-value ${analysis.connectiveDensity > 10 ? 'high' : analysis.connectiveDensity > 5 ? 'medium' : 'low'}`;
+            
+            document.getElementById('metric-ad').textContent = `${analysis.abstractionDensity.toFixed(0)}%`;
+            document.getElementById('metric-ad').className = `metric-value ${analysis.abstractionDensity > 15 ? 'high' : analysis.abstractionDensity > 8 ? 'medium' : 'low'}`;
+            
+            document.getElementById('metric-vmq').textContent = analysis.virtueMashQuotient;
+            document.getElementById('metric-vmq').className = `metric-value ${analysis.virtueMashQuotient > 4 ? 'high' : analysis.virtueMashQuotient > 1 ? 'medium' : 'low'}`;
+            
+            document.getElementById('metric-rd').textContent = analysis.recursionDepth;
+            document.getElementById('metric-rd').className = `metric-value ${analysis.recursionDepth > 3 ? 'high' : analysis.recursionDepth > 1 ? 'medium' : 'low'}`;
+            
+            document.getElementById('metric-coh').textContent = `${(analysis.coherence * 100).toFixed(0)}%`;
+            // Context-aware coherence coloring
+            let cohClass = 'medium';
+            let cohContext = 'Sentence overlap';
+            if (analysis.coherenceContext === 'varied_vocabulary') {
+                cohClass = 'low'; // Green - this is good
+                cohContext = '✓ Varied vocabulary';
+            } else if (analysis.coherenceContext === 'topic_drift') {
+                cohClass = 'high'; // Red - this is bad
+                cohContext = '⚠ Topic drift';
+            } else if (analysis.coherenceContext === 'buzzword_hammering') {
+                cohClass = 'high'; // Red - repetitive
+                cohContext = '⚠ Repetitive';
+            } else if (analysis.coherence < 0.15) {
+                cohClass = 'medium'; // Yellow - ambiguous
+                cohContext = 'Low overlap';
+            }
+            document.getElementById('metric-coh').className = `metric-value ${cohClass}`;
+            document.getElementById('metric-coh-context').textContent = cohContext;
+            
+            document.getElementById('metric-ttr').textContent = `${analysis.ttr.toFixed(0)}%`;
+            document.getElementById('metric-ttr').className = `metric-value low`;
+
+            // Examples
+            const examplesList = document.getElementById('examples-list');
+            const allExamples = [];
+            
+            for (const m of [...new Set(analysis.matches.jargon)].slice(0, 10)) {
+                allExamples.push({ text: m, type: 'jargon', label: '💼 Buzzword' });
+            }
+            for (const m of [...new Set(analysis.matches.confidence)]) {
+                allExamples.push({ text: m, type: 'confidence', label: '💪 Confidence' });
+            }
+            for (const m of [...new Set(analysis.matches.virtue)]) {
+                allExamples.push({ text: m, type: 'virtue', label: '✨ Virtue-Mash' });
+            }
+            for (const m of [...new Set(analysis.matches.recursion)]) {
+                allExamples.push({ text: m, type: 'recursion', label: '🔄 Self-Ref' });
+            }
+            // Add rhetorical questions
+            for (const m of [...new Set(analysis.rhetoricalMatches || [])]) {
+                allExamples.push({ text: m, type: 'rhetorical', label: '❓ Rhetorical' });
+            }
+            // Add similes
+            for (const m of [...new Set(analysis.simileMatches || [])].slice(0, 8)) {
+                allExamples.push({ text: m, type: 'simile', label: '🎭 Simile' });
+            }
+            // Add anaphora patterns
+            if (analysis.anaphoraResult && analysis.anaphoraResult.phrases) {
+                for (const p of analysis.anaphoraResult.phrases.slice(0, 5)) {
+                    allExamples.push({ text: `${p.pattern} (×${p.count})`, type: 'anaphora', label: '🔁 Repetition' });
+                }
+            }
+            // Add abstraction matches (NEW)
+            for (const m of [...new Set(analysis.matches.abstraction)].slice(0, 10)) {
+                allExamples.push({ text: m, type: 'abstraction', label: '☁️ Abstraction' });
+            }
+
+            document.getElementById('examples-count').textContent = allExamples.length;
+            examplesList.innerHTML = allExamples.map(ex => 
+                `<div class="example-item ${ex.type}"><strong>${ex.label}:</strong> "${ex.text}"</div>`
+            ).join('');
+
+            // Notes
+            document.getElementById('structural-notes').innerHTML = analysis.notes.map(n => `<p style="margin-bottom: 0.5rem;">• ${n}</p>`).join('');
+        }
+
+        function analyzeGenerated() {
+            const output = document.getElementById('gen-output').innerText;
+            if (output && !output.includes('will manifest here')) {
+                document.getElementById('analyze-input').value = output;
+                switchTab('analyzer');
+                setTimeout(analyzeText, 100);
+            }
+        }
+
+        // ============================================
+        // EXAMPLES
+        // ============================================
+
+        const examples = {
+            corporate: `Moving forward, the key thing to understand here is that our strategic alignment represents a robust paradigm shift. Obviously, we need to leverage our core competencies to drive sustainable growth paradigms.
+
+At the end of the day, this is fundamentally about stakeholder alignment and seamless integration. The reality is that our synergistic approach enables scalable solutions, and this directly impacts our value proposition.
+
+We are not just addressing optimization; we are orchestrating transformation, navigating complexity, and facilitating dynamic innovation. The bottom line is, this represents best-in-class thought leadership that positions us for holistic ecosystem development.`,
+
+            consultant: `The strategic inflection point we're identifying requires a transformation journey built on stakeholder buy-in and executive sponsorship. Clearly, our current state assessment reveals significant gaps in capability building.
+
+However, the roadmap we're proposing leverages quick wins while establishing lighthouse projects for long-term maturity model advancement. Make no mistake, this operating model represents cutting-edge thinking in change management.
+
+At its core, this is about best-in-class execution of workstreams that drive robust frameworks. The target state we're envisioning enables seamless integration of disruptive innovation with sustainable growth paradigms, which is essentially what we mean when we talk about strategic alignment.`,
+
+            wellness: `The invitation here is to embrace your authentic journey of transformation. At its core, this is fundamentally about alignment with your highest vibration and sacred boundaries.
+
+Obviously, when we center our nervous system on holistic healing, we manifest the abundance we deserve. The reality is that your triggers are actually teachers, showing you where the inner child needs nourishing, and this directly impacts your energetic boundary work.
+
+Ultimately, by not forcing the outcome, we actually receive what we need. Integration is non-negotiable. This represents sustainable growth in your soul curriculum, which is essentially what we mean when we talk about divine timing and cosmic alignment.`
+        };
+
+        function loadExample(type) {
+            document.getElementById('analyze-input').value = examples[type];
+            showToast('Example loaded!');
+        }
+
+        // ============================================
+        // EXPORT
+        // ============================================
+
+        function exportText() {
+            const text = document.getElementById('gen-output').innerText;
+            if (!text || text.includes('will manifest here')) {
+                showToast('Generate something first!');
+                return;
+            }
+            
+            const analysis = analyzeTextInternal(text);
+            const lines = [
+                'Word Salad Laboratory · Generated Sample',
+                '==========================================',
+                '',
+                'Generated Text:',
+                '--------------',
+                text,
+                '',
+                'Metrics:',
+                '--------',
+                `Office Fog Index: ${analysis.dilbertScore}/100`,
+                `SCI Score: ${analysis.sci.toFixed(1)}/5.0`,
+                `Word Count: ${text.split(/\s+/).length}`,
+                `Buzzword Density: ${analysis.jargonDensity.toFixed(0)}%`,
+                `Confidence Markers: ${analysis.confidenceCount}`,
+                `Connective Density: ${analysis.connectiveDensity.toFixed(0)}%`,
+                '',
+                `Dilbert Verdict: ${getDilbertVerdict(analysis.dilbertScore)}`,
+                `SCI Verdict: ${getSciVerdict(analysis.sci)}`,
+                '',
+                '---',
+                'Generated by Word Salad Laboratory v5.0 HYPERREALITY Edition',
+                '"The art of saying nothing with great confidence"'
+            ];
+            
+            const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'word-salad-sample.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Exported!');
+        }
+
+        // ============================================
+        // UI
+        // ============================================
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tabId) btn.classList.add('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function copyOutput(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text)
+                .then(() => showToast('Copied!'))
+                .catch(() => showToast('Copy failed - try selecting manually'));
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+            });
+
+            document.getElementById('confidence').addEventListener('input', (e) => {
+                document.getElementById('confidence-value').textContent = e.target.value;
+            });
+            document.getElementById('substance').addEventListener('input', (e) => {
+                document.getElementById('substance-value').textContent = e.target.value;
+            });
+            document.getElementById('sentences').addEventListener('input', (e) => {
+                document.getElementById('sentences-value').textContent = e.target.value;
+            });
+
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.parentElement.classList.toggle('open');
+                });
+            });
+
+            document.getElementById('gen-topic').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') generateSalad();
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl+Enter: Analyze (from analyzer tab)
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    if (document.getElementById('analyze-input').value.trim()) {
+                        analyzeText();
+                    } else {
+                        generateSalad();
+                    }
+                }
+                // Shift+Enter: Generate
+                if (e.shiftKey && e.key === 'Enter' && !e.ctrlKey) {
+                    e.preventDefault();
+                    generateSalad();
+                }
+                // Ctrl+Shift+C: Copy generated output
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                    copyOutput('gen-output');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

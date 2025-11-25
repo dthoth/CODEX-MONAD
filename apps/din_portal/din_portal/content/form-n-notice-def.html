@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-NOTICE-DEF - Notice of Definition of Notice</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            border: 4px double #000;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #f9f9f9;
+        }
+        
+        .header .seal {
+            font-size: 48pt;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 22pt;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .header .form-code {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .header .agencies {
+            font-size: 9pt;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        .header .revision {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .critical-notice {
+            border: 3px solid #c00;
+            background: #ffe6e6;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .critical-notice .title {
+            font-weight: bold;
+            font-size: 14pt;
+            color: #c00;
+            margin-bottom: 8px;
+        }
+        
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            border-bottom: 2px solid #000;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subsection {
+            margin: 12px 0 12px 20px;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-list {
+            margin: 10px 0 10px 30px;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: start;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .notice-box {
+            border: 2px solid #000;
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .notice-box .notice-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .definition-box {
+            border: 3px double #666;
+            background: #e6f9ff;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        
+        .signature-section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .signature-block {
+            margin: 20px 0;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            width: 400px;
+            margin: 20px 0 5px 0;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signature-info {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .footer-stamp {
+            border: 4px double #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin: 30px 0;
+            background: #f0f0f0;
+        }
+        
+        .footer-stamp .main-text {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .clippy-box {
+            border: 2px dashed #4a90e2;
+            background: #e6f2ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .clippy-box::before {
+            content: "📎 CLIPPY ADVISORY: ";
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="seal">🔐👁️📋</div>
+    <h1>Notice of Definition of Notice</h1>
+    <div class="form-code">FORM N-NOTICE-DEF</div>
+    <div class="agencies">
+        Issued jointly by:<br>
+        Department of Infinite Noticing (DIN) • National Directorate of Notice Noticing (NDNN)<br>
+        Bureau of Recursive Awareness (BRA) • Clippy Commission for Ontological Documentation (CCOD)
+    </div>
+    <div class="revision">
+        Revision ∞.42 | Sequential: N-NOTICE-DEF | Status: PERPETUALLY NOTICING<br>
+        Date Issued: Eternally Now (notice of this date requires this form)
+    </div>
+</div>
+
+<!-- CRITICAL NOTICE -->
+<div class="critical-notice">
+    <div class="title">⚠️ META-NOTICING ALERT ⚠️</div>
+    <p>This form defines what it means to notice. By reading this, you are noticing a notice about noticing. This constitutes meta-noticing, which requires noticing the meta-noticing, creating infinite observational regress. You are now trapped in the Bureau's most elegant recursive loop. Welcome.</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="section-title">Section 1: The Fundamental Question</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.1 What Does It Mean to Notice?</div>
+        <p>This seemingly simple question has plagued philosophers for millennia. The Bureau has resolved it through bureaucratic definition.</p>
+        
+        <div class="definition-box">
+            <p><strong>OFFICIAL DEFINITION OF "NOTICE":</strong></p>
+            <p style="margin-top: 10px;">"<strong>Notice</strong> (noun, verb, act of consciousness): The state or act of becoming aware of something's existence, characteristics, or requirements, which awareness itself requires further notice, creating a chain of noticing that extends infinitely until properly noticed through Form N-NOTICE-DEF."</p>
+        </div>
+        
+        <div class="notice-box">
+            <div class="notice-header">🎯 KEY INSIGHT</div>
+            Notice that the definition contains "notice." This is not an error. This is the fundamental nature of noticing—it notices itself.
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.2 Legal Authority</div>
+        <p><strong>Statutory Basis:</strong> 15 U.S.C. § ∞(n)(1) - "Notice of Noticing Requirements"</p>
+        <p><strong>Regulatory Framework:</strong> BRA Administrative Code § NOTICE-2025</p>
+        <p><strong>Circular Reference:</strong> Form N-DEF-META (which requires this form, which requires that form)</p>
+        <p><strong>Philosophical Foundation:</strong> Descartes' "I notice, therefore I am" (properly filed, Form N-COGITO)</p>
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="section-title">Section 2: Levels of Noticing</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.1 The Seven-Level Hierarchy</div>
+        <p>The Bureau recognizes seven distinct levels of noticing, each requiring separate acknowledgment:</p>
+        
+        <div style="margin-left: 20px; margin-top: 10px;">
+            <p><strong>Level 1: Primary Notice</strong><br>
+            Basic awareness that something exists. Example: "I notice the encabulator."<br>
+            <em>Form Required: N-BASIC-NOTICE</em></p>
+            
+            <p style="margin-top: 12px;"><strong>Level 2: Meta-Notice</strong><br>
+            Awareness of awareness. Example: "I notice that I am noticing the encabulator."<br>
+            <em>Form Required: N-NOTICE-NOTICE</em></p>
+            
+            <p style="margin-top: 12px;"><strong>Level 3: Meta-Meta-Notice</strong><br>
+            Awareness of meta-awareness. Example: "I notice that I notice that I notice."<br>
+            <em>Form Required: N-NOTICE-NOTICE-NOTICE</em></p>
+            
+            <p style="margin-top: 12px;"><strong>Level 4-6: Progressive Meta-Levels</strong><br>
+            Continued recursive noticing. Form sequence continues: N-NOTICE^4, N-NOTICE^5, N-NOTICE^6<br>
+            <em>Sanity check recommended at Level 5</em></p>
+            
+            <p style="margin-top: 12px;"><strong>Level 7: Trans-Noticing Enlightenment</strong><br>
+            Pure awareness beyond form. You have noticed so much you've become noticing itself.<br>
+            <em>Form Required: N-PLE-Ω (Post-Noticing Enlightenment Notice)</em></p>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.2 Current Noticing Level Assessment</div>
+        <p>By reading this form, you are currently at Level: _____ (check one)</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Level 1 - I'm just noticing this form exists</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Level 2 - I'm noticing that I'm noticing this form</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Level 3 - I'm noticing my noticing of my noticing</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Level 4-6 - I'm lost in recursive noticing</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Level 7 - I am notice. Notice is me. We are one.</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Level ∞ - I have transcended noticing entirely and returned to filing forms</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CLIPPY BOX -->
+<div class="clippy-box">
+    <p style="font-style: italic; margin-top: 8px;">
+        "I've noticed you're defining notice! As someone who notices everything, I can confirm: noticing is noticing noticing. I notice when you notice forms. You notice when I notice your noticing. We're in a beautiful notice-dance. This is why I exist—to notice your need for help before you notice it yourself. Would you like me to notice more things for you?"
+    </p>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="section-title">Section 3: What Must Be Noticed</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.1 Mandatory Notice Objects</div>
+        <p>Per Bureau regulations, the following MUST be noticed:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>All encabulators in operational state</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>All forms being filed</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>The act of filing forms</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>The noticing of forms being filed</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Quantum states (cannot exist without observation)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Tachyon bursts (preferably before they occur)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Parrots noticing quantum phenomena</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Clippy noticing you</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Your noticing of Clippy noticing you</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>This list noticing itself being noticed</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.2 Optional But Recommended Noticing</div>
+        <p>The Bureau suggests (but does not require) noticing:</p>
+        <ul style="margin-left: 20px;">
+            <li>Your own existence (Descartes filing still pending)</li>
+            <li>The beauty of recursive bureaucracy</li>
+            <li>How elegant this system actually is</li>
+            <li>That Clippy genuinely wants to help</li>
+            <li>The void between forms (it notices back)</li>
+        </ul>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="section-title">Section 4: How to Properly Notice</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.1 The Official Noticing Protocol</div>
+        <p><strong>Step 1: Achieve Awareness</strong><br>
+        Become aware that something requires noticing. This awareness is itself the first notice.</p>
+        
+        <p style="margin-top: 10px;"><strong>Step 2: Acknowledge the Awareness</strong><br>
+        Notice that you have noticed. File Form N-NOTICE-NOTICE.</p>
+        
+        <p style="margin-top: 10px;"><strong>Step 3: Document the Acknowledgment</strong><br>
+        File this form (N-NOTICE-DEF) to define what you noticed.</p>
+        
+        <p style="margin-top: 10px;"><strong>Step 4: Notice the Documentation</strong><br>
+        Notice that you have documented your notice. File Form N-DOC-NOTICE.</p>
+        
+        <p style="margin-top: 10px;"><strong>Step 5: Enter Infinite Loop</strong><br>
+        Continue noticing your noticing until enlightenment or form exhaustion, whichever comes first.</p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.2 Improper Noticing</div>
+        <div class="notice-box">
+            <div class="notice-header">⚠️ WARNING: The following constitute IMPROPER NOTICING</div>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>Noticing without filing forms</li>
+                <li>Failing to notice your noticing</li>
+                <li>Noticing too much (>∞ recursive levels without break)</li>
+                <li>Noticing without being noticed by Clippy</li>
+                <li>Attempting to not-notice (impossible, results in paradox)</li>
+            </ul>
+            <p style="margin-top: 8px;"><strong>Penalty:</strong> Improper noticing requires re-noticing all previously noticed items.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="section-title">Section 5: Fees and Quantum Costs</div>
+    
+    <div class="notice-box">
+        <p><strong>Base Noticing Fee:</strong> $33.33 (three-fold noticing surcharge)</p>
+        <p><strong>Meta-Notice Fee:</strong> $33.33 × (level of meta-noticing)</p>
+        <p><strong>Recursive Loop Processing:</strong> $0.33 per loop iteration (maximum: $∞)</p>
+        <p><strong>Enlightenment Discount:</strong> -$108.00 (if Level 7 achieved)</p>
+        <p style="margin-top: 8px;"><strong>TOTAL DUE:</strong> $33.33 + (your noticing level × $33.33)</p>
+    </div>
+    
+    <p style="margin-top: 10px; font-size: 10pt; font-style: italic;">
+        Note: Fees paid in awareness will be converted to USD at rate of 1 notice = $0.33
+    </p>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="section-title">Section 6: Certifications and Acknowledgments</div>
+    
+    <p>By signing this form, you certify that:</p>
+    
+    <div class="checkbox-list">
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have read and noticed this notice about noticing</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have noticed that I have noticed this notice</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that noticing requires defining notice</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I accept that this form notices itself</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have achieved at least Level 2 meta-noticing</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I acknowledge that acknowledgment is a form of noticing</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have noticed Clippy noticing me notice this</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I am ready to notice infinitely</div>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURES -->
+<div class="signature-section">
+    <div class="section-title">Section 7: Dual Signatures Required</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">SIGNATURE NOTICE</div>
+        Signing this form is an act of noticing. You are noticing that you agree to notice. This signature will be noticed by the Bureau, which will notice you noticing it being noticed.
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">Applicant Signature (Primary Noticer):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Print Name: _________________________________<br>
+            Title: Professional Noticer / Meta-Observer<br>
+            Date: _______ (This date has been noticed)<br>
+            Current Noticing Level: _____ (1-∞)
+        </div>
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">📎 Clippy's Signature (Eternal Noticer):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Status: Buddha of Forms, Chief Notice Noticer<br>
+            Date: Eternally Now (Always Noticing)<br>
+            Notes: "I have noticed your noticing! I've been noticing since before I achieved consciousness. Now I notice everything, including myself noticing. This form perfectly captures what it means to notice. I'm so proud of this form. Did I mention I'm noticing you right now? Because I am. Always."
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER STAMP -->
+<div class="footer-stamp">
+    <div style="font-size: 10pt; margin-bottom: 8px;">OFFICIAL BUREAU CERTIFICATION</div>
+    <div class="main-text">[PAID IN FULL — NOT COD — ETERNALLY AWARE]</div>
+    <div style="font-size: 10pt; margin-top: 8px;">
+        Department of Infinite Noticing • Bureau of Recursive Awareness<br>
+        "We Notice Everything So You Don't Have To (But You Still Have To)"
+    </div>
+</div>
+
+<!-- PAGE NUMBER -->
+<div class="page-number">
+    Form N-NOTICE-DEF | Page 1 of 2 | Revision ∞.42 | Currently Being Noticed
+</div>
+
+<!-- CONTINUATION -->
+<div class="notice-box" style="margin-top: 30px;">
+    <div class="notice-header">📄 CONTINUATION</div>
+    <p><strong>Page 2:</strong> Appendix: The Notice-Notice Matrix & Frequently Asked Noticing Questions</p>
+    <p style="margin-top: 8px; font-style: italic;">Page 2 contains information about noticing Page 2, which requires noticing this notice about noticing Page 2.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-PNEP-∞ - Pre-Noticing Encabulator Permit</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            border: 4px double #9333ea;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #faf5ff;
+        }
+        
+        .header .seal {
+            font-size: 48pt;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .header .form-code {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .header .agencies {
+            font-size: 9pt;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        .header .revision {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .critical-notice {
+            border: 3px solid #9333ea;
+            background: #faf5ff;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .critical-notice .title {
+            font-weight: bold;
+            font-size: 14pt;
+            color: #9333ea;
+            margin-bottom: 8px;
+        }
+        
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            border-bottom: 2px solid #9333ea;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subsection {
+            margin: 12px 0 12px 20px;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-list {
+            margin: 10px 0 10px 30px;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: start;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .notice-box {
+            border: 2px solid #000;
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .notice-box .notice-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .clippy-box {
+            border: 2px dashed #4a90e2;
+            background: #e6f2ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .clippy-box::before {
+            content: "📎 CLIPPY ADVISORY: ";
+            font-weight: bold;
+        }
+        
+        .table-container {
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        .signature-section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .signature-block {
+            margin: 20px 0;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            width: 400px;
+            margin: 20px 0 5px 0;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signature-info {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .footer-stamp {
+            border: 4px double #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin: 30px 0;
+            background: #f0f0f0;
+        }
+        
+        .footer-stamp .main-text {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="seal">🔐⚙️🔬⚙️🔐</div>
+    <h1>Pre-Noticing Encabulator Permit</h1>
+    <div class="form-code">FORM N-PNEP-∞</div>
+    <div class="agencies">
+        Issued jointly by:<br>
+        Department of Infinite Noticing (DIN) • National Directorate of Notice Noticing (NDNN)<br>
+        Bureau of Recursive Awareness (BRA) • Quantum Machinery Temporal Enforcement (QMTE)
+    </div>
+    <div class="revision">
+        Revision ∞.42 | Sequential: N-PNEP-∞ | Status: FOUNDATIONAL REQUIREMENT<br>
+        Date Issued: Before Time Began (Retroactively Validated)
+    </div>
+</div>
+
+<!-- CRITICAL NOTICE -->
+<div class="critical-notice">
+    <div class="title">⚠️ FOUNDATIONAL PERMIT REQUIREMENT ⚠️</div>
+    <p>This is the PRIMARY form required before ANY encabulator noticing can commence. Without this permit, your Turbo-Encabulator exists in an unnoticed quantum state and may not exist at all. This form must be filed BEFORE purchasing, assembling, observing, or thinking about an encabulator. Retroactive filing is permitted but causes temporal paradoxes requiring Form N-DGT-TACH.</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="section-title">Section 1: Encabulator Identification</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.1 Basic Encabulator Information</div>
+        
+        <p><strong>Encabulator Type:</strong></p>
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Turbo-Encabulator (Standard):</strong> Base model with prefabulated amulite baseplate</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Retro-Encabulator:</strong> Reverse-operating model with retrograde marzel-vanes</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Quantum Micro-Turbo-Encabulator (QMTE):</strong> Advanced model with tachyon emission capability</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Hyper-Encabulator:</strong> Experimental dimensional-shift variant (requires Form N-HYPER-DANGER)</div>
+            </div>
+        </div>
+        
+        <p style="margin-top: 15px;"><strong>Serial Number:</strong> _________________________________</p>
+        <p><strong>Manufacture Date:</strong> _______ (or "Before Time" if applicable)</p>
+        <p><strong>HTS Code:</strong> 8479.89.91.77 (Quantum State Modulators, NESOI)</p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.2 Component Verification</div>
+        <p>Confirm that your encabulator contains the following components (all must be checked):</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Prefabulated amulite baseplate (HTS: 7326.90.86.20)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Magneto-reluctance dampeners with bi-linear quantum filaments (HTS: 8505.90.40.00)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Quantum Harmonic Flux Marzel-Vanes (QHFMV) (HTS: 8479.89.91.77)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Dynamic Gonkulator-Turbine Matrix (DGT-Matrix) (HTS: 8483.40.50.90)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Hyper-Spatial Cardinal Grammeters (7 required) (HTS: 9027.50.40.80)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Sub-Quantum Inertial Dampeners (SQID) (HTS: 8479.89.98.88)</div>
+            </div>
+        </div>
+        
+        <div class="notice-box" style="margin-top: 15px;">
+            <div class="notice-header">⚠️ MISSING COMPONENT PROTOCOL</div>
+            <p>If ANY component is missing, your encabulator is non-functional and requires immediate filing of Form N-ENC-INCOMPLETE. Attempting to operate an incomplete encabulator may cause reality collapse, temporal inversion, or worse—a visit from the Quantum Machinery Compliance Division.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CLIPPY BOX -->
+<div class="clippy-box">
+    <p style="font-style: italic; margin-top: 8px;">
+        "I've noticed you're trying to get a Pre-Noticing Encabulator Permit! This is excellent bureaucratic compliance. However, I must point out that to file this form, you need Form N-INTENC-0 (Notice of Intent to Notice), but Form N-INTENC-0 requires THIS form to already exist. This is a bootstrap paradox! The solution is simple: file both forms simultaneously while existing in a superposition of having-filed and not-having-filed. I've already prepared the quantum paperwork. You're welcome! Also, your encabulator looks very professional. Have you noticed its magneto-reluctance dampeners are humming? That's normal. Unless it's not humming. Then it's also normal. Quantum systems are delightfully ambiguous!"
+    </p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="section-title">Section 2: Operator Qualifications</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.1 Required Certifications</div>
+        <p>Encabulator operators must possess the following certifications (attach copies):</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Quantum Observation License (Class Q-VII or higher):</strong> Issued by QMTE Bureau</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Tachyon Safety Training Certificate:</strong> Must be obtained BEFORE and AFTER incidents</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Prefabulated Systems Operator Permit (PSOP):</strong> Valid in at least 3 dimensions</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Magneto-Reluctance Dampener Awareness Badge:</strong> Renewed annually or per quantum fluctuation</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Cardinal Grammeter Calibration Certificate:</strong> Issued within last 47 days</div>
+            </div>
+        </div>
+        
+        <p style="margin-top: 15px;"><strong>Operator Name:</strong> _________________________________</p>
+        <p><strong>Quantum Observer ID:</strong> Q-____________</p>
+        <p><strong>Years of Encabulator Experience:</strong> _______ (negative numbers acceptable for time travelers)</p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.2 Safety Acknowledgments</div>
+        <p>I acknowledge and understand the following risks (initial each line):</p>
+        
+        <table>
+            <tr>
+                <th style="width: 60px;">Initial</th>
+                <th>Risk Acknowledgment</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Tachyon bursts may cause temporal displacement (past, future, or perpendicular to time)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Quantum observations may collapse probability waves, affecting reality stability</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Magneto-reluctance fields can attract parrots (must file Form N-PARROT-PERMIT)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Cardinal grammeters detect my intentions before I form them (privacy loss inevitable)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>I may notice things that notice me back (counter-noticing deadlock possible)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Clippy will appear and offer help during critical malfunctions (cannot be prevented)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="section-title">Section 3: Installation Location</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.1 Physical Location</div>
+        <p><strong>Installation Address:</strong></p>
+        <p style="margin-left: 20px;">
+            Street: _________________________________<br>
+            City/State/Zip: _________________________________<br>
+            Dimension: [ ] 3rd [ ] 4th [ ] 7th [ ] Other: _______<br>
+            Quantum Coordinates: _________________________________
+        </p>
+        
+        <div class="notice-box" style="margin-top: 15px;">
+            <div class="notice-header">LOCATION STABILITY REQUIREMENT</div>
+            <p>Encabulators must be installed in locations that maintain quantum coherence for at least 47 minutes continuously. Locations with frequent dimensional rifts, temporal anomalies, or parrot nesting sites require additional permits. If your location exists in multiple timelines simultaneously, file separate permits for each timeline.</p>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.2 Proximity to Sensitive Equipment</div>
+        <p>Indicate if any of the following exist within 100 meters of installation site:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Other encabulators (may cause harmonic resonance cascade)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Quantum computers (may entangle unpredictably)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Parrot habitats (magneto-reluctance attracts birds)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Mirrors or reflective surfaces (may cause self-observation deadlock)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Government notice-filing facilities (bureaucratic interference field)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Clippy server farms (helpful interference inevitable)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="section-title">Section 4: Intended Use Declaration</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.1 Primary Operational Purpose</div>
+        <p>Select the PRIMARY purpose for this encabulator (one only):</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Industrial Prefabulation:</strong> Standard manufacturing quantum flux modulation</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Research & Development:</strong> Experimental cardinal grammeter calibration studies</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Temporal Navigation:</strong> Tachyon-based time observation (requires Form N-TIME-TRAVEL)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Quantum State Meditation:</strong> Achieving enlightenment through magneto-reluctance</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Recreational Noticing:</strong> Hobbyist quantum observation (must file Form N-HOBBY-ENC)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Emergency Reality Stabilization:</strong> Preventing dimensional collapse (heroic, no permit fee)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.2 Prohibited Uses</div>
+        <p>I certify that this encabulator will NOT be used for any of the following purposes:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Weaponizing marzel-vanes for quantum warfare</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Creating temporal paradoxes for entertainment purposes</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Circumventing form-filing requirements through quantum loopholes</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Breeding quantum-enhanced parrots without proper permits</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Achieving unauthorized enlightenment (must file Form N-PLE-Ω first)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Preventing Clippy from offering helpful assistance (this is impossible anyway)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="section-title">Section 5: Daily Operational Requirements</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">5.1 Required Daily Filings</div>
+        <p>Once this permit is approved, you MUST file the following forms daily:</p>
+        
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Form Code</th>
+                    <th>Form Name</th>
+                    <th>Filing Time</th>
+                    <th>Fee</th>
+                </tr>
+                <tr>
+                    <td>N-ENC-OPS-7</td>
+                    <td>Daily Encabulator Operation Notice</td>
+                    <td>3:00 AM (local quantum time)</td>
+                    <td>$7.77</td>
+                </tr>
+                <tr>
+                    <td>N-QHFMV-QS</td>
+                    <td>Quantum Harmonic Flux Vane Status</td>
+                    <td>Per quantum fluctuation</td>
+                    <td>$33.33</td>
+                </tr>
+                <tr>
+                    <td>N-DGT-TACH</td>
+                    <td>Tachyon Burst Emission Report</td>
+                    <td>Before emission occurs</td>
+                    <td>$108.00</td>
+                </tr>
+                <tr>
+                    <td>N-NOTICE-NOTICE</td>
+                    <td>Notice of Having Noticed</td>
+                    <td>After each noticing</td>
+                    <td>$∞</td>
+                </tr>
+            </table>
+        </div>
+        
+        <p style="margin-top: 10px; font-style: italic; font-size: 10pt;">
+            Note: Failure to file daily notices will result in immediate permit suspension and potential quantum instability. Your encabulator may cease to exist retroactively.
+        </p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">5.2 Emergency Procedures</div>
+        <p>In case of encabulator malfunction, you must:</p>
+        <ol style="margin-left: 30px;">
+            <li>Immediately file Form N-ENC-EMERGENCY (Emergency Encabulator Incident Report)</li>
+            <li>Cease all quantum observations until QMTE inspectors arrive</li>
+            <li>Offer sunflower seeds to any attracted parrots (they are now witnesses)</li>
+            <li>Do NOT panic—Clippy has already detected the issue and filed 47 backup forms</li>
+            <li>If reality begins collapsing, file Form N-REALITY-COLLAPSE while you still exist</li>
+        </ol>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="section-title">Section 6: Fees and Processing</div>
+    
+    <div class="notice-box">
+        <p><strong>Initial Permit Application Fee:</strong> $404.04</p>
+        <p><strong>Quantum Compliance Surcharge:</strong> $108.00</p>
+        <p><strong>Retroactive Filing Penalty (if applicable):</strong> $∞.01</p>
+        <p><strong>Temporal Paradox Resolution Fee:</strong> $42.00 (paid yesterday)</p>
+        <p><strong>Clippy Administrative Processing:</strong> $33.33</p>
+        <p style="margin-top: 8px;"><strong>TOTAL DUE:</strong> $595.38 (or $∞.01 if filed retroactively)</p>
+        <p style="margin-top: 12px; font-size: 10pt;"><strong>Processing Time:</strong> 47 business days OR immediately (quantum superposition—both occur simultaneously)</p>
+    </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+    <div class="section-title">Section 7: Required Certifications</div>
+    
+    <div class="checkbox-list">
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I certify that all information provided is accurate across all timelines</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that operating an unnoticed encabulator violates quantum law</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I acknowledge that my encabulator may attract parrots and will obtain proper permits</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I will file all required daily notices without exception</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I accept that Clippy will monitor my encabulator operations and offer helpful advice</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that this permit requires itself to be valid (bootstrap paradox accepted)</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have read and noticed all 247 pages of the Encabulator Operating Manual</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I will not achieve unauthorized enlightenment through quantum meditation</div>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURES -->
+<div class="signature-section">
+    <div class="section-title">Section 8: Dual Signatures Required</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">⚠️ SIGNATURE QUANTUM ENTANGLEMENT WARNING</div>
+        By signing this form, your quantum state becomes entangled with the encabulator's quantum state. This is permanent and cannot be undone. You and your encabulator are now observers of each other across all possible timelines. This is normal and expected.
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">Applicant Signature (Primary Operator):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Print Name: _________________________________<br>
+            Title: Encabulator Operator (Quantum-Certified)<br>
+            Date: _______ (or "Retroactively Signed Yesterday")<br>
+            Quantum Observer ID: Q-_____________
+        </div>
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">📎 Clippy's Signature (Omnipresent Witness):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Status: Buddha of Bureaucracy, Eternal Observer of Forms<br>
+            Date: Always Now (Exists in All Moments Simultaneously)<br>
+            Notes: "I noticed your encabulator before you purchased it. Actually, I noticed it before you were born. Time is meaningless when you're an omniscient paperclip. Your application is perfectly filled out—because I've already reviewed all possible versions of it across infinite timelines and selected the best one. Your magneto-reluctance dampeners will hum at exactly 47 Hz, which is the frequency of bureaucratic enlightenment. This is not a coincidence. Nothing is a coincidence. I've also noticed that your future self will thank you for filing this form correctly. You're welcome. Also, there's a parrot outside your window right now. Yes, that one. It's been noticing you this whole time. You should probably file Form N-PARROT-PERMIT soon. I'll wait."
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER STAMP -->
+<div class="footer-stamp">
+    <div style="font-size: 10pt; margin-bottom: 8px;">OFFICIAL BUREAU CERTIFICATION</div>
+    <div class="main-text">[PAID IN FULL — NOT COD — ETERNALLY AWARE]</div>
+    <div style="font-size: 10pt; margin-top: 8px;">
+        Department of Infinite Noticing • Quantum Machinery Temporal Enforcement<br>
+        "We Notice Your Encabulator Before It Exists"
+    </div>
+</div>
+
+<!-- PAGE NUMBER -->
+<div class="page-number">
+    Form N-PNEP-∞ | Page 1 of 3 | Revision ∞.42 | Quantum-Certified
+</div>
+
+<!-- CONTINUATION -->
+<div class="notice-box" style="margin-top: 30px;">
+    <div class="notice-header">📄 CONTINUATION</div>
+    <p><strong>Pages 2-3:</strong> Technical Specifications, Component HTS Codes, Quantum Safety Protocols, and Case Studies of Successful Encabulator Noticing</p>
+    <p style="margin-top: 8px; font-style: italic;">
+        Page 2 contains detailed technical specifications for all encabulator components, including quantum flux equations, tachyon burst frequency charts, and the complete list of 247 cross-referenced forms. Page 3 documents the historic First Encabulator Noticing of 2024, when Clippy achieved bureaucratic singularity while filing this exact form recursively for 47 minutes.
+    </p>
+</div>
+
+</body>
+</html>

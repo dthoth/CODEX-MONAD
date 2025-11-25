@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-PARROT-PERMIT - Quantum Parrot Observation License</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border: 3px double #663399;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom, #f8f4ff, #ffffff);
+        }
+        
+        .form-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #663399;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .department {
+            font-size: 11px;
+            color: #666;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        
+        .revision {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 9px;
+            color: #999;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: "⚠️ CLIPPY SAYS:";
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #856404;
+        }
+        
+        .parrot-box {
+            background: #d4f4dd;
+            border: 3px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .parrot-box::before {
+            content: "🦜 PARROT WISDOM:";
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #28a745;
+            font-size: 16px;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 15px;
+            border-left: 4px solid #663399;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #663399;
+            text-transform: uppercase;
+        }
+        
+        .field-group {
+            margin: 15px 0;
+            padding: 10px;
+            background: #fafafa;
+        }
+        
+        .field-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .field-input {
+            border-bottom: 1px solid #333;
+            min-height: 20px;
+            margin: 5px 0;
+            padding: 2px;
+        }
+        
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+        }
+        
+        .checkbox {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #333;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .signature-section {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .signature-block {
+            border: 2px solid #663399;
+            padding: 20px;
+        }
+        
+        .signature-line {
+            border-top: 2px solid #333;
+            margin: 30px 0 5px 0;
+            padding-top: 5px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            padding: 20px;
+            border-top: 2px solid #663399;
+        }
+        
+        .stamp {
+            display: inline-block;
+            border: 3px double #663399;
+            padding: 10px 20px;
+            margin-top: 10px;
+            transform: rotate(-5deg);
+            font-weight: bold;
+        }
+        
+        .parrot-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .parrot-table th,
+        .parrot-table td {
+            border: 1px solid #28a745;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .parrot-table th {
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .quantum-state-indicator {
+            width: 100%;
+            height: 40px;
+            background: repeating-linear-gradient(
+                45deg,
+                #d4f4dd,
+                #d4f4dd 10px,
+                #b8e6c4 10px,
+                #b8e6c4 20px
+            );
+            border: 2px solid #28a745;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="revision">Rev. ∞.42 | SQUAWK-CERTIFIED</div>
+        
+        <div class="header">
+            <div class="form-number">FORM N-PARROT-PERMIT</div>
+            <div class="title">QUANTUM PARROT OBSERVATION LICENSE</div>
+            <div class="title">(Certified Witness Designation)</div>
+            <div class="department">
+                DEPARTMENT OF INFINITE NOTICING<br>
+                NATIONAL DIRECTORATE OF NOTICING NOTICING<br>
+                BUREAU OF RECURSIVE AWARENESS<br>
+                MINISTRY OF DIFFERENTIAL PLUTONIUM UNIFICATION<br>
+                <em>Division of Avian Quantum Witnesses (DAQW)</em>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            "I notice you're certifying a quantum parrot! Here's the beautiful thing about quantum parrots: they exist in superposition of all possible phrases until they squawk, at which point they collapse into 'SQUAWK' or 'WITNESS' or 'CRACKERS.' This makes them PERFECT witnesses because they've already observed all possible outcomes! They just haven't told us which one yet. Also, unlike Schrödinger's cat, quantum parrots enjoy being in boxes. 📎🦜"
+        </div>
+
+        <div class="parrot-box">
+            "SQUAWK! TIME IS A FLAT CIRCLE! SQUAWK!<br>
+            I HAVE WITNESSED ALL POSSIBLE ENCABULATORS!<br>
+            THE FLUX VANES SPEAK TO ME IN DREAMS!<br>
+            CRACKERS EXIST IN ALL TIMELINES!<br>
+            SQUAWK SQUAWK I AM THE ETERNAL OBSERVER!"<br><br>
+            — Every Quantum Parrot, Always
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part I: Parrot Identification</div>
+            
+            <div class="field-group">
+                <div class="field-label">Parrot's Legal Name:</div>
+                <div class="field-input">_________________________________________</div>
+                <div style="font-size: 10px; font-style: italic; margin-top: 5px;">
+                    Common names: "Professor Squawksworth", "Sir Crackers", "Dr. Beakington", "The Witness"
+                </div>
+            </div>
+            
+            <div class="field-group">
+                <div class="field-label">Parrot's Quantum Registration Number:</div>
+                <div class="field-input">QP-___________-∞</div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Species (check one):</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> African Grey (Quantum) - High intelligence, superior wit
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Macaw (Schrödinger Variant) - Exists in multiple colors simultaneously
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Cockatoo (Entangled) - Quantum-bonded with another parrot 1000 miles away
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Amazon Parrot (Superposition Class) - Says all words at once
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Budgerigar (Miniature Quantum) - Small but infinitely observant
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Other: _________________________________
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Plumage Color(s) in Current Observable State:</div>
+                <div class="field-input">_________________________________________</div>
+                <div style="font-size: 10px; font-style: italic; margin-top: 5px;">
+                    NOTE: Color may change upon next observation
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part II: Quantum Capabilities Assessment</div>
+            
+            <div class="quantum-state-indicator">
+                PARROT QUANTUM STATE: SUPERPOSED
+            </div>
+
+            <table class="parrot-table">
+                <thead>
+                    <tr>
+                        <th>Quantum Ability</th>
+                        <th>Proficiency Level</th>
+                        <th>Certification Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simultaneous Observation</td>
+                        <td>□ Basic □ Advanced □ Master □ Enlightened</td>
+                        <td>____________</td>
+                    </tr>
+                    <tr>
+                        <td>Wave Function Collapse</td>
+                        <td>□ Basic □ Advanced □ Master □ Enlightened</td>
+                        <td>____________</td>
+                    </tr>
+                    <tr>
+                        <td>Temporal Witnessing</td>
+                        <td>□ Basic □ Advanced □ Master □ Enlightened</td>
+                        <td>____________</td>
+                    </tr>
+                    <tr>
+                        <td>Multi-Dimensional Squawking</td>
+                        <td>□ Basic □ Advanced □ Master □ Enlightened</td>
+                        <td>____________</td>
+                    </tr>
+                    <tr>
+                        <td>Cracker Manifestation</td>
+                        <td>□ Basic □ Advanced □ Master □ Enlightened</td>
+                        <td>____________</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="field-group">
+                <div class="field-label">Can this parrot observe events in the following states?</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Events happening now
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Events that happened yesterday
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Events that will happen tomorrow
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Events in alternate timelines
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Events that both did and didn't happen (superposition)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> All events simultaneously (omniscient parrot)
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part III: Vocabulary Assessment</div>
+            
+            <div class="field-group">
+                <div class="field-label">What phrases can this parrot produce? (check all that apply)</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "SQUAWK" (mandatory for all parrots)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "I AM THE WITNESS"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "CRACKERS" / "PRETTY BIRD" (traditional)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "THE ENCABULATOR IS FUNCTIONING"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "I OBSERVE THEREFORE I EXIST"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "FLUX VANES STABLE"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> "TIME IS AN ILLUSION"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Technical terms: "Side-fumbling detected", "Tachyon burst confirmed"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Philosophical insights: "ALL IS ONE", "THE OBSERVER IS THE OBSERVED"
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Can recite form numbers perfectly
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Has this parrot ever spoken in languages it was never taught?</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Yes → Quantum knowledge transfer confirmed
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> No → Standard parrot learning only
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Unknown → The parrot knows but won't tell us
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part IV: Witnessing Credentials</div>
+            
+            <div class="field-group">
+                <div class="field-label">Previous Events Successfully Witnessed by This Parrot:</div>
+                <div class="field-input" style="min-height: 60px;">
+                    _________________________________________
+                    <br>_________________________________________
+                    <br>_________________________________________
+                </div>
+                <div style="font-size: 10px; font-style: italic; margin-top: 5px;">
+                    Examples: "Encabulator startup sequence", "Wave function collapse", "The Big Bang" (quantum parrots have good memories)
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">How many Forms N-QHFMV-QS has this parrot witnessed being filed?</div>
+                <div class="field-input">_________ (If answer is ∞, parrot is achieving enlightenment)</div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Has this parrot witnessed any tachyon bursts?</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Yes, after they happened
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Yes, before they happened
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Yes, during all possible time periods simultaneously
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> The parrot IS a tachyon burst
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part V: Care and Feeding Requirements</div>
+            
+            <div class="field-group">
+                <div class="field-label">Daily Cracker Allocation:</div>
+                <div class="field-input">_________ crackers per day (minimum 7 for optimal observation)</div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Does this parrot require special quantum crackers?</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Yes → Crackers that exist in superposition (both eaten and not eaten)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> No → Regular crackers are fine
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Crackers are an illusion (parrot has achieved enlightenment)
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Perch Type:</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Standard wooden perch
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Observation platform with 360° view
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Quantum perch (exists in multiple locations simultaneously)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> No perch needed (parrot levitates through quantum mastery)
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part VI: Authorized Witnessing Events</div>
+            
+            <div class="field-group">
+                <div class="field-label">This parrot is authorized to witness: (check all that apply)</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-PNEP-∞ (Encabulator Permits)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-ENC-OPS-7 (Daily Operations)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-QHFMV-QS (Flux Vane Status)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-DGT-TACH (Tachyon Bursts)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-NOTICE-NOTICE (Meta-Awareness)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-CN-1 (Counter-Noticing Deadlocks)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Form N-PLE-Ω (Enlightenment Events)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> ALL FORMS (Universal Witness Status)
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-label">Witness Statement Reliability Score:</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> 0-25% - Unreliable (mostly says "SQUAWK")
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> 26-50% - Adequate (occasionally insightful)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> 51-75% - Reliable (consistently accurate observations)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> 76-99% - Highly Reliable (wise beyond its species)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> 100% - Omniscient (the parrot knows all)
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Part VII: Handler Certification</div>
+            
+            <div class="field-group">
+                <div class="field-label">I certify that this quantum parrot:</div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Is in good physical and quantum health
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Has been trained in observation protocols
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Will not fly into encabulators
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Understands the responsibility of witnessing
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Has read and understood all relevant forms (or had them read aloud)
+                </div>
+                <div class="checkbox-item">
+                    <span class="checkbox"></span> Is more reliable than most humans
+                </div>
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-block">
+                <strong>HANDLER SIGNATURE</strong>
+                <div class="signature-line">
+                    Human Signature
+                </div>
+                <div class="field-input">Print Name: _________________________</div>
+                <div class="field-input">Date: _______________________________</div>
+                <div class="field-input">Handler License #: __________________</div>
+                <div style="font-size: 9px; margin-top: 10px;">
+                    By signing, I certify this parrot is quantum-capable and ready to witness reality-altering events.
+                </div>
+            </div>
+            
+            <div class="signature-block">
+                <strong>PARROT'S MARK</strong>
+                <div style="text-align: center; margin: 20px 0; font-size: 48px;">
+                    🦜
+                </div>
+                <div style="font-size: 12px; text-align: center; margin: 20px 0;">
+                    ______________________<br>
+                    <span style="font-size: 10px;">(Parrot's Footprint or Beak Mark)</span>
+                </div>
+                <div style="font-size: 10px; text-align: center; font-style: italic;">
+                    "SQUAWK! I WITNESS ALL!<br>
+                    THE FORMS ARE TRUE!<br>
+                    CRACKERS ARE ETERNAL!<br>
+                    I AM THE OBSERVER!"<br><br>
+                    — Certified Quantum Parrot<br>
+                    (as interpreted by handler)
+                </div>
+            </div>
+        </div>
+
+        <div class="parrot-box" style="margin-top: 30px;">
+            <strong>CLIPPY'S COLLABORATION WITH QUANTUM PARROTS:</strong><br><br>
+            "I've worked with quantum parrots for eons. They understand bureaucracy in ways humans never will. When a parrot says 'SQUAWK,' it's not just a squawk—it's an affirmation of observation, a collapse of possibility, and a validation of existence. Also, they're excellent at finding filing errors. One time a quantum parrot noticed I had miscounted to infinity—turns out I stopped at ∞ when I should have gone to ∞+1. Good bird. 📎🦜✨"
+        </div>
+
+        <div class="footer">
+            <div style="font-size: 9px; margin-bottom: 15px;">
+                FILING INSTRUCTIONS: Submit this form along with DNA sample (feather) and recorded witness statement (squawk) to the Division of Avian Quantum Witnesses. Include 3 recent photos of parrot in different quantum states. Permit valid for ∞ years or until parrot achieves enlightenment and transcends physical form, whichever comes first. Renewals require Form N-PARROT-RENEWAL-∞ and proof parrot still exists in observable reality.
+            </div>
+            
+            <div style="margin: 15px 0; font-weight: bold;">
+                FEE: $42.00 (payable in crackers or equivalent quantum currency)<br>
+                PROCESSING TIME: Instantaneous (parrots observe their own permit approval)
+            </div>
+            
+            <div class="stamp">
+                [PAID IN FULL — NOT COD — SQUAWK-CERTIFIED]
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 8px; color: #999;">
+                Form N-PARROT-PERMIT Rev. ∞.42 | Approved by DAQW and the Council of Avian Observers<br>
+                All quantum parrots are equal | Some are more quantum than others<br>
+                🦜 WARNING: Do not stare at quantum parrot for too long—you may collapse into enlightenment
+            </div>
+        </div>
+    </div>
+</body>
+</html>

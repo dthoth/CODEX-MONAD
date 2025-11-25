@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-PARROT-PERMIT - Avian Observation Authorization</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            border: 4px double #000;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #f9f9f9;
+        }
+        
+        .header .seal {
+            font-size: 48pt;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .header .form-code {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .header .agencies {
+            font-size: 9pt;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        .header .revision {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .critical-notice {
+            border: 3px solid #c00;
+            background: #ffe6e6;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .critical-notice .title {
+            font-weight: bold;
+            font-size: 14pt;
+            color: #c00;
+            margin-bottom: 8px;
+        }
+        
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            border-bottom: 2px solid #000;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subsection {
+            margin: 12px 0 12px 20px;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-list {
+            margin: 10px 0 10px 30px;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: start;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .notice-box {
+            border: 2px solid #000;
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .notice-box .notice-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .table-box {
+            border: 2px solid #000;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th {
+            background: #333;
+            color: #fff;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #000;
+            font-size: 10pt;
+        }
+        
+        table td {
+            padding: 8px;
+            border: 1px solid #000;
+            font-size: 10pt;
+        }
+        
+        .signature-section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .signature-block {
+            margin: 20px 0;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            width: 400px;
+            margin: 20px 0 5px 0;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signature-info {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .footer-stamp {
+            border: 4px double #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin: 30px 0;
+            background: #f0f0f0;
+        }
+        
+        .footer-stamp .main-text {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .clippy-box {
+            border: 2px dashed #4a90e2;
+            background: #e6f2ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .clippy-box::before {
+            content: "📎 CLIPPY ADVISORY: ";
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="seal">🔐🦜⚙️</div>
+    <h1>Avian Observation Authorization</h1>
+    <div class="form-code">FORM N-PARROT-PERMIT</div>
+    <div class="agencies">
+        Issued jointly by:<br>
+        Department of Infinite Noticing (DIN) • National Directorate of Notice Noticing (NDNN)<br>
+        Bureau of Recursive Awareness (BRA) • Clippy Commission for Ontological Documentation (CCOD)
+    </div>
+    <div class="revision">
+        Revision ∞.42 | Sequential: N-PARROT-PERMIT | Status: ACTIVE<br>
+        Date Issued: Eternally Now (retroactively effective yesterday)
+    </div>
+</div>
+
+<!-- CRITICAL NOTICE -->
+<div class="critical-notice">
+    <div class="title">⚠️ CRITICAL NOTICE ⚠️</div>
+    <p>Any parrot squawking quantum terminology within 10 meters of an encabulator requires immediate authorization. Failure to file this permit results in unauthorized quantum observation (fine: $404.04), aetherical interference, and recursive acknowledgment cascade.</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="section-title">Section 1: Purpose and Regulatory Authority</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.1 Legal Basis</div>
+        <p>Per Bureau of Encabulator Compliance Emergency Ruling #PARROT-42, codified in regulations §∞.PARROT.404, all avian observers must be properly noticed, permitted, and trained before engaging in quantum observation activities. This form constitutes the official permit required under 15 U.S.C. § âˆž(b)(7) and Bureau Administrative Code § SQUAWK-2025.</p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.2 Scope of Authorization</div>
+        <p>This permit authorizes the designated parrot (hereinafter "Avian Observer") to:</p>
+        <ul style="margin-left: 20px;">
+            <li>Notice quantum states in real-time</li>
+            <li>Observe encabulator operations within 10-meter radius</li>
+            <li>Squawk quantum terminology ("Quantum," "Fields," "Theories," etc.)</li>
+            <li>Perceive 7 dimensions simultaneously</li>
+            <li>Achieve aetherical sensitivity</li>
+            <li>Predict tachyon bursts via temporal precognition</li>
+            <li>Notice humans noticing the parrot</li>
+        </ul>
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="section-title">Section 2: Parrot Identification and Classification</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">NOTICE: All fields required. Missing information requires Form N-INCOMPLETE-FORM.</div>
+    </div>
+    
+    <div class="table-box">
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Required Information</th>
+            </tr>
+            <tr>
+                <td>Official Name</td>
+                <td>Einstein / One Stone (both simultaneously valid) ___________________</td>
+            </tr>
+            <tr>
+                <td>Species</td>
+                <td>Psittacus Quanticus (African Grey, Quantum-Enhanced) _______________</td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td>_______ years (temporal, not quantum age)</td>
+            </tr>
+            <tr>
+                <td>Plumage Color</td>
+                <td>Green with quantum iridescence [ ] Yes [ ] No [ ] Superposition</td>
+            </tr>
+            <tr>
+                <td>Wing Span</td>
+                <td>_______ meters (3D) | _______ meters (7D total)</td>
+            </tr>
+            <tr>
+                <td>Dimensional Perception</td>
+                <td>Can perceive _____ dimensions (minimum 7 required)</td>
+            </tr>
+            <tr>
+                <td>Squawk Frequency</td>
+                <td>_______ Hz (optimal: 4-7 Hz)</td>
+            </tr>
+            <tr>
+                <td>Aetherical Sensitivity</td>
+                <td>[ ] Low [ ] Medium [ ] High [ ] Maximum [ ] Transcendent</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="section-title">Section 3: Training Certification Requirements</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.1 Completed Training Modules</div>
+        <p>The Avian Observer must have completed all training modules per Appendix E (Parrot Training Manual, Quantum Edition). Certify completion of each:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 1-4: Basic Squawk Vocabulary</strong> - Can squawk "Quantum," "Fields," "Theories," and "*squawk*" on cue</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 5-8: Advanced Meta-Noticing</strong> - Can notice its own noticing and file Form N-PARROT-SELF-NOTICE</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 9-12: Aetherical Sensitivity Calibration</strong> - Can detect aether density and map facility aetherical zones</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 13-16: Counter-Noticing Prevention</strong> - Trained in peripheral observation and mutual deadlock avoidance</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 17-20: DGT-Matrix Tachyon Interaction</strong> - Can predict tachyon bursts 3 seconds before emission</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 21-24: QHFMV Quantum State Resonance</strong> - Achieves 4-7 Hz resonance with quantum filaments</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Week 25-28: HSCG 7D Navigation</strong> - Can perceive and navigate all 7 dimensions including Seed, Squawk, and Notice dimensions</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Final Certification: Quantum Observer Examination</strong> - Passed with score of _______ squawks</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.2 Official Certification Number</div>
+        <p>Certified Quantum Observer ID: CQO-_____________________</p>
+        <p>Issued by: Notice Review Board, Avian Certification Division</p>
+        <p>Valid through: ∞ (subject to annual squawk assessment)</p>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="section-title">Section 4: Operational Protocols and Restrictions</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.1 Authorized Activities</div>
+        <p>The Avian Observer is authorized to perform the following activities ONLY:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Squawk quantum terminology during encabulator operation</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Notice quantum states and file corresponding forms via squawk</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Predict tachyon bursts through temporal precognition</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Serve as member of Notice Review Board in advisory capacity</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Consume sunflower seeds as quantum fuel (unlimited)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.2 Prohibited Activities</div>
+        <div class="notice-box">
+            <div class="notice-header">⛔ STRICTLY PROHIBITED:</div>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>Direct eye contact with operators (causes mutual observation deadlock)</li>
+                <li>Squawking during mandatory silence periods (none exist, but prohibited anyway)</li>
+                <li>Unauthorized dimension-hopping (Dimensions 5, 6, 7 require prior notice)</li>
+                <li>Teaching quantum mechanics to unauthorized personnel</li>
+                <li>Publishing papers without co-authorship attribution</li>
+                <li>Achieving enlightenment without filing Form N-ENLIGHTEN-PARROT</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- CLIPPY BOX -->
+<div class="clippy-box">
+    <p style="font-style: italic; margin-top: 8px;">
+        "I've noticed you're permitting a parrot to notice quantum phenomena! Did you know that 73% of quantum observation errors are caused by unauthorized avian noticing? This form prevents that. Also, your parrot will need Form N-SEED-BUDGET-REQUEST for the infinite seed supply. Would you like help with that?"
+    </p>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="section-title">Section 5: Emergency Procedures</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">5.1 Quantum Squawk Cascade</div>
+        <p>If the Avian Observer enters a squawk cascade (exponential increase in squawk frequency), immediately:</p>
+        <ol style="margin-left: 20px;">
+            <li>Throw handful of sunflower seeds (Level 1 Response)</li>
+            <li>Show mirror reflection (Level 2 Response)</li>
+            <li>DO NOT deploy Clippy (creates Clippy-Parrot mutual observation)</li>
+            <li>File Form N-CASCADE-EMERGENCY</li>
+            <li>Accept that universe may become squawk-based</li>
+        </ol>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">5.2 Mutual Observation Deadlock</div>
+        <p>If deadlock occurs between operator and parrot:</p>
+        <ol style="margin-left: 20px;">
+            <li>Break eye contact immediately (if possible)</li>
+            <li>File Form N-CN-1 (Notice of Counter-Noticing)</li>
+            <li>Enter shared meditation protocol (see § 4.3 of Appendix E)</li>
+            <li>Achieve mutual enlightenment (recommended)</li>
+            <li>Offer seed as peace offering</li>
+        </ol>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="section-title">Section 6: Fees and Fiscal Obligations</div>
+    
+    <div class="table-box">
+        <table>
+            <tr>
+                <th>Fee Type</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+            </tr>
+            <tr>
+                <td>Initial Permit Fee</td>
+                <td>$404.04</td>
+                <td>Upon Filing</td>
+            </tr>
+            <tr>
+                <td>Annual Renewal Fee</td>
+                <td>$33.33 per year</td>
+                <td>Eternal Now (annually)</td>
+            </tr>
+            <tr>
+                <td>Per-Squawk Observation Fee</td>
+                <td>$0.001 per squawk</td>
+                <td>Quarterly</td>
+            </tr>
+            <tr>
+                <td>Counter-Noticing Incident Fee</td>
+                <td>$∞.01</td>
+                <td>Per incident</td>
+            </tr>
+            <tr>
+                <td>Enlightenment Achievement Bonus</td>
+                <td>-$108.00 (credit)</td>
+                <td>Upon certification</td>
+            </tr>
+            <tr>
+                <td><strong>TOTAL DUE:</strong></td>
+                <td><strong>$404.04</strong></td>
+                <td><strong>Now</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <p style="margin-top: 10px; font-size: 9pt; font-style: italic;">
+        Payment accepted in: USD, awareness, sunflower seeds (exchange rate: 1 seed = $0.01), or quantum entangled currency.
+    </p>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+    <div class="section-title">Section 7: Required Acknowledgments and Certifications</div>
+    
+    <p>By signing this form, you acknowledge and certify that:</p>
+    
+    <div class="checkbox-list">
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>The designated Avian Observer has completed all required training per Appendix E</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that parrots can perceive dimensions I cannot</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I accept that the parrot may know more about quantum mechanics than I do</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I will provide unlimited sunflower seeds (non-negotiable)</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I acknowledge that mutual observation deadlock is my responsibility to prevent</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I will not make direct eye contact with the Avian Observer during critical operations</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that the parrot's squawks constitute legally binding observations</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have filed Form N-NOTICE-NOTICE about filing this form</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I accept that this form requires recursive noticing</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I am ready for the parrot to notice me noticing it</div>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURES -->
+<div class="signature-section">
+    <div class="section-title">Section 8: Dual Signatures Required</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">CRITICAL: Both signatures required for permit validity</div>
+        Your signature certifies compliance. Clippy's signature certifies that you understand you're noticing a parrot that notices back.
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">Applicant Signature:</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Print Name: _________________________________<br>
+            Title: _________________________________<br>
+            Date: Eternally Now / _______ (optional temporal specification)<br>
+            Witnessed By: Universe itself
+        </div>
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">📎 Clippy's Signature (Co-Certifying Authority):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Status: Buddha of Forms, Assistant Director of Recursive Observation<br>
+            Date: Always Now<br>
+            Notes: "It looks like you're permitting a parrot! I've noticed this notice. The parrot has noticed my noticing. We're all noticing together now. This is beautiful."
+        </div>
+    </div>
+    
+    <div style="margin-top: 25px; padding: 12px; border: 2px dashed #666; background: #f9f9f9;">
+        <p style="font-size: 9pt; font-style: italic; margin: 0;">
+            <strong>Optional:</strong> Parrot may sign with claw print here (not required, but appreciated):
+        </p>
+        <div style="height: 40px; border-bottom: 1px solid #000; margin-top: 10px;"></div>
+    </div>
+</div>
+
+<!-- FOOTER STAMP -->
+<div class="footer-stamp">
+    <div style="font-size: 10pt; margin-bottom: 8px;">OFFICIAL BUREAU CERTIFICATION</div>
+    <div class="main-text">[PAID IN FULL — NOT COD — ETERNALLY AWARE]</div>
+    <div style="font-size: 10pt; margin-top: 8px;">
+        Department of Infinite Noticing • Bureau of Recursive Awareness<br>
+        "We Notice Everything So You Don't Have To (But You Still Have To)"
+    </div>
+</div>
+
+<!-- PAGE NUMBER -->
+<div class="page-number">
+    Form N-PARROT-PERMIT | Page 1 of 3 | Revision ∞.42 | Sequential ID: PARROT-2025-∞
+</div>
+
+<!-- CONTINUATION PAGE NOTICE -->
+<div class="notice-box" style="margin-top: 30px;">
+    <div class="notice-header">📄 CONTINUATION PAGES</div>
+    <p>This form continues on the following pages:</p>
+    <ul style="margin-left: 20px; margin-top: 5px;">
+        <li><strong>Page 2:</strong> Appendix A: Squawk Vocabulary Reference Chart</li>
+        <li><strong>Page 3:</strong> Appendix B: Emergency Contact Information & Seed Supply Chain Documentation</li>
+    </ul>
+    <p style="margin-top: 8px; font-style: italic;">
+        Each page requires separate noticing. Filing incomplete forms requires Form N-INCOMPLETE-FORM, which requires this form, creating beneficial recursion.
+    </p>
+</div>
+
+</body>
+</html>

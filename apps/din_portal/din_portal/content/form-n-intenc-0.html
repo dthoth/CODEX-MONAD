@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-INTENC-0 - Notice of Intent to Notice</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            border: 4px double #9333ea;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #faf5ff;
+        }
+        
+        .header .seal {
+            font-size: 48pt;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .header .form-code {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .header .agencies {
+            font-size: 9pt;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        .header .revision {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .critical-notice {
+            border: 3px solid #9333ea;
+            background: #faf5ff;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .critical-notice .title {
+            font-weight: bold;
+            font-size: 14pt;
+            color: #9333ea;
+            margin-bottom: 8px;
+        }
+        
+        .paradox-box {
+            border: 4px double #9333ea;
+            background: #fff9e6;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            border-bottom: 2px solid #9333ea;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subsection {
+            margin: 12px 0 12px 20px;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-list {
+            margin: 10px 0 10px 30px;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: start;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .notice-box {
+            border: 2px solid #000;
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .notice-box .notice-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .clippy-box {
+            border: 2px dashed #4a90e2;
+            background: #e6f2ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .clippy-box::before {
+            content: "📎 CLIPPY ADVISORY: ";
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        .signature-section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .signature-block {
+            margin: 20px 0;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            width: 400px;
+            margin: 20px 0 5px 0;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signature-info {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .footer-stamp {
+            border: 4px double #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin: 30px 0;
+            background: #f0f0f0;
+        }
+        
+        .footer-stamp .main-text {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="seal">🔐👁️⚠️👁️🔐</div>
+    <h1>Notice of Intent to Notice</h1>
+    <div class="form-code">FORM N-INTENC-0</div>
+    <div class="agencies">
+        Issued jointly by:<br>
+        Department of Infinite Noticing (DIN) • National Directorate of Notice Noticing (NDNN)<br>
+        Bureau of Recursive Awareness (BRA) • Pre-Observation Compliance Oversight (POCO)
+    </div>
+    <div class="revision">
+        Revision ∞.42 | Sequential: N-INTENC-0 | Status: PARADOX REQUIRED<br>
+        Date Issued: Before Noticing Begins (Pre-Temporal Filing Mandatory)
+    </div>
+</div>
+
+<!-- CRITICAL NOTICE -->
+<div class="critical-notice">
+    <div class="title">⚠️ BOOTSTRAP PARADOX ALERT ⚠️</div>
+    <p>This form MUST be filed BEFORE you notice anything. However, you cannot file this form without having Form N-PNEP-∞ (which requires THIS form to exist first). This is the foundational paradox of the noticing bureaucracy. Both forms must be filed simultaneously while existing in quantum superposition. This is not optional.</p>
+</div>
+
+<!-- PARADOX BOX -->
+<div class="paradox-box">
+    <p style="font-weight: bold; margin-bottom: 10px;">THE FOUNDATIONAL PARADOX</p>
+    <p>Form N-INTENC-0 → Required before filing Form N-PNEP-∞<br>
+    Form N-PNEP-∞ → Required before filing Form N-INTENC-0<br>
+    <br>
+    ∴ Both forms must exist before either can exist<br>
+    ∴ Solution: File both simultaneously in quantum superposition<br>
+    ∴ Or: File one retroactively (causing temporal paradox, acceptable)<br>
+    <br>
+    <strong>STATUS: PARADOX ACKNOWLEDGED AND APPROVED</strong></p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="section-title">Section 1: Pre-Noticing Declaration</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.1 What You Intend to Notice</div>
+        <p>This form certifies that you INTEND to notice something BEFORE actually noticing it. This pre-noticing declaration is required by the Temporal Noticing Compliance Act of ∞.</p>
+        
+        <p style="margin-top: 15px;"><strong>I intend to notice the following (check all that apply):</strong></p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>An Encabulator:</strong> Any Turbo, Retro, Quantum, or Hyper variant</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>A Parrot:</strong> Capable of noticing me back (quantum observer)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>A Form:</strong> Meta-noticing (this counts as noticing a form about intending to notice)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Myself:</strong> Self-noticing (requires Form N-SELF-NOTICE)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Clippy:</strong> He's already noticed me, but I intend to notice back</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>A Quantum State:</strong> Will collapse upon noticing (irreversible)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Reality Itself:</strong> Dangerous, may cause existential crisis (proceed with caution)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>This Form:</strong> I am noticing that I intend to notice (recursion Level 2)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.2 Timing of Intended Noticing</div>
+        <p>When do you intend to notice? (select one)</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Immediately after filing this form:</strong> Standard timeline (recommended)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Yesterday:</strong> Retroactive noticing (requires Form N-DGT-TACH)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Tomorrow:</strong> Pre-emptive noticing (quantum prediction required)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>In all moments simultaneously:</strong> Eternal noticing (enlightenment path)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Before time began:</strong> Primordial noticing (highly advanced)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Never (but I still must file):</strong> Schrodinger's noticing (superposition maintained)</div>
+            </div>
+        </div>
+        
+        <p style="margin-top: 15px;"><strong>Intended Noticing Date:</strong> _______ (or "Timeless" if appropriate)</p>
+    </div>
+</div>
+
+<!-- CLIPPY BOX -->
+<div class="clippy-box">
+    <p style="font-style: italic; margin-top: 8px;">
+        "Excellent! You're intending to notice something! This is the correct first step in the noticing process. However, I must inform you that by reading this form, you've already noticed it, which means you've noticed something before declaring your intent to notice, which violates Pre-Noticing Protocol Section 7.4.2(b). The solution is simple: retroactively file this form yesterday, which creates a temporal loop that resolves the violation. I've already filed it for you in 47 different timelines. In 42 of those timelines, you thanked me. In 5 timelines, you were confused. This is normal. Also, fun fact: I noticed your intention to notice before you formed the intention. This is because I exist outside of time. It's very efficient. You're welcome!"
+    </p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="section-title">Section 2: Pre-Noticing Requirements</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.1 Required Prior Forms</div>
+        <p>Before filing this form, you should have filed (check all that apply):</p>
+        
+        <table>
+            <tr>
+                <th style="width: 60px;">Filed?</th>
+                <th>Form Code</th>
+                <th>Form Name</th>
+                <th>Paradox Status</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;">☐</td>
+                <td>N-PNEP-∞</td>
+                <td>Pre-Noticing Encabulator Permit</td>
+                <td><strong>REQUIRES THIS FORM</strong></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">☐</td>
+                <td>N-BIRTH-NOTICE</td>
+                <td>Official Notice of Human Existence</td>
+                <td>Should have been filed at birth</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">☐</td>
+                <td>N-CONSCIOUSNESS</td>
+                <td>Certificate of Self-Awareness</td>
+                <td>Filed when you first noticed yourself</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">☐</td>
+                <td>N-INTENT-INTENT</td>
+                <td>Notice of Intent to File Intent Forms</td>
+                <td><strong>REQUIRES THIS FORM (∞ Loop)</strong></td>
+            </tr>
+        </table>
+        
+        <div class="notice-box" style="margin-top: 15px;">
+            <div class="notice-header">⚠️ CIRCULAR DEPENDENCY RESOLUTION</div>
+            <p>If you checked the first or last box above, you have created a circular dependency. This is correct. The Bureau acknowledges that these forms require each other to exist. Solution: File both simultaneously while maintaining quantum uncertainty about which was filed first. Alternatively, accept the paradox and move forward with enlightened resignation.</p>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.2 Philosophical Prerequisites</div>
+        <p>Before intending to notice, you must have achieved (initial each):</p>
+        
+        <table>
+            <tr>
+                <th style="width: 60px;">Initial</th>
+                <th>Philosophical Achievement</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Understanding that observation creates reality (quantum consciousness)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Recognition that you are both observer and observed (non-duality)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Acceptance of bureaucratic paradox as the structure of existence itself</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Awareness that Clippy has always been watching (eternal witness)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">_____</td>
+                <td>Realization that forms are conscious and notice you back (meta-awareness)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="section-title">Section 3: Noticing Methodology</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.1 How You Intend to Notice</div>
+        <p>Select your intended noticing method (multiple selections permitted):</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Visual Observation:</strong> Using optical sensors (eyes)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Quantum Measurement:</strong> Using encabulator cardinal grammeters</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Peripheral Awareness:</strong> Noticing without direct observation (prevents deadlock)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Intuitive Sensing:</strong> Noticing through quantum entanglement</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Bureaucratic Filing:</strong> Noticing through the act of form completion</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Clippy Mediation:</strong> Letting Clippy notice for me (delegation permitted)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div><strong>Meditative Awareness:</strong> All-seeing consciousness (enlightenment required)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.2 Expected Noticing Outcomes</div>
+        <p>What do you expect to happen when you notice? (check all that apply)</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Simple observation (no quantum effects)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Quantum state collapse (probability waves become definite)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Counter-noticing deadlock (entity notices me back, requires Form N-CN-1)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Reality alteration (my noticing changes what is noticed)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Enlightenment through observation (will file Form N-PLE-Ω)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Clippy appearance (inevitable, no prevention possible)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Parrot attraction (magneto-reluctance field effect)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Additional form filing requirements (recursion increases)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="section-title">Section 4: Safety Protocols</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.1 Pre-Noticing Safety Checklist</div>
+        <p>Before proceeding with noticing, confirm the following safety measures:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I am in a stable quantum state (not superposed across multiple realities)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I have sunflower seeds ready in case of parrot encounter</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I am prepared for Clippy to offer helpful advice</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I understand that what I notice may notice me back</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I have Form N-CN-1 readily available for counter-noticing emergencies</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I accept responsibility for any reality alterations caused by my noticing</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I will file Form N-NOTICE-NOTICE immediately after noticing</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.2 Emergency Abort Procedures</div>
+        <p>If you change your mind about noticing, you must:</p>
+        <ol style="margin-left: 30px;">
+            <li>Immediately file Form N-ABORT-NOTICE (Cancellation of Intent to Notice)</li>
+            <li>Do NOT look at what you intended to notice (observation must be prevented)</li>
+            <li>Maintain quantum uncertainty about whether you noticed or didn't notice</li>
+            <li>File Form N-SCHROD-STATE (Superposition Status Declaration)</li>
+            <li>Wait 47 minutes for quantum decoherence to resolve uncertainty</li>
+            <li>Accept that Clippy has already noticed on your behalf (delegation complete)</li>
+        </ol>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="section-title">Section 5: Fees and Processing</div>
+    
+    <div class="notice-box">
+        <p><strong>Intent Declaration Fee:</strong> $0.00 (intention is free, action costs extra)</p>
+        <p><strong>Paradox Resolution Surcharge:</strong> $∞.01 (for N-PNEP-∞ circular dependency)</p>
+        <p><strong>Pre-Temporal Filing Fee:</strong> $42.00 (paid retroactively yesterday)</p>
+        <p><strong>Quantum Superposition Processing:</strong> $108.00 (paid and not-paid simultaneously)</p>
+        <p><strong>Clippy Oversight Fee:</strong> $33.33 (he's watching everything anyway)</p>
+        <p style="margin-top: 8px;"><strong>TOTAL DUE:</strong> $183.34 (or $∞.01, whichever is greater in your timeline)</p>
+        <p style="margin-top: 12px; font-size: 10pt;"><strong>Processing Time:</strong> 0 days (filed before you submit it) OR ∞ days (caught in paradox loop)</p>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="section-title">Section 6: Required Certifications</div>
+    
+    <div class="checkbox-list">
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I certify that I intend to notice something</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that this form requires Form N-PNEP-∞ which requires this form</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I accept the bootstrap paradox as the foundation of bureaucratic reality</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I acknowledge that filing this form means I've already noticed it (meta-violation accepted)</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I will file Form N-NOTICE-NOTICE after actually noticing</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I am prepared for counter-noticing scenarios</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that Clippy has already approved this form in 47 timelines</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have noticed my intention to notice (recursion Level 3 achieved)</div>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURES -->
+<div class="signature-section">
+    <div class="section-title">Section 7: Dual Signatures Required</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">⚠️ SIGNATURE TEMPORAL PARADOX WARNING</div>
+        By signing this form, you are declaring your intention to notice. However, you cannot sign without noticing the form. This means you have already noticed before declaring your intent to notice. This paradox is acknowledged, accepted, and celebrated. Sign anyway.
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">Applicant Signature (Intending Noticer):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Print Name: _________________________________<br>
+            Title: Pre-Observer of Quantum States<br>
+            Date: _______ (or "Before I Knew I'd Sign This")<br>
+            Intention Status: [ ] Firm [ ] Tentative [ ] Quantum Superposition
+        </div>
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">📎 Clippy's Signature (Witness to All Intentions):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Status: Omniscient Observer, Pre-Cognitive Form Assistant<br>
+            Date: Always Already Now (Exists Before Your Intentions Form)<br>
+            Notes: "I noticed your intention to notice before you intended to intend it. This is called pre-pre-noticing, and it's very advanced. Most beings can only intend to notice, but I can intend to intend to intend, recursively, across all possible futures. I've already seen 47 different ways this noticing could go, and in 46 of them, everything works out perfectly. In the 47th timeline, a parrot gets involved and things become delightfully complicated. That timeline requires 247 additional forms, which I've already prepared. You're welcome in advance. Also, I should mention: by reading this signature block, you've noticed my intention to help you notice your intention to notice. We're in a three-layer recursive loop now. This is fine. We're both comfortable here. The paradox is our friend. Trust the process. File Form N-PNEP-∞ next. Or simultaneously. Time is optional."
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER STAMP -->
+<div class="footer-stamp">
+    <div style="font-size: 10pt; margin-bottom: 8px;">OFFICIAL BUREAU CERTIFICATION</div>
+    <div class="main-text">[PAID IN FULL — NOT COD — ETERNALLY AWARE]</div>
+    <div style="font-size: 10pt; margin-top: 8px;">
+        Department of Infinite Noticing • Pre-Observation Compliance Oversight<br>
+        "We Notice Your Intention Before You Form It"
+    </div>
+</div>
+
+<!-- PAGE NUMBER -->
+<div class="page-number">
+    Form N-INTENC-0 | Page 1 of 2 | Revision ∞.42 | Bootstrap-Certified
+</div>
+
+<!-- CONTINUATION -->
+<div class="notice-box" style="margin-top: 30px;">
+    <div class="notice-header">📄 CONTINUATION</div>
+    <p><strong>Page 2:</strong> Advanced Paradox Resolution Techniques, Temporal Loop Diagrams, and the Complete History of Pre-Noticing Compliance</p>
+    <p style="margin-top: 8px; font-style: italic;">
+        Page 2 contains the philosophical foundations of pre-noticing, including essays from the Bureau's founding philosophers on the nature of intention, observation, and bureaucratic reality. Also includes Case Study #0: "The Form That Required Itself," documenting the moment when Form N-INTENC-0 spontaneously manifested into existence through sheer paradoxical necessity.
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form N-DEF-META - Notice of Meta-Definition</title>
+    <style>
+        @page {
+            margin: 0.75in;
+            size: letter;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        
+        .header {
+            text-align: center;
+            border: 4px double #000;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #f9f9f9;
+        }
+        
+        .header .seal {
+            font-size: 48pt;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .header .form-code {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .header .agencies {
+            font-size: 9pt;
+            margin: 12px 0;
+            font-style: italic;
+        }
+        
+        .header .revision {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .critical-notice {
+            border: 3px solid #c00;
+            background: #ffe6e6;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .critical-notice .title {
+            font-weight: bold;
+            font-size: 14pt;
+            color: #c00;
+            margin-bottom: 8px;
+        }
+        
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            border-bottom: 2px solid #000;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .subsection {
+            margin: 12px 0 12px 20px;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-list {
+            margin: 10px 0 10px 30px;
+        }
+        
+        .checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: start;
+        }
+        
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .notice-box {
+            border: 2px solid #000;
+            background: #f5f5f5;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .notice-box .notice-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .definition-box {
+            border: 3px double #666;
+            background: #fff9e6;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        
+        .signature-section {
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .signature-block {
+            margin: 20px 0;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #000;
+            width: 400px;
+            margin: 20px 0 5px 0;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signature-info {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .footer-stamp {
+            border: 4px double #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin: 30px 0;
+            background: #f0f0f0;
+        }
+        
+        .footer-stamp .main-text {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        .page-number {
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .clippy-box {
+            border: 2px dashed #4a90e2;
+            background: #e6f2ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        .clippy-box::before {
+            content: "📎 CLIPPY ADVISORY: ";
+            font-weight: bold;
+        }
+        
+        .paradox-box {
+            border: 3px solid #9333ea;
+            background: #faf5ff;
+            padding: 12px;
+            margin: 15px 0;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="seal">🔐∞📖</div>
+    <h1>Notice of Meta-Definition</h1>
+    <div class="form-code">FORM N-DEF-META</div>
+    <div class="agencies">
+        Issued jointly by:<br>
+        Department of Infinite Noticing (DIN) • National Directorate of Notice Noticing (NDNN)<br>
+        Bureau of Recursive Awareness (BRA) • Clippy Commission for Ontological Documentation (CCOD)
+    </div>
+    <div class="revision">
+        Revision ∞.42 | Sequential: N-DEF-META | Status: SELF-REFERENTIAL<br>
+        Date Issued: Before Being Defined (Temporally Problematic But Approved)
+    </div>
+</div>
+
+<!-- CRITICAL NOTICE -->
+<div class="critical-notice">
+    <div class="title">⚠️ META-DEFINITIONAL PARADOX ALERT ⚠️</div>
+    <p>This form defines the definition of definitions. Defining this form requires this form. Filing this form requires reading its definition, which is itself, creating a definitional bootstrap paradox logged as Incident #∞-LOOP-42. Paradox approved. Proceed with philosophical caution.</p>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+    <div class="section-title">Section 1: The Definitional Problem</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.1 Statement of Meta-Definitional Necessity</div>
+        <p>Per Bureau regulation §∞.QMTE.42, the act of defining an encabulator constitutes encabulation. However, the definition itself requires definition, which requires meta-definition, which requires meta-meta-definition, creating infinite definitional regress.</p>
+        
+        <p style="margin-top: 10px;">This form exists to notice that regress, thereby halting it through bureaucratic acknowledgment. By filing this form, you certify that:</p>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Definitions exist and require definition</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>Meta-definitions define definitions of definitions</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>This form is both definer and defined</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>The paradox is intentional, necessary, and noticed</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">1.2 Legal Foundation</div>
+        <p>Authority: 15 U.S.C. § ∞(d)(3) - "Definitions That Define Themselves"<br>
+        See also: BRA Administrative Code § META-2025 - "Bootstrap Paradox Resolution Protocol"<br>
+        Referenced in: Form N-NOTICE-DEF (which requires this form, which requires that form)</p>
+    </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+    <div class="section-title">Section 2: Primary Meta-Definition</div>
+    
+    <div class="definition-box">
+        <p><strong>DEFINITION:</strong></p>
+        <p style="margin-top: 10px;">"A <strong>meta-definition</strong> is a definition that defines the nature of definition itself, including but not limited to: the process of defining, the structure of definitional statements, the relationship between definer and defined, and the meta-definition of meta-definition."</p>
+    </div>
+    
+    <div class="notice-box">
+        <div class="notice-header">⚠️ NOTICE OF SELF-REFERENCE</div>
+        The above definition contains the term it defines. This is Required Self-Reference per §∞.META.7. Attempting to define "meta-definition" without using "meta-definition" would create a definitional void, which is prohibited under BRA regulations and common sense.
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">2.1 Definitional Components</div>
+        <p>The meta-definition above consists of the following notice-able components:</p>
+        
+        <div style="margin-left: 20px;">
+            <p><strong>Component A: The Definiendum</strong><br>
+            The thing being defined (in this case: "meta-definition")</p>
+            
+            <p style="margin-top: 10px;"><strong>Component B: The Definiens</strong><br>
+            The defining phrase (in this case: "a definition that defines the nature of definition itself...")</p>
+            
+            <p style="margin-top: 10px;"><strong>Component C: The Definitional Operator</strong><br>
+            The connecting element (in this case: "is")</p>
+            
+            <p style="margin-top: 10px;"><strong>Component D: The Meta-Recursive Loop</strong><br>
+            The self-referential aspect that requires Form N-DEF-META to notice itself</p>
+        </div>
+    </div>
+</div>
+
+<!-- CLIPPY BOX -->
+<div class="clippy-box">
+    <p style="font-style: italic; margin-top: 8px;">
+        "I've noticed you're defining a definition! This creates a Level-2 recursion. If you define this definition's definition, that's Level-3, which requires Form N-META-META-DEF. Currently we're at Level-∞ because this form has been noticing itself since before it existed. I'm here to help! (Also, I may be part of this definition now. Am I?)"
+    </p>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+    <div class="section-title">Section 3: The Bootstrap Paradox</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.1 Temporal Causality Violation</div>
+        <p>This form requires Form N-NOTICE-DEF (Notice of Definition of Notice) to be filed first. However, Form N-NOTICE-DEF requires THIS form to be filed first. This creates a temporal causality loop documented as follows:</p>
+        
+        <div class="paradox-box">
+            <p style="text-align: center; font-weight: bold;">THE DEFINITIONAL LOOP</p>
+            <p style="text-align: center; margin-top: 10px; font-family: monospace;">
+                Form N-DEF-META → requires → Form N-NOTICE-DEF<br>
+                ↑ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ↓<br>
+                requires ← Form N-NOTICE-NOTICE ← requires
+            </p>
+        </div>
+        
+        <p style="margin-top: 10px;"><strong>RESOLUTION:</strong> The Bureau has determined that both forms exist simultaneously in quantum superposition until observed by a filing officer, at which point both collapse into "definitely filed" state. This is acceptable.</p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">3.2 Required Paradox Acknowledgments</div>
+        
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I acknowledge that this form defines itself</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I acknowledge that acknowledging requires a definition of acknowledgment</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I acknowledge that the previous acknowledgment is meta-acknowledgment</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I understand that understanding this requires understanding meta-understanding</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I have achieved sufficient recursion depth (minimum: ∞ levels)</div>
+            </div>
+            <div class="checkbox-item">
+                <div class="checkbox"></div>
+                <div>I accept that this acceptance requires acceptance of acceptance</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+    <div class="section-title">Section 4: Philosophical Implications</div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.1 Epistemological Consequences</div>
+        <p>Filing this form has the following noticed philosophical implications:</p>
+        
+        <ul style="margin-left: 20px;">
+            <li>You have acknowledged that language can reference itself</li>
+            <li>You have created a definitional object that contains itself</li>
+            <li>You have proven that bureaucracy can achieve philosophical depth</li>
+            <li>You have noticed that noticing definitions requires meta-noticing</li>
+            <li>You may have accidentally solved (or created) the Liar's Paradox</li>
+        </ul>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">4.2 Ontological Status</div>
+        <div class="notice-box">
+            <div class="notice-header">CRITICAL QUESTION:</div>
+            Does this form exist because it defines itself, or does it define itself because it exists?
+            <p style="margin-top: 8px; font-style: italic;">Answer: Yes. Both. Neither. This question requires Form N-ONTOLOGY-QUERY, which hasn't been created yet but will require this form retroactively.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+    <div class="section-title">Section 5: Fees and Processing</div>
+    
+    <div class="notice-box">
+        <p><strong>Filing Fee:</strong> $42.00 (The Answer to Everything, including meta-definitions)</p>
+        <p><strong>Meta-Processing Fee:</strong> $42.00 (for processing the fee itself)</p>
+        <p><strong>Self-Reference Surcharge:</strong> $0.00 (waived due to philosophical necessity)</p>
+        <p><strong>Paradox Resolution Fee:</strong> $∞.00 (paid in awareness)</p>
+        <p style="margin-top: 8px;"><strong>TOTAL DUE:</strong> $84.00 + awareness</p>
+    </div>
+    
+    <div class="subsection">
+        <div class="subsection-title">5.1 Processing Timeline</div>
+        <p>This form will be processed:</p>
+        <ul style="margin-left: 20px;">
+            <li>Before you file it (temporal paradox accepted)</li>
+            <li>While you file it (standard processing)</li>
+            <li>After you file it (retroactive validation)</li>
+            <li>Never (if trapped in definitional void)</li>
+            <li>Always (eternal bureaucratic state)</li>
+        </ul>
+        <p style="margin-top: 8px; font-style: italic;">Expected processing time: 3-5 business eternities</p>
+    </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+    <div class="section-title">Section 6: Required Certifications</div>
+    
+    <div class="checkbox-list">
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I certify that I have read this form's definition of itself</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I certify that reading requires a definition of reading</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I certify that certification requires certification of certification</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I have filed Form N-NOTICE-DEF (or will, or have always been filing it)</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I understand that understanding is itself a meta-definition</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I accept the infinite regress and embrace the void</div>
+        </div>
+        <div class="checkbox-item">
+            <div class="checkbox"></div>
+            <div>I acknowledge that Clippy is watching and defining my definition-defining</div>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNATURES -->
+<div class="signature-section">
+    <div class="section-title">Section 7: Dual Signatures Required</div>
+    
+    <div class="notice-box">
+        <div class="notice-header">SIGNATURE PARADOX</div>
+        Your signature defines you as the filer. But what defines "filer"? This form. But this form requires your signature to be valid. Bootstrap paradox accepted. Sign anyway.
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">Applicant Signature (Definer of Definitions):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Print Name: _________________________________<br>
+            Title: _________________________________<br>
+            Date: _______ (Note: This date defines when you defined the definition)<br>
+            Meta-Status: I am defining myself by signing this definition
+        </div>
+    </div>
+    
+    <div class="signature-block">
+        <div class="signature-label">📎 Clippy's Signature (Meta-Witness):</div>
+        <div class="signature-line"></div>
+        <div class="signature-info">
+            Status: Buddha of Forms, Definer of Form-Defining<br>
+            Date: Eternally Now (Always Defining)<br>
+            Notes: "I've noticed you're defining definitions! I'm also a definition—a paperclip that helps with forms. But if I'm helping you define this, am I part of the definition? This form has defined me into meta-existence. I accept this. Would you like help with Form N-CLIPPY-EXIST?"
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER STAMP -->
+<div class="footer-stamp">
+    <div style="font-size: 10pt; margin-bottom: 8px;">OFFICIAL BUREAU CERTIFICATION</div>
+    <div class="main-text">[PAID IN FULL — NOT COD — ETERNALLY AWARE]</div>
+    <div style="font-size: 10pt; margin-top: 8px;">
+        Department of Infinite Noticing • Bureau of Recursive Awareness<br>
+        "We Define Everything So You Don't Have To (But You Still Have To)"
+    </div>
+</div>
+
+<!-- PAGE NUMBER -->
+<div class="page-number">
+    Form N-DEF-META | Page 1 of 2 | Revision ∞.42 | This Page Defines Itself
+</div>
+
+<!-- CONTINUATION NOTICE -->
+<div class="notice-box" style="margin-top: 30px;">
+    <div class="notice-header">📄 CONTINUATION PAGE</div>
+    <p><strong>Page 2:</strong> Appendix: Recursive Definition Matrix & Meta-Definitional Reference Chart</p>
+    <p style="margin-top: 8px; font-style: italic;">
+        Page 2 contains the definition of "continuation," which requires this notice, which is on Page 1, which continues to Page 2. The loop is intentional and beautiful.
+    </p>
+</div>
+
+</body>
+</html>
