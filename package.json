@@ -64,6 +64,5 @@
     "cross-env": "^7.0.3",
     "electron": "^30.0.0",
     "electron-builder": "^24.6.4"
-  },
-  "dependencies": {}
+  }
 }
