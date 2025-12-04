@@ -1,0 +1,19 @@
+{
+  "id": "codex_capture",
+  "name": "CODEX Capture",
+  "kind": "python",
+  "entry": "index.html",
+  "description": "The Baseline Triangle: Keystrokes, Clipboard, Window Context",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El + Claude",
+  "icon": "🎭",
+  "config": {
+    "enabled": false,
+    "note": "Set to true to enable capture on your personal deployment"
+  },
+  "requires": ["pynput", "pywin32", "psutil"],
+  "scripts": {
+    "start": "python capture.py",
+    "install": "pip install -r requirements.txt"
+  }
+}

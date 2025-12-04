@@ -1,0 +1,6 @@
+# Ignore all capture logs
+daily/
+
+# But keep the structure
+!daily/.gitkeep
+!README.md

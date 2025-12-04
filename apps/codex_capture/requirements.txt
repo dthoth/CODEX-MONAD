@@ -1,0 +1,6 @@
+# CODEX Capture - Dependencies
+# Install: pip install -r requirements.txt
+
+pynput>=1.7.6      # Keyboard/mouse input monitoring
+pywin32>=305       # Windows API (window titles, clipboard)
+psutil>=5.9.0      # Process information

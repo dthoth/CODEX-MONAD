@@ -1,0 +1,28 @@
+{
+  "_comment": "CODEX Capture Configuration",
+  "_note": "This file controls whether the capture system is active",
+  
+  "capture_enabled": false,
+  
+  "settings": {
+    "log_keystrokes": true,
+    "log_clipboard": true,
+    "log_windows": true,
+    
+    "flush_interval_seconds": 30,
+    "window_poll_interval_seconds": 1,
+    
+    "output_directory": "../../data/capture/daily",
+    
+    "exclusions": {
+      "window_title_contains": [],
+      "app_names": [],
+      "_examples": ["KeePass", "1Password", "Banking"]
+    }
+  },
+  
+  "personal_override": {
+    "_instruction": "For Daniel: set capture_enabled to true",
+    "_location": "This file or create config.local.json which overrides this"
+  }
+}

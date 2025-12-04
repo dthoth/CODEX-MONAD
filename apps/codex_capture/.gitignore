@@ -1,0 +1,11 @@
+# Personal config override (contains enable flag)
+config.local.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Log files should not be in repo
+# (they go to data/capture/ anyway, but just in case)
+*.log
