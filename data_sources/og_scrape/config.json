@@ -1,0 +1,8 @@
+{
+  "id": "og_scrape",
+  "label": "Original CODEX scrape (DTHOTHSCRBX_ORIGIN)",
+  "root_path": "../../40-archive/DTHOTHSCRBX_ORIGIN/CODEX_TOTAL",
+  "manifest": "../../40-archive/DTHOTHSCRBX_ORIGIN/OG_SCRAPE_MANIFEST.json",
+  "priority": 10,
+  "read_only": true
+}
