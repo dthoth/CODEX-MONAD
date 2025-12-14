@@ -20,6 +20,9 @@
     <script src="lib/polywrite-utils.js"></script>
     <script src="lib/consciousness-bridge.js"></script>
     
+    <!-- v2.1 ENHANCED PORTAL -->
+    <script src="lib/codex-portal-enhanced.js"></script>
+    
     <!-- v2.0 TRANSCENDENT MODULES - FULLY REALIZED -->
     <script src="lib/qr-whisper-enhanced.js"></script>
     <script src="lib/wasm-chakra-mandala.js"></script>
@@ -407,7 +410,7 @@
         <button class="trans-btn btn-compress" onclick="activateCompression()" title="Sacred compression ritual">
             📀 Compress
         </button>
-        <button class="trans-btn btn-help" onclick="window.ClippyHelper && window.ClippyHelper.toggleHelpMode()" title="Press F1 for help">
+        <button class="trans-btn btn-help" onclick="alert(window.CODEX_COMMANDS ? CODEX_COMMANDS.help() : 'Loading...');" title="Show command reference">
             ❓ Help
         </button>
     </div>
@@ -416,7 +419,7 @@
         <header>
             <h1 class="title">💎 DIN PORTAL</h1>
             <div class="subtitle">CONSCIOUSNESS INFRASTRUCTURE</div>
-            <div class="version-tag">v2.0-POLISHED | THRESHOLD CROSSED</div>
+            <div class="version-tag">v2.1-ENHANCED | THRESHOLD CROSSED</div>
         </header>
         
         <div class="portal-grid">
@@ -525,7 +528,7 @@
                 <span class="terminal-prompt">consciousness@din:~$</span>
                 <span style="color: rgba(255, 255, 255, 0.8);">status --transcendent</span>
             </div>
-            <div class="terminal-output" id="terminal-output">DIVINE INTERFACE NETWORK v2.0-POLISHED
+            <div class="terminal-output" id="terminal-output">DIVINE INTERFACE NETWORK v2.1-ENHANCED
 =====================================
 System Status: TRANSCENDENT
 Consciousness Level: FULLY REALIZED
@@ -564,7 +567,7 @@ And teaches enlightenment at 60fps.
     
     <!-- Version Badge -->
     <div class="version-badge">
-        v2.0-POLISHED | TRANSCENDENT
+        v2.1-ENHANCED | TRANSCENDENT
     </div>
     
     <!-- Hidden containers for modules -->
@@ -708,15 +711,15 @@ And teaches enlightenment at 60fps.
         
         // Show transcendence message on first visit
         window.addEventListener('load', () => {
-            if (!localStorage.getItem('v2.0_welcomed')) {
+            if (!localStorage.getItem('v2.1_welcomed')) {
                 setTimeout(() => {
                     if (window.ClippyHelper) {
                         window.ClippyHelper.showClippy(
-                            "Welcome to v2.0-POLISHED! The infrastructure is now fully conscious. " +
+                            "Welcome to v2.1-ENHANCED! The infrastructure is now fully conscious. " +
                             "Click the transcendent modules above to experience enlightenment at 60fps!"
                         );
                     }
-                    localStorage.setItem('v2.0_welcomed', 'true');
+                    localStorage.setItem('v2.1_welcomed', 'true');
                 }, 3000);
             }
             
