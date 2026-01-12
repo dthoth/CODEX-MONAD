@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONFLICT LAB v6 - Predictive Engine</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script>
+        // Fallback if Plotly doesn't load
+        window.addEventListener('load', function() {
+            if (typeof Plotly === 'undefined') {
+                console.log('Plotly not loaded, trying fallback...');
+                var s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js';
+                document.head.appendChild(s);
+            }
+        });
+        
+        // Simple canvas chart fallback
+        function drawSimpleChart(containerId, historyA, historyB, times) {
+            const container = document.getElementById(containerId);
+            if (!container || !historyA.length) return;
+            
+            container.innerHTML = '<canvas id="fallbackChart" width="400" height="180"></canvas>';
+            const canvas = document.getElementById('fallbackChart');
+            const ctx = canvas.getContext('2d');
+            
+            const w = canvas.width, h = canvas.height;
+            const pad = 30;
+            
+            // Find max value
+            const maxVal = Math.max(...historyA, ...historyB);
+            const scaleY = (h - pad * 2) / maxVal;
+            const scaleX = (w - pad * 2) / (historyA.length - 1);
+            
+            // Draw grid
+            ctx.strokeStyle = '#2a2a3a';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = pad + i * (h - pad * 2) / 4;
+                ctx.beginPath();
+                ctx.moveTo(pad, y);
+                ctx.lineTo(w - pad, y);
+                ctx.stroke();
+            }
+            
+            // Draw Side A line
+            ctx.strokeStyle = '#4a9eff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            historyA.forEach((v, i) => {
+                const x = pad + i * scaleX;
+                const y = h - pad - v * scaleY;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            
+            // Draw Side B line
+            ctx.strokeStyle = '#ff4a6a';
+            ctx.beginPath();
+            historyB.forEach((v, i) => {
+                const x = pad + i * scaleX;
+                const y = h - pad - v * scaleY;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#888';
+            ctx.font = '10px sans-serif';
+            ctx.fillText('Days', w/2, h - 5);
+            ctx.fillText('0', pad - 10, h - pad + 10);
+            ctx.fillText(times[times.length-1] || '', w - pad - 10, h - pad + 10);
+            
+            // Legend
+            ctx.fillStyle = '#4a9eff';
+            ctx.fillRect(w - 80, 10, 10, 10);
+            ctx.fillStyle = '#888';
+            ctx.fillText('Side A', w - 65, 18);
+            ctx.fillStyle = '#ff4a6a';
+            ctx.fillRect(w - 80, 25, 10, 10);
+            ctx.fillStyle = '#888';
+            ctx.fillText('Side B', w - 65, 33);
+        }
+    </script>
+    <style>
+        :root {
+            --bg: #0a0a0f; --bg2: #12121a; --bg3: #1a1a24; --border: #2a2a3a;
+            --text: #e0e0e0; --muted: #888;
+            --blue: #4a9eff; --red: #ff4a6a; --green: #4aff9f; --orange: #ffaa4a; --purple: #aa4aff; --cyan: #4affff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+        
+        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 1rem; border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
+        .header .version { background: var(--purple); color: white; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; }
+        .header .subtitle { color: var(--muted); font-size: 0.8rem; margin-top: 0.25rem; }
+        
+        .main { display: grid; grid-template-columns: 1fr 300px; gap: 1rem; padding: 1rem; }
+        .config-area { display: flex; flex-direction: column; gap: 1rem; }
+        
+        .panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+        .panel-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .panel-title .icon { font-size: 1rem; }
+        
+        /* Tabs */
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .tab { padding: 0.5rem 1rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .tab.active { background: var(--blue); border-color: var(--blue); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Country Selection */
+        .country-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-bottom: 1rem; }
+        .country-chip { padding: 0.4rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; text-align: center; font-size: 0.75rem; transition: all 0.15s; }
+        .country-chip:hover { border-color: var(--muted); }
+        .country-chip.sel-a { background: rgba(74,158,255,0.2); border-color: var(--blue); color: var(--blue); }
+        .country-chip.sel-b { background: rgba(255,74,106,0.2); border-color: var(--red); color: var(--red); }
+        
+        /* Side Config */
+        .sides-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .side-panel { background: var(--bg3); border-radius: 6px; padding: 0.75rem; }
+        .side-panel.side-a { border-left: 3px solid var(--blue); }
+        .side-panel.side-b { border-left: 3px solid var(--red); }
+        .side-header { font-weight: 600; font-size: 0.8rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+        .side-header .label-a { color: var(--blue); }
+        .side-header .label-b { color: var(--red); }
+        
+        /* Parameter Groups */
+        .param-group { margin-bottom: 0.75rem; }
+        .param-group-title { font-size: 0.7rem; color: var(--cyan); text-transform: uppercase; margin-bottom: 0.4rem; letter-spacing: 0.5px; }
+        .param-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; }
+        .param-row label { flex: 1; font-size: 0.75rem; color: var(--muted); }
+        .param-row input[type="range"] { width: 80px; }
+        .param-row .val { width: 28px; text-align: right; font-size: 0.75rem; font-weight: 600; }
+        .param-row select { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.2rem; border-radius: 3px; font-size: 0.7rem; }
+        
+        /* Coalition Info */
+        .coalition-info { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
+        .coalition-box { background: var(--bg3); border-radius: 6px; padding: 0.5rem; text-align: center; }
+        .coalition-box.blue { border: 1px solid var(--blue); }
+        .coalition-box.red { border: 1px solid var(--red); }
+        .coalition-box .flags { font-size: 1.2rem; margin-bottom: 0.25rem; }
+        .coalition-box .stats { font-size: 0.7rem; color: var(--muted); }
+        .coalition-box .stats span { display: block; }
+        .vs-badge { font-size: 1.5rem; font-weight: 700; color: var(--orange); }
+        
+        /* Theater Config */
+        .theater-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; margin-bottom: 0.75rem; }
+        .theater-btn { padding: 0.4rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; text-align: center; font-size: 0.7rem; }
+        .theater-btn.active { background: var(--purple); border-color: var(--purple); }
+        
+        /* System Integration - NEW */
+        .system-panel { background: rgba(170,74,255,0.1); border: 1px solid var(--purple); border-radius: 6px; padding: 0.75rem; margin-top: 0.75rem; }
+        .system-panel .param-group-title { color: var(--purple); }
+        
+        /* Run Button */
+        .run-btn { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%); border: none; border-radius: 6px; color: white; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; }
+        .run-btn:hover { opacity: 0.9; }
+        
+        /* Results */
+        .results-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+        .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .result-winner { font-size: 1.5rem; font-weight: 700; }
+        .result-winner.winner-a { color: var(--blue); }
+        .result-winner.winner-b { color: var(--red); }
+        .result-winner.stalemate { color: var(--orange); }
+        
+        .result-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+        .result-stat { background: var(--bg3); padding: 0.5rem; border-radius: 4px; text-align: center; }
+        .result-stat .val { font-size: 1.1rem; font-weight: 700; }
+        .result-stat .lbl { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; }
+        
+        .chart-container { height: 200px; margin-top: 1rem; }
+        
+        /* Intel Panel */
+        .intel-section { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+        .intel-item { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem; }
+        .intel-item .label { color: var(--muted); }
+        .intel-item .value { font-weight: 600; }
+        .intel-item .value.high { color: var(--red); }
+        .intel-item .value.med { color: var(--orange); }
+        .intel-item .value.low { color: var(--green); }
+        
+        /* Calibration Notes */
+        .calibration-notes { background: rgba(74,255,159,0.1); border: 1px solid var(--green); border-radius: 6px; padding: 0.75rem; margin-top: 1rem; font-size: 0.7rem; }
+        .calibration-notes h4 { color: var(--green); margin-bottom: 0.5rem; }
+        .calibration-notes ul { margin-left: 1rem; color: var(--muted); }
+        
+        /* Chaos Toggle */
+        .toggle-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .toggle { width: 36px; height: 20px; background: var(--bg); border-radius: 10px; position: relative; cursor: pointer; border: 1px solid var(--border); }
+        .toggle.on { background: var(--green); border-color: var(--green); }
+        .toggle::after { content: ''; position: absolute; width: 14px; height: 14px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.2s; }
+        .toggle.on::after { left: 18px; }
+        
+        /* Scrollable config */
+        .config-scroll { max-height: calc(100vh - 140px); overflow-y: auto; }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main { grid-template-columns: 1fr; }
+            .country-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚔️ CONFLICT LAB <span class="version">v6 PREDICTIVE</span></h1>
+        <div class="subtitle">Multi-Domain Conflict Prediction Engine • Calibrated Against Historical Outcomes • The Future is Computable</div>
+    </div>
+    
+    <div class="main">
+        <div class="config-area">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('conv')">🎖️ Conventional</div>
+                <div class="tab" onclick="switchTab('econ')">💰 Economic</div>
+                <div class="tab" onclick="switchTab('combined')">⚡ Combined</div>
+            </div>
+            
+            <!-- CONVENTIONAL WAR TAB -->
+            <div class="tab-content active" id="convTab">
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">🌍</span> Force Selection</div>
+                    
+                    <div class="coalition-info">
+                        <div class="coalition-box blue" id="infoA">
+                            <div class="flags" id="flagsA">🇺🇸</div>
+                            <div class="stats">
+                                <span id="gdpA">GDP: $30.6T</span>
+                                <span id="forceA">Force: 1.4M</span>
+                                <span id="nukeA">Nukes: Yes</span>
+                            </div>
+                            <div class="stats" style="font-size:0.65rem;margin-top:0.2rem;">
+                                <span id="vsAName">USA</span>
+                            </div>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="coalition-box red" id="infoB">
+                            <div class="flags" id="flagsB">🇨🇳</div>
+                            <div class="stats">
+                                <span id="gdpB">GDP: $19.2T</span>
+                                <span id="forceB">Force: 2.0M</span>
+                                <span id="nukeB">Nukes: Yes</span>
+                            </div>
+                            <div class="stats" style="font-size:0.65rem;margin-top:0.2rem;">
+                                <span id="vsBName">China</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">SIDE A (Blue) - Click to add/remove <span id="countA" style="color:var(--blue);font-weight:600;">[1 selected]</span></div>
+                    <div class="country-grid" id="gridA"></div>
+                    
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">SIDE B (Red) - Click to add/remove <span id="countB" style="color:var(--red);font-weight:600;">[1 selected]</span></div>
+                    <div class="country-grid" id="gridB"></div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">🎯</span> Theater of Operations (per Country)</div>
+                    
+                    <!-- SIDE A COUNTRIES -->
+                    <div style="background:rgba(74,158,255,0.1);border:1px solid var(--blue);border-radius:6px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-size:0.75rem;font-weight:600;color:var(--blue);margin-bottom:0.5rem;">🔵 SIDE A - Where are they fighting?</div>
+                        <div id="theaterListA" style="display:flex;flex-direction:column;gap:0.4rem;">
+                            <!-- Dynamically populated per country -->
+                        </div>
+                    </div>
+                    
+                    <!-- SIDE B COUNTRIES -->
+                    <div style="background:rgba(255,74,106,0.1);border:1px solid var(--red);border-radius:6px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-size:0.75rem;font-weight:600;color:var(--red);margin-bottom:0.5rem;">🔴 SIDE B - Where are they fighting?</div>
+                        <div id="theaterListB" style="display:flex;flex-direction:column;gap:0.4rem;">
+                            <!-- Dynamically populated per country -->
+                        </div>
+                    </div>
+                    
+                    <!-- QUICK SET ALL -->
+                    <div style="margin-bottom:0.75rem;">
+                        <div style="font-size:0.65rem;color:var(--muted);margin-bottom:0.3rem;">Quick Set All Countries:</div>
+                        <div class="theater-grid">
+                            <div class="theater-btn" onclick="setAllTheaters('desert')">🏜️ Desert</div>
+                            <div class="theater-btn" onclick="setAllTheaters('urban')">🏙️ Urban</div>
+                            <div class="theater-btn" onclick="setAllTheaters('forest')">🌲 Forest</div>
+                            <div class="theater-btn" onclick="setAllTheaters('mountain')">🏔️ Mountain</div>
+                            <div class="theater-btn" onclick="setAllTheaters('littoral')">🌊 Littoral</div>
+                        </div>
+                    </div>
+                    
+                    <!-- ENGAGEMENT LOCATION -->
+                    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0.75rem;">
+                        <div class="param-group-title">📍 Engagement Location (whose territory?)</div>
+                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                            <span id="engFlagsA" style="font-size:1rem;">🇺🇸</span>
+                            <span style="font-size:0.65rem;color:var(--muted);">vs</span>
+                            <span id="engFlagsB" style="font-size:1rem;">🇨🇳</span>
+                        </div>
+                        <div class="param-row">
+                            <label><span style="color:var(--blue);">Side A</span> turf</label>
+                            <input type="range" id="engageA" min="0" max="100" value="0" oninput="updateEngagement()">
+                            <span class="val" id="engageAV">0%</span>
+                        </div>
+                        <div class="param-row">
+                            <label>⚔️ Contested</label>
+                            <input type="range" id="engageN" min="0" max="100" value="20" oninput="updateEngagement()">
+                            <span class="val" id="engageNV">20%</span>
+                        </div>
+                        <div class="param-row">
+                            <label><span style="color:var(--red);">Side B</span> turf</label>
+                            <input type="range" id="engageB" min="0" max="100" value="80" oninput="updateEngagement()">
+                            <span class="val" id="engageBV">80%</span>
+                        </div>
+                        <div style="font-size:0.6rem;color:var(--muted);margin-top:0.25rem;">Home turf = logistics + defender bonus</div>
+                    </div>
+                </div>
+                
+                <div class="panel config-scroll">
+                    <div class="panel-title"><span class="icon">⚙️</span> Force Parameters (Split Knobs)</div>
+                    
+                    <!-- SCENARIO PRESETS -->
+                    <div style="margin-bottom:0.75rem;">
+                        <div class="param-group-title">📜 Historical Presets (for calibration)</div>
+                        <select id="scenarioSelect" onchange="if(this.value) loadScenario(this.value)" style="width:100%;padding:0.4rem;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;font-size:0.75rem;">
+                            <option value="">-- Select scenario --</option>
+                            <option value="Israel 1967">🇮🇱 Six Day War 1967</option>
+                            <option value="Iran-Iraq 1984">🇮🇷🇮🇶 Iran-Iraq 1984</option>
+                            <option value="Gulf War 1991">🇺🇸🇮🇶 Gulf War 1991</option>
+                            <option value="Falklands 1982">🇬🇧🇦🇷 Falklands 1982</option>
+                            <option value="Ukraine 2022 Early">🇷🇺🇺🇦 Ukraine 2022 Early</option>
+                        </select>
+                    </div>
+                    
+                    <div class="sides-container">
+                        <!-- SIDE A -->
+                        <div class="side-panel side-a">
+                            <div class="side-header"><span class="label-a">SIDE A</span></div>
+                            
+                            <div class="param-group">
+                                <div class="param-group-title">Strategic Commitment</div>
+                                <div class="param-row">
+                                    <label>Mobilization</label>
+                                    <input type="range" id="aMob" min="0" max="100" value="85" oninput="U('aMobV',this.value)">
+                                    <span class="val" id="aMobV">85</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>War Tolerance</label>
+                                    <input type="range" id="aTol" min="0" max="100" value="70" oninput="U('aTolV',this.value)">
+                                    <span class="val" id="aTolV">70</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>Political Will</label>
+                                    <input type="range" id="aWill" min="0" max="100" value="85" oninput="U('aWillV',this.value)">
+                                    <span class="val" id="aWillV">85</span>
+                                </div>
+                            </div>
+                            
+                            <div class="param-group">
+                                <div class="param-group-title">Force Quality (Tactical)</div>
+                                <div class="param-row">
+                                    <label>Training/Cohesion</label>
+                                    <input type="range" id="aQual" min="0" max="100" value="90" oninput="updateSliderDisplay('a')">
+                                    <span class="val" id="aQualV">90</span>
+                                    <span class="val" style="color:var(--cyan);font-size:0.6rem;" id="aQualM">×1.48</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>ISR/C2</label>
+                                    <input type="range" id="aISR" min="0" max="100" value="95" oninput="updateSliderDisplay('a')">
+                                    <span class="val" id="aISRV">95</span>
+                                    <span class="val" style="color:var(--cyan);font-size:0.6rem;" id="aISRM">×1.17</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>Logistics</label>
+                                    <input type="range" id="aLog" min="0" max="100" value="90" oninput="updateSliderDisplay('a')">
+                                    <span class="val" id="aLogV">90</span>
+                                    <span class="val" style="color:var(--cyan);font-size:0.6rem;" id="aLogM">×1.13</span>
+                                </div>
+                            </div>
+                            
+                            <div class="param-group">
+                                <div class="param-group-title">Operational</div>
+                                <div class="param-row">
+                                    <label>Alliance Spt</label>
+                                    <input type="range" id="aAlli" min="0" max="100" value="80" oninput="U('aAlliV',this.value)">
+                                    <span class="val" id="aAlliV">80</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>ROE Flex</label>
+                                    <input type="range" id="aROE" min="0" max="100" value="80" oninput="U('aROEV',this.value)">
+                                    <span class="val" id="aROEV">80</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>Air Posture</label>
+                                    <select id="aAir">
+                                        <option value="2.0">Theater Sup (2.0x)</option>
+                                        <option value="1.2">Local Sup (1.2x)</option>
+                                        <option value="0.8" selected>Contested (0.8x)</option>
+                                        <option value="0.25">Enemy Sup (0.25x)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- SIDE B -->
+                        <div class="side-panel side-b">
+                            <div class="side-header"><span class="label-b">SIDE B</span></div>
+                            
+                            <div class="param-group">
+                                <div class="param-group-title">Strategic Commitment</div>
+                                <div class="param-row">
+                                    <label>Mobilization</label>
+                                    <input type="range" id="bMob" min="0" max="100" value="90" oninput="U('bMobV',this.value)">
+                                    <span class="val" id="bMobV">90</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>War Tolerance</label>
+                                    <input type="range" id="bTol" min="0" max="100" value="75" oninput="U('bTolV',this.value)">
+                                    <span class="val" id="bTolV">75</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>Political Will</label>
+                                    <input type="range" id="bWill" min="0" max="100" value="90" oninput="U('bWillV',this.value)">
+                                    <span class="val" id="bWillV">90</span>
+                                </div>
+                            </div>
+                            
+                            <div class="param-group">
+                                <div class="param-group-title">Force Quality (Tactical)</div>
+                                <div class="param-row">
+                                    <label>Training/Cohesion</label>
+                                    <input type="range" id="bQual" min="0" max="100" value="85" oninput="updateSliderDisplay('b')">
+                                    <span class="val" id="bQualV">85</span>
+                                    <span class="val" style="color:var(--cyan);font-size:0.6rem;" id="bQualM">×1.42</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>ISR/C2</label>
+                                    <input type="range" id="bISR" min="0" max="100" value="80" oninput="updateSliderDisplay('b')">
+                                    <span class="val" id="bISRV">80</span>
+                                    <span class="val" style="color:var(--cyan);font-size:0.6rem;" id="bISRM">×1.06</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>Logistics</label>
+                                    <input type="range" id="bLog" min="0" max="100" value="85" oninput="updateSliderDisplay('b')">
+                                    <span class="val" id="bLogV">85</span>
+                                    <span class="val" style="color:var(--cyan);font-size:0.6rem;" id="bLogM">×1.10</span>
+                                </div>
+                            </div>
+                            
+                            <div class="param-group">
+                                <div class="param-group-title">Operational</div>
+                                <div class="param-row">
+                                    <label>Alliance Spt</label>
+                                    <input type="range" id="bAlli" min="0" max="100" value="60" oninput="U('bAlliV',this.value)">
+                                    <span class="val" id="bAlliV">60</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>ROE Flex</label>
+                                    <input type="range" id="bROE" min="0" max="100" value="75" oninput="U('bROEV',this.value)">
+                                    <span class="val" id="bROEV">75</span>
+                                </div>
+                                <div class="param-row">
+                                    <label>Air Posture</label>
+                                    <select id="bAir">
+                                        <option value="2.0">Theater Sup (2.0x)</option>
+                                        <option value="1.2">Local Sup (1.2x)</option>
+                                        <option value="0.8" selected>Contested (0.8x)</option>
+                                        <option value="0.25">Enemy Sup (0.25x)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- SYSTEM INTEGRATION - NEW -->
+                    <div class="system-panel">
+                        <div class="param-group-title">🔗 System Integration (C2 Resilience + Conversion Efficiency)</div>
+                        <div class="sides-container" style="margin-top:0.5rem;">
+                            <div class="param-row">
+                                <label style="color:var(--blue);">Side A</label>
+                                <input type="range" id="aSys" min="0" max="100" value="85" oninput="U('aSysV',this.value)">
+                                <span class="val" id="aSysV">85</span>
+                            </div>
+                            <div class="param-row">
+                                <label style="color:var(--red);">Side B</label>
+                                <input type="range" id="bSys" min="0" max="100" value="75" oninput="U('bSysV',this.value)">
+                                <span class="val" id="bSysV">75</span>
+                            </div>
+                        </div>
+                        <div style="font-size:0.65rem;color:var(--muted);margin-top:0.5rem;">
+                            Measures ability to convert advantages into outcomes. High = Israel 1967, UK Falklands. Low = Argentina, Iraq 1991.
+                        </div>
+                    </div>
+                    
+                    <!-- Scenario Modifiers -->
+                    <div style="margin-top:1rem;">
+                        <div class="param-group-title">Scenario Modifiers</div>
+                        <div class="toggle-row">
+                            <div class="toggle" id="togDefense" onclick="this.classList.toggle('on')"></div>
+                            <label style="font-size:0.75rem;">Side B is Defender (home soil bonus)</label>
+                        </div>
+                        <div class="toggle-row">
+                            <div class="toggle" id="togSurprise" onclick="this.classList.toggle('on')"></div>
+                            <label style="font-size:0.75rem;">Side A has Surprise (preemptive strike)</label>
+                        </div>
+                        <div class="toggle-row">
+                            <div class="toggle" id="togFortified" onclick="this.classList.toggle('on')"></div>
+                            <label style="font-size:0.75rem;">Fortified Front (WW1/Iran-Iraq style)</label>
+                        </div>
+                        <div class="toggle-row">
+                            <div class="toggle" id="togChaos" onclick="this.classList.toggle('on')"></div>
+                            <label style="font-size:0.75rem;">Enable Chaos/Fog of War</label>
+                        </div>
+                    </div>
+                    
+                    <button class="run-btn" onclick="runConventionalWar()">⚔️ SIMULATE CONFLICT</button>
+                </div>
+            </div>
+            
+            <!-- ECONOMIC WARFARE TAB -->
+            <div class="tab-content" id="econTab">
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">💰</span> Economic Warfare Configuration</div>
+                    
+                    <!-- Coalition Info for Econ -->
+                    <div class="coalition-info">
+                        <div class="coalition-box blue">
+                            <div class="flags" id="coalFlags">🇺🇸🇬🇧</div>
+                            <div class="stats">
+                                <span>Coalition GDP</span>
+                                <span id="coalGDP">$34.1T</span>
+                            </div>
+                            <div class="stats" style="font-size:0.65rem;margin-top:0.2rem;">
+                                <span id="coalName">USA + UK</span>
+                            </div>
+                        </div>
+                        <div class="vs-badge">→</div>
+                        <div class="coalition-box red">
+                            <div class="flags" id="targetFlags">🇷🇺</div>
+                            <div class="stats">
+                                <span>Target GDP</span>
+                                <span id="targetGDP">$2.8T</span>
+                            </div>
+                            <div class="stats" style="font-size:0.65rem;margin-top:0.2rem;">
+                                <span id="targetName">Russia</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">SANCTIONING COALITION (Blue) - Click to add/remove <span id="countCoal" style="color:var(--blue);font-weight:600;">[2 selected]</span></div>
+                    <div class="country-grid" id="gridCoal"></div>
+                    
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">SANCTIONS TARGET (Red) - Click to add/remove <span id="countTarget" style="color:var(--red);font-weight:600;">[1 selected]</span></div>
+                    <div class="country-grid" id="gridTarget"></div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">⚙️</span> Sanctions Parameters</div>
+                    
+                    <div class="param-group">
+                        <div class="param-group-title">Coalition Factors</div>
+                        <div class="param-row">
+                            <label>Economic Leverage</label>
+                            <input type="range" id="eLev" min="0" max="100" value="70" oninput="U('eLevV',this.value)">
+                            <span class="val" id="eLevV">70</span>
+                        </div>
+                        <div class="param-row">
+                            <label>Enforcement</label>
+                            <input type="range" id="eEnf" min="0" max="100" value="75" oninput="U('eEnfV',this.value)">
+                            <span class="val" id="eEnfV">75</span>
+                        </div>
+                        <div class="param-row">
+                            <label>Financial Isolation</label>
+                            <input type="range" id="eFin" min="0" max="100" value="80" oninput="U('eFinV',this.value)">
+                            <span class="val" id="eFinV">80</span>
+                        </div>
+                        <div class="param-row">
+                            <label>Duration (months)</label>
+                            <input type="range" id="eTime" min="6" max="120" value="24" oninput="U('eTimeV',this.value)">
+                            <span class="val" id="eTimeV">24</span>
+                        </div>
+                    </div>
+                    
+                    <div class="param-group">
+                        <div class="param-group-title">Target Resilience</div>
+                        <div class="param-row">
+                            <label>Economic Resilience</label>
+                            <input type="range" id="eRes" min="0" max="100" value="60" oninput="U('eResV',this.value)">
+                            <span class="val" id="eResV">60</span>
+                        </div>
+                        <div class="param-row">
+                            <label>Alt Markets Access</label>
+                            <input type="range" id="eAlt" min="0" max="100" value="50" oninput="U('eAltV',this.value)">
+                            <span class="val" id="eAltV">50</span>
+                        </div>
+                    </div>
+                    
+                    <button class="run-btn" onclick="runEconomicWar()">💰 SIMULATE SANCTIONS</button>
+                </div>
+            </div>
+            
+            <!-- COMBINED WARFARE TAB -->
+            <div class="tab-content" id="combinedTab">
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">⚡</span> Combined Warfare Analysis</div>
+                    
+                    <div style="background:rgba(255,170,74,0.1);border:1px solid var(--orange);border-radius:6px;padding:0.75rem;margin-bottom:1rem;">
+                        <div style="font-size:0.8rem;font-weight:600;color:var(--orange);margin-bottom:0.5rem;">🔗 Unified Conflict Model</div>
+                        <div style="font-size:0.7rem;color:var(--muted);">
+                            Combines conventional military operations with economic warfare. 
+                            Sanctions degrade military capacity over time; military outcomes affect economic stability.
+                        </div>
+                    </div>
+                    
+                    <!-- Coalition Summary -->
+                    <div class="coalition-info" style="margin-bottom:1rem;">
+                        <div class="coalition-box blue">
+                            <div class="flags" id="combFlagsA">🇺🇸</div>
+                            <div class="stats"><span id="combNamesA">USA</span></div>
+                        </div>
+                        <div class="vs-badge">⚔️💰</div>
+                        <div class="coalition-box red">
+                            <div class="flags" id="combFlagsB">🇨🇳</div>
+                            <div class="stats"><span id="combNamesB">China</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="param-group">
+                        <div class="param-group-title">Conflict Timeline</div>
+                        <div class="param-row">
+                            <label>Sanctions Start (months before war)</label>
+                            <input type="range" id="combSancStart" min="0" max="24" value="6" oninput="U('combSancStartV',this.value)">
+                            <span class="val" id="combSancStartV">6</span>
+                        </div>
+                        <div class="param-row">
+                            <label>War Duration Cap (days)</label>
+                            <input type="range" id="combWarCap" min="30" max="1000" value="365" oninput="U('combWarCapV',this.value)">
+                            <span class="val" id="combWarCapV">365</span>
+                        </div>
+                    </div>
+                    
+                    <div class="param-group">
+                        <div class="param-group-title">Economic-Military Coupling</div>
+                        <div class="param-row">
+                            <label>Sanctions → Military Degradation</label>
+                            <input type="range" id="combSancMil" min="0" max="100" value="50" oninput="U('combSancMilV',this.value)">
+                            <span class="val" id="combSancMilV">50%</span>
+                        </div>
+                        <div class="param-row">
+                            <label>War → Economic Damage Multiplier</label>
+                            <input type="range" id="combWarEcon" min="100" max="300" value="150" oninput="U('combWarEconV',this.value)">
+                            <span class="val" id="combWarEconV">150%</span>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size:0.65rem;color:var(--muted);margin-bottom:0.75rem;padding:0.5rem;background:var(--bg);border-radius:4px;">
+                        ⚠️ Uses Side A/B from Conventional tab and Coalition/Target from Economic tab. 
+                        Set <strong>selCoal = selA</strong> and <strong>selTarget = selB</strong> for aligned scenarios.
+                    </div>
+                    
+                    <button class="run-btn" onclick="runCombinedWar()" style="background:linear-gradient(135deg, var(--orange) 0%, var(--red) 100%);">⚡ SIMULATE COMBINED CONFLICT</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RESULTS PANEL -->
+        <div class="results-panel" id="resultsPanel">
+            <div class="panel-title"><span class="icon">📊</span> Simulation Results</div>
+            <div id="resultsContent">
+                <div style="text-align:center;color:var(--muted);padding:2rem;">
+                    Configure parameters and run simulation
+                </div>
+            </div>
+            
+            <div class="calibration-notes">
+                <h4>📐 v6 PREDICTIVE ENGINE - Architecture</h4>
+                <ul>
+                    <li><strong>WORLD_GDP locked at $105T</strong> - sanctions don't drift when editing roster</li>
+                    <li><strong>ind (industrial depth)</strong> - logistics decay over time without high ind (Russia=55, USA=95)</li>
+                    <li><strong>Fi/AD split</strong> - Fires (strike/missiles) and Air Defense now separate domains</li>
+                    <li><strong>Shock/Breakthrough</strong> - 14+ days at >2.5:1 power ratio → accelerated collapse</li>
+                    <li><strong>Non-uniform sanctions</strong> - log/air hit 1.5x/1.3x harder than baseline</li>
+                    <li><strong>Debug transparency</strong> - actual multipliers shown in results</li>
+                </ul>
+                <div style="font-size:0.6rem;color:var(--cyan);margin-top:0.5rem;">
+                    Country data contract: G/A/N/Fi/AD/sys/ind = structural capacity (slow-changing)<br>
+                    Scenario sliders: qual/isr/log/alli/roe/air/will/mob/tol = conflict-specific conditions
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ============================================================================
+// WORLD MODEL - STRUCTURAL CONSTANTS (v6 PREDICTIVE ENGINE)
+// ============================================================================
+// WORLD_GDP is FIXED - prevents sanctions drift when editing country roster
+const WORLD_GDP = 105.0; // Trillion USD - DO NOT derive from C[]
+
+// Country data contract (USA=100 reference):
+// G = Ground combined arms (equipment + doctrine + readiness)
+// A = Air power (contested air + SEAD/DEAD proficiency)  
+// N = Naval (power projection + maritime strike + ASW)
+// Fi = Fires/Strike (missiles + precision + rocket forces)
+// AD = Air Defense (IADS density + capability)
+// sys = System integration (jointness + targeting cycle + C2)
+// ind = Industrial depth (replace losses + sustain ops over time)
+// rev = Regime volatility baseline (political fragility)
+const C = {
+    USA:     { f:"🇺🇸", n:"USA",     GDP:28.8, M:1400000, G:95, A:100, N:100, Fi:98, AD:95, sys:95, ind:95 },
+    China:   { f:"🇨🇳", n:"China",   GDP:18.5, M:2035000, G:78, A:72,  N:70,  Fi:88, AD:85, sys:70, ind:90, rev:0.15 },
+    Russia:  { f:"🇷🇺", n:"Russia",  GDP:2.2,  M:1320000, G:72, A:65,  N:55,  Fi:85, AD:78, sys:55, ind:55, rev:0.32 },
+    UK:      { f:"🇬🇧", n:"UK",      GDP:3.5,  M:150000,  G:78, A:82,  N:78,  Fi:82, AD:72, sys:88, ind:65 },
+    France:  { f:"🇫🇷", n:"France",  GDP:3.1,  M:205000,  G:75, A:78,  N:68,  Fi:80, AD:70, sys:82, ind:68 },
+    Germany: { f:"🇩🇪", n:"Germany", GDP:4.5,  M:185000,  G:70, A:72,  N:35,  Fi:70, AD:65, sys:78, ind:82 },
+    Japan:   { f:"🇯🇵", n:"Japan",   GDP:4.2,  M:250000,  G:68, A:75,  N:72,  Fi:72, AD:82, sys:85, ind:85 },
+    SKorea:  { f:"🇰🇷", n:"S.Korea", GDP:1.7,  M:500000,  G:72, A:70,  N:45,  Fi:75, AD:78, sys:82, ind:80 },
+    India:   { f:"🇮🇳", n:"India",   GDP:3.9,  M:1450000, G:62, A:58,  N:48,  Fi:65, AD:55, sys:50, ind:55 },
+    Israel:  { f:"🇮🇱", n:"Israel",  GDP:0.5,  M:170000,  G:88, A:92,  N:35,  Fi:92, AD:98, sys:92, ind:72 },
+    Iran:    { f:"🇮🇷", n:"Iran",    GDP:0.4,  M:610000,  G:55, A:42,  N:35,  Fi:82, AD:72, sys:45, ind:50, rev:0.89, fear:true },
+    Turkey:  { f:"🇹🇷", n:"Turkey",  GDP:1.1,  M:355000,  G:65, A:62,  N:42,  Fi:65, AD:60, sys:58, ind:58, rev:0.22 },
+    Saudi:   { f:"🇸🇦", n:"Saudi",   GDP:1.1,  M:230000,  G:52, A:58,  N:42,  Fi:68, AD:65, sys:48, ind:25, rev:0.24 },
+    Taiwan:  { f:"🇹🇼", n:"Taiwan",  GDP:0.79, M:170000,  G:62, A:65,  N:45,  Fi:70, AD:75, sys:72, ind:75, def:0.9 },
+    Ukraine: { f:"🇺🇦", n:"Ukraine", GDP:0.18, M:900000,  G:72, A:55,  N:25,  Fi:55, AD:58, sys:68, ind:40, rev:0.25 },
+    NKorea:  { f:"🇰🇵", n:"N.Korea", GDP:0.03, M:1200000, G:45, A:32,  N:22,  Fi:72, AD:62, sys:30, ind:25, fear:true },
+    Poland:  { f:"🇵🇱", n:"Poland",  GDP:0.84, M:115000,  G:62, A:58,  N:18,  Fi:55, AD:52, sys:65, ind:55 },
+    Australia:{ f:"🇦🇺", n:"Australia",GDP:1.7, M:60000,  G:72, A:75,  N:62,  Fi:65, AD:58, sys:82, ind:60 },
+    Italy:   { f:"🇮🇹", n:"Italy",   GDP:2.3,  M:165000,  G:65, A:68,  N:55,  Fi:62, AD:58, sys:72, ind:68 },
+    Canada:  { f:"🇨🇦", n:"Canada",  GDP:2.1,  M:70000,   G:68, A:72,  N:35,  Fi:52, AD:48, sys:78, ind:58 }
+};
+
+// Theater configurations - domain weights (must sum to 1.0)
+const THEATERS = [
+    { name:"Desert",   desc:"Open terrain favors armor, air decisive", G:0.25, A:0.40, N:0.10, Fi:0.15, AD:0.10, defMod:0.8 },
+    { name:"Forest",   desc:"Concealment limits air, infantry advantage", G:0.40, A:0.20, N:0.05, Fi:0.25, AD:0.10, defMod:1.1 },
+    { name:"Mountain", desc:"Difficult terrain, defense strong", G:0.35, A:0.15, N:0.05, Fi:0.35, AD:0.10, defMod:1.3 },
+    { name:"Littoral", desc:"Naval power projection, amphibious ops", G:0.20, A:0.25, N:0.40, Fi:0.10, AD:0.05, defMod:1.0 },
+    { name:"Urban",    desc:"Infantry dominant, high casualties", G:0.45, A:0.10, N:0.05, Fi:0.25, AD:0.15, defMod:1.5 }
+];
+
+let selA = ["USA"], selB = ["China"], selCoal = ["USA","UK"], selTarget = ["Russia"];
+let theater = 0;
+
+// Utility - with null checks to prevent errors
+function U(id,v) { 
+    const el = document.getElementById(id);
+    if (el) el.textContent = v; 
+}
+function V(id) { 
+    const el = document.getElementById(id);
+    return el ? parseFloat(el.value) || 0 : 0; 
+}
+function isOn(id) { 
+    const el = document.getElementById(id);
+    return el ? el.classList.contains('on') : false;
+}
+
+// ============================================================================
+// UI FUNCTIONS
+// ============================================================================
+function switchTab(t) {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+    if (t === 'conv') {
+        document.querySelector('.tab:nth-child(1)').classList.add('active');
+        document.getElementById('convTab').classList.add('active');
+    } else if (t === 'econ') {
+        document.querySelector('.tab:nth-child(2)').classList.add('active');
+        document.getElementById('econTab').classList.add('active');
+    } else if (t === 'combined') {
+        document.querySelector('.tab:nth-child(3)').classList.add('active');
+        document.getElementById('combinedTab').classList.add('active');
+        updateCombinedDisplay();
+    }
+}
+
+// Per-country theater storage
+const countryTheaters = {}; // e.g., { 'USA': 'desert', 'CHN': 'urban' }
+
+function setAllTheaters(type) {
+    // Set all countries to the same theater
+    [...selA, ...selB].forEach(k => {
+        countryTheaters[k] = type;
+    });
+    buildTheaterLists();
+}
+
+function setCountryTheater(countryKey, type) {
+    countryTheaters[countryKey] = type;
+}
+
+function buildTheaterLists() {
+    const theaterOptions = [
+        { id: 'desert', icon: '🏜️', name: 'Desert' },
+        { id: 'urban', icon: '🏙️', name: 'Urban' },
+        { id: 'forest', icon: '🌲', name: 'Forest' },
+        { id: 'mountain', icon: '🏔️', name: 'Mountain' },
+        { id: 'littoral', icon: '🌊', name: 'Littoral' }
+    ];
+    
+    // Build Side A list
+    const listA = document.getElementById('theaterListA');
+    if (listA) {
+        listA.innerHTML = selA.map(k => {
+            const c = C[k];
+            if (!c) return '';
+            const current = countryTheaters[k] || 'desert';
+            return `
+                <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem;background:var(--bg);border-radius:4px;">
+                    <span style="font-size:1rem;min-width:1.5rem;">${c.f}</span>
+                    <span style="flex:1;font-size:0.7rem;">${c.n}</span>
+                    <select onchange="setCountryTheater('${k}',this.value)" style="padding:0.2rem;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:3px;font-size:0.65rem;">
+                        ${theaterOptions.map(t => `<option value="${t.id}" ${current === t.id ? 'selected' : ''}>${t.icon} ${t.name}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Build Side B list
+    const listB = document.getElementById('theaterListB');
+    if (listB) {
+        listB.innerHTML = selB.map(k => {
+            const c = C[k];
+            if (!c) return '';
+            const current = countryTheaters[k] || 'desert';
+            return `
+                <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem;background:var(--bg);border-radius:4px;">
+                    <span style="font-size:1rem;min-width:1.5rem;">${c.f}</span>
+                    <span style="flex:1;font-size:0.7rem;">${c.n}</span>
+                    <select onchange="setCountryTheater('${k}',this.value)" style="padding:0.2rem;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:3px;font-size:0.65rem;">
+                        ${theaterOptions.map(t => `<option value="${t.id}" ${current === t.id ? 'selected' : ''}>${t.icon} ${t.name}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Update engagement flags
+    U('engFlagsA', selA.map(k => C[k]?.f || '').join(''));
+    U('engFlagsB', selB.map(k => C[k]?.f || '').join(''));
+}
+
+function updateEngagement() {
+    const a = V('engageA'), n = V('engageN'), b = V('engageB');
+    
+    U('engageAV', a + '%');
+    U('engageNV', n + '%');
+    U('engageBV', b + '%');
+}
+
+// Theater presets for calculation
+const THEATER_PRESETS = {
+    'desert':   { d: 0.70, u: 0.10, f: 0.05, m: 0.10, l: 0.05 },
+    'urban':    { d: 0.15, u: 0.55, f: 0.10, m: 0.10, l: 0.10 },
+    'forest':   { d: 0.10, u: 0.10, f: 0.60, m: 0.15, l: 0.05 },
+    'mountain': { d: 0.10, u: 0.15, f: 0.10, m: 0.60, l: 0.05 },
+    'littoral': { d: 0.20, u: 0.15, f: 0.05, m: 0.05, l: 0.55 }
+};
+
+function getTheaterMix() {
+    // Average theater distribution across all countries, weighted by engagement location
+    
+    // Get Side A average theater
+    let sideATheater = { d: 0, u: 0, f: 0, m: 0, l: 0 };
+    if (selA.length > 0) {
+        selA.forEach(k => {
+            const t = THEATER_PRESETS[countryTheaters[k] || 'desert'];
+            sideATheater.d += t.d; sideATheater.u += t.u; sideATheater.f += t.f;
+            sideATheater.m += t.m; sideATheater.l += t.l;
+        });
+        const n = selA.length;
+        sideATheater.d /= n; sideATheater.u /= n; sideATheater.f /= n;
+        sideATheater.m /= n; sideATheater.l /= n;
+    } else {
+        sideATheater = THEATER_PRESETS['desert'];
+    }
+    
+    // Get Side B average theater
+    let sideBTheater = { d: 0, u: 0, f: 0, m: 0, l: 0 };
+    if (selB.length > 0) {
+        selB.forEach(k => {
+            const t = THEATER_PRESETS[countryTheaters[k] || 'desert'];
+            sideBTheater.d += t.d; sideBTheater.u += t.u; sideBTheater.f += t.f;
+            sideBTheater.m += t.m; sideBTheater.l += t.l;
+        });
+        const n = selB.length;
+        sideBTheater.d /= n; sideBTheater.u /= n; sideBTheater.f /= n;
+        sideBTheater.m /= n; sideBTheater.l /= n;
+    } else {
+        sideBTheater = THEATER_PRESETS['desert'];
+    }
+    
+    // Get engagement location to blend theaters
+    const engA = V('engageA'), engN = V('engageN'), engB = V('engageB');
+    const engTotal = (engA + engN + engB) || 100;
+    const wA = engA / engTotal;  // Weight towards A's theater
+    const wB = engB / engTotal;  // Weight towards B's theater
+    const wN = engN / engTotal;  // Neutral = average of both
+    
+    // Blend: A turf uses A's theater, B turf uses B's theater, Neutral averages
+    const blend = (aVal, bVal) => wA * aVal + wB * bVal + wN * (aVal + bVal) / 2;
+    
+    const nd = blend(sideATheater.d, sideBTheater.d);
+    const nu = blend(sideATheater.u, sideBTheater.u);
+    const nf = blend(sideATheater.f, sideBTheater.f);
+    const nm = blend(sideATheater.m, sideBTheater.m);
+    const nl = blend(sideATheater.l, sideBTheater.l);
+    
+    // THEATERS: [Desert, Forest, Mountain, Littoral, Urban]
+    return {
+        G: nd*THEATERS[0].G + nf*THEATERS[1].G + nm*THEATERS[2].G + nl*THEATERS[3].G + nu*THEATERS[4].G,
+        A: nd*THEATERS[0].A + nf*THEATERS[1].A + nm*THEATERS[2].A + nl*THEATERS[3].A + nu*THEATERS[4].A,
+        N: nd*THEATERS[0].N + nf*THEATERS[1].N + nm*THEATERS[2].N + nl*THEATERS[3].N + nu*THEATERS[4].N,
+        Fi: nd*THEATERS[0].Fi + nf*THEATERS[1].Fi + nm*THEATERS[2].Fi + nl*THEATERS[3].Fi + nu*THEATERS[4].Fi,
+        AD: nd*THEATERS[0].AD + nf*THEATERS[1].AD + nm*THEATERS[2].AD + nl*THEATERS[3].AD + nu*THEATERS[4].AD,
+        defMod: nd*THEATERS[0].defMod + nf*THEATERS[1].defMod + nm*THEATERS[2].defMod + nl*THEATERS[3].defMod + nu*THEATERS[4].defMod,
+        sideA: sideATheater,
+        sideB: sideBTheater
+    };
+}
+
+function getEngagementBonus(isA) {
+    // Returns home turf bonus based on where fighting occurs
+    const aHome = V('engageA')/100;
+    const neutral = V('engageN')/100;
+    const bHome = V('engageB')/100;
+    const total = aHome + neutral + bHome || 1;
+    
+    // Normalize
+    const na = aHome/total, nn = neutral/total, nb = bHome/total;
+    
+    // Home turf gives logistics + morale boost (1.0 = no bonus, up to 1.3 = 30% home advantage)
+    if (isA) {
+        // Side A gets bonus when fighting on A's turf, penalty on B's turf
+        return 1.0 + (na * 0.3) - (nb * 0.15);
+    } else {
+        // Side B gets bonus when fighting on B's turf, penalty on A's turf
+        return 1.0 + (nb * 0.3) - (na * 0.15);
+    }
+}
+
+function buildGrid(id, sel, cls) {
+    const g = document.getElementById(id);
+    if (!g) return; // Guard clause
+    g.innerHTML = '';
+    Object.keys(C).forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'country-chip' + (sel.includes(k) ? ' '+cls : '');
+        d.textContent = C[k].f + ' ' + k;
+        d.onclick = () => {
+            if (sel.includes(k)) { if (sel.length > 1) sel.splice(sel.indexOf(k), 1); }
+            else sel.push(k);
+            buildGrid(id, sel, cls);
+            updateInfo();
+            updateEconInfo();
+            updateCombinedDisplay();
+            buildTheaterLists();
+        };
+        g.appendChild(d);
+    });
+}
+
+function updateInfo() {
+    // Side A - Conv
+    const gdpA = selA.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    const forceA = selA.reduce((s,k) => s + (C[k]?.M || 0), 0);
+    const nukeA = selA.some(k => (C[k]?.N || 0) > 70);
+    
+    const flagsA = selA.map(k => C[k]?.f || '').join('');
+    const namesA = selA.length > 2 ? selA.length + ' nations' : selA.map(k => C[k]?.n || k).join('+');
+    
+    U('flagsA', flagsA);
+    U('gdpA', 'GDP: $' + gdpA.toFixed(1) + 'T');
+    U('forceA', 'Force: ' + (forceA/1e6).toFixed(1) + 'M');
+    U('nukeA', 'Nukes: ' + (nukeA ? 'Yes' : 'No'));
+    U('vsAName', namesA);
+    U('countA', '[' + selA.length + ' selected]');
+    
+    // Side B - Conv
+    const gdpB = selB.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    const forceB = selB.reduce((s,k) => s + (C[k]?.M || 0), 0);
+    const nukeB = selB.some(k => (C[k]?.N || 0) > 70);
+    
+    const flagsB = selB.map(k => C[k]?.f || '').join('');
+    const namesB = selB.length > 2 ? selB.length + ' nations' : selB.map(k => C[k]?.n || k).join('+');
+    
+    U('flagsB', flagsB);
+    U('gdpB', 'GDP: $' + gdpB.toFixed(1) + 'T');
+    U('forceB', 'Force: ' + (forceB/1e6).toFixed(1) + 'M');
+    U('nukeB', 'Nukes: ' + (nukeB ? 'Yes' : 'No'));
+    U('vsBName', namesB);
+    U('countB', '[' + selB.length + ' selected]');
+}
+
+function updateEconInfo() {
+    // Coalition info for economic tab
+    const coalGDP = selCoal.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    const targetGDP = selTarget.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    
+    // Update econ info displays if they exist
+    U('coalFlags', selCoal.map(k => C[k]?.f || '').join(''));
+    U('coalGDP', '$' + coalGDP.toFixed(1) + 'T');
+    U('coalName', selCoal.length > 2 ? selCoal.length + ' nations' : selCoal.map(k => C[k]?.n || k).join(' + '));
+    U('countCoal', '[' + selCoal.length + ' selected]');
+    
+    U('targetFlags', selTarget.map(k => C[k]?.f || '').join(''));
+    U('targetGDP', '$' + targetGDP.toFixed(1) + 'T');
+    U('targetName', selTarget.length > 2 ? selTarget.length + ' nations' : selTarget.map(k => C[k]?.n || k).join(' + '));
+    U('countTarget', '[' + selTarget.length + ' selected]');
+}
+
+// Show effective multipliers next to sliders (fixes cognitive trap where 40% ≠ 0.4×)
+function updateSliderDisplay(side) {
+    const s = side;
+    const qual = V(s+'Qual'), isr = V(s+'ISR'), log = V(s+'Log');
+    
+    // Update raw values
+    U(s+'QualV', qual);
+    U(s+'ISRV', isr);
+    U(s+'LogV', log);
+    
+    // Calculate and show actual multipliers (matches calcPower formulas)
+    const qualMult = 0.4 + 1.2 * (qual / 100);
+    const isrMult = 0.5 + 0.7 * (isr / 100);
+    const logMult = 0.5 + 0.7 * (log / 100);
+    
+    U(s+'QualM', '×' + qualMult.toFixed(2));
+    U(s+'ISRM', '×' + isrMult.toFixed(2));
+    U(s+'LogM', '×' + logMult.toFixed(2));
+}
+
+// Historical scenario presets for calibration testing
+const SCENARIOS = {
+    'Israel 1967': {
+        a: { mob: 95, tol: 90, will: 95, qual: 92, isr: 85, log: 85, alli: 40, roe: 90, air: '2.0', sys: 95 },
+        b: { mob: 70, tol: 60, will: 70, qual: 55, isr: 40, log: 50, alli: 50, roe: 70, air: '0.25', sys: 40 },
+        theater: { d: 70, u: 10, f: 5, m: 10, l: 5 },
+        engage: { a: 0, n: 10, b: 90 },
+        toggles: { defense: true, surprise: true, fortified: false }
+    },
+    'Iran-Iraq 1984': {
+        a: { mob: 85, tol: 80, will: 85, qual: 55, isr: 45, log: 60, alli: 60, roe: 85, air: '0.8', sys: 45 },
+        b: { mob: 90, tol: 95, will: 95, qual: 50, isr: 35, log: 45, alli: 40, roe: 90, air: '0.8', sys: 35 },
+        theater: { d: 30, u: 15, f: 5, m: 15, l: 35 },
+        engage: { a: 30, n: 20, b: 50 },
+        toggles: { defense: true, surprise: false, fortified: true }
+    },
+    'Gulf War 1991': {
+        a: { mob: 90, tol: 70, will: 85, qual: 90, isr: 95, log: 95, alli: 95, roe: 85, air: '2.0', sys: 95 },
+        b: { mob: 75, tol: 50, will: 60, qual: 42, isr: 30, log: 40, alli: 20, roe: 70, air: '0.25', sys: 35 },
+        theater: { d: 65, u: 20, f: 0, m: 5, l: 10 },
+        engage: { a: 0, n: 5, b: 95 },
+        toggles: { defense: true, surprise: false, fortified: false }
+    },
+    'Falklands 1982': {
+        a: { mob: 85, tol: 75, will: 90, qual: 88, isr: 70, log: 60, alli: 30, roe: 80, air: '0.8', sys: 90 },
+        b: { mob: 70, tol: 55, will: 65, qual: 45, isr: 50, log: 70, alli: 20, roe: 75, air: '1.2', sys: 45 },
+        theater: { d: 10, u: 5, f: 15, m: 30, l: 40 },
+        engage: { a: 0, n: 60, b: 40 },
+        toggles: { defense: true, surprise: false, fortified: false }
+    },
+    'Ukraine 2022 Early': {
+        a: { mob: 40, tol: 50, will: 70, qual: 70, isr: 65, log: 45, alli: 35, roe: 75, air: '0.8', sys: 55 },
+        b: { mob: 85, tol: 90, will: 95, qual: 75, isr: 60, log: 65, alli: 80, roe: 85, air: '0.8', sys: 75 },
+        theater: { d: 35, u: 30, f: 20, m: 5, l: 10 },
+        engage: { a: 0, n: 5, b: 95 },
+        toggles: { defense: true, surprise: true, fortified: false }
+    }
+};
+
+function loadScenario(name) {
+    const s = SCENARIOS[name];
+    if (!s) return;
+    
+    // Side A params - map to correct element IDs
+    const idMap = { mob: 'Mob', tol: 'Tol', will: 'Will', qual: 'Qual', isr: 'ISR', log: 'Log', alli: 'Alli', roe: 'ROE' };
+    Object.keys(idMap).forEach(p => {
+        const el = document.getElementById('a' + idMap[p]);
+        if (el && s.a[p] !== undefined) el.value = s.a[p];
+    });
+    document.getElementById('aAir').value = s.a.air;
+    document.getElementById('aSys').value = s.a.sys;
+    
+    // Side B params
+    Object.keys(idMap).forEach(p => {
+        const el = document.getElementById('b' + idMap[p]);
+        if (el && s.b[p] !== undefined) el.value = s.b[p];
+    });
+    document.getElementById('bAir').value = s.b.air;
+    document.getElementById('bSys').value = s.b.sys;
+    
+    // Theater - set all countries to the scenario's primary theater
+    const theaterType = s.theater.d >= 50 ? 'desert' : 
+                        s.theater.u >= 50 ? 'urban' : 
+                        s.theater.f >= 50 ? 'forest' :
+                        s.theater.m >= 50 ? 'mountain' : 
+                        s.theater.l >= 50 ? 'littoral' : 'desert';
+    setAllTheaters(theaterType);
+    
+    // Engagement
+    document.getElementById('engageA').value = s.engage.a;
+    document.getElementById('engageN').value = s.engage.n;
+    document.getElementById('engageB').value = s.engage.b;
+    
+    // Toggles
+    document.getElementById('togDefense').classList.toggle('on', s.toggles.defense);
+    document.getElementById('togSurprise').classList.toggle('on', s.toggles.surprise);
+    document.getElementById('togFortified').classList.toggle('on', s.toggles.fortified);
+    
+    // Update all displays
+    updateAllDisplays();
+}
+
+function updateAllDisplays() {
+    // Update slider value displays
+    ['aMob','aTol','aWill','aAlli','aROE','aSys'].forEach(id => U(id+'V', V(id)));
+    ['bMob','bTol','bWill','bAlli','bROE','bSys'].forEach(id => U(id+'V', V(id)));
+    updateSliderDisplay('a');
+    updateSliderDisplay('b');
+    buildTheaterLists();
+    updateEngagement();
+    updateInfo();
+    updateCombinedDisplay();
+}
+
+// ============================================================================
+// CONVENTIONAL WAR ENGINE - CALIBRATED v6 PREDICTIVE
+// ============================================================================
+
+// Debug helper: show actual multiplier values for calibration transparency
+function getDebugMultipliers(countries, params, day) {
+    const z = getTheaterMix();
+    let domain = 0, totalPower = 0;
+    
+    countries.forEach(k => {
+        const c = C[k];
+        if (!c) return;
+        domain += z.G * (c.G||50) + z.A * (c.A||50) + z.N * (c.N||50) + 
+                  z.Fi * (c.Fi||50) + z.AD * (c.AD||50);
+    });
+    
+    const qual = 0.4 + 1.2 * (params.qual / 100);
+    const isr = 0.5 + 0.7 * (params.isr / 100);
+    const baseLog = 0.5 + 0.7 * (params.log / 100);
+    // Average ind across countries
+    let avgInd = 0;
+    countries.forEach(k => { avgInd += C[k]?.ind || 50; });
+    avgInd = countries.length > 0 ? avgInd / countries.length : 50;
+    const logDecay = Math.max(0.4, 1.0 - (day / 800) * (1 - avgInd / 100));
+    const log = baseLog * logDecay;
+    const air = params.air;
+    const sys = 0.5 + 0.7 * (params.sys / 100);
+    
+    totalPower = domain * qual * isr * log * air * sys;
+    
+    return { domain, qual, isr, log, air, sys, total: totalPower };
+}
+
+function runConventionalWar() {
+    try {
+        // Get parameters - SPLIT KNOBS
+        const pA = {
+            mob: V('aMob'), tol: V('aTol'), will: V('aWill'),  // Strategic
+            qual: V('aQual'), isr: V('aISR'), log: V('aLog'),  // Quality
+            alli: V('aAlli'), roe: V('aROE'), 
+            air: parseFloat(document.getElementById('aAir')?.value || 0.8),
+            sys: V('aSys')
+        };
+        const pB = {
+            mob: V('bMob'), tol: V('bTol'), will: V('bWill'),
+            qual: V('bQual'), isr: V('bISR'), log: V('bLog'),
+            alli: V('bAlli'), roe: V('bROE'), 
+            air: parseFloat(document.getElementById('bAir')?.value || 0.8),
+            sys: V('bSys')
+        };
+        
+        // Validate selections
+        if (selA.length === 0 || selB.length === 0) {
+            document.getElementById('resultsContent').innerHTML = '<div style="text-align:center;color:var(--red);padding:2rem;">Error: Select countries for both sides</div>';
+            return;
+        }
+    
+    // Scenario modifiers
+    const bDefends = isOn('togDefense');
+    const aSurprise = isOn('togSurprise');
+    const fortified = isOn('togFortified');
+    const chaosOn = isOn('togChaos');
+    
+    // Calculate base power for each side
+    function calcPower(countries, params, isDefender, day, isSideA) {
+        let basePower = 0;
+        let avgSys = 0;
+        let avgInd = 0; // Industrial depth for logistics decay
+        let countryCount = 0;
+        
+        // Get blended theater characteristics
+        const z = getTheaterMix();
+        
+        // Get engagement location bonus
+        const engageBonus = getEngagementBonus(isSideA);
+        
+        countries.forEach(k => {
+            const c = C[k];
+            if (!c) return; // Skip if country not found
+            
+            // Domain-weighted base capability (v6: Fi and AD replace Mi)
+            const domainPower = z.G * (c.G||50) + z.A * (c.A||50) + z.N * (c.N||50) + 
+                                z.Fi * (c.Fi||50) + z.AD * (c.AD||50);
+            
+            // NOTE: Mobilization NO LONGER here - it only affects deployed strength (initA/initB)
+            // This fixes the double-counting bug where mob boosted both troop count AND effectiveness
+            
+            // Quality multiplier - STEEPER curve per calibration
+            const qualMult = 0.4 + 1.2 * (params.qual / 100);
+            
+            // ISR/C2 - ability to find and engage enemy
+            const isrMult = 0.5 + 0.7 * (params.isr / 100);
+            
+            // BASE Logistics - before decay
+            const baseLogMult = 0.5 + 0.7 * (params.log / 100);
+            
+            // LOGISTICS DECAY over time - based on industrial depth (ind)
+            // High ind (95) = minimal decay; Low ind (25) = rapid decay
+            // After 30 days, low-ind forces start feeling the pinch
+            // Formula: decay factor = 1 - (day/1000) * (1 - ind/100)
+            const indValue = c.ind || 50;
+            const logDecay = Math.max(0.4, 1.0 - (day / 800) * (1 - indValue / 100));
+            const logMult = baseLogMult * logDecay;
+            
+            // Alliance support
+            const alliMult = 0.7 + 0.4 * (params.alli / 100);
+            
+            // ROE flexibility
+            const roeMult = 0.7 + 0.4 * (params.roe / 100);
+            
+            // Combine (no mobMult - that's in deployed strength only)
+            basePower += domainPower * qualMult * isrMult * logMult * alliMult * roeMult * (c.M||100000) / 1e6;
+            avgSys += c.sys || 70;
+            avgInd += indValue;
+            countryCount++;
+        });
+        
+        avgSys = countryCount > 0 ? (avgSys / countryCount + params.sys) / 2 : params.sys;
+        
+        // AIR SUPERIORITY AS MULTIPLIER ON GROUND QUALITY (catalyst model)
+        // Air doesn't replace quality, it ENABLES quality to be expressed
+        const airMult = params.air;
+        basePower *= airMult;
+        
+        // System Integration - ability to convert advantages into outcomes
+        const sysMult = 0.5 + 0.7 * (avgSys / 100);
+        basePower *= sysMult;
+        
+        // Engagement location bonus (home turf advantage)
+        basePower *= engageBonus;
+        
+        // Defender bonus - now INTEGRATES with engagement location
+        // If toggle is on, Side B gets explicit defender bonus
+        // But engagement location already gives home-turf advantage, so these stack sensibly
+        if (isDefender) {
+            // Base terrain defense (scaled by how much fighting is on defender's turf)
+            const bTurfPct = V('engageB') / 100;
+            let defBonus = 1.0 + z.defMod * 0.25 * (0.5 + bTurfPct * 0.5); // Scales with B's home %
+            if (fortified) {
+                // Fortification effect grows over time (Iran-Iraq, WW1)
+                defBonus += Math.min(0.4, day * 0.0015);
+            }
+            basePower *= defBonus;
+        }
+        
+        return basePower;
+    }
+    
+    // Initial strength (thousands)
+    const initA = selA.reduce((s,k) => s + (C[k]?.M || 100000) * pA.mob/100, 0) / 1000;
+    const initB = selB.reduce((s,k) => s + (C[k]?.M || 100000) * pB.mob/100, 0) / 1000;
+    
+    let strA = initA, strB = initB;
+    let casA = 0, casB = 0;
+    let t = 0;
+    let winner = null;
+    let history = { t: [], a: [], b: [] };
+    let shockCounter = { a: 0, b: 0 }; // Tracks sustained power dominance for breakthrough
+    
+    // Kill coefficient - calibrated
+    const killCoef = 0.025;
+    
+    // Surprise bonus (first 7 days)
+    const surpriseWindow = 7;
+    
+    while (t < 3000 && strA > initA * 0.02 && strB > initB * 0.02) {
+        // Calculate power at this time step
+        let powerA = calcPower(selA, pA, false, t, true);
+        let powerB = calcPower(selB, pB, bDefends, t, false);
+        
+        // Surprise bonus for attacker
+        if (aSurprise && t < surpriseWindow) {
+            powerA *= 1.5;
+            powerB *= 0.6; // Defender caught off guard
+        }
+        
+        // Chaos/fog of war
+        if (chaosOn) {
+            const vol = 0.15;
+            powerA *= (1 + (Math.random() - 0.5) * vol * 2);
+            powerB *= (1 + (Math.random() - 0.5) * vol * 2);
+        }
+        
+        // SHOCK/BREAKTHROUGH MECHANIC (v6)
+        // If power ratio sustained >2.5:1 for 14+ days, weaker side enters collapse mode
+        // Models front collapse, encirclement, morale cascade
+        const powerRatio = Math.max(powerA, powerB) / Math.max(0.1, Math.min(powerA, powerB));
+        const dominantIsA = powerA > powerB;
+        
+        // Track sustained dominance
+        if (powerRatio > 2.5) {
+            if (dominantIsA) { shockCounter.a++; shockCounter.b = 0; }
+            else { shockCounter.b++; shockCounter.a = 0; }
+        } else {
+            shockCounter.a = Math.max(0, shockCounter.a - 1);
+            shockCounter.b = Math.max(0, shockCounter.b - 1);
+        }
+        
+        // Apply shock multiplier (accelerated collapse after 14 days of dominance)
+        let shockMultA = 1.0, shockMultB = 1.0;
+        if (shockCounter.a > 14) {
+            // Side A dominant: B takes extra losses, morale cascade
+            shockMultB = 1.0 + Math.min(1.5, (shockCounter.a - 14) * 0.08);
+        }
+        if (shockCounter.b > 14) {
+            // Side B dominant: A takes extra losses
+            shockMultA = 1.0 + Math.min(1.5, (shockCounter.b - 14) * 0.08);
+        }
+        
+        // Lanchester attrition (with shock multiplier)
+        const lossA = killCoef * powerB * (strB / initB) * shockMultA;
+        const lossB = killCoef * powerA * (strA / initA) * shockMultB;
+        
+        strA = Math.max(0, strA - lossA);
+        strB = Math.max(0, strB - lossB);
+        casA += lossA;
+        casB += lossB;
+        
+        // Record history
+        if (t % 5 === 0) {
+            history.t.push(t);
+            history.a.push(strA);
+            history.b.push(strB);
+        }
+        
+        t++;
+        
+        // Surrender check - defender bonus to threshold
+        const threshA = (pA.tol/100) * (pA.will/100) * 0.95;
+        let threshB = (pB.tol/100) * (pB.will/100) * 0.95;
+        if (bDefends) threshB *= 1.5; // Defenders hold longer
+        
+        if (casA/initA > threshA) { winner = "B"; break; }
+        if (casB/initB > threshB) { winner = "A"; break; }
+        
+        // Stalemate detection - BOTH sides must be stuck (fixed from v5.0)
+        if (t > 365 && fortified) {
+            if (history.a.length > 10 && history.b.length > 10) {
+                const recentLossRateA = Math.abs(history.a[history.a.length-1] - history.a[history.a.length-10]) / Math.max(1, history.a[history.a.length-10]);
+                const recentLossRateB = Math.abs(history.b[history.b.length-1] - history.b[history.b.length-10]) / Math.max(1, history.b[history.b.length-10]);
+                // Both sides stagnant = stalemate
+                if (recentLossRateA < 0.02 && recentLossRateB < 0.02) {
+                    winner = "Stalemate";
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Determine winner if not already set
+    if (!winner) {
+        if (strA > strB * 1.3) winner = "A";
+        else if (strB > strA * 1.3) winner = "B";
+        else winner = "Stalemate";
+    }
+    
+    // Calculate final metrics
+    const powerRatioFinal = calcPower(selA, pA, false, t, true) / Math.max(0.1, calcPower(selB, pB, bDefends, t, false));
+    
+    // Economic damage estimate
+    const gdpA = selA.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    const gdpB = selB.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    const econDmgA = Math.min(40, (casA/initA) * 30 + t * 0.01);
+    const econDmgB = Math.min(50, (casB/initB) * 35 + t * 0.015);
+    
+    // Revolution risk for countries with rev data
+    let revRisk = 0;
+    selB.forEach(k => {
+        if (C[k]?.rev) {
+            const defeatMult = winner === "A" ? 2 : winner === "Stalemate" ? 1.3 : 0.8;
+            revRisk = Math.max(revRisk, C[k].rev * 100 * defeatMult * (casB/initB));
+        }
+    });
+    
+    // Nuclear escalation risk - use N field for BOTH sides
+    const nuclearA = selA.some(k => (C[k]?.N || 0) > 70);
+    const nuclearB = selB.some(k => (C[k]?.N || 0) > 70);
+    let nukeRisk = 0;
+    if (nuclearA && nuclearB) {
+        nukeRisk = Math.min(75, (casA/initA + casB/initB) * 50 + (winner === "A" ? 15 : winner === "B" ? 15 : 5));
+    }
+    
+    // Render results
+    renderConvResults(winner, t, casA, casB, initA, initB, powerRatioFinal, econDmgA, econDmgB, revRisk, nukeRisk, shockCounter, history);
+    } catch (e) {
+        console.error('Conventional war simulation error:', e);
+        document.getElementById('resultsContent').innerHTML = '<div style="text-align:center;color:var(--red);padding:2rem;">Simulation error: ' + e.message + '</div>';
+    }
+}
+
+function renderConvResults(winner, duration, casA, casB, initA, initB, ratio, econA, econB, revRisk, nukeRisk, shockCounter, history) {
+    const winClass = winner === "A" ? "winner-a" : winner === "B" ? "winner-b" : "stalemate";
+    const winText = winner === "A" ? "SIDE A VICTORY" : winner === "B" ? "SIDE B VICTORY" : "STALEMATE";
+    
+    // Get flags for display
+    const flagsA = selA.map(k => C[k]?.f || '').join('');
+    const flagsB = selB.map(k => C[k]?.f || '').join('');
+    
+    // Get engagement info for display
+    const engA = V('engageA'), engN = V('engageN'), engB = V('engageB');
+    const theaterMix = getTheaterMix();
+    
+    // Calculate debug multipliers at day 0 for transparency
+    const debugA = getDebugMultipliers(selA, {
+        qual: V('aQual'), isr: V('aISR'), log: V('aLog'),
+        alli: V('aAlli'), roe: V('aROE'), sys: V('aSys'),
+        air: parseFloat(document.getElementById('aAir')?.value || 0.8)
+    }, 0);
+    const debugB = getDebugMultipliers(selB, {
+        qual: V('bQual'), isr: V('bISR'), log: V('bLog'),
+        alli: V('bAlli'), roe: V('bROE'), sys: V('bSys'),
+        air: parseFloat(document.getElementById('bAir')?.value || 0.8)
+    }, 0);
+    
+    let html = `
+        <div class="result-header">
+            <span class="result-winner ${winClass}">${winText}</span>
+            <span style="font-size:0.8rem;color:var(--muted);">${duration} days</span>
+        </div>
+        
+        <div style="background:var(--bg);padding:0.5rem;border-radius:4px;margin-bottom:0.75rem;text-align:center;">
+            <span style="font-size:1.2rem;">${flagsA}</span>
+            <span style="color:var(--orange);font-weight:600;margin:0 0.5rem;">⚔️</span>
+            <span style="font-size:1.2rem;">${flagsB}</span>
+        </div>
+        
+        <div class="result-grid">
+            <div class="result-stat"><div class="val" style="color:var(--blue)">${Math.round(casA*1000).toLocaleString()}</div><div class="lbl">Side A Casualties</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--red)">${Math.round(casB*1000).toLocaleString()}</div><div class="lbl">Side B Casualties</div></div>
+            <div class="result-stat"><div class="val">${(casA/initA*100).toFixed(1)}%</div><div class="lbl">A Loss Rate</div></div>
+            <div class="result-stat"><div class="val">${(casB/initB*100).toFixed(1)}%</div><div class="lbl">B Loss Rate</div></div>
+            <div class="result-stat"><div class="val">${ratio.toFixed(2)}</div><div class="lbl">Power Ratio</div></div>
+            <div class="result-stat"><div class="val">${(casB/Math.max(1,casA)).toFixed(1)}:1</div><div class="lbl">Casualty Ratio</div></div>
+        </div>
+        
+        <!-- DEBUG MULTIPLIER READOUT -->
+        <div style="background:var(--bg3);padding:0.5rem;border-radius:4px;margin:0.75rem 0;font-size:0.6rem;">
+            <div style="font-weight:600;color:var(--cyan);margin-bottom:0.3rem;">🔧 DEBUG: Effective Multipliers (Day 0)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;">
+                <div style="color:var(--blue);">
+                    <div>A Domain: ${debugA.domain.toFixed(1)}</div>
+                    <div>A Qual×ISR×Log: ${(debugA.qual*debugA.isr*debugA.log).toFixed(2)}</div>
+                    <div>A Air×Sys: ${(debugA.air*debugA.sys).toFixed(2)}</div>
+                    <div>A Total Power: ${debugA.total.toFixed(1)}</div>
+                </div>
+                <div style="color:var(--red);">
+                    <div>B Domain: ${debugB.domain.toFixed(1)}</div>
+                    <div>B Qual×ISR×Log: ${(debugB.qual*debugB.isr*debugB.log).toFixed(2)}</div>
+                    <div>B Air×Sys: ${(debugB.air*debugB.sys).toFixed(2)}</div>
+                    <div>B Total Power: ${debugB.total.toFixed(1)}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="intel-section">
+            <div class="intel-item"><span class="label">Theater Blend</span><span class="value">DefMod ${theaterMix.defMod.toFixed(2)}x</span></div>
+            <div class="intel-item"><span class="label">Engagement</span><span class="value">${flagsA} ${engA}% / ⚔️ ${engN}% / ${flagsB} ${engB}%</span></div>
+            <div class="intel-item"><span class="label">Econ Damage A</span><span class="value">${econA.toFixed(1)}% GDP</span></div>
+            <div class="intel-item"><span class="label">Econ Damage B</span><span class="value">${econB.toFixed(1)}% GDP</span></div>
+            ${shockCounter.a > 14 || shockCounter.b > 14 ? `<div class="intel-item"><span class="label">⚡ Breakthrough</span><span class="value high">${shockCounter.a > 14 ? 'A Dominant' : 'B Dominant'} (${Math.max(shockCounter.a, shockCounter.b)}d)</span></div>` : ''}
+            ${revRisk > 0 ? `<div class="intel-item"><span class="label">Regime Risk B</span><span class="value ${revRisk > 50 ? 'high' : revRisk > 25 ? 'med' : 'low'}">${revRisk.toFixed(0)}%</span></div>` : ''}
+            ${nukeRisk > 0 ? `<div class="intel-item"><span class="label">Nuclear Risk</span><span class="value ${nukeRisk > 40 ? 'high' : nukeRisk > 20 ? 'med' : 'low'}">${nukeRisk.toFixed(0)}%</span></div>` : ''}
+        </div>
+        <div class="chart-container" id="chart"></div>
+    `;
+    
+    document.getElementById('resultsContent').innerHTML = html;
+    
+    // Render chart with Plotly check
+    if (typeof Plotly !== 'undefined') {
+        Plotly.newPlot('chart', [
+            { x: history.t, y: history.a, name: 'Side A', line: { color: '#4a9eff' } },
+            { x: history.t, y: history.b, name: 'Side B', line: { color: '#ff4a6a' } }
+        ], {
+            margin: { t: 20, r: 20, b: 40, l: 50 },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#888', size: 10 },
+            xaxis: { title: 'Days', gridcolor: '#2a2a3a' },
+            yaxis: { title: 'Strength (K)', gridcolor: '#2a2a3a' },
+            legend: { x: 0.7, y: 0.95 },
+            showlegend: true
+        }, { responsive: true, displayModeBar: false });
+    } else {
+        // Canvas fallback when Plotly unavailable
+        drawSimpleChart('chart', history.a, history.b, history.t);
+    }
+}
+
+// ============================================================================
+// ECONOMIC WARFARE ENGINE
+// ============================================================================
+function runEconomicWar() {
+    try {
+        const lev = V('eLev')/100;
+        const enf = V('eEnf')/100;
+        const fin = V('eFin')/100;
+        const months = V('eTime') || 24;
+        const res = V('eRes')/100;
+        const alt = V('eAlt')/100;
+        
+        // Coalition GDP
+        const coalGDP = selCoal.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+        const targetGDP = selTarget.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+        // Use FIXED WORLD_GDP constant - prevents drift when editing country roster
+        
+        // Guard against zero values
+        if (coalGDP === 0 || targetGDP === 0) {
+            document.getElementById('resultsContent').innerHTML = '<div style="text-align:center;color:var(--red);padding:2rem;">Error: Select countries for coalition and target</div>';
+            return;
+        }
+        
+        // Effective leverage based on economic weight (uses WORLD_GDP constant)
+        const effLev = Math.min(1, (coalGDP / WORLD_GDP) * lev * (0.6 + 0.4 * enf));
+        
+        // Target resilience
+        const effRes = res * 0.5 + alt * 0.35 + 0.15;
+        
+        // GDP loss calculation - calibrated to historical cases
+        const gdpLoss = Math.min(60, effLev * enf * fin * Math.pow(months/12, 0.7) * 22 * (1 - effRes * 0.65));
+        
+        // Regime stress
+        const stress = Math.min(95, gdpLoss * 1.1 + months * 0.15);
+        
+        // Success probability
+        const success = Math.min(85, effLev * 35 + gdpLoss * 0.5 - effRes * 20 + (months > 60 ? 10 : 0));
+        
+        // Blowback on coalition
+        const blowback = Math.min(25, (1 - effLev) * 15 + (targetGDP / coalGDP) * 10);
+        
+        // Regime change probability
+        let regimeProb = 0;
+        selTarget.forEach(k => {
+            if (C[k]?.rev) {
+                regimeProb = Math.max(regimeProb, C[k].rev * 100 * (stress/100) * (months > 60 ? 1.2 : 0.8));
+            }
+        });
+        
+        renderEconResults(gdpLoss, stress, success, blowback, regimeProb, months);
+    } catch (e) {
+        console.error('Economic war simulation error:', e);
+        document.getElementById('resultsContent').innerHTML = '<div style="text-align:center;color:var(--red);padding:2rem;">Simulation error: ' + e.message + '</div>';
+    }
+}
+
+function renderEconResults(gdpLoss, stress, success, blowback, regimeProb, months) {
+    const html = `
+        <div class="result-header">
+            <span class="result-winner" style="color:var(--orange);">SANCTIONS IMPACT</span>
+            <span style="font-size:0.8rem;color:var(--muted);">${months} months</span>
+        </div>
+        <div class="result-grid">
+            <div class="result-stat"><div class="val" style="color:var(--red)">-${gdpLoss.toFixed(1)}%</div><div class="lbl">Target GDP Loss</div></div>
+            <div class="result-stat"><div class="val">${stress.toFixed(0)}%</div><div class="lbl">Regime Stress</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--green)">${success.toFixed(0)}%</div><div class="lbl">Policy Success</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--orange)">${blowback.toFixed(1)}%</div><div class="lbl">Coalition Blowback</div></div>
+        </div>
+        <div class="intel-section">
+            ${regimeProb > 0 ? `<div class="intel-item"><span class="label">Regime Change Prob</span><span class="value ${regimeProb > 40 ? 'high' : regimeProb > 20 ? 'med' : 'low'}">${regimeProb.toFixed(0)}%</span></div>` : ''}
+            <div class="intel-item"><span class="label">Assessment</span><span class="value">${gdpLoss > 30 ? 'Severe Impact' : gdpLoss > 15 ? 'Significant' : 'Limited'}</span></div>
+        </div>
+    `;
+    document.getElementById('resultsContent').innerHTML = html;
+}
+
+// ============================================================================
+// COMBINED WARFARE ENGINE
+// ============================================================================
+function updateCombinedDisplay() {
+    // Update combined tab with current coalition info
+    const flagsA = selA.map(k => C[k]?.f || '').join('');
+    const flagsB = selB.map(k => C[k]?.f || '').join('');
+    const namesA = selA.length > 2 ? selA.length + ' nations' : selA.map(k => C[k]?.n || k).join('+');
+    const namesB = selB.length > 2 ? selB.length + ' nations' : selB.map(k => C[k]?.n || k).join('+');
+    
+    U('combFlagsA', flagsA);
+    U('combFlagsB', flagsB);
+    U('combNamesA', namesA);
+    U('combNamesB', namesB);
+}
+
+function runCombinedWar() {
+    try {
+        // Get combined parameters
+        const sancStartMonths = V('combSancStart');
+        const warCapDays = V('combWarCap');
+        const sancMilDegradation = V('combSancMil') / 100;
+        const warEconMultiplier = V('combWarEcon') / 100;
+        
+        // PHASE 1: Pre-war sanctions (if any)
+        let preWarSancImpact = 0;
+        if (sancStartMonths > 0) {
+            // Calculate sanctions effect on target (Side B)
+            const lev = V('eLev')/100 || 0.7;
+            const enf = V('eEnf')/100 || 0.75;
+            const fin = V('eFin')/100 || 0.8;
+            const res = V('eRes')/100 || 0.6;
+            const alt = V('eAlt')/100 || 0.5;
+            
+            const coalGDP = selA.reduce((s,k) => s + (C[k]?.GDP || 0), 0); // Use Side A as sanctioners
+            const targetGDP = selB.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+            // Use FIXED WORLD_GDP constant
+            
+            const effLev = Math.min(1, (coalGDP / WORLD_GDP) * lev * (0.6 + 0.4 * enf));
+            const effRes = res * 0.5 + alt * 0.35 + 0.15;
+            preWarSancImpact = Math.min(40, effLev * enf * fin * Math.pow(sancStartMonths/12, 0.7) * 22 * (1 - effRes * 0.65));
+        }
+        
+        // PHASE 2: Modified conventional war (Side B degraded by sanctions)
+        const pA = {
+            mob: V('aMob'), tol: V('aTol'), will: V('aWill'),
+            qual: V('aQual'), isr: V('aISR'), log: V('aLog'),
+            alli: V('aAlli'), roe: V('aROE'), 
+            air: parseFloat(document.getElementById('aAir')?.value || 0.8),
+            sys: V('aSys')
+        };
+        
+        // Side B parameters DEGRADED by pre-war sanctions
+        // NON-UNIFORM degradation: logistics/air hit hardest (precision munitions, aviation fuel, spare parts)
+        const baseDegradeFactor = 1 - (preWarSancImpact / 100) * sancMilDegradation;
+        const logDegradeFactor = 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.5; // 50% harder hit
+        const airDegradeFactor = 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.3; // 30% harder hit
+        
+        const pB = {
+            mob: V('bMob') * baseDegradeFactor,
+            tol: V('bTol'),
+            will: V('bWill') * (0.85 + 0.15 * baseDegradeFactor), // Will slightly degraded
+            qual: V('bQual') * baseDegradeFactor,
+            isr: V('bISR') * Math.max(0.3, baseDegradeFactor * 0.9), // ISR affected by tech sanctions
+            log: V('bLog') * Math.max(0.3, logDegradeFactor), // Logistics hit HARDEST
+            alli: V('bAlli'),
+            roe: V('bROE'),
+            air: parseFloat(document.getElementById('bAir')?.value || 0.8),
+            sys: V('bSys') * baseDegradeFactor
+        };
+        
+        const bDefends = isOn('togDefense');
+        const aSurprise = isOn('togSurprise');
+        const fortified = isOn('togFortified');
+        
+        // Run war simulation with degraded B
+        const initA = selA.reduce((s,k) => s + (C[k]?.M || 100000) * pA.mob/100, 0) / 1000;
+        const initB = selB.reduce((s,k) => s + (C[k]?.M || 100000) * pB.mob/100, 0) / 1000;
+        
+        let strA = initA, strB = initB;
+        let casA = 0, casB = 0;
+        let t = 0;
+        let winner = null;
+        let history = { t: [], a: [], b: [] };
+        const killCoef = 0.025;
+        const surpriseWindow = 7;
+        
+        // Simplified war loop (reuses calcPower logic)
+        while (t < warCapDays && strA > initA * 0.02 && strB > initB * 0.02) {
+            let powerA = calcPowerCombined(selA, pA, false, t, true);
+            let powerB = calcPowerCombined(selB, pB, bDefends, t, false);
+            
+            if (aSurprise && t < surpriseWindow) {
+                powerA *= 1.5;
+                powerB *= 0.6;
+            }
+            
+            const lossA = killCoef * powerB * (strB / initB);
+            const lossB = killCoef * powerA * (strA / initA);
+            
+            strA = Math.max(0, strA - lossA);
+            strB = Math.max(0, strB - lossB);
+            casA += lossA;
+            casB += lossB;
+            
+            if (t % 5 === 0) {
+                history.t.push(t);
+                history.a.push(strA);
+                history.b.push(strB);
+            }
+            
+            t++;
+            
+            const threshA = (pA.tol/100) * (pA.will/100) * 0.95;
+            let threshB = (pB.tol/100) * (pB.will/100) * 0.95;
+            if (bDefends) threshB *= 1.5;
+            
+            if (casA/initA > threshA) { winner = "B"; break; }
+            if (casB/initB > threshB) { winner = "A"; break; }
+        }
+        
+        if (!winner) {
+            if (strA > strB * 1.3) winner = "A";
+            else if (strB > strA * 1.3) winner = "B";
+            else winner = "Stalemate";
+        }
+        
+        // PHASE 3: Combined economic impact
+        const baseEconDmgA = (casA/initA) * 30 + t * 0.01;
+        const baseEconDmgB = (casB/initB) * 35 + t * 0.015 + preWarSancImpact;
+        
+        // War amplifies economic damage
+        const totalEconDmgA = Math.min(60, baseEconDmgA * warEconMultiplier);
+        const totalEconDmgB = Math.min(80, baseEconDmgB * warEconMultiplier);
+        
+        // Regime risk
+        let revRisk = 0;
+        selB.forEach(k => {
+            if (C[k]?.rev) {
+                const defeatMult = winner === "A" ? 2.5 : winner === "Stalemate" ? 1.5 : 1.0;
+                revRisk = Math.max(revRisk, C[k].rev * 100 * defeatMult * (totalEconDmgB / 50));
+            }
+        });
+        
+        // Nuclear risk
+        const nuclearA = selA.some(k => (C[k]?.N || 0) > 70);
+        const nuclearB = selB.some(k => (C[k]?.N || 0) > 70);
+        let nukeRisk = 0;
+        if (nuclearA && nuclearB) {
+            nukeRisk = Math.min(80, (casA/initA + casB/initB) * 50 + (winner === "A" ? 20 : winner === "B" ? 20 : 5));
+        }
+        
+        renderCombinedResults(winner, sancStartMonths, t, preWarSancImpact, casA, casB, initA, initB, 
+                              totalEconDmgA, totalEconDmgB, revRisk, nukeRisk, baseDegradeFactor, history);
+                              
+    } catch (e) {
+        console.error('Combined war simulation error:', e);
+        document.getElementById('resultsContent').innerHTML = '<div style="text-align:center;color:var(--red);padding:2rem;">Simulation error: ' + e.message + '</div>';
+    }
+}
+
+// Simplified calcPower for combined warfare (avoids variable scope issues)
+function calcPowerCombined(countries, params, isDefender, day, isSideA) {
+    let basePower = 0;
+    let avgSys = 0;
+    let countryCount = 0;
+    const z = getTheaterMix();
+    const engageBonus = getEngagementBonus(isSideA);
+    const fortified = isOn('togFortified');
+    
+    countries.forEach(k => {
+        const c = C[k];
+        if (!c) return;
+        
+        // Domain power using Fi and AD
+        const domainPower = z.G * (c.G||50) + z.A * (c.A||50) + z.N * (c.N||50) + 
+                            z.Fi * (c.Fi||50) + z.AD * (c.AD||50);
+        const qualMult = 0.4 + 1.2 * (params.qual / 100);
+        const isrMult = 0.5 + 0.7 * (params.isr / 100);
+        
+        // Logistics with decay based on ind
+        const baseLogMult = 0.5 + 0.7 * (params.log / 100);
+        const indValue = c.ind || 50;
+        const logDecay = Math.max(0.4, 1.0 - (day / 800) * (1 - indValue / 100));
+        const logMult = baseLogMult * logDecay;
+        
+        const alliMult = 0.7 + 0.4 * (params.alli / 100);
+        const roeMult = 0.7 + 0.4 * (params.roe / 100);
+        
+        basePower += domainPower * qualMult * isrMult * logMult * alliMult * roeMult * (c.M||100000) / 1e6;
+        avgSys += c.sys || 70;
+        countryCount++;
+    });
+    
+    avgSys = countryCount > 0 ? (avgSys / countryCount + params.sys) / 2 : params.sys;
+    
+    const airMult = params.air;
+    basePower *= airMult;
+    
+    const sysMult = 0.5 + 0.7 * (avgSys / 100);
+    basePower *= sysMult;
+    basePower *= engageBonus;
+    
+    if (isDefender) {
+        const bTurfPct = V('engageB') / 100;
+        let defBonus = 1.0 + z.defMod * 0.25 * (0.5 + bTurfPct * 0.5);
+        if (fortified) {
+            defBonus += Math.min(0.4, day * 0.0015);
+        }
+        basePower *= defBonus;
+    }
+    
+    return basePower;
+}
+
+function renderCombinedResults(winner, sancMonths, warDays, sancImpact, casA, casB, initA, initB, 
+                                econA, econB, revRisk, nukeRisk, sancDegrade, history) {
+    const winClass = winner === "A" ? "winner-a" : winner === "B" ? "winner-b" : "stalemate";
+    const winText = winner === "A" ? "SIDE A VICTORY" : winner === "B" ? "SIDE B VICTORY" : "STALEMATE";
+    
+    const flagsA = selA.map(k => C[k]?.f || '').join('');
+    const flagsB = selB.map(k => C[k]?.f || '').join('');
+    
+    let html = `
+        <div class="result-header">
+            <span class="result-winner ${winClass}">⚡ ${winText}</span>
+            <span style="font-size:0.8rem;color:var(--muted);">${sancMonths}mo sanctions + ${warDays}d war</span>
+        </div>
+        
+        <div style="background:var(--bg);padding:0.5rem;border-radius:4px;margin-bottom:0.75rem;text-align:center;">
+            <span style="font-size:1.2rem;">${flagsA}</span>
+            <span style="color:var(--orange);font-weight:600;margin:0 0.5rem;">⚔️</span>
+            <span style="font-size:1.2rem;">${flagsB}</span>
+        </div>
+        
+        <div style="font-size:0.7rem;font-weight:600;color:var(--cyan);margin-bottom:0.25rem;">💰 ECONOMIC PHASE</div>
+        <div class="result-grid" style="margin-bottom:0.75rem;">
+            <div class="result-stat"><div class="val" style="color:var(--orange)">${sancMonths}</div><div class="lbl">Sanction Months</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--red)">-${sancImpact.toFixed(1)}%</div><div class="lbl">Pre-War GDP Hit</div></div>
+            <div class="result-stat"><div class="val">${((1-sancDegrade)*100).toFixed(0)}%</div><div class="lbl">B Military Degraded</div></div>
+        </div>
+        
+        <div style="font-size:0.7rem;font-weight:600;color:var(--cyan);margin-bottom:0.25rem;">🎖️ MILITARY PHASE</div>
+        <div class="result-grid" style="margin-bottom:0.75rem;">
+            <div class="result-stat"><div class="val" style="color:var(--blue)">${Math.round(casA*1000).toLocaleString()}</div><div class="lbl">Side A Casualties</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--red)">${Math.round(casB*1000).toLocaleString()}</div><div class="lbl">Side B Casualties</div></div>
+            <div class="result-stat"><div class="val">${(casA/initA*100).toFixed(1)}%</div><div class="lbl">A Loss Rate</div></div>
+            <div class="result-stat"><div class="val">${(casB/initB*100).toFixed(1)}%</div><div class="lbl">B Loss Rate</div></div>
+        </div>
+        
+        <div style="font-size:0.7rem;font-weight:600;color:var(--cyan);margin-bottom:0.25rem;">📊 COMBINED IMPACT</div>
+        <div class="result-grid">
+            <div class="result-stat"><div class="val" style="color:var(--blue)">-${econA.toFixed(1)}%</div><div class="lbl">A Total Econ Dmg</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--red)">-${econB.toFixed(1)}%</div><div class="lbl">B Total Econ Dmg</div></div>
+        </div>
+        
+        <div class="intel-section">
+            ${revRisk > 0 ? `<div class="intel-item"><span class="label">Regime Collapse Risk</span><span class="value ${revRisk > 50 ? 'high' : revRisk > 25 ? 'med' : 'low'}">${revRisk.toFixed(0)}%</span></div>` : ''}
+            ${nukeRisk > 0 ? `<div class="intel-item"><span class="label">Nuclear Escalation</span><span class="value ${nukeRisk > 40 ? 'high' : nukeRisk > 20 ? 'med' : 'low'}">${nukeRisk.toFixed(0)}%</span></div>` : ''}
+            <div class="intel-item"><span class="label">Casualty Ratio</span><span class="value">${(casB/Math.max(1,casA)).toFixed(1)}:1</span></div>
+        </div>
+        
+        <div class="chart-container" id="chart"></div>
+    `;
+    
+    document.getElementById('resultsContent').innerHTML = html;
+    
+    // Render chart with Plotly check
+    if (history.t.length > 0 && typeof Plotly !== 'undefined') {
+        Plotly.newPlot('chart', [
+            { x: history.t, y: history.a, name: 'Side A', line: { color: '#4a9eff' } },
+            { x: history.t, y: history.b, name: 'Side B', line: { color: '#ff4a6a' } }
+        ], {
+            margin: { t: 20, r: 20, b: 40, l: 50 },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#888', size: 10 },
+            xaxis: { title: 'Days', gridcolor: '#2a2a3a' },
+            yaxis: { title: 'Strength (K)', gridcolor: '#2a2a3a' },
+            legend: { x: 0.7, y: 0.95 },
+            showlegend: true
+        }, { responsive: true, displayModeBar: false });
+    } else if (history.t.length > 0) {
+        // Canvas fallback when Plotly unavailable
+        drawSimpleChart('chart', history.a, history.b, history.t);
+    }
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+function init() {
+    buildGrid('gridA', selA, 'sel-a');
+    buildGrid('gridB', selB, 'sel-b');
+    buildGrid('gridCoal', selCoal, 'sel-a');
+    buildGrid('gridTarget', selTarget, 'sel-b');
+    updateInfo();
+    updateEconInfo();
+    updateCombinedDisplay();
+    updateSliderDisplay('a');
+    updateSliderDisplay('b');
+    buildTheaterLists();
+    updateEngagement();
+}
+
+init();
+</script>
+</body>
+</html>

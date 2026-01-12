@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODEX Browser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0f;
+            color: #e6eaf2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(180deg, #1a1f2a 0%, #12151c 100%);
+            border-bottom: 1px solid #2a3140;
+            height: 44px;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #2a3140;
+            background: #161a22;
+            color: #00ff88;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: #1e2430;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.home {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #000;
+            font-weight: bold;
+            border: none;
+        }
+
+        .nav-btn.home:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        /* URL Bar */
+        .url-bar {
+            flex: 1;
+            height: 32px;
+            background: #0d1117;
+            border: 1px solid #2a3140;
+            border-radius: 6px;
+            padding: 0 12px;
+            color: #888;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .url-bar .protocol {
+            color: #00ff88;
+        }
+
+        .url-bar .path {
+            color: #666;
+        }
+
+        /* Status indicator */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 10px;
+            color: #666;
+            font-size: 11px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 6px #00ff88;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            position: relative;
+        }
+
+        webview, iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a3140;
+            border-top-color: #00ff88;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #00ff88;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <button class="nav-btn" id="backBtn" title="Back (Alt+←)">←</button>
+        <button class="nav-btn" id="forwardBtn" title="Forward (Alt+→)">→</button>
+        <button class="nav-btn" id="refreshBtn" title="Refresh (F5)">↻</button>
+        <button class="nav-btn home" id="homeBtn" title="Portal Home (Alt+H)">⌂</button>
+        
+        <div class="url-bar" id="urlBar">
+            <span class="protocol">codex://</span>
+            <span class="path" id="currentPath">portal</span>
+        </div>
+        
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>CODEX</span>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading consciousness...</div>
+        </div>
+        
+        <!-- Webview for Electron, iframe for fallback -->
+        <webview id="contentView" src="index.html" allowpopups></webview>
+    </div>
+
+    <script>
+        const webview = document.getElementById('contentView');
+        const backBtn = document.getElementById('backBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const homeBtn = document.getElementById('homeBtn');
+        const urlBar = document.getElementById('currentPath');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Navigation functions
+        function goBack() {
+            if (webview.canGoBack()) webview.goBack();
+        }
+
+        function goForward() {
+            if (webview.canGoForward()) webview.goForward();
+        }
+
+        function refresh() {
+            webview.reload();
+        }
+
+        function goHome() {
+            webview.src = 'index.html';
+        }
+
+        // Button handlers
+        backBtn.onclick = goBack;
+        forwardBtn.onclick = goForward;
+        refreshBtn.onclick = refresh;
+        homeBtn.onclick = goHome;
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F5') {
+                e.preventDefault();
+                refresh();
+            }
+            if (e.altKey && e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goBack();
+            }
+            if (e.altKey && e.key === 'ArrowRight') {
+                e.preventDefault();
+                goForward();
+            }
+            if (e.altKey && e.key.toLowerCase() === 'h') {
+                e.preventDefault();
+                goHome();
+            }
+        });
+
+        // Webview events
+        webview.addEventListener('did-start-loading', () => {
+            loadingOverlay.classList.add('active');
+        });
+
+        webview.addEventListener('did-stop-loading', () => {
+            loadingOverlay.classList.remove('active');
+            updateNavState();
+        });
+
+        webview.addEventListener('did-navigate', updateNavState);
+        webview.addEventListener('did-navigate-in-page', updateNavState);
+
+        function updateNavState() {
+            // Update back/forward buttons
+            backBtn.disabled = !webview.canGoBack();
+            forwardBtn.disabled = !webview.canGoForward();
+            
+            // Update URL bar
+            try {
+                const url = webview.getURL();
+                let displayPath = url.replace(/^file:\/\/.*?\//, '').replace(/\.html$/, '');
+                if (displayPath.includes('index') || displayPath === '') {
+                    displayPath = 'portal';
+                }
+                // Clean up the path for display
+                displayPath = displayPath.split('/').pop() || 'portal';
+                urlBar.textContent = displayPath;
+            } catch (e) {
+                urlBar.textContent = 'portal';
+            }
+        }
+
+        // Initial state
+        webview.addEventListener('dom-ready', () => {
+            updateNavState();
+        });
+    </script>
+</body>
+</html>

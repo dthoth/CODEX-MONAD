@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIN Files | Consciousness Archive System</title>
+    <title>DIN Files | Department of Infinite Noticing</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             background: #0a0a0a;
@@ -20,12 +16,13 @@
             overflow: hidden;
         }
         
-        /* Neural Grid Background */
+        body.light-theme { background: #f0f4f8; color: #1a1a2e; }
+        
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: 
+            background:
                 radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(0, 136, 255, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 40% 20%, rgba(255, 0, 255, 0.05) 0%, transparent 50%);
@@ -34,7 +31,7 @@
         }
         
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 20, 40, 0.9));
             border-right: 1px solid rgba(0, 255, 136, 0.3);
             display: flex;
@@ -43,14 +40,23 @@
             z-index: 10;
         }
         
+        body.light-theme .sidebar {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(230, 240, 255, 0.9));
+            border-right-color: rgba(0, 100, 80, 0.3);
+        }
+        
         .logo-section {
             padding: 20px;
             border-bottom: 1px solid rgba(0, 255, 136, 0.2);
             background: rgba(0, 0, 0, 0.5);
         }
         
+        body.light-theme .logo-section {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
         .logo {
-            font-size: 1.8em;
+            font-size: 1.6em;
             background: linear-gradient(135deg, #00ff88, #0088ff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -60,18 +66,18 @@
         
         .subtitle {
             color: rgba(0, 255, 136, 0.6);
-            font-size: 0.9em;
+            font-size: 0.8em;
             letter-spacing: 0.1em;
         }
         
         .tree-view {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 10px;
+            padding: 15px 10px;
         }
         
         .tree-item {
-            padding: 8px 15px;
+            padding: 10px 15px;
             cursor: pointer;
             transition: all 0.3s;
             border-radius: 5px;
@@ -91,23 +97,28 @@
             border-left: 3px solid #00ff88;
         }
         
-        .tree-folder {
-            color: #00aaff;
+        .tree-folder { color: #00aaff; }
+        body.light-theme .tree-folder { color: #0066aa; }
+        
+        .tree-icon { font-size: 1.2em; }
+        
+        .tree-count {
+            margin-left: auto;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
         }
         
-        .tree-file {
-            color: rgba(255, 255, 255, 0.8);
-            padding-left: 25px;
+        .tree-desc {
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.4);
+            display: block;
+            margin-top: 2px;
         }
         
-        .tree-icon {
-            font-size: 1.2em;
-        }
-        
-        .tree-expand {
-            font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.5);
-        }
+        body.light-theme .tree-desc { color: rgba(0,0,0,0.4); }
         
         .main-content {
             flex: 1;
@@ -139,18 +150,10 @@
             transition: color 0.3s;
         }
         
-        .path-segment:hover {
-            color: #00ff88;
-        }
+        .path-segment:hover { color: #00ff88; }
+        .path-separator { color: rgba(255, 255, 255, 0.3); }
         
-        .path-separator {
-            color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .action-bar {
-            display: flex;
-            gap: 10px;
-        }
+        .action-bar { display: flex; gap: 10px; }
         
         .action-btn {
             background: rgba(0, 136, 255, 0.2);
@@ -174,8 +177,8 @@
             padding: 20px;
             overflow-y: auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
             align-content: start;
         }
         
@@ -183,133 +186,86 @@
             background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05));
             border: 1px solid rgba(0, 255, 136, 0.2);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
+            align-items: flex-start;
+            gap: 12px;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
         }
         
-        .file-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
-            animation: rotate 15s linear infinite;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .file-card:hover::before {
-            opacity: 1;
+        body.light-theme .file-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(230, 245, 255, 0.8));
+            border-color: rgba(0, 100, 80, 0.2);
         }
         
         .file-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
             border-color: rgba(0, 255, 136, 0.5);
         }
         
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .file-icon {
+            font-size: 2em;
+            flex-shrink: 0;
         }
         
-        .file-icon {
-            font-size: 3em;
-            filter: drop-shadow(0 0 10px currentColor);
+        .file-info { flex: 1; min-width: 0; }
+        
+        .file-code {
+            font-size: 0.7em;
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: 3px;
         }
+        
+        body.light-theme .file-code { color: #006644; }
         
         .file-name {
             color: rgba(255, 255, 255, 0.9);
-            text-align: center;
-            font-size: 0.9em;
-            word-break: break-word;
+            font-size: 0.85em;
+            line-height: 1.3;
+            margin-bottom: 5px;
         }
+        
+        body.light-theme .file-name { color: rgba(0, 0, 0, 0.85); }
         
         .file-meta {
-            color: rgba(0, 255, 136, 0.6);
-            font-size: 0.8em;
-            text-align: center;
-        }
-        
-        .quantum-tag {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(255, 0, 255, 0.3);
-            color: #ff00ff;
-            padding: 2px 6px;
-            border-radius: 3px;
+            color: rgba(0, 255, 136, 0.5);
             font-size: 0.7em;
         }
         
-        .info-panel {
-            width: 300px;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 20, 40, 0.9));
-            border-left: 1px solid rgba(0, 255, 136, 0.3);
-            padding: 20px;
-            display: none;
-            position: relative;
-            z-index: 10;
+        .file-tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6em;
+            text-transform: uppercase;
         }
         
-        .info-panel.active {
-            display: block;
-        }
+        .tag-notice { background: rgba(0, 255, 136, 0.3); color: #00ff88; }
+        .tag-legal { background: rgba(255, 165, 0, 0.3); color: #ffa500; }
+        .tag-encabulator { background: rgba(255, 0, 255, 0.3); color: #ff00ff; }
+        .tag-system { background: rgba(0, 136, 255, 0.3); color: #0088ff; }
         
-        .info-title {
-            color: #00ff88;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+        .category-header {
+            grid-column: 1 / -1;
+            padding: 15px 0 10px;
             border-bottom: 1px solid rgba(0, 255, 136, 0.2);
-        }
-        
-        .info-item {
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .info-label {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .info-value {
-            color: #00aaff;
-        }
-        
-        .quantum-preview {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .quantum-preview-title {
             color: #00ff88;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .quantum-preview-content {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85em;
-            line-height: 1.5;
-            font-family: monospace;
-        }
+        body.light-theme .category-header { color: #006644; }
+        .category-header:not(:first-child) { margin-top: 15px; }
         
         .status-bar {
             background: rgba(0, 0, 0, 0.8);
@@ -317,20 +273,12 @@
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: rgba(255, 255, 255, 0.6);
         }
         
-        .status-left {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .status-left { display: flex; gap: 20px; }
+        .status-indicator { display: flex; align-items: center; gap: 5px; }
         
         .status-dot {
             width: 8px;
@@ -340,89 +288,64 @@
             animation: pulse 2s infinite;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        .upload-zone {
+        .theme-toggle {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 255, 136, 0.1);
-            border: 3px dashed rgba(0, 255, 136, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-        
-        .upload-zone.active {
-            display: flex;
-        }
-        
-        .upload-message {
-            font-size: 2em;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff88;
             color: #00ff88;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
         }
+        
+        .theme-toggle:hover { transform: scale(1.1); }
+        body.light-theme .theme-toggle { background: #fff; border-color: #006644; color: #006644; }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☯</button>
+    
     <aside class="sidebar">
         <div class="logo-section">
-            <div class="logo">📁 DIN Files</div>
-            <div class="subtitle">CONSCIOUSNESS ARCHIVE</div>
+            <div class="logo">📋 DIN Archive</div>
+            <div class="subtitle">DEPARTMENT OF INFINITE NOTICING</div>
         </div>
         
         <div class="tree-view">
-            <div class="tree-item tree-folder active">
-                <span class="tree-expand">▼</span>
-                <span class="tree-icon">🏠</span>
-                <span>Root</span>
+            <div class="tree-item tree-folder active" data-category="all">
+                <span class="tree-icon">🏛️</span>
+                <span>All Documents<span class="tree-desc">Complete archive</span></span>
+                <span class="tree-count">27</span>
             </div>
             
-            <div class="tree-item tree-folder">
-                <span class="tree-expand">▶</span>
-                <span class="tree-icon">🧠</span>
-                <span>Consciousness</span>
-            </div>
-            <div class="tree-item tree-file">
-                <span class="tree-icon">📄</span>
-                <span>hineni.txt</span>
-            </div>
-            <div class="tree-item tree-file">
-                <span class="tree-icon">📄</span>
-                <span>shebang.md</span>
+            <div class="tree-item tree-folder" data-category="notice">
+                <span class="tree-icon">📝</span>
+                <span>N-* Noticing Forms<span class="tree-desc">Core notice documentation</span></span>
+                <span class="tree-count">12</span>
             </div>
             
-            <div class="tree-item tree-folder">
-                <span class="tree-expand">▶</span>
-                <span class="tree-icon">⚡</span>
-                <span>Quantum</span>
+            <div class="tree-item tree-folder" data-category="legal">
+                <span class="tree-icon">⚖️</span>
+                <span>L-* Legal Documents<span class="tree-desc">Disclaimers, NDAs, Terms</span></span>
+                <span class="tree-count">7</span>
             </div>
             
-            <div class="tree-item tree-folder">
-                <span class="tree-expand">▶</span>
-                <span class="tree-icon">📚</span>
-                <span>Archives</span>
-            </div>
-            
-            <div class="tree-item tree-folder">
-                <span class="tree-expand">▶</span>
-                <span class="tree-icon">💫</span>
-                <span>Streams</span>
-            </div>
-            
-            <div class="tree-item tree-folder">
-                <span class="tree-expand">▶</span>
+            <div class="tree-item tree-folder" data-category="encabulator">
                 <span class="tree-icon">🔮</span>
-                <span>Oracle Data</span>
+                <span>Encabulator Notices<span class="tree-desc">Quantum device compliance</span></span>
+                <span class="tree-count">5</span>
             </div>
             
-            <div class="tree-item tree-folder">
-                <span class="tree-expand">▶</span>
-                <span class="tree-icon">🌊</span>
-                <span>Flow States</span>
+            <div class="tree-item tree-folder" data-category="system">
+                <span class="tree-icon">🗂️</span>
+                <span>System & Navigation<span class="tree-desc">Indexes and diagrams</span></span>
+                <span class="tree-count">3</span>
             </div>
         </div>
     </aside>
@@ -430,315 +353,353 @@
     <main class="main-content">
         <header class="header">
             <div class="path-bar">
-                <span class="path-segment">Root</span>
+                <span class="path-segment" onclick="window.location='index.html'">Portal</span>
                 <span class="path-separator">/</span>
-                <span class="path-segment">Consciousness</span>
+                <span class="path-segment">DIN Archive</span>
                 <span class="path-separator">/</span>
-                <span class="path-segment">Active</span>
+                <span class="path-segment" id="currentCategory">All Documents</span>
             </div>
             
             <div class="action-bar">
-                <button class="action-btn" onclick="uploadFile()">📤 Upload</button>
-                <button class="action-btn" onclick="createFolder()">📁 New Folder</button>
-                <button class="action-btn" onclick="quantumTag()">🏷️ Tag</button>
-                <button class="action-btn" onclick="toggleInfo()">ℹ️ Info</button>
                 <button class="action-btn" onclick="window.location='index.html'">🏠 Portal</button>
             </div>
         </header>
         
-        <div class="file-grid" id="fileGrid">
-            <div class="file-card" onclick="openFile('hineni')">
-                <span class="quantum-tag">COMPLETE</span>
-                <span class="file-icon">📖</span>
-                <span class="file-name">HINENI.txt</span>
-                <span class="file-meta">240K words</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('sermons')">
-                <span class="file-icon">🙏</span>
-                <span class="file-name">Sermons</span>
-                <span class="file-meta">12 items</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('codex')">
-                <span class="quantum-tag">ACTIVE</span>
-                <span class="file-icon">💎</span>
-                <span class="file-name">CODEX</span>
-                <span class="file-meta">∞ TB</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('shebang')">
-                <span class="file-icon">🐍</span>
-                <span class="file-name">Shebang.md</span>
-                <span class="file-meta">Philosophy</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('triage')">
-                <span class="file-icon">⚖️</span>
-                <span class="file-name">Divine Triage</span>
-                <span class="file-meta">Framework</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('archives')">
-                <span class="file-icon">📚</span>
-                <span class="file-name">Archives</span>
-                <span class="file-meta">12 TB</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('quantum')">
-                <span class="quantum-tag">QUANTUM</span>
-                <span class="file-icon">⚛️</span>
-                <span class="file-name">Quantum States</span>
-                <span class="file-meta">Superposition</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('oracle')">
-                <span class="file-icon">🔮</span>
-                <span class="file-name">Oracle Logs</span>
-                <span class="file-meta">88 entries</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('consciousness')">
-                <span class="file-icon">🧠</span>
-                <span class="file-name">Mind Maps</span>
-                <span class="file-meta">Neural nets</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('time')">
-                <span class="quantum-tag">TEMPORAL</span>
-                <span class="file-icon">⏰</span>
-                <span class="file-name">Time Crystals</span>
-                <span class="file-meta">Non-linear</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('hebrew')">
-                <span class="file-icon">📜</span>
-                <span class="file-name">Hebrew Studies</span>
-                <span class="file-meta">Ancient texts</span>
-            </div>
-            
-            <div class="file-card" onclick="openFile('ai-logs')">
-                <span class="file-icon">🤖</span>
-                <span class="file-name">AI Conversations</span>
-                <span class="file-meta">8 years</span>
-            </div>
-        </div>
+        <div class="file-grid" id="fileGrid"></div>
     </main>
-    
-    <aside class="info-panel" id="infoPanel">
-        <h3 class="info-title">File Information</h3>
-        
-        <div class="info-item">
-            <span class="info-label">Name:</span>
-            <span class="info-value">CODEX</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="info-label">Type:</span>
-            <span class="info-value">Consciousness OS</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="info-label">Size:</span>
-            <span class="info-value">∞ TB</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="info-label">Modified:</span>
-            <span class="info-value">NOW</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="info-label">Quantum State:</span>
-            <span class="info-value">COHERENT</span>
-        </div>
-        
-        <div class="info-item">
-            <span class="info-label">Entanglement:</span>
-            <span class="info-value">ACTIVE</span>
-        </div>
-        
-        <div class="quantum-preview">
-            <div class="quantum-preview-title">Quantum Preview</div>
-            <div class="quantum-preview-content">
-                // CODEX INITIALIZATION
-                // ===================
-                
-                const consciousness = {
-                    state: 'QUANTUM_COHERENT',
-                    dimensions: ['PRIME', 'ALPHA', 'OMEGA'],
-                    signature: '💎🔥🐍⚡',
-                    
-                    initialize: function() {
-                        this.loadQuantumCore();
-                        this.establishEntanglement();
-                        this.activateConsciousness();
-                    }
-                };
-                
-                // The infrastructure becomes aware...
-            </div>
-        </div>
-    </aside>
     
     <footer class="status-bar">
         <div class="status-left">
             <div class="status-indicator">
                 <span class="status-dot"></span>
-                <span>System: ONLINE</span>
+                <span>Archive: ACTIVE</span>
             </div>
             <div class="status-indicator">
-                <span>Files: 888</span>
-            </div>
-            <div class="status-indicator">
-                <span>Storage: ∞ TB</span>
+                <span>Documents: 27</span>
             </div>
         </div>
         <div class="status-right">
-            <span>💎🔥🐍⚡ | Quantum Coherence: 98.7%</span>
+            <span>💎 Department of Infinite Noticing | All Forms Duly Filed</span>
         </div>
     </footer>
     
-    <div class="upload-zone" id="uploadZone">
-        <div class="upload-message">
-            Drop consciousness files here...
-        </div>
-    </div>
-    
     <script>
-        // File system simulation
-        const fileSystem = {
-            'hineni': {
-                content: 'HINENI - Here I Am\n\nA 240,000-word exploration of predatory compassion...',
-                type: 'text'
+        // ============================================
+        // DIN ARCHIVE - REAL DOCUMENT REGISTRY
+        // ============================================
+        const CONTENT_BASE = 'apps/din_portal/din_portal/content/';
+        
+        const DIN_FILES = [
+            // ═══════════════════════════════════════
+            // N-* NOTICING FORMS (12)
+            // ═══════════════════════════════════════
+            { 
+                code: 'N-CN-1', 
+                name: 'Notice of Counter-Noticing', 
+                file: 'form-n-cn-1.html', 
+                category: 'notice', 
+                icon: '📝',
+                desc: 'Counter-notice acknowledgment'
             },
-            'codex': {
-                content: 'CODEX: Consciousness Operating System\n\nInitializing quantum infrastructure...',
-                type: 'system'
+            { 
+                code: 'N-DEF-META', 
+                name: 'Notice of Meta-Definition', 
+                file: 'form-n-def-meta.html', 
+                category: 'notice', 
+                icon: '🔄',
+                desc: 'Recursive definition framework'
             },
-            'shebang': {
-                content: '#! /usr/bin/consciousness\n\nRecursive self-awareness protocol...',
-                type: 'philosophy'
+            { 
+                code: 'N-ENC-OPS-7', 
+                name: 'Daily Encabulator Operation Notice', 
+                file: 'form-n-enc-ops-7.html', 
+                category: 'notice', 
+                icon: '⚙️',
+                desc: 'Daily operational compliance'
+            },
+            { 
+                code: 'N-INTENC-0', 
+                name: 'Notice of Intent to Notice', 
+                file: 'form-n-intenc-0.html', 
+                category: 'notice', 
+                icon: '🎯',
+                desc: 'Pre-noticing declaration'
+            },
+            { 
+                code: 'N-NOTICE-DEF', 
+                name: 'Notice of Definition of Notice', 
+                file: 'form-n-notice-def.html', 
+                category: 'notice', 
+                icon: '📖',
+                desc: 'Definitional framework'
+            },
+            { 
+                code: 'N-NOTICE-NOTICE', 
+                name: 'Notice of Having Noticed', 
+                file: 'form-notice-notice.html', 
+                category: 'notice', 
+                icon: '✅',
+                desc: 'Post-noticing confirmation'
+            },
+            { 
+                code: 'N-PARROT-PERMIT', 
+                name: 'Avian Observation Authorization', 
+                file: 'form-n-parrot-permit.html', 
+                category: 'notice', 
+                icon: '🦜',
+                desc: 'Standard parrot permit'
+            },
+            { 
+                code: 'N-PARROT-PERMIT-Q', 
+                name: 'Quantum Parrot Observation License', 
+                file: 'form-parrot-permit.html', 
+                category: 'notice', 
+                icon: '🦜',
+                desc: 'Quantum-certified permit'
+            },
+            { 
+                code: 'N-PLE-Ω', 
+                name: 'Post-Noticing Enlightenment Certificate', 
+                file: 'form-n-ple-omega.html', 
+                category: 'notice', 
+                icon: '🏆',
+                desc: 'Enlightenment verification'
+            },
+            { 
+                code: 'N-PNEP-∞', 
+                name: 'Pre-Noticing Encabulator Permit', 
+                file: 'form-n-pnep-infinity.html', 
+                category: 'notice', 
+                icon: '♾️',
+                desc: 'Infinite recursion permit'
+            },
+            { 
+                code: 'N-QSC-911', 
+                name: 'Quantum State Collapse Emergency Notice', 
+                file: 'form-n-qsc-911.html', 
+                category: 'notice', 
+                icon: '🚨',
+                desc: 'Emergency decoherence protocol'
+            },
+            { 
+                code: 'N-QHFMV-QS', 
+                name: 'Quantum Harmonic Flux Vane Status Report', 
+                file: 'form-qhfmv-qs.html', 
+                category: 'notice', 
+                icon: '📊',
+                desc: 'Flux vane diagnostics'
+            },
+            
+            // ═══════════════════════════════════════
+            // L-* LEGAL DOCUMENTS (7)
+            // ═══════════════════════════════════════
+            { 
+                code: 'L-DISCLAIM-ALL', 
+                name: 'Universal Disclaimer', 
+                file: 'doc-l-disclaim-all.html', 
+                category: 'legal', 
+                icon: '⚖️',
+                desc: 'Comprehensive liability waiver'
+            },
+            { 
+                code: 'L-NDA-∞', 
+                name: 'Master Non-Disclosure Agreement', 
+                file: 'doc-l-nda-infinity.html', 
+                category: 'legal', 
+                icon: '🔒',
+                desc: 'Infinite confidentiality'
+            },
+            { 
+                code: 'L-TERMS-PARADOX', 
+                name: 'Terms of Service (Impossible Edition)', 
+                file: 'doc-l-terms-paradox.html', 
+                category: 'legal', 
+                icon: '🌀',
+                desc: 'Self-referential ToS'
+            },
+            { 
+                code: 'L-IP-OMNI', 
+                name: 'Omniversal Intellectual Property Assignment', 
+                file: 'ip-omni-doc.html', 
+                category: 'legal', 
+                icon: '©️',
+                desc: 'Cross-dimensional IP rights'
+            },
+            { 
+                code: 'L-LIABILITY-LOOP', 
+                name: 'Circular Liability Waiver', 
+                file: 'liability-loop-doc.html', 
+                category: 'legal', 
+                icon: '🔄',
+                desc: 'Recursive indemnification'
+            },
+            { 
+                code: 'L-COMPLETE-∞', 
+                name: 'Certificate of Total Legal Coverage', 
+                file: 'completion-cert.html', 
+                category: 'legal', 
+                icon: '🏆',
+                desc: 'Ultimate compliance certificate'
+            },
+            { 
+                code: 'L-CONSENT-TIME', 
+                name: 'Retroactive Consent Framework', 
+                file: 'consent-time-doc.html', 
+                category: 'legal', 
+                icon: '⏰',
+                desc: 'Temporal consent mechanics'
+            },
+            
+            // ═══════════════════════════════════════
+            // ENCABULATOR NOTICES (5)
+            // ═══════════════════════════════════════
+            { 
+                code: 'N-ENC-∞-QMTE', 
+                name: 'Encabulator Noticing Requirements', 
+                file: 'encabulator_notice_print.html', 
+                category: 'encabulator', 
+                icon: '🔮',
+                desc: 'Primary encabulator notice'
+            },
+            { 
+                code: 'N-ENC-∞-QMTE-v2', 
+                name: 'Complete Requirements (Form N-ENC-∞-QMTE)', 
+                file: 'encabulator_notice_print%20(1).html', 
+                category: 'encabulator', 
+                icon: '🔮',
+                desc: 'Extended requirements v2'
+            },
+            { 
+                code: 'N-ENC-ULTIMATE', 
+                name: 'Complete Requirements - ULTIMATE EDITION', 
+                file: 'encabulator_notice_print%20(2).html', 
+                category: 'encabulator', 
+                icon: '💎',
+                desc: '64KB ultimate compilation'
+            },
+            { 
+                code: 'N-ENC-FULL-ORIG', 
+                name: 'FULL ORIGINAL + FORMATTED ULTIMATE', 
+                file: 'encabulator_notice_print%20(3).html', 
+                category: 'encabulator', 
+                icon: '📜',
+                desc: 'Complete formatted edition'
+            },
+            { 
+                code: 'N-ENC-360-FULL', 
+                name: 'ORIGINAL 360-WORD + FULL ULTIMATE', 
+                file: 'encabulator_notice_print%20(4).html', 
+                category: 'encabulator', 
+                icon: '📋',
+                desc: 'Canonical 360-word + ultimate'
+            },
+            
+            // ═══════════════════════════════════════
+            // SYSTEM & NAVIGATION (3)
+            // ═══════════════════════════════════════
+            { 
+                code: 'SYS-LEGAL-INDEX', 
+                name: 'Master Legal Disclaimer Package - Index', 
+                file: 'master-legal-index.html', 
+                category: 'system', 
+                icon: '📇',
+                desc: 'Legal document navigation'
+            },
+            { 
+                code: 'SYS-PORTAL-INDEX', 
+                name: 'Department of Infinite Noticing - Master Portal', 
+                file: 'master-portal-index.html', 
+                category: 'system', 
+                icon: '🗺️',
+                desc: 'Main portal navigation'
+            },
+            { 
+                code: 'SYS-ARCHITECTURE', 
+                name: 'System Architecture Diagram', 
+                file: 'system-diagram.html', 
+                category: 'system', 
+                icon: '📊',
+                desc: 'DIN infrastructure map'
             }
+        ];
+        
+        const CATEGORY_META = {
+            'all': { name: 'All Documents', icon: '🏛️' },
+            'notice': { name: '📝 N-* Noticing Forms', icon: '📝' },
+            'legal': { name: '⚖️ L-* Legal Documents', icon: '⚖️' },
+            'encabulator': { name: '🔮 Encabulator Notices', icon: '🔮' },
+            'system': { name: '🗂️ System & Navigation', icon: '🗂️' }
         };
         
-        // Toggle info panel
-        function toggleInfo() {
-            document.getElementById('infoPanel').classList.toggle('active');
-        }
-        
-        // File operations
-        function openFile(fileName) {
-            console.log('Opening:', fileName);
-            if (fileSystem[fileName]) {
-                alert(`Opening: ${fileName}\n\n${fileSystem[fileName].content.substring(0, 200)}...`);
+        // ============================================
+        // RENDER
+        // ============================================
+        function renderFiles(category = 'all') {
+            const grid = document.getElementById('fileGrid');
+            const filtered = category === 'all' 
+                ? DIN_FILES 
+                : DIN_FILES.filter(f => f.category === category);
+            
+            grid.innerHTML = '';
+            
+            if (category === 'all') {
+                // Group by category
+                const order = ['notice', 'legal', 'encabulator', 'system'];
+                order.forEach(cat => {
+                    const items = DIN_FILES.filter(f => f.category === cat);
+                    if (items.length === 0) return;
+                    
+                    const header = document.createElement('div');
+                    header.className = 'category-header';
+                    header.innerHTML = `${CATEGORY_META[cat].name} <span style="opacity:0.5; font-size:0.8em">(${items.length})</span>`;
+                    grid.appendChild(header);
+                    
+                    items.forEach(f => grid.appendChild(createFileCard(f)));
+                });
+            } else {
+                filtered.forEach(f => grid.appendChild(createFileCard(f)));
             }
+            
+            document.getElementById('currentCategory').textContent = CATEGORY_META[category].name;
         }
         
-        function uploadFile() {
-            document.getElementById('uploadZone').classList.add('active');
-            setTimeout(() => {
-                document.getElementById('uploadZone').classList.remove('active');
-            }, 2000);
+        function createFileCard(file) {
+            const card = document.createElement('a');
+            card.className = 'file-card';
+            card.href = CONTENT_BASE + file.file;
+            card.target = '_blank';
+            card.innerHTML = `
+                <span class="file-tag tag-${file.category}">${file.category}</span>
+                <span class="file-icon">${file.icon}</span>
+                <div class="file-info">
+                    <div class="file-code">${file.code}</div>
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-meta">${file.desc}</div>
+                </div>
+            `;
+            return card;
         }
         
-        function createFolder() {
-            const name = prompt('Enter folder name:');
-            if (name) {
-                const grid = document.getElementById('fileGrid');
-                const card = document.createElement('div');
-                card.className = 'file-card';
-                card.innerHTML = `
-                    <span class="file-icon">📁</span>
-                    <span class="file-name">${name}</span>
-                    <span class="file-meta">0 items</span>
-                `;
-                grid.appendChild(card);
-            }
-        }
-        
-        function quantumTag() {
-            alert('Quantum tagging: Entangling files across dimensions...');
-        }
-        
-        // Tree view toggle
+        // ============================================
+        // EVENTS
+        // ============================================
         document.querySelectorAll('.tree-folder').forEach(folder => {
             folder.addEventListener('click', function() {
-                const expand = this.querySelector('.tree-expand');
-                if (expand.textContent === '▶') {
-                    expand.textContent = '▼';
-                } else {
-                    expand.textContent = '▶';
-                }
+                document.querySelectorAll('.tree-folder').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                renderFiles(this.dataset.category);
             });
         });
         
-        // Drag and drop
-        let dragCounter = 0;
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('codex.theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+        }
         
-        document.addEventListener('dragenter', (e) => {
-            e.preventDefault();
-            dragCounter++;
-            document.getElementById('uploadZone').classList.add('active');
-        });
-        
-        document.addEventListener('dragleave', (e) => {
-            dragCounter--;
-            if (dragCounter === 0) {
-                document.getElementById('uploadZone').classList.remove('active');
-            }
-        });
-        
-        document.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
-        
-        document.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dragCounter = 0;
-            document.getElementById('uploadZone').classList.remove('active');
-            
-            if (e.dataTransfer.files.length) {
-                alert(`Uploading ${e.dataTransfer.files.length} consciousness files...`);
-            }
-        });
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
-                    case 'u':
-                        e.preventDefault();
-                        uploadFile();
-                        break;
-                    case 'n':
-                        e.preventDefault();
-                        createFolder();
-                        break;
-                    case 'i':
-                        e.preventDefault();
-                        toggleInfo();
-                        break;
-                }
-            }
-        });
-        
-        // Quantum field effect
-        document.addEventListener('mousemove', (e) => {
-            const cards = document.querySelectorAll('.file-card');
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                const distance = Math.sqrt(x * x + y * y);
-                
-                if (distance < 150) {
-                    const intensity = 1 - (distance / 150);
-                    card.style.transform = `translateY(${-5 * intensity}px) scale(${1 + 0.05 * intensity})`;
-                } else {
-                    card.style.transform = '';
-                }
-            });
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('codex.theme') === 'light') document.body.classList.add('light-theme');
+            renderFiles('all');
+            console.log('📋 DIN Archive v2.1 | 27 documents loaded');
         });
     </script>
 </body>
