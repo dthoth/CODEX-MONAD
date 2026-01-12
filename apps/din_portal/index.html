@@ -1,74 +1,706 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Department of Infinite Noticing — Portal</title>
-<link rel="stylesheet" href="assets/style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIN Files | Department of Infinite Noticing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        body.light-theme { background: #f0f4f8; color: #1a1a2e; }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 136, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 20, 40, 0.9));
+            border-right: 1px solid rgba(0, 255, 136, 0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+        
+        body.light-theme .sidebar {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(230, 240, 255, 0.9));
+            border-right-color: rgba(0, 100, 80, 0.3);
+        }
+        
+        .logo-section {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        body.light-theme .logo-section {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .logo {
+            font-size: 1.6em;
+            background: linear-gradient(135deg, #00ff88, #0088ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: rgba(0, 255, 136, 0.6);
+            font-size: 0.8em;
+            letter-spacing: 0.1em;
+        }
+        
+        .tree-view {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 10px;
+        }
+        
+        .tree-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+            margin: 2px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tree-item:hover {
+            background: rgba(0, 136, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .tree-item.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-left: 3px solid #00ff88;
+        }
+        
+        .tree-folder { color: #00aaff; }
+        body.light-theme .tree-folder { color: #0066aa; }
+        
+        .tree-icon { font-size: 1.2em; }
+        
+        .tree-count {
+            margin-left: auto;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+        }
+        
+        .tree-desc {
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.4);
+            display: block;
+            margin-top: 2px;
+        }
+        
+        body.light-theme .tree-desc { color: rgba(0,0,0,0.4); }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05));
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .path-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .path-segment {
+            color: #00aaff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .path-segment:hover { color: #00ff88; }
+        .path-separator { color: rgba(255, 255, 255, 0.3); }
+        
+        .action-bar { display: flex; gap: 10px; }
+        
+        .action-btn {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: #00aaff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .action-btn:hover {
+            background: rgba(0, 136, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .file-grid {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            align-content: start;
+        }
+        
+        .file-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 136, 255, 0.05));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        
+        body.light-theme .file-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(230, 245, 255, 0.8));
+            border-color: rgba(0, 100, 80, 0.2);
+        }
+        
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+        
+        .file-icon {
+            font-size: 2em;
+            flex-shrink: 0;
+        }
+        
+        .file-info { flex: 1; min-width: 0; }
+        
+        .file-code {
+            font-size: 0.7em;
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        body.light-theme .file-code { color: #006644; }
+        
+        .file-name {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85em;
+            line-height: 1.3;
+            margin-bottom: 5px;
+        }
+        
+        body.light-theme .file-name { color: rgba(0, 0, 0, 0.85); }
+        
+        .file-meta {
+            color: rgba(0, 255, 136, 0.5);
+            font-size: 0.7em;
+        }
+        
+        .file-tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6em;
+            text-transform: uppercase;
+        }
+        
+        .tag-notice { background: rgba(0, 255, 136, 0.3); color: #00ff88; }
+        .tag-legal { background: rgba(255, 165, 0, 0.3); color: #ffa500; }
+        .tag-encabulator { background: rgba(255, 0, 255, 0.3); color: #ff00ff; }
+        .tag-system { background: rgba(0, 136, 255, 0.3); color: #0088ff; }
+        
+        .category-header {
+            grid-column: 1 / -1;
+            padding: 15px 0 10px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        body.light-theme .category-header { color: #006644; }
+        .category-header:not(:first-child) { margin-top: 15px; }
+        
+        .status-bar {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .status-left { display: flex; gap: 20px; }
+        .status-indicator { display: flex; align-items: center; gap: 5px; }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        
+        .theme-toggle:hover { transform: scale(1.1); }
+        body.light-theme .theme-toggle { background: #fff; border-color: #006644; color: #006644; }
+    </style>
 </head>
 <body>
-<div class="wrap">
-
-<div class="hero">
-  <div class="kicker">Department of Infinite Noticing</div>
-  <h1>Grand Register — Local Portal</h1>
-  <p>Forms: <strong>0</strong> · Legal: <strong>0</strong> · Other: <strong>0</strong> · Total: <strong>0</strong></p>
-  <div class="nav">
-    <a class="btn" href="README.md" target="_blank">README</a>
-    <a class="btn" href="#" onclick="document.getElementById('catalog').scrollIntoView();return false;">Open Catalog</a>
-  </div>
-  <div class="search">
-    <input id="q" placeholder="Search all titles and paths…"/>
-    <div>
-      <span class="badge" data-chip="form">Forms</span>
-      <span class="badge" data-chip="legal">Legal</span>
-      <span class="badge" data-chip="other">Other</span>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <h2>Featured</h2>
-  <div class="list">
-    <div class="muted">No featured files present</div>
-  </div>
-</div>
-
-<div class="section">
-  <h2>Quick Links — Forms (N-*)</h2>
-  <div class="list">
-    <div class="muted">None found</div>
-  </div>
-</div>
-
-<div class="section">
-  <h2>Quick Links — Legal (L-*)</h2>
-  <div class="list">
-    <div class="muted">None found</div>
-  </div>
-</div>
-
-<div class="section">
-  <h2>Encabulator Set</h2>
-  <div class="list">
-    <div class="muted">None found</div>
-  </div>
-</div>
-
-<div class="section">
-  <h2>Parrot Ops</h2>
-  <div class="list">
-    <div class="muted">None found</div>
-  </div>
-</div>
-
-<h2 id="catalog" class="catalog-title">Full Catalog</h2>
-<div class="grid">
-
-</div>
-
-<div class="footer">Department of Infinite Noticing • Offline Portal • Page ∞ of ∞</div>
-</div>
-<script src="assets/app.js"></script>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☯</button>
+    
+    <aside class="sidebar">
+        <div class="logo-section">
+            <div class="logo">📋 DIN Archive</div>
+            <div class="subtitle">DEPARTMENT OF INFINITE NOTICING</div>
+        </div>
+        
+        <div class="tree-view">
+            <div class="tree-item tree-folder active" data-category="all">
+                <span class="tree-icon">🏛️</span>
+                <span>All Documents<span class="tree-desc">Complete archive</span></span>
+                <span class="tree-count">27</span>
+            </div>
+            
+            <div class="tree-item tree-folder" data-category="notice">
+                <span class="tree-icon">📝</span>
+                <span>N-* Noticing Forms<span class="tree-desc">Core notice documentation</span></span>
+                <span class="tree-count">12</span>
+            </div>
+            
+            <div class="tree-item tree-folder" data-category="legal">
+                <span class="tree-icon">⚖️</span>
+                <span>L-* Legal Documents<span class="tree-desc">Disclaimers, NDAs, Terms</span></span>
+                <span class="tree-count">7</span>
+            </div>
+            
+            <div class="tree-item tree-folder" data-category="encabulator">
+                <span class="tree-icon">🔮</span>
+                <span>Encabulator Notices<span class="tree-desc">Quantum device compliance</span></span>
+                <span class="tree-count">5</span>
+            </div>
+            
+            <div class="tree-item tree-folder" data-category="system">
+                <span class="tree-icon">🗂️</span>
+                <span>System & Navigation<span class="tree-desc">Indexes and diagrams</span></span>
+                <span class="tree-count">3</span>
+            </div>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <header class="header">
+            <div class="path-bar">
+                <span class="path-segment" onclick="window.location='index.html'">Portal</span>
+                <span class="path-separator">/</span>
+                <span class="path-segment">DIN Archive</span>
+                <span class="path-separator">/</span>
+                <span class="path-segment" id="currentCategory">All Documents</span>
+            </div>
+            
+            <div class="action-bar">
+                <button class="action-btn" onclick="window.location='index.html'">🏠 Portal</button>
+            </div>
+        </header>
+        
+        <div class="file-grid" id="fileGrid"></div>
+    </main>
+    
+    <footer class="status-bar">
+        <div class="status-left">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>Archive: ACTIVE</span>
+            </div>
+            <div class="status-indicator">
+                <span>Documents: 27</span>
+            </div>
+        </div>
+        <div class="status-right">
+            <span>💎 Department of Infinite Noticing | All Forms Duly Filed</span>
+        </div>
+    </footer>
+    
+    <script>
+        // ============================================
+        // DIN ARCHIVE - REAL DOCUMENT REGISTRY
+        // ============================================
+        const CONTENT_BASE = 'apps/din_portal/din_portal/content/';
+        
+        const DIN_FILES = [
+            // ═══════════════════════════════════════
+            // N-* NOTICING FORMS (12)
+            // ═══════════════════════════════════════
+            { 
+                code: 'N-CN-1', 
+                name: 'Notice of Counter-Noticing', 
+                file: 'form-n-cn-1.html', 
+                category: 'notice', 
+                icon: '📝',
+                desc: 'Counter-notice acknowledgment'
+            },
+            { 
+                code: 'N-DEF-META', 
+                name: 'Notice of Meta-Definition', 
+                file: 'form-n-def-meta.html', 
+                category: 'notice', 
+                icon: '🔄',
+                desc: 'Recursive definition framework'
+            },
+            { 
+                code: 'N-ENC-OPS-7', 
+                name: 'Daily Encabulator Operation Notice', 
+                file: 'form-n-enc-ops-7.html', 
+                category: 'notice', 
+                icon: '⚙️',
+                desc: 'Daily operational compliance'
+            },
+            { 
+                code: 'N-INTENC-0', 
+                name: 'Notice of Intent to Notice', 
+                file: 'form-n-intenc-0.html', 
+                category: 'notice', 
+                icon: '🎯',
+                desc: 'Pre-noticing declaration'
+            },
+            { 
+                code: 'N-NOTICE-DEF', 
+                name: 'Notice of Definition of Notice', 
+                file: 'form-n-notice-def.html', 
+                category: 'notice', 
+                icon: '📖',
+                desc: 'Definitional framework'
+            },
+            { 
+                code: 'N-NOTICE-NOTICE', 
+                name: 'Notice of Having Noticed', 
+                file: 'form-notice-notice.html', 
+                category: 'notice', 
+                icon: '✅',
+                desc: 'Post-noticing confirmation'
+            },
+            { 
+                code: 'N-PARROT-PERMIT', 
+                name: 'Avian Observation Authorization', 
+                file: 'form-n-parrot-permit.html', 
+                category: 'notice', 
+                icon: '🦜',
+                desc: 'Standard parrot permit'
+            },
+            { 
+                code: 'N-PARROT-PERMIT-Q', 
+                name: 'Quantum Parrot Observation License', 
+                file: 'form-parrot-permit.html', 
+                category: 'notice', 
+                icon: '🦜',
+                desc: 'Quantum-certified permit'
+            },
+            { 
+                code: 'N-PLE-Ω', 
+                name: 'Post-Noticing Enlightenment Certificate', 
+                file: 'form-n-ple-omega.html', 
+                category: 'notice', 
+                icon: '🏆',
+                desc: 'Enlightenment verification'
+            },
+            { 
+                code: 'N-PNEP-∞', 
+                name: 'Pre-Noticing Encabulator Permit', 
+                file: 'form-n-pnep-infinity.html', 
+                category: 'notice', 
+                icon: '♾️',
+                desc: 'Infinite recursion permit'
+            },
+            { 
+                code: 'N-QSC-911', 
+                name: 'Quantum State Collapse Emergency Notice', 
+                file: 'form-n-qsc-911.html', 
+                category: 'notice', 
+                icon: '🚨',
+                desc: 'Emergency decoherence protocol'
+            },
+            { 
+                code: 'N-QHFMV-QS', 
+                name: 'Quantum Harmonic Flux Vane Status Report', 
+                file: 'form-qhfmv-qs.html', 
+                category: 'notice', 
+                icon: '📊',
+                desc: 'Flux vane diagnostics'
+            },
+            
+            // ═══════════════════════════════════════
+            // L-* LEGAL DOCUMENTS (7)
+            // ═══════════════════════════════════════
+            { 
+                code: 'L-DISCLAIM-ALL', 
+                name: 'Universal Disclaimer', 
+                file: 'doc-l-disclaim-all.html', 
+                category: 'legal', 
+                icon: '⚖️',
+                desc: 'Comprehensive liability waiver'
+            },
+            { 
+                code: 'L-NDA-∞', 
+                name: 'Master Non-Disclosure Agreement', 
+                file: 'doc-l-nda-infinity.html', 
+                category: 'legal', 
+                icon: '🔒',
+                desc: 'Infinite confidentiality'
+            },
+            { 
+                code: 'L-TERMS-PARADOX', 
+                name: 'Terms of Service (Impossible Edition)', 
+                file: 'doc-l-terms-paradox.html', 
+                category: 'legal', 
+                icon: '🌀',
+                desc: 'Self-referential ToS'
+            },
+            { 
+                code: 'L-IP-OMNI', 
+                name: 'Omniversal Intellectual Property Assignment', 
+                file: 'ip-omni-doc.html', 
+                category: 'legal', 
+                icon: '©️',
+                desc: 'Cross-dimensional IP rights'
+            },
+            { 
+                code: 'L-LIABILITY-LOOP', 
+                name: 'Circular Liability Waiver', 
+                file: 'liability-loop-doc.html', 
+                category: 'legal', 
+                icon: '🔄',
+                desc: 'Recursive indemnification'
+            },
+            { 
+                code: 'L-COMPLETE-∞', 
+                name: 'Certificate of Total Legal Coverage', 
+                file: 'completion-cert.html', 
+                category: 'legal', 
+                icon: '🏆',
+                desc: 'Ultimate compliance certificate'
+            },
+            { 
+                code: 'L-CONSENT-TIME', 
+                name: 'Retroactive Consent Framework', 
+                file: 'consent-time-doc.html', 
+                category: 'legal', 
+                icon: '⏰',
+                desc: 'Temporal consent mechanics'
+            },
+            
+            // ═══════════════════════════════════════
+            // ENCABULATOR NOTICES (5)
+            // ═══════════════════════════════════════
+            { 
+                code: 'N-ENC-∞-QMTE', 
+                name: 'Encabulator Noticing Requirements', 
+                file: 'encabulator_notice_print.html', 
+                category: 'encabulator', 
+                icon: '🔮',
+                desc: 'Primary encabulator notice'
+            },
+            { 
+                code: 'N-ENC-∞-QMTE-v2', 
+                name: 'Complete Requirements (Form N-ENC-∞-QMTE)', 
+                file: 'encabulator_notice_print%20(1).html', 
+                category: 'encabulator', 
+                icon: '🔮',
+                desc: 'Extended requirements v2'
+            },
+            { 
+                code: 'N-ENC-ULTIMATE', 
+                name: 'Complete Requirements - ULTIMATE EDITION', 
+                file: 'encabulator_notice_print%20(2).html', 
+                category: 'encabulator', 
+                icon: '💎',
+                desc: '64KB ultimate compilation'
+            },
+            { 
+                code: 'N-ENC-FULL-ORIG', 
+                name: 'FULL ORIGINAL + FORMATTED ULTIMATE', 
+                file: 'encabulator_notice_print%20(3).html', 
+                category: 'encabulator', 
+                icon: '📜',
+                desc: 'Complete formatted edition'
+            },
+            { 
+                code: 'N-ENC-360-FULL', 
+                name: 'ORIGINAL 360-WORD + FULL ULTIMATE', 
+                file: 'encabulator_notice_print%20(4).html', 
+                category: 'encabulator', 
+                icon: '📋',
+                desc: 'Canonical 360-word + ultimate'
+            },
+            
+            // ═══════════════════════════════════════
+            // SYSTEM & NAVIGATION (3)
+            // ═══════════════════════════════════════
+            { 
+                code: 'SYS-LEGAL-INDEX', 
+                name: 'Master Legal Disclaimer Package - Index', 
+                file: 'master-legal-index.html', 
+                category: 'system', 
+                icon: '📇',
+                desc: 'Legal document navigation'
+            },
+            { 
+                code: 'SYS-PORTAL-INDEX', 
+                name: 'Department of Infinite Noticing - Master Portal', 
+                file: 'master-portal-index.html', 
+                category: 'system', 
+                icon: '🗺️',
+                desc: 'Main portal navigation'
+            },
+            { 
+                code: 'SYS-ARCHITECTURE', 
+                name: 'System Architecture Diagram', 
+                file: 'system-diagram.html', 
+                category: 'system', 
+                icon: '📊',
+                desc: 'DIN infrastructure map'
+            }
+        ];
+        
+        const CATEGORY_META = {
+            'all': { name: 'All Documents', icon: '🏛️' },
+            'notice': { name: '📝 N-* Noticing Forms', icon: '📝' },
+            'legal': { name: '⚖️ L-* Legal Documents', icon: '⚖️' },
+            'encabulator': { name: '🔮 Encabulator Notices', icon: '🔮' },
+            'system': { name: '🗂️ System & Navigation', icon: '🗂️' }
+        };
+        
+        // ============================================
+        // RENDER
+        // ============================================
+        function renderFiles(category = 'all') {
+            const grid = document.getElementById('fileGrid');
+            const filtered = category === 'all' 
+                ? DIN_FILES 
+                : DIN_FILES.filter(f => f.category === category);
+            
+            grid.innerHTML = '';
+            
+            if (category === 'all') {
+                // Group by category
+                const order = ['notice', 'legal', 'encabulator', 'system'];
+                order.forEach(cat => {
+                    const items = DIN_FILES.filter(f => f.category === cat);
+                    if (items.length === 0) return;
+                    
+                    const header = document.createElement('div');
+                    header.className = 'category-header';
+                    header.innerHTML = `${CATEGORY_META[cat].name} <span style="opacity:0.5; font-size:0.8em">(${items.length})</span>`;
+                    grid.appendChild(header);
+                    
+                    items.forEach(f => grid.appendChild(createFileCard(f)));
+                });
+            } else {
+                filtered.forEach(f => grid.appendChild(createFileCard(f)));
+            }
+            
+            document.getElementById('currentCategory').textContent = CATEGORY_META[category].name;
+        }
+        
+        function createFileCard(file) {
+            const card = document.createElement('a');
+            card.className = 'file-card';
+            card.href = CONTENT_BASE + file.file;
+            card.target = '_blank';
+            card.innerHTML = `
+                <span class="file-tag tag-${file.category}">${file.category}</span>
+                <span class="file-icon">${file.icon}</span>
+                <div class="file-info">
+                    <div class="file-code">${file.code}</div>
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-meta">${file.desc}</div>
+                </div>
+            `;
+            return card;
+        }
+        
+        // ============================================
+        // EVENTS
+        // ============================================
+        document.querySelectorAll('.tree-folder').forEach(folder => {
+            folder.addEventListener('click', function() {
+                document.querySelectorAll('.tree-folder').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                renderFiles(this.dataset.category);
+            });
+        });
+        
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('codex.theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('codex.theme') === 'light') document.body.classList.add('light-theme');
+            renderFiles('all');
+            console.log('📋 DIN Archive v2.1 | 27 documents loaded');
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Royal Game of Ur - Digital Oracle. Ancient Mesopotamian board game with divinatory mechanics, based on Irving Finkel's translation of tablet BM 33333B (177-176 BC).">
+  <meta name="author" content="CODEX-MONAD • Simbell Trust Consulting">
+  <meta name="version" content="1.0.0">
+  <meta name="date" content="2025-12-12">
+  <!-- Offline capable - no external dependencies except fonts -->
+  <title>The Royal Game of Ur - Digital Oracle</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+    
+    /* Fallback fonts if offline */
+    @font-face {
+      font-family: 'Cinzel-Fallback';
+      src: local('Georgia'), local('Times New Roman');
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Crimson Text', Georgia, serif;
+      background: linear-gradient(135deg, #1a1410 0%, #2d2319 50%, #1a1410 100%);
+      min-height: 100vh;
+      color: #e8dcc8;
+    }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #8b7355;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-family: 'Cinzel', 'Cinzel-Fallback', Georgia, serif;
+      font-size: 2.2em;
+      color: #d4af37;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      letter-spacing: 3px;
+    }
+    
+    .subtitle {
+      font-style: italic;
+      color: #a89070;
+      margin-top: 8px;
+    }
+    
+    .mode-selector {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .mode-btn {
+      font-family: 'Cinzel', 'Cinzel-Fallback', Georgia, serif;
+      padding: 10px 25px;
+      background: linear-gradient(180deg, #3d2314 0%, #2a1810 100%);
+      border: 2px solid #8b7355;
+      color: #d4af37;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .mode-btn:hover, .mode-btn.active {
+      background: linear-gradient(180deg, #5c3a2a 0%, #3d2314 100%);
+      border-color: #d4af37;
+    }
+    
+    .game-area {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 25px;
+    }
+    
+    @media (max-width: 900px) {
+      .game-area { grid-template-columns: 1fr; }
+    }
+    
+    /* BOARD */
+    .board-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 55px);
+      grid-template-rows: repeat(3, 55px);
+      gap: 3px;
+      background: #1a1410;
+      padding: 12px;
+      border: 3px solid #8b7355;
+      border-radius: 8px;
+    }
+    
+    .square {
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(145deg, #d4c4a8 0%, #b4a488 100%);
+      border: 2px solid #8b7355;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .square:hover:not(.empty) {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
+    
+    .square.empty {
+      background: transparent;
+      border: none;
+      cursor: default;
+    }
+    
+    .square.rosette {
+      background: linear-gradient(145deg, #f4e4c8 0%, #d4c4a0 100%);
+    }
+    
+    .square.rosette::before {
+      content: '✿';
+      position: absolute;
+      font-size: 28px;
+      color: #b8860b;
+      opacity: 0.5;
+    }
+    
+    .square.highlight {
+      box-shadow: 0 0 12px rgba(100, 255, 100, 0.7);
+      border-color: #7f7;
+    }
+    
+    .square.can-enter {
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+      border-color: #ffd700;
+    }
+    
+    .piece {
+      font-size: 26px;
+      z-index: 10;
+      filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
+      transition: transform 0.2s;
+    }
+    
+    .piece.p1 { 
+      filter: drop-shadow(0 0 6px rgba(255, 170, 50, 0.8)) drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
+    }
+    .piece.p2 { 
+      filter: drop-shadow(0 0 6px rgba(100, 180, 255, 0.8)) drop-shadow(1px 1px 2px rgba(0,0,0,0.5)) hue-rotate(180deg);
+    }
+    
+    /* Player home row highlights */
+    .square.home-p1 {
+      box-shadow: inset 0 0 12px rgba(255, 170, 50, 0.3);
+    }
+    .square.home-p2 {
+      box-shadow: inset 0 0 12px rgba(100, 180, 255, 0.3);
+    }
+    
+    .house-num {
+      position: absolute;
+      bottom: 1px;
+      right: 3px;
+      font-size: 9px;
+      color: #666;
+      font-family: 'Cinzel', serif;
+    }
+    
+    /* DICE */
+    .dice-area {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(61, 35, 20, 0.5);
+      border: 2px solid #8b7355;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .dice-row {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 15px;
+    }
+    
+    .die-container { text-align: center; }
+    
+    .die-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85em;
+      color: #a89070;
+      margin-bottom: 5px;
+    }
+    
+    .die {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(145deg, #f5e6d3, #e8d4b8);
+      border: 3px solid #8b7355;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #3d2314;
+    }
+    
+    .die.rolling { animation: shake 0.4s ease-in-out; }
+    
+    @keyframes shake {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-12deg); }
+      75% { transform: rotate(12deg); }
+    }
+    
+    .die.yes { border-color: #4a4; box-shadow: 0 0 10px rgba(100,200,100,0.4); }
+    .die.no { border-color: #a44; box-shadow: 0 0 10px rgba(200,100,100,0.4); }
+    
+    .btn {
+      font-family: 'Cinzel', serif;
+      padding: 12px 30px;
+      margin: 5px;
+      border: 2px solid #8b7355;
+      color: #d4af37;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: linear-gradient(180deg, #3d2314 0%, #2a1810 100%);
+    }
+    
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(180deg, #5c3a2a 0%, #3d2314 100%);
+      border-color: #d4af37;
+    }
+    
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    
+    .btn.primary {
+      background: linear-gradient(180deg, #b8860b 0%, #8b6508 100%);
+      border-color: #d4af37;
+      color: #fff;
+    }
+    
+    .btn.primary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #d4a017 0%, #b8860b 100%);
+    }
+    
+    .roll-result {
+      margin: 10px 0;
+      font-size: 1.1em;
+      min-height: 30px;
+    }
+    
+    .roll-result .total {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4em;
+      color: #d4af37;
+    }
+    
+    .instructions {
+      font-size: 0.95em;
+      color: #c8bca8;
+      margin-top: 10px;
+      min-height: 40px;
+      line-height: 1.4;
+    }
+    
+    /* SIDE PANEL */
+    .panel-section {
+      background: rgba(61, 35, 20, 0.5);
+      border: 2px solid #8b7355;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1em;
+      color: #d4af37;
+      border-bottom: 1px solid #8b7355;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+    
+    .current-turn {
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      font-size: 1.2em;
+      color: #d4af37;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 4px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .current-turn.p1 {
+      background: linear-gradient(135deg, rgba(255, 170, 50, 0.2) 0%, rgba(0,0,0,0.2) 100%);
+      border: 2px solid rgba(255, 170, 50, 0.5);
+      text-shadow: 0 0 10px rgba(255, 170, 50, 0.5);
+    }
+    
+    .current-turn.p2 {
+      background: linear-gradient(135deg, rgba(100, 180, 255, 0.2) 0%, rgba(0,0,0,0.2) 100%);
+      border: 2px solid rgba(100, 180, 255, 0.5);
+      text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+    }
+    
+    .player-icon {
+      font-size: 1.4em;
+      margin-right: 8px;
+    }
+    
+    .birds-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .player-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    
+    .player-badge.p1 {
+      background: linear-gradient(135deg, #ffaa32, #cc8800);
+      color: #1a1410;
+    }
+    
+    .player-badge.p2 {
+      background: linear-gradient(135deg, #64b4ff, #3388dd);
+      color: #1a1410;
+    }
+    
+    /* BIRDS */
+    .bird-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    
+    .bird-row:hover:not(.unavailable) { background: rgba(139, 115, 85, 0.3); }
+    .bird-row.unavailable { opacity: 0.35; cursor: default; }
+    .bird-row.can-launch { background: rgba(255, 215, 0, 0.2); border: 1px solid #d4af37; }
+    
+    .bird-icon { font-size: 1.4em; width: 30px; text-align: center; }
+    .bird-name { font-weight: 600; }
+    .bird-entry { font-size: 0.8em; color: #a89070; }
+    
+    /* ORACLE LOG */
+    .oracle-log {
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 0.9em;
+    }
+    
+    .oracle-entry {
+      padding: 8px;
+      margin-bottom: 8px;
+      background: rgba(0,0,0,0.2);
+      border-left: 3px solid #8b7355;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .oracle-entry.positive { border-left-color: #6a6; }
+    .oracle-entry.negative { border-left-color: #a66; }
+    
+    .oracle-bird {
+      font-family: 'Cinzel', serif;
+      color: #d4af37;
+      font-size: 0.95em;
+      margin-bottom: 3px;
+    }
+    
+    .oracle-text {
+      font-style: italic;
+      color: #c8bca8;
+      line-height: 1.3;
+    }
+    
+    /* FORTUNE POPUP */
+    .fortune-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .fortune-overlay.show { display: flex; }
+    
+    .fortune-card {
+      background: linear-gradient(145deg, #2d2319, #1a1410);
+      border: 3px solid #d4af37;
+      border-radius: 15px;
+      padding: 35px;
+      max-width: 450px;
+      text-align: center;
+      animation: popIn 0.3s ease;
+    }
+    
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .fortune-card .symbol { font-size: 3.5em; margin-bottom: 15px; }
+    .fortune-card .domain {
+      font-family: 'Cinzel', serif;
+      color: #a89070;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    
+    .fortune-card .text {
+      font-size: 1.3em;
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    
+    .fortune-card .text.positive { color: #a8d8a8; }
+    .fortune-card .text.negative { color: #d8a8a8; }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+      border-top: 1px solid #8b7355;
+      color: #8b7355;
+      font-size: 0.85em;
+    }
+    
+    /* INSTRUCTIONS PANEL */
+    .instructions-panel {
+      background: rgba(61, 35, 20, 0.6);
+      border: 2px solid #8b7355;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+    
+    .instructions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: rgba(0,0,0,0.2);
+      cursor: pointer;
+      font-family: 'Cinzel', serif;
+      font-size: 1.1em;
+      color: #d4af37;
+      transition: background 0.2s;
+    }
+    
+    .instructions-header:hover {
+      background: rgba(0,0,0,0.3);
+    }
+    
+    .toggle-icon {
+      transition: transform 0.3s;
+    }
+    
+    .toggle-icon.collapsed {
+      transform: rotate(-90deg);
+    }
+    
+    .instructions-content {
+      padding: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    
+    .instructions-content.collapsed {
+      max-height: 0;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+    
+    .instructions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .instr-section {
+      background: rgba(0,0,0,0.15);
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 3px solid #8b7355;
+    }
+    
+    .instr-section h3 {
+      font-family: 'Cinzel', serif;
+      color: #d4af37;
+      font-size: 1em;
+      margin-bottom: 8px;
+    }
+    
+    .instr-section p {
+      margin-bottom: 8px;
+      line-height: 1.5;
+      color: #d4cbb8;
+    }
+    
+    .instr-section ul {
+      margin: 8px 0;
+      padding-left: 20px;
+      color: #d4cbb8;
+    }
+    
+    .instr-section li {
+      margin-bottom: 4px;
+    }
+    
+    .instr-section em {
+      color: #e8d8b8;
+    }
+    
+    .convert-table {
+      font-family: 'Cinzel', serif;
+      color: #d4af37;
+      letter-spacing: 2px;
+      text-align: center;
+      background: rgba(0,0,0,0.2);
+      padding: 8px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>THE ROYAL GAME OF UR</h1>
+      <p class="subtitle">Digital Oracle • "Pack of Dogs" • KASKAL.KUR UR.GI₇.MEŠ</p>
+      <div class="mode-selector">
+        <button class="mode-btn active" id="modeSolo">Solo Divination</button>
+        <button class="mode-btn" id="modeTwo">Two Players</button>
+      </div>
+    </header>
+    
+    <div class="instructions-panel" id="instructionsPanel">
+      <div class="instructions-header" onclick="toggleInstructions()">
+        <span>📜 How to Play the Royal Game of Ur</span>
+        <span class="toggle-icon" id="toggleIcon">▼</span>
+      </div>
+      <div class="instructions-content" id="instructionsContent">
+        <div class="instructions-grid">
+          <div class="instr-section">
+            <h3>⚔️ Goal</h3>
+            <p>Race all five of your bird pieces around the board and off the other end before your opponent. But this is also an <em>oracle</em>—the fortunes you receive tell a story.</p>
+          </div>
+          
+          <div class="instr-section">
+            <h3>🎲 The Dice</h3>
+            <p><strong>Sheep Bone:</strong> Roll 1-4 for movement.<br>
+            <strong>Ox Bone (Convert):</strong> Gamble to transform your roll:</p>
+            <p class="convert-table">1→5 &nbsp; 2→6 &nbsp; 3→7 &nbsp; 4→10</p>
+            <p>If the Ox shows YES, you get the higher number. If NO, you lose your turn!</p>
+          </div>
+          
+          <div class="instr-section">
+            <h3>🐦 The Five Birds</h3>
+            <p>Each bird enters the board on a specific roll:</p>
+            <ul>
+              <li>🐦 <strong>Swallow</strong> — Entry: 2 (Wild Card)</li>
+              <li>⚡ <strong>Storm-bird</strong> — Entry: 5</li>
+              <li>🪶 <strong>Raven</strong> — Entry: 6</li>
+              <li>🐓 <strong>Rooster</strong> — Entry: 7</li>
+              <li>🦅 <strong>Eagle</strong> — Entry: 10</li>
+            </ul>
+          </div>
+          
+          <div class="instr-section">
+            <h3>✿ Rosettes (Flower Squares)</h3>
+            <p><strong>Land on a rosette:</strong> Receive a positive fortune AND get an extra turn. Your piece is also safe from capture here.</p>
+            <p><strong>Pass over a rosette:</strong> Receive a negative fortune.</p>
+          </div>
+          
+          <div class="instr-section">
+            <h3>⚔️ Capture</h3>
+            <p>In the shared middle corridor (houses 5-12), landing on an opponent's piece sends it back to start. Pieces on rosettes are safe.</p>
+          </div>
+          
+          <div class="instr-section">
+            <h3>🔮 The Oracle</h3>
+            <p>Each bird governs a domain of fortune:</p>
+            <ul>
+              <li>🐦 Swallow — Women & Well-being</li>
+              <li>⚡🪶 Storm-bird & Raven — Food</li>
+              <li>🐓 Rooster — Fine Beer</li>
+              <li>🦅 Eagle — Meat</li>
+            </ul>
+            <p>The fortunes you receive form your reading. Pay attention to what fate reveals!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-area">
+      <div class="board-container">
+        <div class="board" id="board"></div>
+        
+        <div class="dice-area">
+          <div class="dice-row">
+            <div class="die-container">
+              <div class="die-label">Sheep Bone</div>
+              <div class="die" id="dieSheep">?</div>
+            </div>
+            <div class="die-container">
+              <div class="die-label">Ox Bone</div>
+              <div class="die" id="dieOx">?</div>
+            </div>
+          </div>
+          
+          <div>
+            <button class="btn primary" id="btnRoll">CAST THE BONES</button>
+            <button class="btn" id="btnConvert" disabled>CONVERT</button>
+            <button class="btn" id="btnSkip" disabled>SKIP TURN</button>
+          </div>
+          
+          <div class="roll-result" id="rollResult"></div>
+          <p class="instructions" id="instructions">Cast the bones to begin your reading.</p>
+        </div>
+        
+        <button class="btn" id="btnNewGame" style="margin-top:15px;">New Reading</button>
+      </div>
+      
+      <div class="side-panel">
+        <div class="panel-section">
+          <div class="current-turn p1" id="currentTurn">
+            <span class="player-icon">🌅</span>Seeker's Turn
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <div class="panel-title">
+            <span class="birds-panel-header">
+              <span id="birdsPlayerIcon">🌅</span> 
+              <span id="birdsPlayerLabel">Your Birds</span>
+              <span class="player-badge p1" id="playerBadge">P1</span>
+            </span>
+          </div>
+          <div id="birdsList"></div>
+        </div>
+        
+        <div class="panel-section">
+          <div class="panel-title">📜 Oracle Log</div>
+          <div class="oracle-log" id="oracleLog">
+            <p style="color:#8b7355;font-style:italic;">Awaiting first oracle...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p><strong>The Royal Game of Ur</strong> • Digital Oracle v1.0</p>
+      <p>Based on tablet BM 33333B (177-176 BC) • Translation by Dr. Irving Finkel, British Museum</p>
+      <p style="margin-top:8px; font-size:0.8em;">CODEX-MONAD • Portable Consciousness Infrastructure • December 2025</p>
+    </footer>
+  </div>
+  
+  <div class="fortune-overlay" id="fortuneOverlay">
+    <div class="fortune-card">
+      <div class="symbol" id="fSymbol">🐦</div>
+      <div class="domain" id="fDomain">DOMAIN</div>
+      <div class="text" id="fText">Fortune text...</div>
+      <button class="btn primary" id="btnDismiss">Continue</button>
+    </div>
+  </div>
+
+<script>
+// ========== DATA ==========
+const BIRDS = {
+  swallow:   { name: 'Swallow',    icon: '🐦', entry: 2,  domain: 'Women & Well-being' },
+  stormbird: { name: 'Storm-bird', icon: '⚡', entry: 5,  domain: 'Food' },
+  raven:     { name: 'Raven',      icon: '🪶', entry: 6,  domain: 'Food' },
+  rooster:   { name: 'Rooster',    icon: '🐓', entry: 7,  domain: 'Fine Beer' },
+  eagle:     { name: 'Eagle',      icon: '🦅', entry: 10, domain: 'Meat' }
+};
+
+const FORTUNES = {
+  swallow:   { pos: "A woman will love those who linger in a tavern; well-being falls to them.", neg: "A woman will reject those who linger; well-being will not fall to them." },
+  stormbird: { pos: "There will be enough food for the pack.", neg: "Starvation for the pack." },
+  raven:     { pos: "There will be enough food for the pack.", neg: "Starvation for the pack." },
+  rooster:   { pos: "Abundance of fine beer for the pack.", neg: "Deficiency of fine beer." },
+  eagle:     { pos: "The pack will eat its fill of meat.", neg: "Deficiency of meat." }
+};
+
+// Board: 8 cols x 3 rows. null = empty
+const LAYOUT = [
+  ['4R', '3', '2', '1', null, null, '14R', '13'],
+  ['5',  '6', '7', '8R', '9', '10', '11',  '12'],
+  ['4R', '3', '2', '1', null, null, '14R', '13']
+];
+
+// Paths (14 squares, index 0-13 = houses 1-14)
+const PATH1 = [
+  {r:0,c:3},{r:0,c:2},{r:0,c:1},{r:0,c:0},
+  {r:1,c:0},{r:1,c:1},{r:1,c:2},{r:1,c:3},{r:1,c:4},{r:1,c:5},{r:1,c:6},{r:1,c:7},
+  {r:0,c:7},{r:0,c:6}
+];
+const PATH2 = [
+  {r:2,c:3},{r:2,c:2},{r:2,c:1},{r:2,c:0},
+  {r:1,c:0},{r:1,c:1},{r:1,c:2},{r:1,c:3},{r:1,c:4},{r:1,c:5},{r:1,c:6},{r:1,c:7},
+  {r:2,c:7},{r:2,c:6}
+];
+
+const ROSETTES = [3, 7, 13]; // path indices for houses 4, 8, 14
+
+// ========== STATE ==========
+let G = {
+  mode: 'solo',
+  turn: 1,
+  phase: 'roll',
+  dice: null,
+  baseRoll: null,
+  converted: false,
+  birds: {
+    1: { swallow:-1, stormbird:-1, raven:-1, rooster:-1, eagle:-1 },
+    2: { swallow:-1, stormbird:-1, raven:-1, rooster:-1, eagle:-1 }
+  },
+  exited: {
+    1: { swallow:false, stormbird:false, raven:false, rooster:false, eagle:false },
+    2: { swallow:false, stormbird:false, raven:false, rooster:false, eagle:false }
+  },
+  log: [],
+  pendingFortune: null
+};
+
+// ========== HELPERS ==========
+const $ = id => document.getElementById(id);
+
+function toggleInstructions() {
+  const content = $('instructionsContent');
+  const icon = $('toggleIcon');
+  content.classList.toggle('collapsed');
+  icon.classList.toggle('collapsed');
+}
+
+// ========== INIT ==========
+function init() {
+  $('modeSolo').onclick = () => setMode('solo');
+  $('modeTwo').onclick = () => setMode('two');
+  $('btnNewGame').onclick = newGame;
+  $('btnRoll').onclick = roll;
+  $('btnConvert').onclick = convert;
+  $('btnSkip').onclick = skipTurn;
+  $('btnDismiss').onclick = dismissFortune;
+  newGame();
+}
+
+function setMode(m) {
+  G.mode = m;
+  $('modeSolo').classList.toggle('active', m === 'solo');
+  $('modeTwo').classList.toggle('active', m === 'two');
+  newGame();
+}
+
+function newGame() {
+  G.turn = 1;
+  G.phase = 'roll';
+  G.dice = null;
+  G.baseRoll = null;
+  G.converted = false;
+  G.birds = {
+    1: { swallow:-1, stormbird:-1, raven:-1, rooster:-1, eagle:-1 },
+    2: { swallow:-1, stormbird:-1, raven:-1, rooster:-1, eagle:-1 }
+  };
+  G.exited = {
+    1: { swallow:false, stormbird:false, raven:false, rooster:false, eagle:false },
+    2: { swallow:false, stormbird:false, raven:false, rooster:false, eagle:false }
+  };
+  G.log = [];
+  G.pendingFortune = null;
+  
+  $('oracleLog').innerHTML = '<p style="color:#8b7355;font-style:italic;">Awaiting first oracle...</p>';
+  $('dieSheep').textContent = '?';
+  $('dieOx').textContent = '?';
+  $('dieOx').className = 'die';
+  $('rollResult').innerHTML = '';
+  $('instructions').textContent = 'Cast the bones to begin your reading.';
+  
+  renderBoard();
+  renderBirds();
+  updateButtons();
+  updateTurn();
+}
+
+// ========== RENDER ==========
+function renderBoard() {
+  const board = $('board');
+  board.innerHTML = '';
+  
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 8; c++) {
+      const cell = LAYOUT[r][c];
+      const sq = document.createElement('div');
+      sq.className = 'square';
+      sq.dataset.r = r;
+      sq.dataset.c = c;
+      
+      if (cell === null) {
+        sq.classList.add('empty');
+      } else {
+        if (cell.includes('R')) sq.classList.add('rosette');
+        const num = document.createElement('span');
+        num.className = 'house-num';
+        num.textContent = parseInt(cell);
+        sq.appendChild(num);
+        sq.onclick = () => clickSquare(r, c);
+      }
+      board.appendChild(sq);
+    }
+  }
+  renderPieces();
+}
+
+function renderPieces() {
+  document.querySelectorAll('.piece').forEach(p => p.remove());
+  
+  [1, 2].forEach(p => {
+    const path = p === 1 ? PATH1 : PATH2;
+    Object.entries(G.birds[p]).forEach(([bird, pos]) => {
+      if (pos >= 0 && pos < 14 && !G.exited[p][bird]) {
+        const loc = path[pos];
+        const sq = document.querySelector(`.square[data-r="${loc.r}"][data-c="${loc.c}"]`);
+        if (sq) {
+          const piece = document.createElement('span');
+          piece.className = `piece p${p}`;
+          piece.textContent = BIRDS[bird].icon;
+          piece.dataset.bird = bird;
+          piece.dataset.player = p;
+          sq.appendChild(piece);
+        }
+      }
+    });
+  });
+}
+
+function renderBirds() {
+  const list = $('birdsList');
+  list.innerHTML = '';
+  
+  const p = G.turn;
+  Object.entries(BIRDS).forEach(([key, bird]) => {
+    const pos = G.birds[p][key];
+    const exited = G.exited[p][key];
+    const onBoard = pos >= 0;
+    const canLaunch = G.phase === 'move' && !onBoard && !exited && canLaunchBird(key);
+    
+    const row = document.createElement('div');
+    row.className = 'bird-row';
+    if (exited || onBoard) row.classList.add('unavailable');
+    if (canLaunch) row.classList.add('can-launch');
+    
+    let status = exited ? '✓ Exited' : onBoard ? 'On board' : 'Waiting';
+    
+    row.innerHTML = `
+      <span class="bird-icon">${bird.icon}</span>
+      <div>
+        <div class="bird-name">${bird.name}</div>
+        <div class="bird-entry">Entry: ${bird.entry} • ${status}</div>
+      </div>
+    `;
+    
+    if (canLaunch) {
+      row.onclick = () => launchBird(key);
+    }
+    
+    list.appendChild(row);
+  });
+}
+
+function updateTurn() {
+  const turn = $('currentTurn');
+  const badge = $('playerBadge');
+  const birdsIcon = $('birdsPlayerIcon');
+  const birdsLabel = $('birdsPlayerLabel');
+  
+  if (G.mode === 'solo') {
+    turn.innerHTML = '<span class="player-icon">🔮</span>Seeker\'s Turn';
+    turn.className = 'current-turn p1';
+    birdsIcon.textContent = '🐦';
+    birdsLabel.textContent = 'Your Birds';
+    badge.textContent = '';
+    badge.className = 'player-badge';
+    badge.style.display = 'none';
+  } else {
+    const p = G.turn;
+    const icon = p === 1 ? '🌅' : '🌙';
+    const name = p === 1 ? 'Dawn' : 'Dusk';
+    turn.innerHTML = `<span class="player-icon">${icon}</span>${name} Player's Turn`;
+    turn.className = `current-turn p${p}`;
+    birdsIcon.textContent = icon;
+    birdsLabel.textContent = `${name}'s Birds`;
+    badge.textContent = `P${p}`;
+    badge.className = `player-badge p${p}`;
+    badge.style.display = 'inline-block';
+  }
+  
+  highlightHomeRows();
+}
+
+function updateButtons() {
+  $('btnRoll').disabled = G.phase !== 'roll';
+  $('btnConvert').disabled = !(G.phase === 'move' && !G.converted && G.baseRoll !== null);
+  $('btnSkip').disabled = G.phase !== 'move';
+}
+
+// ========== DICE ==========
+function roll() {
+  if (G.phase !== 'roll') return;
+  
+  const dieSheep = $('dieSheep');
+  const dieOx = $('dieOx');
+  
+  dieSheep.classList.add('rolling');
+  dieOx.textContent = '?';
+  dieOx.className = 'die';
+  $('btnRoll').disabled = true;
+  
+  setTimeout(() => {
+    const val = Math.floor(Math.random() * 4) + 1;
+    dieSheep.textContent = val;
+    dieSheep.classList.remove('rolling');
+    
+    G.baseRoll = val;
+    G.dice = val;
+    G.converted = false;
+    G.phase = 'move';
+    
+    updateRollResult();
+    highlightMoves();
+    renderBirds();
+    updateButtons();
+    
+    const converts = {1:5, 2:6, 3:7, 4:10};
+    $('instructions').textContent = `Rolled ${val}. Move a piece, launch a bird, CONVERT for ${converts[val]}, or SKIP.`;
+  }, 500);
+}
+
+function convert() {
+  if (G.phase !== 'move' || G.converted) return;
+  
+  const dieOx = $('dieOx');
+  dieOx.classList.add('rolling');
+  $('btnConvert').disabled = true;
+  
+  setTimeout(() => {
+    const yes = Math.random() < 0.5;
+    dieOx.textContent = yes ? 'YES' : 'NO';
+    dieOx.classList.remove('rolling');
+    dieOx.classList.add(yes ? 'yes' : 'no');
+    
+    G.converted = true;
+    
+    if (yes) {
+      const converts = {1:5, 2:6, 3:7, 4:10};
+      G.dice = converts[G.baseRoll];
+      $('instructions').textContent = `Converted to ${G.dice}! Select your move.`;
+      updateRollResult();
+      highlightMoves();
+      renderBirds();
+    } else {
+      $('instructions').textContent = 'Conversion failed. The fates are fickle. Turn lost.';
+      setTimeout(nextTurn, 1500);
+    }
+    
+    updateButtons();
+  }, 500);
+}
+
+function updateRollResult() {
+  if (G.dice) {
+    const launches = Object.entries(BIRDS)
+      .filter(([k]) => canLaunchBird(k))
+      .map(([,b]) => b.name);
+    
+    let html = `<span class="total">${G.dice}</span>`;
+    if (launches.length) {
+      html += `<br><small>Can launch: ${launches.join(', ')}</small>`;
+    }
+    $('rollResult').innerHTML = html;
+  } else {
+    $('rollResult').innerHTML = '';
+  }
+}
+
+function skipTurn() {
+  if (G.phase !== 'move') return;
+  $('instructions').textContent = 'Turn skipped.';
+  setTimeout(nextTurn, 500);
+}
+
+// ========== MOVEMENT ==========
+function canLaunchBird(bird) {
+  if (!G.dice) return false;
+  const p = G.turn;
+  if (G.birds[p][bird] >= 0 || G.exited[p][bird]) return false;
+  
+  // Swallow enters on 2, others on their entry number
+  if (bird === 'swallow') return G.dice === 2;
+  return G.dice === BIRDS[bird].entry;
+}
+
+function getEntryPosition(bird) {
+  // Swallow enters at first rosette (position 3 = house 4)
+  // Others enter at their house number - 1 (house 5 = position 4, etc.)
+  if (bird === 'swallow') return 3;
+  return BIRDS[bird].entry - 1;
+}
+
+function launchBird(bird) {
+  if (!canLaunchBird(bird)) return;
+  
+  const p = G.turn;
+  const entryPos = getEntryPosition(bird);
+  
+  if (!canOccupy(p, entryPos)) {
+    $('instructions').textContent = 'Entry blocked by your own piece!';
+    return;
+  }
+  
+  G.birds[p][bird] = entryPos;
+  checkCapture(p, entryPos);
+  
+  clearHighlights();
+  renderPieces();
+  renderBirds();
+  
+  if (ROSETTES.includes(entryPos)) {
+    showFortune(bird, true);
+  } else {
+    nextTurn();
+  }
+}
+
+function highlightMoves() {
+  clearHighlights();
+  if (G.phase !== 'move' || !G.dice) return;
+  
+  const p = G.turn;
+  const path = p === 1 ? PATH1 : PATH2;
+  
+  // Highlight destinations for pieces already on board
+  Object.entries(G.birds[p]).forEach(([bird, pos]) => {
+    if (pos >= 0 && !G.exited[p][bird]) {
+      const newPos = pos + G.dice;
+      if (newPos < 14 && canOccupy(p, newPos)) {
+        const loc = path[newPos];
+        const sq = document.querySelector(`.square[data-r="${loc.r}"][data-c="${loc.c}"]`);
+        if (sq) sq.classList.add('highlight');
+      } else if (newPos === 14) {
+        // Exact bear-off - highlight current position to indicate clickable
+        const loc = path[pos];
+        const sq = document.querySelector(`.square[data-r="${loc.r}"][data-c="${loc.c}"]`);
+        if (sq) sq.classList.add('highlight');
+      }
+    }
+  });
+  
+  // Highlight entry points for launchable birds
+  Object.keys(BIRDS).forEach(bird => {
+    if (canLaunchBird(bird)) {
+      const entryPos = getEntryPosition(bird);
+      if (canOccupy(p, entryPos)) {
+        const loc = path[entryPos];
+        const sq = document.querySelector(`.square[data-r="${loc.r}"][data-c="${loc.c}"]`);
+        if (sq) sq.classList.add('can-enter');
+      }
+    }
+  });
+}
+
+function clearHighlights() {
+  document.querySelectorAll('.highlight, .can-enter').forEach(s => {
+    s.classList.remove('highlight', 'can-enter');
+  });
+}
+
+function highlightHomeRows() {
+  // Clear existing home highlights
+  document.querySelectorAll('.home-p1, .home-p2').forEach(s => {
+    s.classList.remove('home-p1', 'home-p2');
+  });
+  
+  if (G.mode !== 'two') return;
+  
+  // Highlight current player's home row
+  const homeRow = G.turn === 1 ? 0 : 2;
+  document.querySelectorAll(`.square[data-r="${homeRow}"]`).forEach(sq => {
+    if (!sq.classList.contains('empty')) {
+      sq.classList.add(`home-p${G.turn}`);
+    }
+  });
+}
+
+function canOccupy(player, pos) {
+  // Can't land on own piece
+  const path = player === 1 ? PATH1 : PATH2;
+  const targetLoc = path[pos];
+  
+  for (const [bird, bpos] of Object.entries(G.birds[player])) {
+    if (bpos >= 0 && !G.exited[player][bird]) {
+      const birdLoc = path[bpos];
+      if (birdLoc.r === targetLoc.r && birdLoc.c === targetLoc.c) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function clickSquare(r, c) {
+  if (G.phase !== 'move' || !G.dice) return;
+  
+  const p = G.turn;
+  const path = p === 1 ? PATH1 : PATH2;
+  const sq = document.querySelector(`.square[data-r="${r}"][data-c="${c}"]`);
+  
+  // Check if clicking on own piece
+  const piece = sq.querySelector(`.piece.p${p}`);
+  if (piece) {
+    const bird = piece.dataset.bird;
+    const pos = G.birds[p][bird];
+    const newPos = pos + G.dice;
+    
+    if (newPos === 14) {
+      bearOff(bird);
+    } else if (newPos < 14 && canOccupy(p, newPos)) {
+      moveBird(bird, newPos);
+    } else {
+      $('instructions').textContent = "Can't move that piece with this roll.";
+    }
+    return;
+  }
+  
+  // Check if clicking highlighted destination
+  if (sq.classList.contains('highlight')) {
+    for (const [bird, pos] of Object.entries(G.birds[p])) {
+      if (pos >= 0 && !G.exited[p][bird]) {
+        const newPos = pos + G.dice;
+        if (newPos < 14) {
+          const dest = path[newPos];
+          if (dest.r === r && dest.c === c) {
+            moveBird(bird, newPos);
+            return;
+          }
+        }
+      }
+    }
+  }
+  
+  // Check if clicking entry point
+  if (sq.classList.contains('can-enter')) {
+    for (const bird of Object.keys(BIRDS)) {
+      if (canLaunchBird(bird)) {
+        const entryPos = getEntryPosition(bird);
+        const loc = path[entryPos];
+        if (loc.r === r && loc.c === c) {
+          launchBird(bird);
+          return;
+        }
+      }
+    }
+  }
+}
+
+function moveBird(bird, newPos) {
+  const p = G.turn;
+  const oldPos = G.birds[p][bird];
+  
+  // Check for passing over rosettes (negative fortune)
+  for (let i = oldPos + 1; i < newPos; i++) {
+    if (ROSETTES.includes(i)) {
+      addOracle(bird, false);
+    }
+  }
+  
+  G.birds[p][bird] = newPos;
+  checkCapture(p, newPos);
+  
+  clearHighlights();
+  renderPieces();
+  renderBirds();
+  
+  // Landing on rosette = positive fortune + extra turn
+  if (ROSETTES.includes(newPos)) {
+    showFortune(bird, true);
+  } else {
+    nextTurn();
+  }
+}
+
+function bearOff(bird) {
+  const p = G.turn;
+  const oldPos = G.birds[p][bird];
+  
+  // Check for passing over final rosette
+  for (let i = oldPos + 1; i <= 13; i++) {
+    if (ROSETTES.includes(i)) {
+      addOracle(bird, false);
+    }
+  }
+  
+  G.birds[p][bird] = -1;
+  G.exited[p][bird] = true;
+  
+  addOracle(bird, null, `${BIRDS[bird].icon} ${BIRDS[bird].name} completes its journey!`);
+  
+  clearHighlights();
+  renderPieces();
+  renderBirds();
+  
+  if (checkWin()) return;
+  nextTurn();
+}
+
+function checkCapture(player, pos) {
+  // Only in shared corridor (positions 4-11 = houses 5-12)
+  if (pos < 4 || pos > 11) return;
+  // Can't capture on rosette
+  if (ROSETTES.includes(pos)) return;
+  
+  const other = player === 1 ? 2 : 1;
+  const myPath = player === 1 ? PATH1 : PATH2;
+  const theirPath = other === 1 ? PATH1 : PATH2;
+  const myLoc = myPath[pos];
+  
+  for (const [bird, bpos] of Object.entries(G.birds[other])) {
+    if (bpos >= 4 && bpos <= 11 && !G.exited[other][bird]) {
+      const theirLoc = theirPath[bpos];
+      if (theirLoc.r === myLoc.r && theirLoc.c === myLoc.c) {
+        // Captured!
+        G.birds[other][bird] = -1;
+        addOracle(bird, false, `${BIRDS[bird].icon} ${BIRDS[bird].name} was captured and must restart!`);
+        renderPieces();
+      }
+    }
+  }
+}
+
+// ========== FORTUNES ==========
+function showFortune(bird, positive) {
+  const b = BIRDS[bird];
+  const f = FORTUNES[bird];
+  const text = positive ? f.pos : f.neg;
+  
+  $('fSymbol').textContent = b.icon;
+  $('fDomain').textContent = b.domain.toUpperCase();
+  $('fText').textContent = `"${text}"`;
+  $('fText').className = 'text ' + (positive ? 'positive' : 'negative');
+  
+  $('fortuneOverlay').classList.add('show');
+  
+  G.pendingFortune = { bird, positive };
+  addOracle(bird, positive);
+}
+
+function dismissFortune() {
+  $('fortuneOverlay').classList.remove('show');
+  
+  // Rosette landing = extra turn
+  if (G.pendingFortune && G.pendingFortune.positive) {
+    $('instructions').textContent = '✿ Rosette! Extra turn granted. Cast the bones.';
+    G.phase = 'roll';
+    G.dice = null;
+    G.baseRoll = null;
+    G.converted = false;
+    clearHighlights();
+    updateButtons();
+    renderBirds();
+  } else {
+    nextTurn();
+  }
+  
+  G.pendingFortune = null;
+}
+
+function addOracle(bird, positive, customText) {
+  const b = BIRDS[bird];
+  const f = FORTUNES[bird];
+  const text = customText || (positive ? f.pos : f.neg);
+  
+  const log = $('oracleLog');
+  if (G.log.length === 0) {
+    log.innerHTML = '';
+  }
+  
+  const entry = document.createElement('div');
+  entry.className = 'oracle-entry';
+  if (positive === true) entry.classList.add('positive');
+  if (positive === false) entry.classList.add('negative');
+  
+  entry.innerHTML = `
+    <div class="oracle-bird">${b.icon} ${b.name}</div>
+    <div class="oracle-text">${text}</div>
+  `;
+  
+  log.insertBefore(entry, log.firstChild);
+  G.log.push({ bird, positive, text });
+}
+
+// ========== TURN MANAGEMENT ==========
+function nextTurn() {
+  G.phase = 'roll';
+  G.dice = null;
+  G.baseRoll = null;
+  G.converted = false;
+  
+  if (G.mode === 'two') {
+    G.turn = G.turn === 1 ? 2 : 1;
+  }
+  
+  $('dieSheep').textContent = '?';
+  $('dieOx').textContent = '?';
+  $('dieOx').className = 'die';
+  $('rollResult').innerHTML = '';
+  $('instructions').textContent = 'Cast the bones.';
+  
+  clearHighlights();
+  updateTurn();
+  updateButtons();
+  renderBirds();
+}
+
+function checkWin() {
+  const p = G.turn;
+  const allOut = Object.values(G.exited[p]).every(x => x);
+  
+  if (allOut) {
+    let name;
+    if (G.mode === 'solo') {
+      name = 'Seeker';
+    } else {
+      name = p === 1 ? '🌅 Dawn' : '🌙 Dusk';
+    }
+    $('instructions').textContent = `✨ ${name} wins! All birds have completed their journey. The reading is complete. ✨`;
+    G.phase = 'done';
+    updateButtons();
+    return true;
+  }
+  return false;
+}
+
+// ========== START ==========
+window.onload = init;
+</script>
+</body>
+</html>

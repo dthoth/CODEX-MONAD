@@ -1,0 +1,73 @@
+﻿[
+    {
+        "id":  "bureaucratic_universe",
+        "name":  "Bureaucratic Universe",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "codex_capture",
+        "name":  "CODEX Capture",
+        "kind":  "python",
+        "entry":  "index.html",
+        "description":  "The Baseline Triangle: Keystrokes, Clipboard, Window Context",
+        "version":  "1.0.0",
+        "author":  "Rev. LL Dan-i-El + Claude",
+        "icon":  "ðŸŽ­",
+        "config":  {
+                       "enabled":  false,
+                       "note":  "Set to true to enable capture on your personal deployment"
+                   },
+        "requires":  [
+                         "pynput",
+                         "pywin32",
+                         "psutil"
+                     ],
+        "scripts":  {
+                        "start":  "python capture.py",
+                        "install":  "pip install -r requirements.txt"
+                    }
+    },
+    {
+        "id":  "codex_monad",
+        "name":  "Codex Monad Seedline",
+        "kind":  "html",
+        "entry":  "START_HERE.html"
+    },
+    {
+        "id":  "din_portal",
+        "name":  "DIN Portal",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "polywrite",
+        "name":  "PolyWrite Pro",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "pranayama",
+        "name":  "Pranayama",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "samson_recursive",
+        "name":  "Samson\u0027s Recursive Homepage",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "royal_game_of_ur",
+        "name":  "Royal Game of Ur",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "conflict_lab",
+        "name":  "Conflict Lab",
+        "kind":  "html",
+        "entry":  "index.html"
+    }
+]
