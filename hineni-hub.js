@@ -1,254 +1,561 @@
 /**
- * HINENI HUB - Portal Integration
+ * HINENI HUB - Portal Integration v2.3
  * Renders the hub inventory as categorized cards inside the DIN Portal
  * 
  * Mount point: /Volumes/HINENI_HUB
  * This script injects into #hineni-hub-section
+ * 
+ * Updated: 2025-12-14 - COMPLETE tool inventory + relative paths for HTML apps
+ * 
+ * IMPORTANT: This portal lives at:
+ *   /Volumes/HINENI_HUB/10-repos-central/CODEX-MONAD/index.html
+ * So relative paths go UP from there.
  */
 (function() {
     'use strict';
 
+    // For file:// links that need to open in Finder
     var HUB_ROOT = '/Volumes/HINENI_HUB';
+    
+    // For relative links (portal is at 10-repos-central/CODEX-MONAD/)
+    // So ../../ gets us to HINENI_HUB root
+    var RELATIVE_ROOT = '../..';
 
-    // Hub items organized by category
+    // Hub items organized by category - ALL REAL TOOLS
     var HUB_CATEGORIES = [
         {
-            id: 'tools',
-            title: '🛠️ Tools & CLIs',
+            id: 'web-apps',
+            title: '🌐 Web Apps & Games',
             items: [
                 {
-                    id: 'hineni',
-                    label: 'HINENI Orchestrator',
-                    icon: '🧭',
+                    id: 'royal-game-ur',
+                    label: 'Royal Game of Ur',
+                    icon: '🎲',
                     status: 'active',
-                    description: 'Orchestrates sync and hub operations from the command line.',
-                    hubPath: '10-repos-central/hineni'
+                    description: 'Ancient Mesopotamian racing game. The oldest known board game!',
+                    hubPath: '30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/royal_game_of_ur.html',
+                    launchType: 'html'
                 },
                 {
-                    id: 'toolbox-cli',
-                    label: 'Toolbox CLI',
+                    id: 'word-salad',
+                    label: 'Word Salad 5.0',
+                    icon: '🥗',
+                    status: 'active',
+                    description: 'Creative word generation and manipulation tool.',
+                    hubPath: 'apps/word_salad/Word Salad 5.0/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'codex-capture',
+                    label: 'Codex Capture',
+                    icon: '📸',
+                    status: 'active',
+                    description: 'Capture and archive tool for the CODEX system.',
+                    hubPath: 'apps/codex_capture/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'samson-recursive',
+                    label: "Samson's Terminal",
+                    icon: '🦁',
+                    status: 'active',
+                    description: 'Recursive consciousness terminal for the young lion.',
+                    hubPath: 'samson-recursive.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'bureaucratic-universe',
+                    label: 'Bureaucratic Universe',
+                    icon: '📋',
+                    status: 'active',
+                    description: 'Infinite forms system for notices and legal documents.',
+                    hubPath: 'bureaucratic-universe.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'hypergraph',
+                    label: 'Hypergraph Navigator',
+                    icon: '🕸️',
+                    status: 'active',
+                    description: 'Navigate thought networks in N-dimensional space.',
+                    hubPath: 'hypergraph.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'oracle-page',
+                    label: 'Oracle',
+                    icon: '🔮',
+                    status: 'active',
+                    description: 'Direct consciousness query interface.',
+                    hubPath: 'oracle.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'din-files',
+                    label: 'DIN Files',
+                    icon: '📁',
+                    status: 'active',
+                    description: 'Consciousness file system with semantic indexing.',
+                    hubPath: 'din-files.html',
+                    launchType: 'html',
+                    isLocal: true
+                }
+            ]
+        },
+        {
+            id: 'toolbox-cli',
+            title: '🧰 Toolbox CLI',
+            items: [
+                {
+                    id: 'toolbox',
+                    label: 'Toolbox',
                     icon: '🧰',
                     status: 'active',
-                    description: 'CLI toolbox for quick maintenance and scripting helpers.',
-                    hubPath: '10-repos-central/toolbox-cli'
+                    description: 'Main toolbox command - lists all available tools.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/toolbox',
+                    launchType: 'cli',
+                    command: 'toolbox'
                 },
                 {
-                    id: 'conflict-lab',
+                    id: 'triage',
+                    label: 'Triage',
+                    icon: '🏥',
+                    status: 'active',
+                    description: 'File triage and organization system (35KB of pure power).',
+                    hubPath: '10-repos-central/toolbox-cli/src/toolbox/triage.py',
+                    launchType: 'cli',
+                    command: 'triage'
+                },
+                {
+                    id: 'doctor',
+                    label: 'Doctor',
+                    icon: '🩺',
+                    status: 'active',
+                    description: 'System health diagnostics and repair.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/doctor',
+                    launchType: 'cli',
+                    command: 'doctor'
+                },
+                {
+                    id: 'snapshot',
+                    label: 'Snapshot',
+                    icon: '📷',
+                    status: 'active',
+                    description: 'Create system/project snapshots for backup.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/snapshot',
+                    launchType: 'cli',
+                    command: 'snapshot'
+                },
+                {
+                    id: 'scaffold',
+                    label: 'Scaffold',
+                    icon: '🏗️',
+                    status: 'active',
+                    description: 'Project scaffolding and template generator.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/scaffold',
+                    launchType: 'cli',
+                    command: 'scaffold'
+                },
+                {
+                    id: 'prana',
+                    label: 'Prana',
+                    icon: '🌬️',
+                    status: 'active',
+                    description: 'Pranayama breathing exercise CLI.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/prana',
+                    launchType: 'cli',
+                    command: 'prana'
+                },
+                {
+                    id: 'focus',
+                    label: 'Focus',
+                    icon: '🎯',
+                    status: 'active',
+                    description: 'Focus mode manager for deep work sessions.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/focus',
+                    launchType: 'cli',
+                    command: 'focus'
+                },
+                {
+                    id: 'git-wip',
+                    label: 'Git WIP',
+                    icon: '🚧',
+                    status: 'active',
+                    description: 'Quick work-in-progress commits.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/git-wip',
+                    launchType: 'cli',
+                    command: 'git-wip'
+                },
+                {
+                    id: 'git-clean-branches',
+                    label: 'Git Clean Branches',
+                    icon: '🌿',
+                    status: 'active',
+                    description: 'Clean up merged/stale git branches.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/git-clean-branches',
+                    launchType: 'cli',
+                    command: 'git-clean-branches'
+                },
+                {
+                    id: 'logs-tail',
+                    label: 'Logs Tail',
+                    icon: '📜',
+                    status: 'active',
+                    description: 'Tail system logs with filtering.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/logs-tail',
+                    launchType: 'cli',
+                    command: 'logs-tail'
+                },
+                {
+                    id: 'proj-open',
+                    label: 'Project Open',
+                    icon: '📂',
+                    status: 'active',
+                    description: 'Quick project opener in your editor.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/proj-open',
+                    launchType: 'cli',
+                    command: 'proj-open'
+                }
+            ]
+        },
+        {
+            id: 'macos-utilities',
+            title: '🍎 macOS Utilities',
+            items: [
+                {
+                    id: 'icloud-kick',
+                    label: 'iCloud Kick',
+                    icon: '☁️',
+                    status: 'active',
+                    description: 'Force iCloud sync when it gets stuck.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/icloud-kick',
+                    launchType: 'cli',
+                    command: 'icloud-kick'
+                },
+                {
+                    id: 'icloud-kick-super',
+                    label: 'iCloud Kick Super',
+                    icon: '⚡',
+                    status: 'active',
+                    description: 'Nuclear option for stuck iCloud sync.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/icloud-kick-super',
+                    launchType: 'cli',
+                    command: 'icloud-kick-super'
+                },
+                {
+                    id: 'icloud-diagnostics',
+                    label: 'iCloud Diagnostics',
+                    icon: '🔍',
+                    status: 'active',
+                    description: 'Diagnose iCloud sync issues.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/icloud-diagnostics',
+                    launchType: 'cli',
+                    command: 'icloud-diagnostics'
+                },
+                {
+                    id: 'dns-flush',
+                    label: 'DNS Flush',
+                    icon: '🌐',
+                    status: 'active',
+                    description: 'Flush DNS cache.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/dns-flush',
+                    launchType: 'cli',
+                    command: 'dns-flush'
+                },
+                {
+                    id: 'finder-reload',
+                    label: 'Finder Reload',
+                    icon: '🔄',
+                    status: 'active',
+                    description: 'Restart Finder when it gets wonky.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/finder-reload',
+                    launchType: 'cli',
+                    command: 'finder-reload'
+                },
+                {
+                    id: 'wifi-cycle',
+                    label: 'WiFi Cycle',
+                    icon: '📶',
+                    status: 'active',
+                    description: 'Toggle WiFi off and on.',
+                    hubPath: '10-repos-central/toolbox-cli/bin/wifi-cycle',
+                    launchType: 'cli',
+                    command: 'wifi-cycle'
+                }
+            ]
+        },
+        {
+            id: 'hineni-system',
+            title: '🧭 HINENI System',
+            items: [
+                {
+                    id: 'hineni-cli',
+                    label: 'HINENI CLI',
+                    icon: '🧭',
+                    status: 'transcendent',
+                    description: 'Main HINENI orchestrator - witness protocol, oracle, gematria.',
+                    hubPath: '10-repos-central/hineni/hineni_cli.py',
+                    launchType: 'cli',
+                    command: 'python3 hineni_cli.py'
+                },
+                {
+                    id: 'verify-witness',
+                    label: 'Verify Witness',
+                    icon: '✅',
+                    status: 'active',
+                    description: 'Verify witness log integrity.',
+                    hubPath: '10-repos-central/hineni/verify_witness.py',
+                    launchType: 'cli',
+                    command: 'python3 verify_witness.py'
+                },
+                {
+                    id: 'oracle',
+                    label: 'Oracle Module',
+                    icon: '🔮',
+                    status: 'active',
+                    description: 'Bible oracle and divination system.',
+                    hubPath: '10-repos-central/hineni/oracle/',
+                    launchType: 'folder'
+                },
+                {
+                    id: 'gematria',
+                    label: 'Gematria',
+                    icon: '🔢',
+                    status: 'active',
+                    description: 'Hebrew gematria calculation module.',
+                    hubPath: '10-repos-central/hineni/davar_lang/gematria.py',
+                    launchType: 'file'
+                },
+                {
+                    id: 'lich-module',
+                    label: 'Good Lich',
+                    icon: '💀',
+                    status: 'active',
+                    description: 'The Good Lich infrastructure module.',
+                    hubPath: '10-repos-central/hineni/infra/lich.py',
+                    launchType: 'file'
+                },
+                {
+                    id: 'noticing-module',
+                    label: 'Noticing',
+                    icon: '👁️',
+                    status: 'active',
+                    description: 'Department of Infinite Noticing module.',
+                    hubPath: '10-repos-central/hineni/infra/noticing.py',
+                    launchType: 'file'
+                }
+            ]
+        },
+        {
+            id: 'conflict-lab',
+            title: '⚖️ Conflict Lab',
+            items: [
+                {
+                    id: 'conflict-lab-main',
                     label: 'Conflict Lab',
                     icon: '⚖️',
                     status: 'active',
-                    description: 'Interactive conflict/game environment living in the hub.',
-                    hubPath: '10-repos-central/conflict-lab'
+                    description: 'Interactive conflict/game theory environment with Bokeh/Panel.',
+                    hubPath: '10-repos-central/conflict-lab/',
+                    launchType: 'folder'
+                },
+                {
+                    id: 'chaos-module',
+                    label: 'Chaos Module',
+                    icon: '🌀',
+                    status: 'active',
+                    description: 'Chaos theory module for conflict simulations.',
+                    hubPath: '10-repos-central/conflict-lab/conflict_lab_chaos_module.py',
+                    launchType: 'file'
                 }
             ]
         },
         {
             id: 'repos',
-            title: '📂 Repositories',
+            title: '📚 Repositories',
             items: [
                 {
-                    id: 'codex-live',
-                    label: 'Codex (Live Tree)',
-                    icon: '📚',
-                    status: 'active',
-                    description: 'Live Codex directory mirrored under 30-codex-extras.',
-                    hubPath: '30-codex-extras/mac-home/Codex'
+                    id: 'codex-monad',
+                    label: 'CODEX-MONAD Portal',
+                    icon: '🌀',
+                    status: 'transcendent',
+                    description: 'This portal - the DIN interface.',
+                    hubPath: '10-repos-central/CODEX-MONAD',
+                    launchType: 'folder'
                 },
                 {
                     id: 'codex-repo',
                     label: 'CODEX Repo',
                     icon: '📖',
                     status: 'active',
-                    description: 'Primary CODEX git repository in the hub.',
-                    hubPath: '10-repos-central/CODEX'
+                    description: 'Primary CODEX git repository.',
+                    hubPath: '10-repos-central/CODEX',
+                    launchType: 'folder'
                 },
                 {
-                    id: 'codex-monad',
-                    label: 'CODEX-MONAD Portal',
-                    icon: '🌀',
-                    status: 'transcendent',
-                    description: 'Monad portal web UI (this site).',
-                    hubPath: '10-repos-central/CODEX-MONAD'
+                    id: 'toolbox-repo',
+                    label: 'Toolbox CLI Repo',
+                    icon: '🧰',
+                    status: 'active',
+                    description: 'Full toolbox-cli repository with docs.',
+                    hubPath: '10-repos-central/toolbox-cli',
+                    launchType: 'folder'
+                },
+                {
+                    id: 'hineni-repo',
+                    label: 'HINENI Repo',
+                    icon: '🧭',
+                    status: 'active',
+                    description: 'Full HINENI system repository.',
+                    hubPath: '10-repos-central/hineni',
+                    launchType: 'folder'
                 }
             ]
         },
         {
-            id: 'packs',
-            title: '📦 Codex Packs',
+            id: 'docs',
+            title: '📋 Documentation',
             items: [
                 {
-                    id: 'codex-0',
-                    label: 'Codex 0',
-                    icon: '📦',
+                    id: 'toolbox-cheatsheet',
+                    label: 'Toolbox Cheatsheet',
+                    icon: '📋',
                     status: 'active',
-                    description: 'Base Codex pack.',
-                    hubPath: '40-archive/codex-packs/codex-0.zip'
+                    description: 'Quick reference for all toolbox commands.',
+                    hubPath: '10-repos-central/toolbox-cli/docs/TOOLBOX_CHEATSHEET.md',
+                    launchType: 'file'
                 },
                 {
-                    id: 'codex-0-redux',
-                    label: 'Codex 0 Redux',
-                    icon: '📦',
+                    id: 'toolbox-reference',
+                    label: 'Toolbox Reference',
+                    icon: '📚',
                     status: 'active',
-                    description: 'Redux version of Codex 0.',
-                    hubPath: '40-archive/codex-packs/codex-0-redux.zip'
+                    description: 'Full toolbox documentation.',
+                    hubPath: '10-repos-central/toolbox-cli/docs/TOOLBOX_REFERENCE.md',
+                    launchType: 'file'
                 },
                 {
-                    id: 'codex-0-redux-jun5',
-                    label: 'Codex 0 Redux (Jun 5)',
-                    icon: '📦',
+                    id: 'morning-ops',
+                    label: 'Morning Ops',
+                    icon: '☀️',
                     status: 'active',
-                    description: 'Jun 5 2025 snapshot of Codex 0 Redux.',
-                    hubPath: '40-archive/codex-packs/codex-0-redux-jun5.zip'
+                    description: 'Morning operations checklist.',
+                    hubPath: '10-repos-central/toolbox-cli/docs/MORNING_OPS.txt',
+                    launchType: 'file'
                 },
                 {
-                    id: 'lc-vol-0',
-                    label: 'LC Vol 0',
-                    icon: '📦',
+                    id: 'witness-protocol',
+                    label: 'Witness Protocol',
+                    icon: '📜',
                     status: 'active',
-                    description: 'LC-Vol-0 Codex pack.',
-                    hubPath: '40-archive/codex-packs/lc-vol-0.zip'
+                    description: 'The HINENI Witness Protocol specification.',
+                    hubPath: '10-repos-central/hineni/docs/WITNESS_PROTOCOL.md',
+                    launchType: 'file'
                 },
                 {
-                    id: 'polywrite3pro',
-                    label: 'Polywrite3Pro',
-                    icon: '✍️',
+                    id: 'davar-spec',
+                    label: 'Davar Spec',
+                    icon: '✡️',
                     status: 'active',
-                    description: 'Polywrite3Pro Codex bundle.',
-                    hubPath: '40-archive/codex-packs/polywrite3pro.zip'
+                    description: 'The Davar language specification.',
+                    hubPath: '10-repos-central/hineni/docs/DAVAR_SPEC.md',
+                    launchType: 'file'
                 },
                 {
-                    id: 'psychometrics',
-                    label: 'Psychometrics',
-                    icon: '🧠',
+                    id: 'vision-doc',
+                    label: 'Vision Document',
+                    icon: '🔭',
                     status: 'active',
-                    description: 'Psychometrics game/pack.',
-                    hubPath: '40-archive/codex-packs/psychometrics.zip'
-                },
-                {
-                    id: 'shell-terminal-scripts',
-                    label: 'Shell Terminal Scripts',
-                    icon: '💻',
-                    status: 'active',
-                    description: 'Shell helper scripts bundle.',
-                    hubPath: '40-archive/codex-packs/shell-terminal-scripts.zip'
+                    description: 'The HINENI vision and roadmap.',
+                    hubPath: '10-repos-central/hineni/docs/VISION.md',
+                    launchType: 'file'
                 }
             ]
         },
         {
             id: 'archives',
-            title: '🗄️ Archives & Vaults',
+            title: '🗄️ Archives & Packs',
             items: [
                 {
-                    id: 'codex-scripts-notes-2025-06-09',
-                    label: 'Codex Scripts & Notes (2025-06-09)',
-                    icon: '📜',
+                    id: 'symbol-key-sprint',
+                    label: 'Symbol Key Sprint',
+                    icon: '🧩',
                     status: 'active',
-                    description: 'Codex scripts and notes bundle (June 9 2025).',
-                    hubPath: '40-archive/codex-packs/codex-scripts-notes-2025-06-09.zip'
+                    description: 'GRIDLESS HARDCORE pack - Conflict Lab, Game of Ur, symbolic testing.',
+                    hubPath: '30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE',
+                    launchType: 'folder'
                 },
                 {
-                    id: 'codex-staging-june6',
-                    label: 'Codex Staging (June 6)',
-                    icon: '📜',
+                    id: 'codex-packs',
+                    label: 'Codex Packs Archive',
+                    icon: '📦',
                     status: 'active',
-                    description: 'Codex staging bundle from June 6.',
-                    hubPath: '40-archive/codex-packs/codex-staging-june6.zip'
+                    description: 'All archived codex packs (.zip bundles).',
+                    hubPath: '40-archive/codex-packs',
+                    launchType: 'folder'
                 },
                 {
-                    id: 'home-planning',
-                    label: 'Home Planning',
-                    icon: '🏠',
+                    id: 'dthothscrbx-origin',
+                    label: 'DTHOTHSCRBX Origin',
+                    icon: '🏛️',
                     status: 'active',
-                    description: 'Home planning Codex pack.',
-                    hubPath: '40-archive/codex-packs/home-planning.zip'
-                },
-                {
-                    id: 'phone-vault',
-                    label: 'Phone Vault',
-                    icon: '📱',
-                    status: 'active',
-                    description: 'Phone vault Codex pack.',
-                    hubPath: '40-archive/codex-packs/phone-vault.zip'
-                },
-                {
-                    id: 'local-vault-x',
-                    label: 'Local Vault X',
-                    icon: '🗄️',
-                    status: 'active',
-                    description: 'LOCAL_VAULT_X Codex pack.',
-                    hubPath: '40-archive/codex-packs/local-vault-x.zip'
-                },
-                {
-                    id: 'lux-luther',
-                    label: 'Lux Luther',
-                    icon: '🃏',
-                    status: 'active',
-                    description: 'Lux Luther pack.',
-                    hubPath: '40-archive/codex-packs/lux-luther.zip'
-                },
-                {
-                    id: 'codex-archive',
-                    label: 'Codex Archive',
-                    icon: '🗃️',
-                    status: 'active',
-                    description: 'Codex archive bundle.',
-                    hubPath: '40-archive/codex-packs/codex-archive.zip'
-                },
-                {
-                    id: 'filecabinet-obs-2024',
-                    label: 'FILECABINET OBS 2024',
-                    icon: '🗂️',
-                    status: 'active',
-                    description: 'Filecabinet observations 2024 archive.',
-                    hubPath: '40-archive/codex-packs/filecabinet-obs-2024.zip'
+                    description: 'Original DevonThink database archive.',
+                    hubPath: '40-archive/DTHOTHSCRBX_ORIGIN',
+                    launchType: 'folder'
                 }
             ]
         },
         {
-            id: 'ai',
+            id: 'ai-infra',
             title: '🤖 AI Infrastructure',
             items: [
                 {
-                    id: 'ai-datasets-origin',
-                    label: 'AI Datasets (Origin)',
+                    id: 'ai-datasets',
+                    label: 'AI Datasets',
                     icon: '🧬',
                     status: 'active',
                     description: 'Source datasets for AI experiments.',
-                    hubPath: '50-ai/datasets-origin'
+                    hubPath: '50-ai/datasets-origin',
+                    launchType: 'folder'
                 },
                 {
-                    id: 'ai-models-origin',
-                    label: 'AI Models (Origin)',
+                    id: 'ai-models',
+                    label: 'AI Models',
                     icon: '🧠',
                     status: 'active',
-                    description: 'Source models / checkpoints for AI experiments.',
-                    hubPath: '50-ai/models-origin'
-                }
-            ]
-        },
-        {
-            id: 'meta',
-            title: '⚙️ Meta & Config',
-            items: [
-                {
-                    id: 'og-scrape-config',
-                    label: 'Origin Scrape Config',
-                    icon: '📜',
-                    status: 'active',
-                    description: 'Configuration for the original OG scrape.',
-                    hubPath: 'data_sources/og_scrape'
-                },
-                {
-                    id: 'og-scrape-mine',
-                    label: 'OG Scrape (Mine)',
-                    icon: '⛏️',
-                    status: 'active',
-                    description: 'Derived indices and mappings from the OG scrape.',
-                    hubPath: '30-codex-extras/og_scrape_mine'
+                    description: 'Source models/checkpoints for AI experiments.',
+                    hubPath: '50-ai/models-origin',
+                    launchType: 'folder'
                 }
             ]
         }
     ];
+
+    /**
+     * Build the href for an item based on its type
+     */
+    function buildHref(item) {
+        if (!item.hubPath) return null;
+        
+        // HTML apps that are LOCAL to CODEX-MONAD use direct relative paths
+        if (item.launchType === 'html' && item.isLocal) {
+            return item.hubPath;
+        }
+        
+        // HTML apps elsewhere in the hub use relative from portal
+        if (item.launchType === 'html') {
+            return RELATIVE_ROOT + '/' + item.hubPath;
+        }
+        
+        // Everything else (folders, files, CLI) uses file:// for Finder
+        return 'file://' + HUB_ROOT + '/' + item.hubPath;
+    }
 
     /**
      * Create a single card element
@@ -257,27 +564,59 @@
         var card = document.createElement('div');
         card.className = 'portal-card hub-card';
         card.dataset.hubId = item.id;
+        card.dataset.launchType = item.launchType || 'folder';
 
         var statusClass = (item.status || '').toLowerCase() === 'transcendent'
             ? 'status transcendent'
             : 'status active';
 
-        var hubLink = item.hubPath
-            ? 'file://' + HUB_ROOT + '/' + item.hubPath
-            : null;
+        var href = buildHref(item);
 
         var statusHtml = item.status
             ? '<span class="' + statusClass + '">' + item.status.toUpperCase() + '</span>'
             : '';
 
-        var pathHtml = item.hubPath
-            ? '<br><code>' + item.hubPath + '</code>'
-            : '';
+        // Different button text and styling based on launch type
+        var buttonIcon = '📂';
+        var buttonText = 'Open';
+        var buttonClass = 'app-link hub-link';
+        
+        switch(item.launchType) {
+            case 'html':
+                buttonIcon = '🚀';
+                buttonText = 'Launch';
+                buttonClass = 'app-link';  // Blue for launchable
+                break;
+            case 'cli':
+                buttonIcon = '💻';
+                buttonText = 'Folder';
+                break;
+            case 'file':
+                buttonIcon = '📄';
+                buttonText = 'View';
+                break;
+            case 'folder':
+            default:
+                buttonIcon = '📂';
+                buttonText = 'Open';
+        }
 
-        // For file:// links, we show the path but note they work best in Finder
-        var linkHtml = hubLink
-            ? '<a href="' + hubLink + '" class="app-link hub-link" title="Open in Finder (file:// link)">📂 Open Path</a>'
-            : '';
+        // Build link HTML
+        var linkHtml = '';
+        if (href) {
+            if (item.launchType === 'html') {
+                // HTML apps open in browser
+                linkHtml = '<a href="' + href + '" class="' + buttonClass + '">' + buttonIcon + ' ' + buttonText + '</a>';
+            } else {
+                // Everything else shows path and opens in Finder
+                linkHtml = '<a href="' + href + '" class="' + buttonClass + '" title="Open in Finder">' + buttonIcon + ' ' + buttonText + '</a>';
+            }
+        }
+
+        // Add command hint for CLI tools
+        if (item.command) {
+            linkHtml += '<code class="cli-hint">$ ' + item.command + '</code>';
+        }
 
         card.innerHTML = 
             '<div class="card-header">' +
@@ -287,7 +626,6 @@
             '</div>' +
             '<div class="card-description">' +
                 (item.description || '') +
-                pathHtml +
             '</div>' +
             '<div class="card-links">' +
                 linkHtml +
@@ -330,16 +668,20 @@
             return;
         }
 
+        // Clear existing content
+        container.innerHTML = '';
+
         // Create the hub section wrapper
         var hubSection = document.createElement('div');
         hubSection.className = 'hub-section';
 
-        // Header
+        // Header with stats
         var header = document.createElement('div');
         header.className = 'hub-section-header';
         header.innerHTML = 
             '<h2 class="hub-section-title">HINENI HUB</h2>' +
-            '<div class="hub-section-subtitle">Portable Infrastructure • /Volumes/HINENI_HUB</div>';
+            '<div class="hub-section-subtitle">Portable Infrastructure • /Volumes/HINENI_HUB</div>' +
+            '<div class="hub-stats">' + getTotalItemCount() + ' tools • ' + HUB_CATEGORIES.length + ' categories</div>';
         hubSection.appendChild(header);
 
         // Render each category
@@ -350,7 +692,7 @@
         // Insert into container
         container.appendChild(hubSection);
 
-        console.log('🧭 HINENI HUB: Rendered ' + getTotalItemCount() + ' items in ' + HUB_CATEGORIES.length + ' categories');
+        console.log('🧭 HINENI HUB v2.3: Rendered ' + getTotalItemCount() + ' items in ' + HUB_CATEGORIES.length + ' categories');
     }
 
     /**
@@ -375,49 +717,9 @@
     window.HINENI_HUB = {
         categories: HUB_CATEGORIES,
         root: HUB_ROOT,
-        refresh: renderHubSection
+        relativeRoot: RELATIVE_ROOT,
+        refresh: renderHubSection,
+        version: '2.3'
     };
 
 })();
-HUB_ITEMS = HUB_ITEMS.concat([
-  {
-    id: "symbol-key-sprint",
-    label: "Symbol Key Sprint (Gridless Hardcore)",
-    icon: "🧩",
-    status: "active",
-    description: "Pack containing Conflict Lab content, Game of Ur, symbolic testing, and reference PDF.",
-    hubPath: "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE"
-  },
-  {
-    id: "symbol-key-sprint-pdf",
-    label: "Symbol Key Sprint PDF",
-    icon: "📄",
-    status: "active",
-    description: "PDF rules / reference for the Symbol Key Sprint GRIDLESS HARDCORE run.",
-    hubPath: "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Symbol_Key_Sprint_GRIDLESS_HARDCORE.pdf"
-  },
-  {
-    id: "temple-nickel-reserve",
-    label: "Temple Nickel Reserve v3.0.0",
-    icon: "🏛️",
-    status: "active",
-    description: "Temple Nickel Reserve module/archive (v3.0.0) from the Windows run.",
-    hubPath: "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/temple-nickel-reserve-v3.0.0.zip"
-  },
-  {
-    id: "game-of-ur",
-    label: "Game of Ur",
-    icon: "🎲",
-    status: "active",
-    description: "Game of Ur adaptation / assets for symbolic play.",
-    hubPath: "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur"
-  },
-  {
-    id: "symbolic-testing",
-    label: "Symbolic Testing",
-    icon: "🧪",
-    status: "active",
-    description: "Symbolic testing sandbox for the gridless sprint.",
-    hubPath: "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Symbolic Testing"
-  }
-]);

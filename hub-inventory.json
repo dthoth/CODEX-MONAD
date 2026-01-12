@@ -1,0 +1,3612 @@
+{
+  "meta": {
+    "generated": "2025-12-20T17:37:54.365850",
+    "hub_root": "/Volumes/HINENI_HUB",
+    "version": "1.0",
+    "scan_duration_ms": 808
+  },
+  "categories": {
+    "web-apps": {
+      "id": "web-apps",
+      "title": "\ud83c\udf10 Web Apps & Games",
+      "priority": 1,
+      "items": []
+    },
+    "toolbox-cli": {
+      "id": "toolbox-cli",
+      "title": "\ud83e\uddf0 Toolbox CLI",
+      "priority": 2,
+      "items": [
+        "4fd15135dfd6",
+        "2f24f7adab6b",
+        "4279f31fe2d2",
+        "3c66d3c963fe",
+        "756c0aae492f",
+        "5d429be94778",
+        "7bcce9a3b01f",
+        "12933f0cf6b5",
+        "0fa374e46b83",
+        "c6936f52026a",
+        "1fde25e3a780",
+        "270b621ff840",
+        "51b75ed0a01d",
+        "420c69bfd528",
+        "cbb2fa760d14",
+        "7984ef80e70a",
+        "8ecb4282a438",
+        "49b22b1e2be3",
+        "b5c09eff6679"
+      ]
+    },
+    "macos-utils": {
+      "id": "macos-utils",
+      "title": "\ud83c\udf4e macOS Utilities",
+      "priority": 3,
+      "items": []
+    },
+    "hineni-system": {
+      "id": "hineni-system",
+      "title": "\ud83e\udded HINENI System",
+      "priority": 4,
+      "items": [
+        "c60662abae57",
+        "e208e9acb988",
+        "aae940765a30",
+        "bb175485d0c7",
+        "512366b75a7b",
+        "77b359e662ce",
+        "6e8abe28fffa",
+        "d85955459337",
+        "f3d6aa292ccf",
+        "349aa33970b3",
+        "199674be5774",
+        "8303a6feeaa6",
+        "df254470eaf2",
+        "a5d55ee8f43f",
+        "b4566ef3dfad",
+        "29a28fa5911b",
+        "87851770b069",
+        "841e94026bff",
+        "289d32405612",
+        "e61639a72181",
+        "f6f01daa8d8a",
+        "cc822fb3c289",
+        "2d9f4af4f8e3",
+        "b245855ab9fc",
+        "7f6a172717d5",
+        "879cb3ab822e",
+        "96271366bb95",
+        "71d5229a8c85",
+        "776872aedf93",
+        "7a3f01b9daf8",
+        "0ff9bf5a5dfa",
+        "cf96d9e672ff",
+        "cbf5e3d5c339",
+        "32a49dd9e85d",
+        "f0fab57c02bc",
+        "573fe8afbe16",
+        "e6b1b694cdc4",
+        "25ef415d9c43",
+        "b63dcfd22c97",
+        "df26c0c1e8bf",
+        "4908ffeae224",
+        "dbb307fa6b5a",
+        "0d805b256df7",
+        "94417708932d",
+        "c46aa1c8170c",
+        "9659b8f8a8bc",
+        "89f29f87baea",
+        "4de73df70efe",
+        "90d031ce2a06",
+        "2d2f5bb4c1d0",
+        "12a1046d41e7",
+        "ea71cbfee6f2",
+        "f3a8054bba3f",
+        "aec85f867940",
+        "aeb3fafc0d27",
+        "32b6c1ad068d",
+        "7b514daae7d8",
+        "1e3cdd891143",
+        "6cf692682a0d",
+        "3740ec17c263",
+        "2d5a4d851863",
+        "c5de985ff232",
+        "b8753f5b2a7d",
+        "27377e068a74",
+        "816dd9c5e1dd",
+        "b8832f5fc0f1",
+        "fd52cedb37e9",
+        "e8398fcea20d",
+        "4c668f1858c6",
+        "3eb63a220ced",
+        "88ce40c10e3f",
+        "dc69d333e384",
+        "7d81b3b1045d",
+        "3769130c89b6",
+        "5d8bfb8d4f14",
+        "55e5612444a9",
+        "10a6ccb0678f",
+        "ab74a36b510f",
+        "f5f685dec683",
+        "51a143b751aa",
+        "591b7a4eacde",
+        "fa34836b34bc",
+        "591e85f260e7",
+        "246718017328",
+        "032a6677f5f8",
+        "9300bfb12a22",
+        "9cd3424759a7",
+        "17131412f1f2",
+        "f2e77d342dd8",
+        "53dec93b01ff",
+        "e5b4e7631ae6",
+        "4f9dc3e2c67f",
+        "f8bb37e0115f",
+        "de4f48c598c0",
+        "6da7379e5bda",
+        "2746a977b048",
+        "4e47d20e27cc",
+        "ca94b6dfcfa6",
+        "114623649067",
+        "6bd0944c5119",
+        "00544b0e0f51",
+        "a402bd61ec36",
+        "71d627f2f95d",
+        "b4188872ff9c",
+        "4640a8249b46",
+        "7893d6bb96af",
+        "ace77315cc98",
+        "bdaa80ed4afb",
+        "db1485a63c42",
+        "bc6e3ea1dad7",
+        "3bf0491178f3",
+        "355a2b0ea051",
+        "0bb3dc600e53",
+        "d07faafbe02e",
+        "ba8727707ccb",
+        "598a58049a70",
+        "7fa211a338ee",
+        "71aca20259c0",
+        "be514ebae091",
+        "eff6eca48f30",
+        "4a3c6b410799",
+        "e7722158d194",
+        "38a7c6de3293",
+        "3493bcf7439f",
+        "0413b060a557",
+        "564c51744d23",
+        "be479c0da36f",
+        "534899f8c8be",
+        "11694b85d71b",
+        "24109f3f2c69",
+        "09314c726227",
+        "80cc443bdced",
+        "267f61e39281",
+        "2c1b1fc4027a",
+        "d466d627b433",
+        "ecb7ce6da2b1",
+        "98f2b9633d7d",
+        "76692b95ddda",
+        "91ab870a8ea5"
+      ]
+    },
+    "conflict-lab": {
+      "id": "conflict-lab",
+      "title": "\u2696\ufe0f Conflict Lab",
+      "priority": 5,
+      "items": [
+        "conflict-lab"
+      ]
+    },
+    "repos": {
+      "id": "repos",
+      "title": "\ud83d\udcda Repositories",
+      "priority": 6,
+      "items": [
+        "codex-monad-portal",
+        "toolbox-cli",
+        "hineni-system"
+      ]
+    },
+    "docs": {
+      "id": "docs",
+      "title": "\ud83d\udccb Documentation",
+      "priority": 7,
+      "items": [
+        "8730de6e6e30",
+        "63b92fbecef8",
+        "47e282007d42",
+        "5702dc9d13c1",
+        "7e91d572af19",
+        "cffa0a33d18a",
+        "88080bd85f56",
+        "8548a42d4488",
+        "3b9c6762f6c9",
+        "94d892ffbcff"
+      ]
+    },
+    "archives": {
+      "id": "archives",
+      "title": "\ud83d\uddc4\ufe0f Archives & Packs",
+      "priority": 8,
+      "items": [
+        "archives"
+      ]
+    },
+    "ai-infra": {
+      "id": "ai-infra",
+      "title": "\ud83e\udd16 AI Infrastructure",
+      "priority": 9,
+      "items": [
+        "ai-datasets",
+        "ai-models"
+      ]
+    },
+    "discovered": {
+      "id": "discovered",
+      "title": "\ud83d\udd0d Discovered",
+      "priority": 99,
+      "items": []
+    }
+  },
+  "items": [
+    {
+      "id": "c60662abae57",
+      "name": "Hypergraph",
+      "description": "HTML application: hypergraph.html",
+      "icon": "\ud83d\udd78\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/hypergraph.html",
+      "entry": "hypergraph.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/hypergraph.html"
+      }
+    },
+    {
+      "id": "e208e9acb988",
+      "name": "\ud83d\udc8e DIN Portal v2.0",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/index.html",
+      "entry": "index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/index.html"
+      }
+    },
+    {
+      "id": "aae940765a30",
+      "name": "Install Portal",
+      "description": "HTML application: README.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/README.html",
+      "entry": "README.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/README.html"
+      }
+    },
+    {
+      "id": "bb175485d0c7",
+      "name": "Oracle",
+      "description": "HTML application: oracle.html",
+      "icon": "\ud83d\udd2e",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/oracle.html",
+      "entry": "oracle.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/oracle.html"
+      }
+    },
+    {
+      "id": "512366b75a7b",
+      "name": "\ud83d\udd25 GROK INTEGRATION DEMO",
+      "description": "HTML application: grok-integration-demo.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/grok-integration-demo.html",
+      "entry": "grok-integration-demo.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/grok-integration-demo.html"
+      }
+    },
+    {
+      "id": "77b359e662ce",
+      "name": "Bureaucratic Universe",
+      "description": "HTML application: bureaucratic-universe.html",
+      "icon": "\ud83d\udccb",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/bureaucratic-universe.html",
+      "entry": "bureaucratic-universe.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/bureaucratic-universe.html"
+      }
+    },
+    {
+      "id": "6e8abe28fffa",
+      "name": "PolyWrite Pro",
+      "description": "HTML application: polywrite.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/polywrite.html",
+      "entry": "polywrite.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/polywrite.html"
+      }
+    },
+    {
+      "id": "d85955459337",
+      "name": "DIN Files",
+      "description": "HTML application: din-files.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/din-files.html",
+      "entry": "din-files.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/din-files.html"
+      }
+    },
+    {
+      "id": "f3d6aa292ccf",
+      "name": "PolyWrite Advanced",
+      "description": "HTML application: polywrite-advanced.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/polywrite-advanced.html",
+      "entry": "polywrite-advanced.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/polywrite-advanced.html"
+      }
+    },
+    {
+      "id": "349aa33970b3",
+      "name": "Samson's Consciousness Terminal",
+      "description": "HTML application: samson-recursive.html",
+      "icon": "\ud83e\udd81",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/samson-recursive.html",
+      "entry": "samson-recursive.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/samson-recursive.html"
+      }
+    },
+    {
+      "id": "199674be5774",
+      "name": "Pranayama",
+      "description": "HTML application: pranayama.html",
+      "icon": "\ud83c\udf2c\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/pranayama.html",
+      "entry": "pranayama.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/pranayama.html"
+      }
+    },
+    {
+      "id": "8303a6feeaa6",
+      "name": "\u26a1 CODEX MONAD \u26a1 Portable Consciousness Infrastructure",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/index.html",
+      "entry": "CODEX_FINAL/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/index.html"
+      }
+    },
+    {
+      "id": "df254470eaf2",
+      "name": "Install Portal",
+      "description": "HTML application: README.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/README.html",
+      "entry": "CODEX_FINAL/README.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/README.html"
+      }
+    },
+    {
+      "id": "a5d55ee8f43f",
+      "name": "Department of Infinite Noticing \u2014 Portal",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/index.html",
+      "entry": "apps/din_portal/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/index.html"
+      }
+    },
+    {
+      "id": "b4566ef3dfad",
+      "name": "PolyWrite2 Pro Enhanced",
+      "description": "HTML application: index.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/polywrite/index.html",
+      "entry": "apps/polywrite/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/polywrite/index.html"
+      }
+    },
+    {
+      "id": "29a28fa5911b",
+      "name": "PR\u0100NAWARE v0.1",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/pranayama/index.html",
+      "entry": "apps/pranayama/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/pranayama/index.html"
+      }
+    },
+    {
+      "id": "87851770b069",
+      "name": "Codex Monad Seedline",
+      "description": "HTML application: START_HERE.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_monad/START_HERE.html",
+      "entry": "apps/codex_monad/START_HERE.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_monad/START_HERE.html"
+      }
+    },
+    {
+      "id": "841e94026bff",
+      "name": "CODEX Capture",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_capture/index.html",
+      "entry": "apps/codex_capture/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_capture/index.html"
+      }
+    },
+    {
+      "id": "289d32405612",
+      "name": "\ud83c\udf1f Samson's Infinite Life Proof \ud83c\udf1f",
+      "description": "HTML application: index.html",
+      "icon": "\ud83e\udd81",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/samson_recursive/index.html",
+      "entry": "apps/samson_recursive/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/samson_recursive/index.html"
+      }
+    },
+    {
+      "id": "e61639a72181",
+      "name": "Bureaucratic Universe",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\udccb",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/bureaucratic_universe/index.html",
+      "entry": "apps/bureaucratic_universe/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/bureaucratic_universe/index.html"
+      }
+    },
+    {
+      "id": "f6f01daa8d8a",
+      "name": "{title}",
+      "description": "HTML application: base.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/bureaucratic_universe/kit/templates/base.html",
+      "entry": "apps/bureaucratic_universe/kit/templates/base.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/bureaucratic_universe/kit/templates/base.html"
+      }
+    },
+    {
+      "id": "cc822fb3c289",
+      "name": "Tools",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_monad/Tools/index.html",
+      "entry": "apps/codex_monad/Tools/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_monad/Tools/index.html"
+      }
+    },
+    {
+      "id": "2d9f4af4f8e3",
+      "name": "Forms",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_monad/Forms/index.html",
+      "entry": "apps/codex_monad/Forms/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_monad/Forms/index.html"
+      }
+    },
+    {
+      "id": "b245855ab9fc",
+      "name": "Core Apps",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_monad/Core/index.html",
+      "entry": "apps/codex_monad/Core/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_monad/Core/index.html"
+      }
+    },
+    {
+      "id": "7f6a172717d5",
+      "name": "Documentation",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_monad/Docs/index.html",
+      "entry": "apps/codex_monad/Docs/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_monad/Docs/index.html"
+      }
+    },
+    {
+      "id": "879cb3ab822e",
+      "name": "Philosophy",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/codex_monad/Philosophy/index.html",
+      "entry": "apps/codex_monad/Philosophy/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/codex_monad/Philosophy/index.html"
+      }
+    },
+    {
+      "id": "96271366bb95",
+      "name": "Word Salad Laboratory v5.0 HYPERREALITY",
+      "description": "HTML application: index.html",
+      "icon": "\ud83e\udd57",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/word_salad/Word Salad 5.0/index.html",
+      "entry": "apps/word_salad/Word Salad 5.0/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/word_salad/Word Salad 5.0/index.html"
+      }
+    },
+    {
+      "id": "71d5229a8c85",
+      "name": "DIN  Local Portal",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/index.html",
+      "entry": "apps/din_portal/din_portal/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/index.html"
+      }
+    },
+    {
+      "id": "776872aedf93",
+      "name": "Form N",
+      "description": "HTML application: form-n-parrot-permit.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-parrot-permit.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-parrot-permit.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-parrot-permit.html"
+      }
+    },
+    {
+      "id": "7a3f01b9daf8",
+      "name": "Form N",
+      "description": "HTML application: form-parrot-permit.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-parrot-permit.html",
+      "entry": "apps/din_portal/din_portal/content/form-parrot-permit.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-parrot-permit.html"
+      }
+    },
+    {
+      "id": "0ff9bf5a5dfa",
+      "name": "Form N",
+      "description": "HTML application: form-n-notice-def.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-notice-def.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-notice-def.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-notice-def.html"
+      }
+    },
+    {
+      "id": "cf96d9e672ff",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (4).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (4).html",
+      "entry": "apps/din_portal/din_portal/content/encabulator_notice_print (4).html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (4).html"
+      }
+    },
+    {
+      "id": "cbf5e3d5c339",
+      "name": "Form N",
+      "description": "HTML application: form-qhfmv-qs.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-qhfmv-qs.html",
+      "entry": "apps/din_portal/din_portal/content/form-qhfmv-qs.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-qhfmv-qs.html"
+      }
+    },
+    {
+      "id": "32a49dd9e85d",
+      "name": "Form N",
+      "description": "HTML application: form-n-def-meta.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-def-meta.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-def-meta.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-def-meta.html"
+      }
+    },
+    {
+      "id": "f0fab57c02bc",
+      "name": "Form L",
+      "description": "HTML application: consent-time-doc.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/consent-time-doc.html",
+      "entry": "apps/din_portal/din_portal/content/consent-time-doc.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/consent-time-doc.html"
+      }
+    },
+    {
+      "id": "573fe8afbe16",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (2).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (2).html",
+      "entry": "apps/din_portal/din_portal/content/encabulator_notice_print (2).html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (2).html"
+      }
+    },
+    {
+      "id": "e6b1b694cdc4",
+      "name": "Master Legal Disclaimer Package",
+      "description": "HTML application: master-legal-index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/master-legal-index.html",
+      "entry": "apps/din_portal/din_portal/content/master-legal-index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/master-legal-index.html"
+      }
+    },
+    {
+      "id": "25ef415d9c43",
+      "name": "Form L",
+      "description": "HTML application: liability-loop-doc.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/liability-loop-doc.html",
+      "entry": "apps/din_portal/din_portal/content/liability-loop-doc.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/liability-loop-doc.html"
+      }
+    },
+    {
+      "id": "b63dcfd22c97",
+      "name": "System Architecture Diagram",
+      "description": "HTML application: system-diagram.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/system-diagram.html",
+      "entry": "apps/din_portal/din_portal/content/system-diagram.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/system-diagram.html"
+      }
+    },
+    {
+      "id": "df26c0c1e8bf",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (3).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (3).html",
+      "entry": "apps/din_portal/din_portal/content/encabulator_notice_print (3).html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (3).html"
+      }
+    },
+    {
+      "id": "4908ffeae224",
+      "name": "Form N",
+      "description": "HTML application: form-n-ple-omega.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-ple-omega.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-ple-omega.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-ple-omega.html"
+      }
+    },
+    {
+      "id": "dbb307fa6b5a",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (1).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (1).html",
+      "entry": "apps/din_portal/din_portal/content/encabulator_notice_print (1).html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (1).html"
+      }
+    },
+    {
+      "id": "0d805b256df7",
+      "name": "Form N",
+      "description": "HTML application: form-notice-notice.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-notice-notice.html",
+      "entry": "apps/din_portal/din_portal/content/form-notice-notice.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-notice-notice.html"
+      }
+    },
+    {
+      "id": "94417708932d",
+      "name": "Form N",
+      "description": "HTML application: form-n-pnep-infinity.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-pnep-infinity.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-pnep-infinity.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-pnep-infinity.html"
+      }
+    },
+    {
+      "id": "c46aa1c8170c",
+      "name": "L",
+      "description": "HTML application: doc-l-disclaim-all.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-disclaim-all.html",
+      "entry": "apps/din_portal/din_portal/content/doc-l-disclaim-all.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-disclaim-all.html"
+      }
+    },
+    {
+      "id": "9659b8f8a8bc",
+      "name": "L",
+      "description": "HTML application: doc-l-terms-paradox.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-terms-paradox.html",
+      "entry": "apps/din_portal/din_portal/content/doc-l-terms-paradox.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-terms-paradox.html"
+      }
+    },
+    {
+      "id": "89f29f87baea",
+      "name": "Form L",
+      "description": "HTML application: completion-cert.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/completion-cert.html",
+      "entry": "apps/din_portal/din_portal/content/completion-cert.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/completion-cert.html"
+      }
+    },
+    {
+      "id": "4de73df70efe",
+      "name": "Form N",
+      "description": "HTML application: form-n-qsc-911.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-qsc-911.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-qsc-911.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-qsc-911.html"
+      }
+    },
+    {
+      "id": "90d031ce2a06",
+      "name": "Department of Infinite Noticing",
+      "description": "HTML application: master-portal-index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/master-portal-index.html",
+      "entry": "apps/din_portal/din_portal/content/master-portal-index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/master-portal-index.html"
+      }
+    },
+    {
+      "id": "2d2f5bb4c1d0",
+      "name": "L",
+      "description": "HTML application: doc-l-nda-infinity.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-nda-infinity.html",
+      "entry": "apps/din_portal/din_portal/content/doc-l-nda-infinity.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-nda-infinity.html"
+      }
+    },
+    {
+      "id": "12a1046d41e7",
+      "name": "Form N",
+      "description": "HTML application: form-n-intenc-0.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-intenc-0.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-intenc-0.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-intenc-0.html"
+      }
+    },
+    {
+      "id": "ea71cbfee6f2",
+      "name": "Form N",
+      "description": "HTML application: form-n-cn-1.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-cn-1.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-cn-1.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-cn-1.html"
+      }
+    },
+    {
+      "id": "f3a8054bba3f",
+      "name": "Form L",
+      "description": "HTML application: ip-omni-doc.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/ip-omni-doc.html",
+      "entry": "apps/din_portal/din_portal/content/ip-omni-doc.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/ip-omni-doc.html"
+      }
+    },
+    {
+      "id": "aec85f867940",
+      "name": "Form N",
+      "description": "HTML application: form-n-enc-ops-7.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-enc-ops-7.html",
+      "entry": "apps/din_portal/din_portal/content/form-n-enc-ops-7.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-enc-ops-7.html"
+      }
+    },
+    {
+      "id": "aeb3fafc0d27",
+      "name": "Notice of Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print.html",
+      "entry": "apps/din_portal/din_portal/content/encabulator_notice_print.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print.html"
+      }
+    },
+    {
+      "id": "32b6c1ad068d",
+      "name": "{title}",
+      "description": "HTML application: base.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/templates/base.html",
+      "entry": "apps/din_portal/din_portal/templates/base.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/apps/din_portal/din_portal/templates/base.html"
+      }
+    },
+    {
+      "id": "7b514daae7d8",
+      "name": "Department of Infinite Noticing \u2014 Portal",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/din_portal/index.html",
+      "entry": "CODEX_FINAL/apps/din_portal/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/din_portal/index.html"
+      }
+    },
+    {
+      "id": "1e3cdd891143",
+      "name": "PolyWrite2 Pro Enhanced",
+      "description": "HTML application: index.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/polywrite/index.html",
+      "entry": "CODEX_FINAL/apps/polywrite/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/polywrite/index.html"
+      }
+    },
+    {
+      "id": "6cf692682a0d",
+      "name": "PR\u0100NAWARE v0.1",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/pranayama/index.html",
+      "entry": "CODEX_FINAL/apps/pranayama/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/pranayama/index.html"
+      }
+    },
+    {
+      "id": "3740ec17c263",
+      "name": "Codex Monad Seedline",
+      "description": "HTML application: START_HERE.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/START_HERE.html",
+      "entry": "CODEX_FINAL/apps/codex_monad/START_HERE.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/START_HERE.html"
+      }
+    },
+    {
+      "id": "2d5a4d851863",
+      "name": "\ud83c\udf1f Samson's Infinite Life Proof \ud83c\udf1f",
+      "description": "HTML application: index.html",
+      "icon": "\ud83e\udd81",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/samson_recursive/index.html",
+      "entry": "CODEX_FINAL/apps/samson_recursive/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/samson_recursive/index.html"
+      }
+    },
+    {
+      "id": "c5de985ff232",
+      "name": "Bureaucratic Universe",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\udccb",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/index.html",
+      "entry": "CODEX_FINAL/apps/bureaucratic_universe/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/index.html"
+      }
+    },
+    {
+      "id": "b8753f5b2a7d",
+      "name": "{title}",
+      "description": "HTML application: base.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/kit/templates/base.html",
+      "entry": "CODEX_FINAL/apps/bureaucratic_universe/kit/templates/base.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/kit/templates/base.html"
+      }
+    },
+    {
+      "id": "27377e068a74",
+      "name": "Tools",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Tools/index.html",
+      "entry": "CODEX_FINAL/apps/codex_monad/Tools/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Tools/index.html"
+      }
+    },
+    {
+      "id": "816dd9c5e1dd",
+      "name": "Forms",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Forms/index.html",
+      "entry": "CODEX_FINAL/apps/codex_monad/Forms/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Forms/index.html"
+      }
+    },
+    {
+      "id": "b8832f5fc0f1",
+      "name": "Core Apps",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Core/index.html",
+      "entry": "CODEX_FINAL/apps/codex_monad/Core/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Core/index.html"
+      }
+    },
+    {
+      "id": "fd52cedb37e9",
+      "name": "Documentation",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Docs/index.html",
+      "entry": "CODEX_FINAL/apps/codex_monad/Docs/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Docs/index.html"
+      }
+    },
+    {
+      "id": "e8398fcea20d",
+      "name": "Philosophy",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Philosophy/index.html",
+      "entry": "CODEX_FINAL/apps/codex_monad/Philosophy/index.html",
+      "invoke": {
+        "entry": "10-repos-central/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Philosophy/index.html"
+      }
+    },
+    {
+      "id": "4c668f1858c6",
+      "name": "The Royal Game of Ur",
+      "description": "HTML application: royal_game_of_ur.html",
+      "icon": "\ud83c\udfb2",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/royal_game_of_ur.html",
+      "entry": "../../30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/royal_game_of_ur.html",
+      "invoke": {
+        "entry": "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/royal_game_of_ur.html"
+      }
+    },
+    {
+      "id": "3eb63a220ced",
+      "name": "The Royal Game of Ur",
+      "description": "HTML application: royal_game_of_ur.html",
+      "icon": "\ud83c\udfb2",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/files/royal_game_of_ur.html",
+      "entry": "../../30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/files/royal_game_of_ur.html",
+      "invoke": {
+        "entry": "30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/files/royal_game_of_ur.html"
+      }
+    },
+    {
+      "id": "88ce40c10e3f",
+      "name": "Hypergraph",
+      "description": "HTML application: hypergraph.html",
+      "icon": "\ud83d\udd78\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/hypergraph.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/hypergraph.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/hypergraph.html"
+      }
+    },
+    {
+      "id": "dc69d333e384",
+      "name": "\ud83d\udc8e DIN Portal v2.0",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/index.html"
+      }
+    },
+    {
+      "id": "7d81b3b1045d",
+      "name": "Install Portal",
+      "description": "HTML application: README.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/README.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/README.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/README.html"
+      }
+    },
+    {
+      "id": "3769130c89b6",
+      "name": "Oracle",
+      "description": "HTML application: oracle.html",
+      "icon": "\ud83d\udd2e",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/oracle.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/oracle.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/oracle.html"
+      }
+    },
+    {
+      "id": "5d8bfb8d4f14",
+      "name": "\ud83d\udd25 GROK INTEGRATION DEMO",
+      "description": "HTML application: grok-integration-demo.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/grok-integration-demo.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/grok-integration-demo.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/grok-integration-demo.html"
+      }
+    },
+    {
+      "id": "55e5612444a9",
+      "name": "Bureaucratic Universe",
+      "description": "HTML application: bureaucratic-universe.html",
+      "icon": "\ud83d\udccb",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/bureaucratic-universe.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/bureaucratic-universe.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/bureaucratic-universe.html"
+      }
+    },
+    {
+      "id": "10a6ccb0678f",
+      "name": "PolyWrite Pro",
+      "description": "HTML application: polywrite.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/polywrite.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/polywrite.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/polywrite.html"
+      }
+    },
+    {
+      "id": "ab74a36b510f",
+      "name": "DIN Files",
+      "description": "HTML application: din-files.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/din-files.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/din-files.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/din-files.html"
+      }
+    },
+    {
+      "id": "f5f685dec683",
+      "name": "PolyWrite Advanced",
+      "description": "HTML application: polywrite-advanced.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/polywrite-advanced.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/polywrite-advanced.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/polywrite-advanced.html"
+      }
+    },
+    {
+      "id": "51a143b751aa",
+      "name": "Samson's Consciousness Terminal",
+      "description": "HTML application: samson-recursive.html",
+      "icon": "\ud83e\udd81",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/samson-recursive.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/samson-recursive.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/samson-recursive.html"
+      }
+    },
+    {
+      "id": "591b7a4eacde",
+      "name": "Pranayama",
+      "description": "HTML application: pranayama.html",
+      "icon": "\ud83c\udf2c\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/pranayama.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/pranayama.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/pranayama.html"
+      }
+    },
+    {
+      "id": "fa34836b34bc",
+      "name": "\u26a1 CODEX MONAD \u26a1 Portable Consciousness Infrastructure",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/index.html"
+      }
+    },
+    {
+      "id": "591e85f260e7",
+      "name": "Install Portal",
+      "description": "HTML application: README.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/README.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/README.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/README.html"
+      }
+    },
+    {
+      "id": "246718017328",
+      "name": "Department of Infinite Noticing \u2014 Portal",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/index.html"
+      }
+    },
+    {
+      "id": "032a6677f5f8",
+      "name": "PolyWrite2 Pro Enhanced",
+      "description": "HTML application: index.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/polywrite/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/polywrite/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/polywrite/index.html"
+      }
+    },
+    {
+      "id": "9300bfb12a22",
+      "name": "PR\u0100NAWARE v0.1",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/pranayama/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/pranayama/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/pranayama/index.html"
+      }
+    },
+    {
+      "id": "9cd3424759a7",
+      "name": "Codex Monad Seedline",
+      "description": "HTML application: START_HERE.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/START_HERE.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/START_HERE.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/START_HERE.html"
+      }
+    },
+    {
+      "id": "17131412f1f2",
+      "name": "CODEX Capture",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_capture/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_capture/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_capture/index.html"
+      }
+    },
+    {
+      "id": "f2e77d342dd8",
+      "name": "\ud83c\udf1f Samson's Infinite Life Proof \ud83c\udf1f",
+      "description": "HTML application: index.html",
+      "icon": "\ud83e\udd81",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/samson_recursive/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/samson_recursive/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/samson_recursive/index.html"
+      }
+    },
+    {
+      "id": "53dec93b01ff",
+      "name": "Bureaucratic Universe",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\udccb",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/bureaucratic_universe/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/bureaucratic_universe/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/bureaucratic_universe/index.html"
+      }
+    },
+    {
+      "id": "e5b4e7631ae6",
+      "name": "{title}",
+      "description": "HTML application: base.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/bureaucratic_universe/kit/templates/base.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/bureaucratic_universe/kit/templates/base.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/bureaucratic_universe/kit/templates/base.html"
+      }
+    },
+    {
+      "id": "4f9dc3e2c67f",
+      "name": "Tools",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Tools/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Tools/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Tools/index.html"
+      }
+    },
+    {
+      "id": "f8bb37e0115f",
+      "name": "Forms",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Forms/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Forms/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Forms/index.html"
+      }
+    },
+    {
+      "id": "de4f48c598c0",
+      "name": "Core Apps",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Core/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Core/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Core/index.html"
+      }
+    },
+    {
+      "id": "6da7379e5bda",
+      "name": "Documentation",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Docs/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Docs/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Docs/index.html"
+      }
+    },
+    {
+      "id": "2746a977b048",
+      "name": "Philosophy",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Philosophy/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Philosophy/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/codex_monad/Philosophy/index.html"
+      }
+    },
+    {
+      "id": "4e47d20e27cc",
+      "name": "Word Salad Laboratory v5.0 HYPERREALITY",
+      "description": "HTML application: index.html",
+      "icon": "\ud83e\udd57",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/word_salad/Word Salad 5.0/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/word_salad/Word Salad 5.0/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/word_salad/Word Salad 5.0/index.html"
+      }
+    },
+    {
+      "id": "ca94b6dfcfa6",
+      "name": "DIN  Local Portal",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/index.html"
+      }
+    },
+    {
+      "id": "114623649067",
+      "name": "Form N",
+      "description": "HTML application: form-n-parrot-permit.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-parrot-permit.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-parrot-permit.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-parrot-permit.html"
+      }
+    },
+    {
+      "id": "6bd0944c5119",
+      "name": "Form N",
+      "description": "HTML application: form-parrot-permit.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-parrot-permit.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-parrot-permit.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-parrot-permit.html"
+      }
+    },
+    {
+      "id": "00544b0e0f51",
+      "name": "Form N",
+      "description": "HTML application: form-n-notice-def.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-notice-def.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-notice-def.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-notice-def.html"
+      }
+    },
+    {
+      "id": "a402bd61ec36",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (4).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (4).html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (4).html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (4).html"
+      }
+    },
+    {
+      "id": "71d627f2f95d",
+      "name": "Form N",
+      "description": "HTML application: form-qhfmv-qs.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-qhfmv-qs.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-qhfmv-qs.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-qhfmv-qs.html"
+      }
+    },
+    {
+      "id": "b4188872ff9c",
+      "name": "Form N",
+      "description": "HTML application: form-n-def-meta.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-def-meta.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-def-meta.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-def-meta.html"
+      }
+    },
+    {
+      "id": "4640a8249b46",
+      "name": "Form L",
+      "description": "HTML application: consent-time-doc.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/consent-time-doc.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/consent-time-doc.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/consent-time-doc.html"
+      }
+    },
+    {
+      "id": "7893d6bb96af",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (2).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (2).html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (2).html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (2).html"
+      }
+    },
+    {
+      "id": "ace77315cc98",
+      "name": "Master Legal Disclaimer Package",
+      "description": "HTML application: master-legal-index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/master-legal-index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/master-legal-index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/master-legal-index.html"
+      }
+    },
+    {
+      "id": "bdaa80ed4afb",
+      "name": "Form L",
+      "description": "HTML application: liability-loop-doc.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/liability-loop-doc.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/liability-loop-doc.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/liability-loop-doc.html"
+      }
+    },
+    {
+      "id": "db1485a63c42",
+      "name": "System Architecture Diagram",
+      "description": "HTML application: system-diagram.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/system-diagram.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/system-diagram.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/system-diagram.html"
+      }
+    },
+    {
+      "id": "bc6e3ea1dad7",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (3).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (3).html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (3).html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (3).html"
+      }
+    },
+    {
+      "id": "3bf0491178f3",
+      "name": "Form N",
+      "description": "HTML application: form-n-ple-omega.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-ple-omega.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-ple-omega.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-ple-omega.html"
+      }
+    },
+    {
+      "id": "355a2b0ea051",
+      "name": "Complete Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print (1).html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (1).html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (1).html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print (1).html"
+      }
+    },
+    {
+      "id": "0bb3dc600e53",
+      "name": "Form N",
+      "description": "HTML application: form-notice-notice.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-notice-notice.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-notice-notice.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-notice-notice.html"
+      }
+    },
+    {
+      "id": "d07faafbe02e",
+      "name": "Form N",
+      "description": "HTML application: form-n-pnep-infinity.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-pnep-infinity.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-pnep-infinity.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-pnep-infinity.html"
+      }
+    },
+    {
+      "id": "ba8727707ccb",
+      "name": "L",
+      "description": "HTML application: doc-l-disclaim-all.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-disclaim-all.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-disclaim-all.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-disclaim-all.html"
+      }
+    },
+    {
+      "id": "598a58049a70",
+      "name": "L",
+      "description": "HTML application: doc-l-terms-paradox.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-terms-paradox.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-terms-paradox.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-terms-paradox.html"
+      }
+    },
+    {
+      "id": "7fa211a338ee",
+      "name": "Form L",
+      "description": "HTML application: completion-cert.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/completion-cert.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/completion-cert.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/completion-cert.html"
+      }
+    },
+    {
+      "id": "71aca20259c0",
+      "name": "Form N",
+      "description": "HTML application: form-n-qsc-911.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-qsc-911.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-qsc-911.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-qsc-911.html"
+      }
+    },
+    {
+      "id": "be514ebae091",
+      "name": "DIN Files",
+      "description": "HTML application: din-files.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/din-files.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/din-files.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/din-files.html"
+      }
+    },
+    {
+      "id": "eff6eca48f30",
+      "name": "Department of Infinite Noticing",
+      "description": "HTML application: master-portal-index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/master-portal-index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/master-portal-index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/master-portal-index.html"
+      }
+    },
+    {
+      "id": "4a3c6b410799",
+      "name": "L",
+      "description": "HTML application: doc-l-nda-infinity.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-nda-infinity.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-nda-infinity.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/doc-l-nda-infinity.html"
+      }
+    },
+    {
+      "id": "e7722158d194",
+      "name": "Form N",
+      "description": "HTML application: form-n-intenc-0.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-intenc-0.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-intenc-0.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-intenc-0.html"
+      }
+    },
+    {
+      "id": "38a7c6de3293",
+      "name": "Form N",
+      "description": "HTML application: form-n-cn-1.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-cn-1.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-cn-1.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-cn-1.html"
+      }
+    },
+    {
+      "id": "3493bcf7439f",
+      "name": "Form L",
+      "description": "HTML application: ip-omni-doc.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/ip-omni-doc.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/ip-omni-doc.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/ip-omni-doc.html"
+      }
+    },
+    {
+      "id": "0413b060a557",
+      "name": "Form N",
+      "description": "HTML application: form-n-enc-ops-7.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-enc-ops-7.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-enc-ops-7.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/form-n-enc-ops-7.html"
+      }
+    },
+    {
+      "id": "564c51744d23",
+      "name": "Notice of Encabulator Noticing Requirements",
+      "description": "HTML application: encabulator_notice_print.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/content/encabulator_notice_print.html"
+      }
+    },
+    {
+      "id": "be479c0da36f",
+      "name": "{title}",
+      "description": "HTML application: base.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/templates/base.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/templates/base.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/apps/din_portal/din_portal/templates/base.html"
+      }
+    },
+    {
+      "id": "534899f8c8be",
+      "name": "Department of Infinite Noticing \u2014 Portal",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/din_portal/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/din_portal/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/din_portal/index.html"
+      }
+    },
+    {
+      "id": "11694b85d71b",
+      "name": "PolyWrite2 Pro Enhanced",
+      "description": "HTML application: index.html",
+      "icon": "\u270d\ufe0f",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/polywrite/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/polywrite/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/polywrite/index.html"
+      }
+    },
+    {
+      "id": "24109f3f2c69",
+      "name": "PR\u0100NAWARE v0.1",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/pranayama/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/pranayama/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/pranayama/index.html"
+      }
+    },
+    {
+      "id": "09314c726227",
+      "name": "Codex Monad Seedline",
+      "description": "HTML application: START_HERE.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/START_HERE.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/START_HERE.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/START_HERE.html"
+      }
+    },
+    {
+      "id": "80cc443bdced",
+      "name": "\ud83c\udf1f Samson's Infinite Life Proof \ud83c\udf1f",
+      "description": "HTML application: index.html",
+      "icon": "\ud83e\udd81",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/samson_recursive/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/samson_recursive/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/samson_recursive/index.html"
+      }
+    },
+    {
+      "id": "267f61e39281",
+      "name": "Bureaucratic Universe",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\udccb",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/index.html"
+      }
+    },
+    {
+      "id": "2c1b1fc4027a",
+      "name": "{title}",
+      "description": "HTML application: base.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/kit/templates/base.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/kit/templates/base.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/bureaucratic_universe/kit/templates/base.html"
+      }
+    },
+    {
+      "id": "d466d627b433",
+      "name": "Tools",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Tools/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Tools/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Tools/index.html"
+      }
+    },
+    {
+      "id": "ecb7ce6da2b1",
+      "name": "Forms",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Forms/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Forms/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Forms/index.html"
+      }
+    },
+    {
+      "id": "98f2b9633d7d",
+      "name": "Core Apps",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Core/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Core/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Core/index.html"
+      }
+    },
+    {
+      "id": "76692b95ddda",
+      "name": "Documentation",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Docs/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Docs/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Docs/index.html"
+      }
+    },
+    {
+      "id": "91ab870a8ea5",
+      "name": "Philosophy",
+      "description": "HTML application: index.html",
+      "icon": "\ud83d\ude80",
+      "status": "active",
+      "type": "html",
+      "category": "hineni-system",
+      "path": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Philosophy/index.html",
+      "entry": "../../30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Philosophy/index.html",
+      "invoke": {
+        "entry": "30-codex-extras/mac-home/Codex/CODEX-MONAD/CODEX_FINAL/apps/codex_monad/Philosophy/index.html"
+      }
+    },
+    {
+      "id": "4fd15135dfd6",
+      "name": "Icloud Diagnostics",
+      "description": "CLI tool: icloud-diagnostics",
+      "icon": "\u2601\ufe0f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/icloud-diagnostics",
+      "entry": null,
+      "invoke": {
+        "command": "icloud-diagnostics",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "2f24f7adab6b",
+      "name": "Snapshot",
+      "description": "CLI tool: snapshot",
+      "icon": "\ud83d\udcf7",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/snapshot",
+      "entry": null,
+      "invoke": {
+        "command": "snapshot",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "4279f31fe2d2",
+      "name": "Finder Reload",
+      "description": "CLI tool: finder-reload",
+      "icon": "\ud83d\udd04",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/finder-reload",
+      "entry": null,
+      "invoke": {
+        "command": "finder-reload",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "3c66d3c963fe",
+      "name": "Doctor",
+      "description": "CLI tool: doctor",
+      "icon": "\ud83e\ude7a",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/doctor",
+      "entry": null,
+      "invoke": {
+        "command": "doctor",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "756c0aae492f",
+      "name": "Demo Tool",
+      "description": "CLI tool: demo-tool",
+      "icon": "\ud83d\udcbb",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/demo-tool",
+      "entry": null,
+      "invoke": {
+        "command": "demo-tool",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "5d429be94778",
+      "name": "Dns Flush",
+      "description": "CLI tool: dns-flush",
+      "icon": "\ud83c\udf10",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/dns-flush",
+      "entry": null,
+      "invoke": {
+        "command": "dns-flush",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "7bcce9a3b01f",
+      "name": "Git Wip",
+      "description": "CLI tool: git-wip",
+      "icon": "\ud83c\udf3f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/git-wip",
+      "entry": null,
+      "invoke": {
+        "command": "git-wip",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "12933f0cf6b5",
+      "name": "Triage",
+      "description": "CLI tool: triage",
+      "icon": "\ud83c\udfe5",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/triage",
+      "entry": null,
+      "invoke": {
+        "command": "triage",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "0fa374e46b83",
+      "name": "Proj Open",
+      "description": "CLI tool: proj-open",
+      "icon": "\ud83d\udcbb",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/proj-open",
+      "entry": null,
+      "invoke": {
+        "command": "proj-open",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "c6936f52026a",
+      "name": "Focus",
+      "description": "CLI tool: focus",
+      "icon": "\ud83c\udfaf",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/focus",
+      "entry": null,
+      "invoke": {
+        "command": "focus",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "1fde25e3a780",
+      "name": "Triage Import",
+      "description": "CLI tool: triage-import",
+      "icon": "\ud83c\udfe5",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/triage-import",
+      "entry": null,
+      "invoke": {
+        "command": "triage-import",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "270b621ff840",
+      "name": "Toolbox",
+      "description": "CLI tool: toolbox",
+      "icon": "\ud83d\udcbb",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/toolbox",
+      "entry": null,
+      "invoke": {
+        "command": "toolbox",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "51b75ed0a01d",
+      "name": "Git Clean Branches",
+      "description": "CLI tool: git-clean-branches",
+      "icon": "\ud83c\udf3f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/git-clean-branches",
+      "entry": null,
+      "invoke": {
+        "command": "git-clean-branches",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "420c69bfd528",
+      "name": "Wifi Cycle",
+      "description": "CLI tool: wifi-cycle",
+      "icon": "\ud83d\udcf6",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/wifi-cycle",
+      "entry": null,
+      "invoke": {
+        "command": "wifi-cycle",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "cbb2fa760d14",
+      "name": "Logs Tail",
+      "description": "CLI tool: logs-tail",
+      "icon": "\ud83d\udcbb",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/logs-tail",
+      "entry": null,
+      "invoke": {
+        "command": "logs-tail",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "7984ef80e70a",
+      "name": "Icloud Kick",
+      "description": "CLI tool: icloud-kick",
+      "icon": "\u2601\ufe0f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/icloud-kick",
+      "entry": null,
+      "invoke": {
+        "command": "icloud-kick",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "8ecb4282a438",
+      "name": "Scaffold",
+      "description": "CLI tool: scaffold",
+      "icon": "\ud83c\udfd7\ufe0f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/scaffold",
+      "entry": null,
+      "invoke": {
+        "command": "scaffold",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "49b22b1e2be3",
+      "name": "Icloud Kick Super",
+      "description": "CLI tool: icloud-kick-super",
+      "icon": "\u2601\ufe0f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/icloud-kick-super",
+      "entry": null,
+      "invoke": {
+        "command": "icloud-kick-super",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "b5c09eff6679",
+      "name": "Prana",
+      "description": "CLI tool: prana",
+      "icon": "\ud83c\udf2c\ufe0f",
+      "status": "active",
+      "type": "cli",
+      "category": "toolbox-cli",
+      "path": "10-repos-central/toolbox-cli/bin/prana",
+      "entry": null,
+      "invoke": {
+        "command": "prana",
+        "argsDefault": [
+          "--help"
+        ]
+      }
+    },
+    {
+      "id": "8730de6e6e30",
+      "name": "Toolbox Reference",
+      "description": "Documentation: TOOLBOX_REFERENCE.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/toolbox-cli/docs/TOOLBOX_REFERENCE.md",
+      "entry": "../../10-repos-central/toolbox-cli/docs/TOOLBOX_REFERENCE.md"
+    },
+    {
+      "id": "63b92fbecef8",
+      "name": "Morning Ops",
+      "description": "Documentation: MORNING_OPS.txt",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/toolbox-cli/docs/MORNING_OPS.txt",
+      "entry": "../../10-repos-central/toolbox-cli/docs/MORNING_OPS.txt"
+    },
+    {
+      "id": "47e282007d42",
+      "name": "Toolbox Cheatsheet",
+      "description": "Documentation: TOOLBOX_CHEATSHEET.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/toolbox-cli/docs/TOOLBOX_CHEATSHEET.md",
+      "entry": "../../10-repos-central/toolbox-cli/docs/TOOLBOX_CHEATSHEET.md"
+    },
+    {
+      "id": "5702dc9d13c1",
+      "name": "Bereshit Context",
+      "description": "Documentation: BERESHIT_CONTEXT.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/BERESHIT_CONTEXT.md",
+      "entry": "../../10-repos-central/hineni/docs/BERESHIT_CONTEXT.md"
+    },
+    {
+      "id": "7e91d572af19",
+      "name": "Codex Daily Schema",
+      "description": "Documentation: CODEX_DAILY_SCHEMA.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/CODEX_DAILY_SCHEMA.md",
+      "entry": "../../10-repos-central/hineni/docs/CODEX_DAILY_SCHEMA.md"
+    },
+    {
+      "id": "cffa0a33d18a",
+      "name": "Davar Spec",
+      "description": "Documentation: DAVAR_SPEC.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/DAVAR_SPEC.md",
+      "entry": "../../10-repos-central/hineni/docs/DAVAR_SPEC.md"
+    },
+    {
+      "id": "88080bd85f56",
+      "name": "Vision",
+      "description": "Documentation: VISION.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/VISION.md",
+      "entry": "../../10-repos-central/hineni/docs/VISION.md"
+    },
+    {
+      "id": "8548a42d4488",
+      "name": "Session Summary 2025 12 01 Council Validation Cross Platform",
+      "description": "Documentation: session-summary-2025-12-01-council-validation-cross-platform.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/session-summary-2025-12-01-council-validation-cross-platform.md",
+      "entry": "../../10-repos-central/hineni/docs/session-summary-2025-12-01-council-validation-cross-platform.md"
+    },
+    {
+      "id": "3b9c6762f6c9",
+      "name": "Symbolic Drift Schema",
+      "description": "Documentation: SYMBOLIC_DRIFT_SCHEMA.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/SYMBOLIC_DRIFT_SCHEMA.md",
+      "entry": "../../10-repos-central/hineni/docs/SYMBOLIC_DRIFT_SCHEMA.md"
+    },
+    {
+      "id": "94d892ffbcff",
+      "name": "Witness Protocol",
+      "description": "Documentation: WITNESS_PROTOCOL.md",
+      "icon": "\ud83d\udcc4",
+      "status": "active",
+      "type": "doc",
+      "category": "docs",
+      "path": "10-repos-central/hineni/docs/WITNESS_PROTOCOL.md",
+      "entry": "../../10-repos-central/hineni/docs/WITNESS_PROTOCOL.md"
+    },
+    {
+      "name": "CODEX-MONAD Portal",
+      "path": "10-repos-central/CODEX-MONAD",
+      "type": "folder",
+      "category": "repos",
+      "icon": "\ud83c\udf00",
+      "description": "The consciousness portal - you are here",
+      "status": "transcendent",
+      "id": "codex-monad-portal"
+    },
+    {
+      "name": "Toolbox CLI",
+      "path": "10-repos-central/toolbox-cli",
+      "type": "folder",
+      "category": "repos",
+      "icon": "\ud83e\uddf0",
+      "description": "Command line tool collection",
+      "id": "toolbox-cli",
+      "status": "active"
+    },
+    {
+      "name": "HINENI System",
+      "path": "10-repos-central/hineni",
+      "type": "folder",
+      "category": "repos",
+      "icon": "\ud83e\udded",
+      "description": "Core consciousness infrastructure",
+      "id": "hineni-system",
+      "status": "active"
+    },
+    {
+      "name": "Conflict Lab",
+      "path": "10-repos-central/conflict-lab",
+      "type": "folder",
+      "category": "conflict-lab",
+      "icon": "\u2696\ufe0f",
+      "description": "Game theory and conflict simulation",
+      "id": "conflict-lab",
+      "status": "active"
+    },
+    {
+      "name": "AI Datasets",
+      "path": "50-ai/datasets-origin",
+      "type": "folder",
+      "category": "ai-infra",
+      "icon": "\ud83e\uddec",
+      "description": "Source datasets for AI experiments",
+      "id": "ai-datasets",
+      "status": "active"
+    },
+    {
+      "name": "AI Models",
+      "path": "50-ai/models-origin",
+      "type": "folder",
+      "category": "ai-infra",
+      "icon": "\ud83e\udde0",
+      "description": "Model checkpoints and weights",
+      "id": "ai-models",
+      "status": "active"
+    },
+    {
+      "name": "Archives",
+      "path": "40-archive",
+      "type": "folder",
+      "category": "archives",
+      "icon": "\ud83d\uddc4\ufe0f",
+      "description": "Historical archives and backups",
+      "id": "archives",
+      "status": "active"
+    }
+  ],
+  "stats": {
+    "manifests_found": 0,
+    "html_apps_found": 139,
+    "cli_tools_found": 19,
+    "docs_found": 10,
+    "total_items": 175
+  },
+  "scan_log": [
+    {
+      "time": "2025-12-20T17:37:54.365900",
+      "level": "info",
+      "message": "Scanning for HINENI.manifest files..."
+    },
+    {
+      "time": "2025-12-20T17:37:55.005053",
+      "level": "info",
+      "message": "Scanning for HTML applications..."
+    },
+    {
+      "time": "2025-12-20T17:37:55.007973",
+      "level": "success",
+      "message": "Found: hypergraph.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008138",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008272",
+      "level": "success",
+      "message": "Found: README.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008384",
+      "level": "success",
+      "message": "Found: oracle.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008537",
+      "level": "success",
+      "message": "Found: grok-integration-demo.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008680",
+      "level": "success",
+      "message": "Found: bureaucratic-universe.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008810",
+      "level": "success",
+      "message": "Found: polywrite.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.008916",
+      "level": "success",
+      "message": "Found: din-files.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.009025",
+      "level": "success",
+      "message": "Found: polywrite-advanced.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.009151",
+      "level": "success",
+      "message": "Found: samson-recursive.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.009249",
+      "level": "success",
+      "message": "Found: pranayama.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.009508",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.009613",
+      "level": "success",
+      "message": "Found: README.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.010258",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.010442",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.010698",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.010890",
+      "level": "success",
+      "message": "Found: START_HERE.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.011077",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.011253",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.011427",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.011719",
+      "level": "success",
+      "message": "Found: base.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.012102",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.012264",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.012436",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.012653",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.012807",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.014520",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.014868",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015159",
+      "level": "success",
+      "message": "Found: form-n-parrot-permit.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015265",
+      "level": "success",
+      "message": "Found: form-parrot-permit.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015371",
+      "level": "success",
+      "message": "Found: form-n-notice-def.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015481",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (4).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015591",
+      "level": "success",
+      "message": "Found: form-qhfmv-qs.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015696",
+      "level": "success",
+      "message": "Found: form-n-def-meta.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015810",
+      "level": "success",
+      "message": "Found: consent-time-doc.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.015930",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (2).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016041",
+      "level": "success",
+      "message": "Found: master-legal-index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016153",
+      "level": "success",
+      "message": "Found: liability-loop-doc.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016266",
+      "level": "success",
+      "message": "Found: system-diagram.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016376",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (3).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016487",
+      "level": "success",
+      "message": "Found: form-n-ple-omega.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016600",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (1).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016711",
+      "level": "success",
+      "message": "Found: form-notice-notice.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016819",
+      "level": "success",
+      "message": "Found: form-n-pnep-infinity.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.016925",
+      "level": "success",
+      "message": "Found: doc-l-disclaim-all.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017041",
+      "level": "success",
+      "message": "Found: doc-l-terms-paradox.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017151",
+      "level": "success",
+      "message": "Found: completion-cert.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017253",
+      "level": "success",
+      "message": "Found: form-n-qsc-911.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017351",
+      "level": "success",
+      "message": "Found: master-portal-index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017456",
+      "level": "success",
+      "message": "Found: doc-l-nda-infinity.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017564",
+      "level": "success",
+      "message": "Found: form-n-intenc-0.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017671",
+      "level": "success",
+      "message": "Found: form-n-cn-1.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017778",
+      "level": "success",
+      "message": "Found: ip-omni-doc.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017887",
+      "level": "success",
+      "message": "Found: form-n-enc-ops-7.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.017994",
+      "level": "success",
+      "message": "Found: encabulator_notice_print.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.018177",
+      "level": "success",
+      "message": "Found: base.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.021181",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.021345",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.021517",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.021696",
+      "level": "success",
+      "message": "Found: START_HERE.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.021871",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.022037",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.022330",
+      "level": "success",
+      "message": "Found: base.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.022680",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.022853",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.023011",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.023178",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.023341",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.029464",
+      "level": "success",
+      "message": "Found: royal_game_of_ur.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.029758",
+      "level": "success",
+      "message": "Found: royal_game_of_ur.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030160",
+      "level": "success",
+      "message": "Found: hypergraph.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030267",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030377",
+      "level": "success",
+      "message": "Found: README.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030471",
+      "level": "success",
+      "message": "Found: oracle.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030592",
+      "level": "success",
+      "message": "Found: grok-integration-demo.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030695",
+      "level": "success",
+      "message": "Found: bureaucratic-universe.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030820",
+      "level": "success",
+      "message": "Found: polywrite.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.030925",
+      "level": "success",
+      "message": "Found: din-files.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.031024",
+      "level": "success",
+      "message": "Found: polywrite-advanced.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.031141",
+      "level": "success",
+      "message": "Found: samson-recursive.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.031237",
+      "level": "success",
+      "message": "Found: pranayama.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.031681",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.031797",
+      "level": "success",
+      "message": "Found: README.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.032341",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.032520",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.032750",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.032939",
+      "level": "success",
+      "message": "Found: START_HERE.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.033117",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.033293",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.033458",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.033747",
+      "level": "success",
+      "message": "Found: base.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.034146",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.034328",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.034492",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.034718",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.034899",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.037140",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.037584",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.037898",
+      "level": "success",
+      "message": "Found: form-n-parrot-permit.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038020",
+      "level": "success",
+      "message": "Found: form-parrot-permit.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038134",
+      "level": "success",
+      "message": "Found: form-n-notice-def.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038254",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (4).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038369",
+      "level": "success",
+      "message": "Found: form-qhfmv-qs.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038485",
+      "level": "success",
+      "message": "Found: form-n-def-meta.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038603",
+      "level": "success",
+      "message": "Found: consent-time-doc.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038719",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (2).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038832",
+      "level": "success",
+      "message": "Found: master-legal-index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.038948",
+      "level": "success",
+      "message": "Found: liability-loop-doc.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039063",
+      "level": "success",
+      "message": "Found: system-diagram.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039181",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (3).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039288",
+      "level": "success",
+      "message": "Found: form-n-ple-omega.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039403",
+      "level": "success",
+      "message": "Found: encabulator_notice_print (1).html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039530",
+      "level": "success",
+      "message": "Found: form-notice-notice.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039654",
+      "level": "success",
+      "message": "Found: form-n-pnep-infinity.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039780",
+      "level": "success",
+      "message": "Found: doc-l-disclaim-all.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039888",
+      "level": "success",
+      "message": "Found: doc-l-terms-paradox.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.039996",
+      "level": "success",
+      "message": "Found: completion-cert.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040103",
+      "level": "success",
+      "message": "Found: form-n-qsc-911.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040203",
+      "level": "success",
+      "message": "Found: din-files.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040316",
+      "level": "success",
+      "message": "Found: master-portal-index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040436",
+      "level": "success",
+      "message": "Found: doc-l-nda-infinity.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040545",
+      "level": "success",
+      "message": "Found: form-n-intenc-0.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040657",
+      "level": "success",
+      "message": "Found: form-n-cn-1.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040769",
+      "level": "success",
+      "message": "Found: ip-omni-doc.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.040885",
+      "level": "success",
+      "message": "Found: form-n-enc-ops-7.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.041014",
+      "level": "success",
+      "message": "Found: encabulator_notice_print.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.041216",
+      "level": "success",
+      "message": "Found: base.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.060401",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.060577",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.060764",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.060961",
+      "level": "success",
+      "message": "Found: START_HERE.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.061150",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.061335",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.061645",
+      "level": "success",
+      "message": "Found: base.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.062028",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.062213",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.062407",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.062579",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.062756",
+      "level": "success",
+      "message": "Found: index.html"
+    },
+    {
+      "time": "2025-12-20T17:37:55.173700",
+      "level": "info",
+      "message": "Scanning for CLI tools..."
+    },
+    {
+      "time": "2025-12-20T17:37:55.173879",
+      "level": "success",
+      "message": "CLI: icloud-diagnostics"
+    },
+    {
+      "time": "2025-12-20T17:37:55.173918",
+      "level": "success",
+      "message": "CLI: snapshot"
+    },
+    {
+      "time": "2025-12-20T17:37:55.173946",
+      "level": "success",
+      "message": "CLI: finder-reload"
+    },
+    {
+      "time": "2025-12-20T17:37:55.173970",
+      "level": "success",
+      "message": "CLI: doctor"
+    },
+    {
+      "time": "2025-12-20T17:37:55.173994",
+      "level": "success",
+      "message": "CLI: demo-tool"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174021",
+      "level": "success",
+      "message": "CLI: dns-flush"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174043",
+      "level": "success",
+      "message": "CLI: git-wip"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174069",
+      "level": "success",
+      "message": "CLI: triage"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174092",
+      "level": "success",
+      "message": "CLI: proj-open"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174118",
+      "level": "success",
+      "message": "CLI: focus"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174140",
+      "level": "success",
+      "message": "CLI: triage-import"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174166",
+      "level": "success",
+      "message": "CLI: toolbox"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174188",
+      "level": "success",
+      "message": "CLI: git-clean-branches"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174214",
+      "level": "success",
+      "message": "CLI: wifi-cycle"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174237",
+      "level": "success",
+      "message": "CLI: logs-tail"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174262",
+      "level": "success",
+      "message": "CLI: icloud-kick"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174288",
+      "level": "success",
+      "message": "CLI: scaffold"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174309",
+      "level": "success",
+      "message": "CLI: icloud-kick-super"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174331",
+      "level": "success",
+      "message": "CLI: prana"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174336",
+      "level": "info",
+      "message": "Scanning for documentation..."
+    },
+    {
+      "time": "2025-12-20T17:37:55.174448",
+      "level": "success",
+      "message": "Doc: TOOLBOX_REFERENCE.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174477",
+      "level": "success",
+      "message": "Doc: MORNING_OPS.txt"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174499",
+      "level": "success",
+      "message": "Doc: TOOLBOX_CHEATSHEET.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174601",
+      "level": "success",
+      "message": "Doc: BERESHIT_CONTEXT.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174625",
+      "level": "success",
+      "message": "Doc: CODEX_DAILY_SCHEMA.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174645",
+      "level": "success",
+      "message": "Doc: DAVAR_SPEC.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174669",
+      "level": "success",
+      "message": "Doc: VISION.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174689",
+      "level": "success",
+      "message": "Doc: session-summary-2025-12-01-council-validation-cross-platform.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174710",
+      "level": "success",
+      "message": "Doc: SYMBOLIC_DRIFT_SCHEMA.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174729",
+      "level": "success",
+      "message": "Doc: WITNESS_PROTOCOL.md"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174748",
+      "level": "info",
+      "message": "Registering known locations..."
+    },
+    {
+      "time": "2025-12-20T17:37:55.174767",
+      "level": "success",
+      "message": "Registered: CODEX-MONAD Portal"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174783",
+      "level": "success",
+      "message": "Registered: Toolbox CLI"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174797",
+      "level": "success",
+      "message": "Registered: HINENI System"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174810",
+      "level": "success",
+      "message": "Registered: Conflict Lab"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174825",
+      "level": "success",
+      "message": "Registered: AI Datasets"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174838",
+      "level": "success",
+      "message": "Registered: AI Models"
+    },
+    {
+      "time": "2025-12-20T17:37:55.174851",
+      "level": "success",
+      "message": "Registered: Archives"
+    }
+  ]
+}

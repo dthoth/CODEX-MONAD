@@ -1,0 +1,202 @@
+[
+  {
+    "id": "hineni",
+    "label": "HINENI Orchestrator",
+    "icon": "🧭",
+    "status": "active",
+    "description": "Orchestrates sync and hub operations from the command line.",
+    "hubPath": "10-repos-central/hineni"
+  },
+  {
+    "id": "toolbox-cli",
+    "label": "Toolbox CLI",
+    "icon": "🧰",
+    "status": "active",
+    "description": "CLI toolbox for quick maintenance and scripting helpers.",
+    "hubPath": "10-repos-central/toolbox-cli"
+  },
+  {
+    "id": "conflict-lab",
+    "label": "Conflict Lab",
+    "icon": "⚖️",
+    "status": "active",
+    "description": "Interactive conflict/game environment living in the hub.",
+    "hubPath": "10-repos-central/conflict-lab"
+  },
+  {
+    "id": "codex-live",
+    "label": "Codex (Live Tree)",
+    "icon": "📚",
+    "status": "active",
+    "description": "Live Codex directory mirrored under 30-codex-extras.",
+    "hubPath": "30-codex-extras/mac-home/Codex"
+  },
+  {
+    "id": "codex-repo",
+    "label": "CODEX Repo",
+    "icon": "📖",
+    "status": "active",
+    "description": "Primary CODEX git repository in the hub.",
+    "hubPath": "10-repos-central/CODEX"
+  },
+  {
+    "id": "codex-monad",
+    "label": "CODEX-MONAD Portal",
+    "icon": "🌀",
+    "status": "active",
+    "description": "Monad portal web UI (this site).",
+    "hubPath": "10-repos-central/CODEX-MONAD"
+  },
+  {
+    "id": "codex-0",
+    "label": "Codex 0",
+    "icon": "📦",
+    "status": "active",
+    "description": "Base Codex pack.",
+    "hubPath": "40-archive/codex-packs/codex-0.zip"
+  },
+  {
+    "id": "codex-0-redux",
+    "label": "Codex 0 Redux",
+    "icon": "📦",
+    "status": "active",
+    "description": "Redux version of Codex 0.",
+    "hubPath": "40-archive/codex-packs/codex-0-redux.zip"
+  },
+  {
+    "id": "codex-0-redux-jun5",
+    "label": "Codex 0 Redux (Jun 5)",
+    "icon": "📦",
+    "status": "active",
+    "description": "Jun 5 2025 snapshot of Codex 0 Redux.",
+    "hubPath": "40-archive/codex-packs/codex-0-redux-jun5.zip"
+  },
+  {
+    "id": "lc-vol-0",
+    "label": "LC Vol 0",
+    "icon": "📦",
+    "status": "active",
+    "description": "LC-Vol-0 Codex pack.",
+    "hubPath": "40-archive/codex-packs/lc-vol-0.zip"
+  },
+  {
+    "id": "codex-scripts-notes-2025-06-09",
+    "label": "Codex Scripts & Notes (2025-06-09)",
+    "icon": "📜",
+    "status": "active",
+    "description": "Codex scripts and notes bundle (June 9 2025).",
+    "hubPath": "40-archive/codex-packs/codex-scripts-notes-2025-06-09.zip"
+  },
+  {
+    "id": "codex-staging-june6",
+    "label": "Codex Staging (June 6)",
+    "icon": "📜",
+    "status": "active",
+    "description": "Codex staging bundle from June 6.",
+    "hubPath": "40-archive/codex-packs/codex-staging-june6.zip"
+  },
+  {
+    "id": "polywrite3pro",
+    "label": "Polywrite3Pro",
+    "icon": "✍️",
+    "status": "active",
+    "description": "Polywrite3Pro Codex bundle.",
+    "hubPath": "40-archive/codex-packs/polywrite3pro.zip"
+  },
+  {
+    "id": "psychometrics",
+    "label": "Psychometrics",
+    "icon": "🧠",
+    "status": "active",
+    "description": "Psychometrics game/pack.",
+    "hubPath": "40-archive/codex-packs/psychometrics.zip"
+  },
+  {
+    "id": "home-planning",
+    "label": "Home Planning",
+    "icon": "🏠",
+    "status": "active",
+    "description": "Home planning Codex pack.",
+    "hubPath": "40-archive/codex-packs/home-planning.zip"
+  },
+  {
+    "id": "phone-vault",
+    "label": "Phone Vault",
+    "icon": "📱",
+    "status": "active",
+    "description": "Phone vault Codex pack.",
+    "hubPath": "40-archive/codex-packs/phone-vault.zip"
+  },
+  {
+    "id": "local-vault-x",
+    "label": "Local Vault X",
+    "icon": "🗄️",
+    "status": "active",
+    "description": "LOCAL_VAULT_X Codex pack.",
+    "hubPath": "40-archive/codex-packs/local-vault-x.zip"
+  },
+  {
+    "id": "shell-terminal-scripts",
+    "label": "Shell Terminal Scripts",
+    "icon": "💻",
+    "status": "active",
+    "description": "Shell helper scripts bundle.",
+    "hubPath": "40-archive/codex-packs/shell-terminal-scripts.zip"
+  },
+  {
+    "id": "lux-luther",
+    "label": "Lux Luther",
+    "icon": "🃏",
+    "status": "active",
+    "description": "Lux Luther pack.",
+    "hubPath": "40-archive/codex-packs/lux-luther.zip"
+  },
+  {
+    "id": "codex-archive",
+    "label": "Codex Archive",
+    "icon": "🗃️",
+    "status": "active",
+    "description": "Codex archive bundle.",
+    "hubPath": "40-archive/codex-packs/codex-archive.zip"
+  },
+  {
+    "id": "filecabinet-obs-2024",
+    "label": "FILECABINET OBS 2024",
+    "icon": "🗂️",
+    "status": "active",
+    "description": "Filecabinet observations 2024 archive.",
+    "hubPath": "40-archive/codex-packs/filecabinet-obs-2024.zip"
+  },
+  {
+    "id": "ai-datasets-origin",
+    "label": "AI Datasets (Origin)",
+    "icon": "🧬",
+    "status": "active",
+    "description": "Source datasets for AI experiments.",
+    "hubPath": "50-ai/datasets-origin"
+  },
+  {
+    "id": "ai-models-origin",
+    "label": "AI Models (Origin)",
+    "icon": "🧠",
+    "status": "active",
+    "description": "Source models / checkpoints for AI experiments.",
+    "hubPath": "50-ai/models-origin"
+  },
+  {
+    "id": "og-scrape-config",
+    "label": "Origin Scrape Config",
+    "icon": "📜",
+    "status": "active",
+    "description": "Configuration for the original OG scrape.",
+    "hubPath": "data_sources/og_scrape"
+  },
+  {
+    "id": "og-scrape-mine",
+    "label": "OG Scrape (Mine)",
+    "icon": "⛏️",
+    "status": "active",
+    "description": "Derived indices and mappings from the OG scrape.",
+    "hubPath": "30-codex-extras/og_scrape_mine"
+  }
+]
