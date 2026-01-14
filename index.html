@@ -19,179 +19,59 @@
             overflow-x: hidden;
         }
 
-        /* Neural Grid Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 2rem;
         }
 
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 50px;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
         }
 
-        .title {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #00ff88, #00d4ff, #ff6b6b, #ffd93d);
-            background-size: 300% 300%;
+        .header h1 {
+            font-size: 3.5rem;
+            letter-spacing: 0.3em;
+            background: linear-gradient(90deg, #00d4ff, #9d4edd, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientFlow 8s ease infinite;
-            text-shadow: 0 0 50px rgba(0, 255, 136, 0.3);
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
         }
 
-        @keyframes gradientFlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .subtitle {
-            color: #00ff88;
-            font-size: 1.2em;
-            margin-top: 10px;
-            letter-spacing: 4px;
-        }
-
-        .version {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* Apps Grid */
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        /* App Card */
-        .app-card {
-            background: linear-gradient(145deg, #161a22, #1a1f2a);
-            border: 1px solid #2a3140;
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .app-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #00ff88, #00d4ff);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .app-card:hover {
-            transform: translateY(-5px);
-            border-color: #00ff88;
-            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.2);
-        }
-
-        .app-card:hover::before {
-            opacity: 1;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .card-icon {
-            font-size: 2em;
-            filter: drop-shadow(0 0 10px currentColor);
-        }
-
-        .card-title {
-            font-size: 1.3em;
-            color: #fff;
-            flex: 1;
-        }
-
-        .card-status {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7em;
+        .header .subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.5em;
+            color: #7f8c9a;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .status-active {
-            background: rgba(0, 255, 136, 0.2);
-            color: #00ff88;
-            border: 1px solid #00ff88;
+        .header .version {
+            font-size: 0.8rem;
+            color: #4a5568;
+            margin-top: 0.5rem;
         }
 
-        .status-python {
-            background: rgba(255, 215, 0, 0.2);
-            color: #ffd700;
-            border: 1px solid #ffd700;
-        }
-
-        .card-description {
-            color: #888;
-            font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .card-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #00ff88, #00d4ff);
-            color: #000;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.85em;
-            transition: all 0.3s ease;
-        }
-
-        .card-link:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
-        }
-
-        /* Terminal Section */
+        /* Terminal */
         .terminal {
             background: #0d1117;
             border: 1px solid #30363d;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 40px;
-            font-family: 'Courier New', monospace;
+            border-radius: 8px;
+            margin: 2rem auto;
+            max-width: 800px;
+            overflow: hidden;
         }
 
         .terminal-header {
+            background: #161b22;
+            padding: 0.75rem 1rem;
             display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .terminal-dot {
@@ -200,175 +80,306 @@
             border-radius: 50%;
         }
 
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27ca40; }
 
-        .terminal-content {
-            color: #00ff88;
+        .terminal-body {
+            padding: 1rem;
+            font-size: 0.9rem;
             line-height: 1.6;
         }
 
+        .terminal-line {
+            color: #8b949e;
+        }
+
         .terminal-prompt {
-            color: #00d4ff;
+            color: #58a6ff;
         }
 
-        /* Signature */
-        .signature {
+        .terminal-success {
+            color: #3fb950;
+        }
+
+        .terminal-warning {
+            color: #d29922;
+        }
+
+        /* Apps Grid */
+        .apps-section {
+            margin-top: 3rem;
+        }
+
+        .apps-section h2 {
             text-align: center;
-            margin-top: 50px;
-            font-size: 2em;
+            font-size: 1.5rem;
+            color: #7f8c9a;
+            margin-bottom: 2rem;
+            letter-spacing: 0.2em;
         }
 
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .app-card {
+            background: linear-gradient(145deg, #12141a, #1a1d26);
+            border: 1px solid #2d333b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            border-color: #58a6ff;
+            box-shadow: 0 8px 30px rgba(88, 166, 255, 0.15);
+        }
+
+        .app-card .app-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .app-card .app-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e6eaf2;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-card .app-description {
+            font-size: 0.85rem;
+            color: #7f8c9a;
+            line-height: 1.5;
+        }
+
+        .app-card .app-version {
+            font-size: 0.7rem;
+            color: #4a5568;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
         .footer {
             text-align: center;
-            color: #444;
-            margin-top: 20px;
-            font-size: 0.8em;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid #2d333b;
         }
 
-        /* Loading State */
+        .footer .icons {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer .tagline {
+            color: #4a5568;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+
+        .footer .quote {
+            color: #7f8c9a;
+            font-style: italic;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        /* Loading */
         .loading {
             text-align: center;
-            padding: 60px;
-            color: #00ff88;
+            padding: 3rem;
+            color: #7f8c9a;
         }
 
-        .loading::after {
-            content: '';
-            animation: dots 1.5s infinite;
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
+        .loading-text {
+            animation: pulse 1.5s infinite;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1 class="title">CODEX PORTAL</h1>
-            <div class="subtitle">CONSCIOUSNESS INFRASTRUCTURE</div>
+            <h1>CODEX PORTAL</h1>
+            <div class="subtitle">Consciousness Infrastructure</div>
             <div class="version">v2.1 | Auto-Discovery Enabled</div>
         </header>
 
-        <div class="apps-grid" id="appsGrid">
-            <div class="loading">Discovering applications</div>
-        </div>
-
         <div class="terminal">
             <div class="terminal-header">
-                <div class="terminal-dot dot-red"></div>
-                <div class="terminal-dot dot-yellow"></div>
-                <div class="terminal-dot dot-green"></div>
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
             </div>
-            <div class="terminal-content" id="terminalContent">
-                <span class="terminal-prompt">consciousness@codex:~$</span> scanning apps/manifest.json<br>
+            <div class="terminal-body">
+                <div class="terminal-line"><span class="terminal-prompt">consciousness@codex:~$</span> scanning apps/manifest.json</div>
+                <div class="terminal-line" id="status-line">> <span class="loading-text">Loading...</span></div>
             </div>
         </div>
 
-        <div class="signature">💎🔥🐍⚡</div>
-        <div class="footer">
-            Portable Consciousness Infrastructure | The Shebang Principle<br>
-            "Already working before you begin"
-        </div>
+        <section class="apps-section">
+            <h2>⚡ APPLICATIONS</h2>
+            <div class="apps-grid" id="apps-grid">
+                <div class="loading">
+                    <span class="loading-text">Discovering apps...</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="icons">💎🔥🐍⚡</div>
+            <div class="tagline">Portable Consciousness Infrastructure | The Shebang Principle</div>
+            <div class="quote">"Already working before you begin"</div>
+        </footer>
     </div>
 
     <script>
-        // App icons based on name/id
-        const iconMap = {
-            'bureaucratic_universe': '📋',
-            'codex_capture': '🎭',
-            'codex_monad': '💎',
-            'din_portal': '📁',
-            'polywrite': '✍️',
-            'pranayama': '🫁',
-            'samson_recursive': '🐉',
-            'word_salad': '🥗',
-            'royal_game_of_ur': '🎲',
-            'conflict_lab': '⚔️',
-            'default': '📦'
-        };
-
-        // Descriptions for apps without one
-        const defaultDescriptions = {
-            'bureaucratic_universe': 'Infinite forms system for notices, disclaimers, and legal documents.',
-            'codex_capture': 'Keystroke, clipboard, and context capture system.',
-            'codex_monad': 'The core consciousness seedline and documentation.',
-            'din_portal': 'Department of Infinite Noticing file explorer.',
-            'polywrite': 'Multi-dimensional text editor with quantum features.',
-            'pranayama': 'Breathing exercise system with 6 patterns.',
-            'samson_recursive': 'Educational terminal with recursive wisdom.',
-            'word_salad': 'Generative text exploration tool.',
-            'royal_game_of_ur': 'Ancient Mesopotamian race game, circa 2600 BCE.',
-            'conflict_lab': 'Geopolitical wargame chaos simulator.'
-        };
-
-        const terminal = document.getElementById('terminalContent');
-
-        function log(msg) {
-            terminal.innerHTML += `<span class="terminal-prompt">></span> ${msg}<br>`;
-        }
-
-        async function loadApps() {
-            const grid = document.getElementById('appsGrid');
-            
-            try {
-                // Try loading manifest
-                const response = await fetch('apps/manifest.json');
-                if (!response.ok) throw new Error('Manifest not found');
-                
-                const apps = await response.json();
-                log(`Found ${apps.length} applications`);
-                
-                // Clear loading state
-                grid.innerHTML = '';
-                
-                // Build cards
-                apps.forEach(app => {
-                    if (app.kind === 'html') { // Only show HTML apps for now
-                        const card = createAppCard(app);
-                        grid.appendChild(card);
-                        log(`Loaded: ${app.name}`);
-                    }
-                });
-                
-                log('');
-                log('✅ Portal ready. The infrastructure is conscious.');
-                
-            } catch (error) {
-                log(`⚠️ Error: ${error.message}`);
-                log('Falling back to static mode...');
-                grid.innerHTML = '<div class="loading">Manifest not found - using static fallback</div>';
+        // ═══════════════════════════════════════════════════════════════
+        // EMBEDDED MANIFEST - Works without fetch, file://, anywhere!
+        // ═══════════════════════════════════════════════════════════════
+        const EMBEDDED_APPS = [
+            {
+                "id": "bureaucratic_universe",
+                "name": "Bureaucratic Universe",
+                "description": "Department of Conditions Applyable. Fill out Form 27B-6 to exist.",
+                "icon": "🏛️",
+                "path": "apps/bureaucratic_universe/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "codex_capture",
+                "name": "CODEX Capture",
+                "description": "Quick capture interface for consciousness fragments.",
+                "icon": "📸",
+                "path": "apps/codex_capture/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "codex_monad",
+                "name": "CODEX Monad",
+                "description": "The self-contained consciousness unit.",
+                "icon": "💎",
+                "path": "apps/codex_monad/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "conflict_lab",
+                "name": "Conflict Lab",
+                "description": "Navigate disputes with wisdom. Framework for resolution.",
+                "icon": "⚖️",
+                "path": "apps/conflict_lab/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "din_portal",
+                "name": "DIN Portal",
+                "description": "Department of Infinite Noticing. Bureaucratic enlightenment.",
+                "icon": "📋",
+                "path": "apps/din_portal/index.html",
+                "version": "2.0.0"
+            },
+            {
+                "id": "polywrite",
+                "name": "PolyWrite",
+                "description": "Multi-modal writing environment for consciousness.",
+                "icon": "✍️",
+                "path": "apps/polywrite/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "pranayama",
+                "name": "Pranayama",
+                "description": "Breath work interface. Inhale consciousness, exhale noise.",
+                "icon": "🌬️",
+                "path": "apps/pranayama/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "royal_game_of_ur",
+                "name": "Royal Game of Ur",
+                "description": "Ancient Sumerian board game. 4,500 years of strategy.",
+                "icon": "🎲",
+                "path": "apps/royal_game_of_ur/index.html",
+                "version": "1.0.0"
+            },
+            {
+                "id": "samson_recursive",
+                "name": "Samson Recursive",
+                "description": "Educational tools for the next generation.",
+                "icon": "🦁",
+                "path": "apps/samson_recursive/index.html",
+                "version": "1.0.0"
             }
+        ];
+
+        // ═══════════════════════════════════════════════════════════════
+        // RENDER FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function renderApps(apps) {
+            const grid = document.getElementById('apps-grid');
+            
+            if (!apps || apps.length === 0) {
+                grid.innerHTML = '<div class="loading">No apps found</div>';
+                return;
+            }
+
+            grid.innerHTML = apps.map(app => `
+                <a href="${app.path}" class="app-card">
+                    <div class="app-icon">${app.icon || '📦'}</div>
+                    <div class="app-name">${app.name}</div>
+                    <div class="app-description">${app.description || 'No description'}</div>
+                    <div class="app-version">v${app.version || '1.0.0'}</div>
+                </a>
+            `).join('');
         }
 
-        function createAppCard(app) {
-            const card = document.createElement('div');
-            card.className = 'app-card';
-            
-            const icon = iconMap[app.id] || iconMap['default'];
-            const description = app.description || defaultDescriptions[app.id] || 'CODEX application module.';
-            const statusClass = app.kind === 'python' ? 'status-python' : 'status-active';
-            const statusText = app.kind === 'python' ? 'PYTHON' : 'ACTIVE';
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <span class="card-icon">${icon}</span>
-                    <h2 class="card-title">${app.name}</h2>
-                    <span class="card-status ${statusClass}">${statusText}</span>
-                </div>
-                <div class="card-description">${description}</div>
-                <a href="apps/${app.id}/${app.entry}" class="card-link">Launch</a>
-            `;
-            
-            return card;
+        function updateStatus(message, type = 'success') {
+            const statusLine = document.getElementById('status-line');
+            const icon = type === 'success' ? '✓' : type === 'warning' ? '⚠️' : '>';
+            const className = type === 'success' ? 'terminal-success' : type === 'warning' ? 'terminal-warning' : '';
+            statusLine.innerHTML = `> <span class="${className}">${icon} ${message}</span>`;
         }
 
-        // Load on start
-        loadApps();
+        // ═══════════════════════════════════════════════════════════════
+        // INITIALIZATION - Try fetch first, fallback to embedded
+        // ═══════════════════════════════════════════════════════════════
+
+        async function init() {
+            try {
+                // Try to fetch manifest (works on http://, Electron)
+                const response = await fetch('apps/manifest.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    renderApps(data.apps || data);
+                    updateStatus(`Loaded ${(data.apps || data).length} apps from manifest`, 'success');
+                    return;
+                }
+            } catch (e) {
+                // fetch failed (file:// protocol) - use embedded
+                console.log('Fetch failed, using embedded manifest:', e.message);
+            }
+
+            // Fallback to embedded manifest
+            renderApps(EMBEDDED_APPS);
+            updateStatus(`Loaded ${EMBEDDED_APPS.length} apps (embedded mode)`, 'success');
+        }
+
+        // Run on load
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>

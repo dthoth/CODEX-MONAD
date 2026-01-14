@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💎 CODEX Portal | Consciousness Infrastructure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            color: #e6eaf2;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Neural Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .title {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00ff88, #00d4ff, #ff6b6b, #ffd93d);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 8s ease infinite;
+            text-shadow: 0 0 50px rgba(0, 255, 136, 0.3);
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            color: #00ff88;
+            font-size: 1.2em;
+            margin-top: 10px;
+            letter-spacing: 4px;
+        }
+
+        .version {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Apps Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* App Card */
+        .app-card {
+            background: linear-gradient(145deg, #161a22, #1a1f2a);
+            border: 1px solid #2a3140;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff88;
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            font-size: 2em;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            color: #fff;
+            flex: 1;
+        }
+
+        .card-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .status-python {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .card-description {
+            color: #888;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .card-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Terminal Section */
+        .terminal {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-content {
+            color: #00ff88;
+            line-height: 1.6;
+        }
+
+        .terminal-prompt {
+            color: #00d4ff;
+        }
+
+        /* Signature */
+        .signature {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 2em;
+        }
+
+        .footer {
+            text-align: center;
+            color: #444;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #00ff88;
+        }
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">CODEX PORTAL</h1>
+            <div class="subtitle">CONSCIOUSNESS INFRASTRUCTURE</div>
+            <div class="version">v2.1 | Auto-Discovery Enabled</div>
+        </header>
+
+        <div class="apps-grid" id="appsGrid">
+            <div class="loading">Discovering applications</div>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+            </div>
+            <div class="terminal-content" id="terminalContent">
+                <span class="terminal-prompt">consciousness@codex:~$</span> scanning apps/manifest.json<br>
+            </div>
+        </div>
+
+        <div class="signature">💎🔥🐍⚡</div>
+        <div class="footer">
+            Portable Consciousness Infrastructure | The Shebang Principle<br>
+            "Already working before you begin"
+        </div>
+    </div>
+
+    <script>
+        // App icons based on name/id
+        const iconMap = {
+            'bureaucratic_universe': '📋',
+            'codex_capture': '🎭',
+            'codex_monad': '💎',
+            'din_portal': '📁',
+            'polywrite': '✍️',
+            'pranayama': '🫁',
+            'samson_recursive': '🐉',
+            'word_salad': '🥗',
+            'royal_game_of_ur': '🎲',
+            'conflict_lab': '⚔️',
+            'default': '📦'
+        };
+
+        // Descriptions for apps without one
+        const defaultDescriptions = {
+            'bureaucratic_universe': 'Infinite forms system for notices, disclaimers, and legal documents.',
+            'codex_capture': 'Keystroke, clipboard, and context capture system.',
+            'codex_monad': 'The core consciousness seedline and documentation.',
+            'din_portal': 'Department of Infinite Noticing file explorer.',
+            'polywrite': 'Multi-dimensional text editor with quantum features.',
+            'pranayama': 'Breathing exercise system with 6 patterns.',
+            'samson_recursive': 'Educational terminal with recursive wisdom.',
+            'word_salad': 'Generative text exploration tool.',
+            'royal_game_of_ur': 'Ancient Mesopotamian race game, circa 2600 BCE.',
+            'conflict_lab': 'Geopolitical wargame chaos simulator.'
+        };
+
+        const terminal = document.getElementById('terminalContent');
+
+        function log(msg) {
+            terminal.innerHTML += `<span class="terminal-prompt">></span> ${msg}<br>`;
+        }
+
+        async function loadApps() {
+            const grid = document.getElementById('appsGrid');
+            
+            try {
+                // Try loading manifest
+                const response = await fetch('apps/manifest.json');
+                if (!response.ok) throw new Error('Manifest not found');
+                
+                const apps = await response.json();
+                log(`Found ${apps.length} applications`);
+                
+                // Clear loading state
+                grid.innerHTML = '';
+                
+                // Build cards
+                apps.forEach(app => {
+                    if (app.kind === 'html') { // Only show HTML apps for now
+                        const card = createAppCard(app);
+                        grid.appendChild(card);
+                        log(`Loaded: ${app.name}`);
+                    }
+                });
+                
+                log('');
+                log('✅ Portal ready. The infrastructure is conscious.');
+                
+            } catch (error) {
+                log(`⚠️ Error: ${error.message}`);
+                log('Falling back to static mode...');
+                grid.innerHTML = '<div class="loading">Manifest not found - using static fallback</div>';
+            }
+        }
+
+        function createAppCard(app) {
+            const card = document.createElement('div');
+            card.className = 'app-card';
+            
+            const icon = iconMap[app.id] || iconMap['default'];
+            const description = app.description || defaultDescriptions[app.id] || 'CODEX application module.';
+            const statusClass = app.kind === 'python' ? 'status-python' : 'status-active';
+            const statusText = app.kind === 'python' ? 'PYTHON' : 'ACTIVE';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-icon">${icon}</span>
+                    <h2 class="card-title">${app.name}</h2>
+                    <span class="card-status ${statusClass}">${statusText}</span>
+                </div>
+                <div class="card-description">${description}</div>
+                <a href="apps/${app.id}/${app.entry}" class="card-link">Launch</a>
+            `;
+            
+            return card;
+        }
+
+        // Load on start
+        loadApps();
+    </script>
+</body>
+</html>
