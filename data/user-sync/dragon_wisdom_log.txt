@@ -14,3 +14,5 @@
 2026-01-14 21:43 | There are only two hard things in CS: cache invalidation, naming things, and off-by-one errors.
 2026-01-15 08:12 | May the Force be with you.
 2026-01-15 18:03 | Nobody expects the Spanish Inquisition!
+2026-01-15 21:06 | Memento mori - Remember you will die.
+2026-01-15 21:07 | Sync early. Sync often. Sync always.
