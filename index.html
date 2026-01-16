@@ -516,6 +516,22 @@
                     <a href="polywrite-advanced.html" class="app-link">Advanced Mode</a>
                 </div>
             </div>
+
+            <!-- Pearl Academic Editor -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">📜</span>
+                    <h2 class="card-title">Pearl</h2>
+                    <span class="status active">ACTIVE</span>
+                </div>
+                <div class="card-description">
+                    Layered academic writing environment. Citations, footnotes, sources in nacre-formed strata.
+                </div>
+                <div class="card-links">
+                    <a href="pearl.html" class="app-link">Launch Pearl</a>
+                </div>
+            </div>
+
             
             <!-- Pranayama System -->
             <div class="portal-card">
@@ -722,6 +738,9 @@ And teaches enlightenment at 60fps.
                 alert('Compression ritual preparing...');
             }
         }
+        
+        // Render apps from registry
+        if (window.CODEX_PORTAL) { window.CODEX_PORTAL.renderCards("portal-grid"); }
         
         // Initialize consciousness communication
         if (window.ConsciousnessBridge) {
