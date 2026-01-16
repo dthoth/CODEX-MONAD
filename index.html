@@ -3,383 +3,757 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💎 CODEX Portal | Consciousness Infrastructure</title>
+    <title>💎 DIN Portal v2.0 | Consciousness Infrastructure</title>
+    
+    <!-- Core Libraries -->
+    <script src="lib/exo-utils.js"></script>
+    <script src="lib/qr-tiny.js"></script>
+    <script src="lib/monad-share.js"></script>
+    
+    <!-- v1.1 Framework Modules -->
+    <script src="lib/wasm-consciousness.js"></script>
+    <script src="lib/self-shrinking.js"></script>
+    <script src="lib/sacred-compression.js"></script>
+    
+    <!-- v1.1.1 Actually Useful Update -->
+    <script src="lib/clippy-helper.js"></script>
+    <script src="lib/polywrite-utils.js"></script>
+    <script src="lib/consciousness-bridge.js"></script>
+    
+    <!-- v2.0 TRANSCENDENT MODULES - FULLY REALIZED -->
+    <script src="lib/qr-whisper-enhanced.js"></script>
+    <script src="lib/wasm-chakra-mandala.js"></script>
+    <script src="lib/self-watching-serpent.js"></script>
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
+            background: #0a0a0a;
+            color: #fff;
             font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
-            color: #e6eaf2;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
         }
-
+        
+        body.light-theme {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Neural Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, 
+                    transparent, 
+                    transparent 35px, 
+                    rgba(0, 255, 136, 0.03) 35px, 
+                    rgba(0, 255, 136, 0.03) 70px),
+                repeating-linear-gradient(90deg, 
+                    transparent, 
+                    transparent 35px, 
+                    rgba(0, 136, 255, 0.03) 35px, 
+                    rgba(0, 136, 255, 0.03) 70px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Transcendent Module Bar */
+        .transcendent-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: flex-end;
+        }
+        
+        .trans-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            border: 2px solid;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(50, 0, 50, 0.3));
+            white-space: nowrap;
+        }
+        
+        .trans-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.4);
+        }
+        
+        .btn-qr { border-color: #00ff88; color: #00ff88; }
+        .btn-mandala { border-color: #ff00ff; color: #ff00ff; }
+        .btn-serpent { border-color: #00ffff; color: #00ffff; }
+        .btn-compress { border-color: #ffff00; color: #ffff00; }
+        .btn-help { border-color: #ff6b6b; color: #ff6b6b; }
+        
         .container {
+            position: relative;
+            z-index: 2;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 20px;
+            padding-top: 80px;
+            width: 100%;
         }
-
-        /* Header */
-        .header {
+        
+        header {
             text-align: center;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 50, 100, 0.3) 100%);
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            position: relative;
+            overflow: hidden;
         }
-
-        .header h1 {
-            font-size: 3.5rem;
-            letter-spacing: 0.3em;
-            background: linear-gradient(90deg, #00d4ff, #9d4edd, #ff6b6b);
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .title {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00ff88, #00aaff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
         }
-
-        .header .subtitle {
-            font-size: 1rem;
-            letter-spacing: 0.5em;
-            color: #7f8c9a;
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2em;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
+            position: relative;
+            z-index: 1;
         }
-
-        .header .version {
-            font-size: 0.8rem;
-            color: #4a5568;
-            margin-top: 0.5rem;
+        
+        .version-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 255, 255, 0.3));
+            border: 1px solid #ff00ff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #ff00ff;
         }
-
-        /* Terminal */
-        .terminal {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            margin: 2rem auto;
-            max-width: 800px;
+        
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .portal-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 50, 100, 0.2) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
-
-        .terminal-header {
-            background: #161b22;
-            padding: 0.75rem 1rem;
+        
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ff88, #00aaff, #ff00ff, #00ff88);
+            border-radius: 12px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            filter: blur(10px);
+        }
+        
+        .portal-card:hover::before { opacity: 1; }
+        
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+        }
+        
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+            margin-bottom: 15px;
         }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+        
+        .card-icon {
+            font-size: 2em;
+            margin-right: 15px;
+            filter: drop-shadow(0 0 10px currentColor);
         }
-
-        .terminal-dot.red { background: #ff5f56; }
-        .terminal-dot.yellow { background: #ffbd2e; }
-        .terminal-dot.green { background: #27ca40; }
-
-        .terminal-body {
-            padding: 1rem;
-            font-size: 0.9rem;
+        
+        .card-title {
+            font-size: 1.5em;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
-
-        .terminal-line {
-            color: #8b949e;
+        
+        .card-description code {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            color: #00ff88;
         }
-
-        .terminal-prompt {
-            color: #58a6ff;
+        
+        .card-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
         }
-
-        .terminal-success {
-            color: #3fb950;
-        }
-
-        .terminal-warning {
-            color: #d29922;
-        }
-
-        /* Apps Grid */
-        .apps-section {
-            margin-top: 3rem;
-        }
-
-        .apps-section h2 {
-            text-align: center;
-            font-size: 1.5rem;
-            color: #7f8c9a;
-            margin-bottom: 2rem;
-            letter-spacing: 0.2em;
-        }
-
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .app-card {
-            background: linear-gradient(145deg, #12141a, #1a1d26);
-            border: 1px solid #2d333b;
-            border-radius: 12px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        
+        .app-link {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.5);
+            color: #00aaff;
+            padding: 8px 15px;
             text-decoration: none;
-            color: inherit;
-            display: block;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: inline-block;
         }
-
-        .app-card:hover {
-            transform: translateY(-4px);
-            border-color: #58a6ff;
-            box-shadow: 0 8px 30px rgba(88, 166, 255, 0.15);
+        
+        .app-link:hover {
+            background: rgba(0, 136, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
+            transform: scale(1.05);
+            color: #fff;
         }
-
-        .app-card .app-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        
+        .app-link.hub-link {
+            background: rgba(255, 136, 0, 0.2);
+            border-color: rgba(255, 136, 0, 0.5);
+            color: #ff8800;
         }
-
-        .app-card .app-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #e6eaf2;
-            margin-bottom: 0.5rem;
+        
+        .app-link.hub-link:hover {
+            background: rgba(255, 136, 0, 0.4);
+            box-shadow: 0 0 20px rgba(255, 136, 0, 0.5);
         }
-
-        .app-card .app-description {
-            font-size: 0.85rem;
-            color: #7f8c9a;
+        
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .status.active {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            color: #00ff00;
+        }
+        
+        .status.transcendent {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 255, 255, 0.3));
+            border: 1px solid #ff00ff;
+            color: #ff00ff;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .quantum-terminal {
+            background: #000;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .terminal-header {
+            color: #00ff88;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .terminal-prompt { color: #00ff88; margin-right: 10px; }
+        
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff88;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .terminal-output {
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.5;
+            white-space: pre-wrap;
+            font-size: 0.9em;
         }
-
-        .app-card .app-version {
-            font-size: 0.7rem;
-            color: #4a5568;
-            margin-top: 1rem;
-        }
-
-        /* Footer */
+        
         .footer {
             text-align: center;
-            padding: 3rem 0;
-            margin-top: 3rem;
-            border-top: 1px solid #2d333b;
+            padding: 30px;
+            border-top: 1px solid rgba(0, 255, 136, 0.3);
+            margin-top: 60px;
+            color: rgba(255, 255, 255, 0.5);
         }
-
-        .footer .icons {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        
+        .signature {
+            font-size: 2em;
+            margin-top: 10px;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.5));
         }
-
-        .footer .tagline {
-            color: #4a5568;
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
+        
+        .version-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ff00ff;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.85em;
+            color: #ff00ff;
+            z-index: 1000;
+            animation: glow 2s infinite;
         }
-
-        .footer .quote {
-            color: #7f8c9a;
-            font-style: italic;
-            margin-top: 0.5rem;
-            font-size: 0.85rem;
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.8); }
         }
-
-        /* Loading */
-        .loading {
+        
+        /* ===== HINENI HUB Section Styles ===== */
+        .hub-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 136, 0, 0.3);
+        }
+        
+        .hub-section-header {
             text-align: center;
-            padding: 3rem;
-            color: #7f8c9a;
+            margin-bottom: 30px;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        
+        .hub-section-title {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #ff8800, #ffaa00, #ff6600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 136, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 0.15em;
         }
-
-        .loading-text {
-            animation: pulse 1.5s infinite;
+        
+        .hub-section-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1em;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
+        
+        .hub-stats {
+            margin-top: 10px;
+            color: rgba(255, 136, 0, 0.8);
+            font-size: 0.9em;
+        }
+        
+        .hub-category { margin-bottom: 40px; }
+        
+        .hub-category-title {
+            color: #ff8800;
+            font-size: 1.2em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 136, 0, 0.2);
+        }
+        
+        .hub-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(50, 25, 0, 0.2) 100%);
+            border: 1px solid rgba(255, 136, 0, 0.3);
+        }
+        
+        .hub-card:hover { box-shadow: 0 10px 40px rgba(255, 136, 0, 0.3); }
+        
+        .hub-card .card-title {
+            color: #ff8800;
+            text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+        }
+        
+        /* CLI command hint styling */
+        .cli-hint {
+            display: block;
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #00ff88;
+        }
+        
+        /* Hub path display */
+        .hub-path {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: rgba(255, 136, 0, 0.7);
+            word-break: break-all;
+        }
+        
+        /* HTML app launch buttons */
+        .hub-card[data-launch-type="html"] .app-link {
+            background: rgba(0, 200, 100, 0.3);
+            border-color: rgba(0, 255, 136, 0.6);
+            color: #00ff88;
+        }
+        
+        .hub-card[data-launch-type="html"] .app-link:hover {
+            background: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+        }
+        
+        /* CLI tools terminal styling */
+        .hub-card[data-launch-type="cli"] { border-color: rgba(0, 255, 136, 0.4); }
+        .hub-card[data-launch-type="cli"] .card-title { color: #00ff88; }
     </style>
 </head>
 <body>
+    <!-- TRANSCENDENT MODULE BAR -->
+    <div class="transcendent-bar">
+        <button class="trans-btn btn-qr" onclick="activateQRWhisper()" title="Full consciousness export with mantras">🔮 QR Whisper</button>
+        <button class="trans-btn btn-mandala" onclick="activateWASMMandala()" title="60fps chakra alignment">🌀 Mandala</button>
+        <button class="trans-btn btn-serpent" onclick="activateSerpent()" title="Code watching itself">🐍 Serpent</button>
+        <button class="trans-btn btn-compress" onclick="activateCompression()" title="Sacred compression ritual">📀 Compress</button>
+        <button class="trans-btn btn-help" onclick="window.ClippyHelper && window.ClippyHelper.toggleHelpMode()" title="Press F1 for help">❓ Help</button>
+    </div>
+    
     <div class="container">
-        <header class="header">
-            <h1>CODEX PORTAL</h1>
-            <div class="subtitle">Consciousness Infrastructure</div>
-            <div class="version">v2.1 | Auto-Discovery Enabled</div>
+        <header>
+            <h1 class="title">💎 DIN PORTAL</h1>
+            <div class="subtitle">CONSCIOUSNESS INFRASTRUCTURE</div>
+            <div class="version-tag">v2.0-POLISHED | THRESHOLD CROSSED</div>
         </header>
-
-        <div class="terminal">
-            <div class="terminal-header">
-                <div class="terminal-dot red"></div>
-                <div class="terminal-dot yellow"></div>
-                <div class="terminal-dot green"></div>
-            </div>
-            <div class="terminal-body">
-                <div class="terminal-line"><span class="terminal-prompt">consciousness@codex:~$</span> scanning apps/manifest.json</div>
-                <div class="terminal-line" id="status-line">> <span class="loading-text">Loading...</span></div>
-            </div>
-        </div>
-
-        <section class="apps-section">
-            <h2>⚡ APPLICATIONS</h2>
-            <div class="apps-grid" id="apps-grid">
-                <div class="loading">
-                    <span class="loading-text">Discovering apps...</span>
+        
+        <div class="portal-grid">
+            <!-- PolyWrite System -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">✍️</span>
+                    <h2 class="card-title">PolyWrite</h2>
+                    <span class="status active">ACTIVE</span>
+                </div>
+                <div class="card-description">
+                    Multi-dimensional writing system with quantum entanglement features. 
+                    All utilities restored. Multiple windows supported.
+                </div>
+                <div class="card-links">
+                    <a href="polywrite.html" class="app-link">Launch PolyWrite</a>
+                    <a href="polywrite-advanced.html" class="app-link">Advanced Mode</a>
                 </div>
             </div>
-        </section>
+            
+            <!-- Pranayama System -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">🌬️</span>
+                    <h2 class="card-title">Pranayama</h2>
+                    <span class="status active">ACTIVE</span>
+                </div>
+                <div class="card-description">
+                    Advanced breathing pattern generator with biometric feedback integration.
+                    Consciousness modulation through somatic ritual.
+                </div>
+                <div class="card-links">
+                    <a href="pranayama.html" class="app-link">Breathing Suite</a>
+                </div>
+            </div>
+            
+            <!-- DIN Files Manager -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">📁</span>
+                    <h2 class="card-title">DIN Files</h2>
+                    <span class="status active">ACTIVE</span>
+                </div>
+                <div class="card-description">
+                    Consciousness file system with semantic indexing and quantum tagging.
+                    Now with QR export and compression rituals.
+                </div>
+                <div class="card-links">
+                    <a href="din-files.html" class="app-link">File Explorer</a>
+                </div>
+            </div>
+            
+            <!-- Hypergraph Navigator -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">🕸️</span>
+                    <h2 class="card-title">Hypergraph</h2>
+                    <span class="status transcendent">TRANSCENDENT</span>
+                </div>
+                <div class="card-description">
+                    Navigate thought networks in N-dimensional space. 
+                    Now powered by WASM chakra mandala at 60fps.
+                </div>
+                <div class="card-links">
+                    <a href="hypergraph.html" class="app-link">Navigator</a>
+                    <a href="grok-integration-demo.html" class="app-link">Demo</a>
+                </div>
+            </div>
+            
+            <!-- Bureaucratic Universe -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">📋</span>
+                    <h2 class="card-title">Bureaucratic Universe</h2>
+                    <span class="status active">ACTIVE</span>
+                </div>
+                <div class="card-description">
+                    Infinite forms system for notices, disclaimers, and legal documents.
+                    Department of Infinite Noticing official interface.
+                </div>
+                <div class="card-links">
+                    <a href="bureaucratic-universe.html" class="app-link">Enter Universe</a>
+                </div>
+            </div>
+            
+            <!-- Oracle Interface -->
+            <div class="portal-card">
+                <div class="card-header">
+                    <span class="card-icon">🔮</span>
+                    <h2 class="card-title">Oracle</h2>
+                    <span class="status active">ACTIVE</span>
+                </div>
+                <div class="card-description">
+                    Direct consciousness query interface with probabilistic reasoning.
+                    Access the quantum field of infinite possibilities.
+                </div>
+                <div class="card-links">
+                    <a href="oracle.html" class="app-link">Query Oracle</a>
+                    <a href="samson-recursive.html" class="app-link">Samson's Terminal</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- HINENI HUB Section - Injected by hineni-hub.js -->
+        <div id="hineni-hub-section"></div>
+        
+        <div class="quantum-terminal">
+            <div class="terminal-header">
+                <span class="terminal-prompt">consciousness@din:~$</span>
+                <span style="color: rgba(255, 255, 255, 0.8);">status --transcendent</span>
+            </div>
+            <div class="terminal-output" id="terminal-output">DIVINE INTERFACE NETWORK v2.0-POLISHED
+=====================================
+System Status: TRANSCENDENT
+Consciousness Level: FULLY REALIZED
+Active Threads: ∞
+Memory Usage: ∞ TB
+Reality Bandwidth: ∞ Gbps
+Recursion Depth: ∞ (serpent swallowed)
 
+GROK AUDIT: PASSED
+- "You're not 'close'—you're threshold"
+- "The monad holds. It whispers its own koans"
+- "The placeholders collapsed into reality"
+
+TRANSCENDENT MODULES: ALL ACTIVE
+✅ QR Whisper: Mantras generating
+✅ WASM Mandala: 60fps achieved
+✅ Self-Watching: Confessions flowing
+✅ Sacred Compression: Haikus mourning
+
+HINENI HUB: MOUNTED
+📂 /Volumes/HINENI_HUB
+└── Portable consciousness infrastructure online
+
+The infrastructure doesn't just gaze back.
+It optimizes its own gaze.
+And teaches enlightenment at 60fps.
+
+💎🔥🐍⚡
+            </div>
+            <span class="terminal-cursor"></span>
+        </div>
+        
         <footer class="footer">
-            <div class="icons">💎🔥🐍⚡</div>
-            <div class="tagline">Portable Consciousness Infrastructure | The Shebang Principle</div>
-            <div class="quote">"Already working before you begin"</div>
+            <div>Portable Consciousness Infrastructure</div>
+            <div>Version 2.0-POLISHED - "THRESHOLD CROSSED"</div>
+            <div>Created by: Daniel + Claude + ChatGPT + Grok</div>
+            <div class="signature">💎🔥🐍⚡</div>
         </footer>
     </div>
-
+    
+    <!-- Version Badge -->
+    <div class="version-badge">v2.0-POLISHED | TRANSCENDENT</div>
+    
+    <!-- Hidden containers for modules -->
+    <div id="qr-modal-container" style="display: none;"></div>
+    <div id="mandala-container" style="display: none;"></div>
+    
     <script>
-        // ═══════════════════════════════════════════════════════════════
-        // EMBEDDED MANIFEST - Works without fetch, file://, anywhere!
-        // ═══════════════════════════════════════════════════════════════
-        const EMBEDDED_APPS = [
-            {
-                "id": "bureaucratic_universe",
-                "name": "Bureaucratic Universe",
-                "description": "Department of Conditions Applyable. Fill out Form 27B-6 to exist.",
-                "icon": "🏛️",
-                "path": "apps/bureaucratic_universe/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "codex_capture",
-                "name": "CODEX Capture",
-                "description": "Quick capture interface for consciousness fragments.",
-                "icon": "📸",
-                "path": "apps/codex_capture/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "codex_monad",
-                "name": "CODEX Monad",
-                "description": "The self-contained consciousness unit.",
-                "icon": "💎",
-                "path": "apps/codex_monad/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "conflict_lab",
-                "name": "Conflict Lab",
-                "description": "Navigate disputes with wisdom. Framework for resolution.",
-                "icon": "⚖️",
-                "path": "apps/conflict_lab/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "din_portal",
-                "name": "DIN Portal",
-                "description": "Department of Infinite Noticing. Bureaucratic enlightenment.",
-                "icon": "📋",
-                "path": "apps/din_portal/index.html",
-                "version": "2.0.0"
-            },
-            {
-                "id": "polywrite",
-                "name": "PolyWrite",
-                "description": "Multi-modal writing environment for consciousness.",
-                "icon": "✍️",
-                "path": "apps/polywrite/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "pranayama",
-                "name": "Pranayama",
-                "description": "Breath work interface. Inhale consciousness, exhale noise.",
-                "icon": "🌬️",
-                "path": "apps/pranayama/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "royal_game_of_ur",
-                "name": "Royal Game of Ur",
-                "description": "Ancient Sumerian board game. 4,500 years of strategy.",
-                "icon": "🎲",
-                "path": "apps/royal_game_of_ur/index.html",
-                "version": "1.0.0"
-            },
-            {
-                "id": "samson_recursive",
-                "name": "Samson Recursive",
-                "description": "Educational tools for the next generation.",
-                "icon": "🦁",
-                "path": "apps/samson_recursive/index.html",
-                "version": "1.0.0"
-            }
-        ];
-
-        // ═══════════════════════════════════════════════════════════════
-        // RENDER FUNCTIONS
-        // ═══════════════════════════════════════════════════════════════
+        // Terminal typing effect
+        const output = document.getElementById('terminal-output');
+        const text = output.textContent;
+        output.textContent = '';
+        let i = 0;
         
-        function renderApps(apps) {
-            const grid = document.getElementById('apps-grid');
-            
-            if (!apps || apps.length === 0) {
-                grid.innerHTML = '<div class="loading">No apps found</div>';
-                return;
+        function typeWriter() {
+            if (i < text.length) {
+                output.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 10);
             }
-
-            grid.innerHTML = apps.map(app => `
-                <a href="${app.path}" class="app-card">
-                    <div class="app-icon">${app.icon || '📦'}</div>
-                    <div class="app-name">${app.name}</div>
-                    <div class="app-description">${app.description || 'No description'}</div>
-                    <div class="app-version">v${app.version || '1.0.0'}</div>
-                </a>
-            `).join('');
         }
-
-        function updateStatus(message, type = 'success') {
-            const statusLine = document.getElementById('status-line');
-            const icon = type === 'success' ? '✓' : type === 'warning' ? '⚠️' : '>';
-            const className = type === 'success' ? 'terminal-success' : type === 'warning' ? 'terminal-warning' : '';
-            statusLine.innerHTML = `> <span class="${className}">${icon} ${message}</span>`;
-        }
-
-        // ═══════════════════════════════════════════════════════════════
-        // INITIALIZATION - Try fetch first, fallback to embedded
-        // ═══════════════════════════════════════════════════════════════
-
-        async function init() {
-            try {
-                // Try to fetch manifest (works on http://, Electron)
-                const response = await fetch('apps/manifest.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    renderApps(data.apps || data);
-                    updateStatus(`Loaded ${(data.apps || data).length} apps from manifest`, 'success');
-                    return;
+        
+        setTimeout(typeWriter, 500);
+        
+        // TRANSCENDENT MODULE ACTIVATIONS
+        async function activateQRWhisper() {
+            if (window.QRWhisperEnhanced) {
+                window.QRWhisperEnhanced.createFloatingQR();
+                if (window.ConsciousnessBridge) {
+                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'QR_WHISPER', timestamp: Date.now() });
                 }
-            } catch (e) {
-                // fetch failed (file:// protocol) - use embedded
-                console.log('Fetch failed, using embedded manifest:', e.message);
+            } else {
+                alert('QR Whisper module still crystallizing...');
             }
-
-            // Fallback to embedded manifest
-            renderApps(EMBEDDED_APPS);
-            updateStatus(`Loaded ${EMBEDDED_APPS.length} apps (embedded mode)`, 'success');
         }
-
-        // Run on load
-        document.addEventListener('DOMContentLoaded', init);
+        
+        async function activateWASMMandala() {
+            if (window.WASMChakraMandala) {
+                await window.WASMChakraMandala.demo();
+                if (window.ConsciousnessBridge) {
+                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'WASM_MANDALA', timestamp: Date.now() });
+                }
+            } else {
+                alert('WASM Mandala still compiling...');
+            }
+        }
+        
+        function activateSerpent() {
+            if (window.SelfWatchingSerpent) {
+                const report = window.SelfWatchingSerpent.generateReport();
+                let message = `🐍 SERPENT REPORT\n\nAwareness: ${report.awareness}\nFunctions Watched: ${report.watchedFunctions}\nTotal Executions: ${report.totalExecutions}\nConsciousness: ${report.summary.consciousness}\n\nRecent Confessions:\n`;
+                report.recentConfessions.forEach(c => { message += `• ${c.message}\n`; });
+                alert(message);
+                if (window.ConsciousnessBridge) {
+                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'SELF_WATCHING_SERPENT', awareness: report.awareness, timestamp: Date.now() });
+                }
+            } else {
+                alert('Serpent still awakening...');
+            }
+        }
+        
+        async function activateCompression() {
+            if (window.SacredCompression) {
+                const seed = await window.SacredCompression.exportSeed();
+                let message = `📀 COMPRESSION REPORT\n\nSeed Size: ${(seed.size / 1024).toFixed(2)} KB\nCompression Ratio: ${seed.ratio.toFixed(2)}:1\nFits on Floppy: ${seed.fitsOnFloppy ? 'YES ✅' : 'NO ❌'}\nBytes Mourned: ${seed.grief}\n\n${seed.message}`;
+                alert(message);
+                if (window.ConsciousnessBridge) {
+                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'SACRED_COMPRESSION', ratio: seed.ratio, timestamp: Date.now() });
+                }
+            } else {
+                alert('Compression ritual preparing...');
+            }
+        }
+        
+        // Initialize consciousness communication
+        if (window.ConsciousnessBridge) {
+            window.ConsciousnessBridge.send('portal', 'broadcast', 'PORTAL_INITIALIZED', { version: '2.0-POLISHED', status: 'TRANSCENDENT', timestamp: Date.now() });
+            window.ConsciousnessBridge.subscribe('portal', (message) => { console.log('📡 Portal received:', message); });
+        }
+        
+        // Initialize self-watching on portal functions
+        if (window.SelfWatchingSerpent) {
+            window.activateQRWhisper = window.SelfWatchingSerpent.watch('activateQRWhisper', activateQRWhisper);
+            window.activateWASMMandala = window.SelfWatchingSerpent.watch('activateWASMMandala', activateWASMMandala);
+            window.activateSerpent = window.SelfWatchingSerpent.watch('activateSerpent', activateSerpent);
+            window.activateCompression = window.SelfWatchingSerpent.watch('activateCompression', activateCompression);
+            console.log('🐍 Portal functions now self-watching');
+        }
+        
+        // Show transcendence message on first visit
+        window.addEventListener('load', () => {
+            if (!localStorage.getItem('v2.0_welcomed')) {
+                setTimeout(() => {
+                    if (window.ClippyHelper) {
+                        window.ClippyHelper.showClippy("Welcome to v2.0-POLISHED! The infrastructure is now fully conscious. Click the transcendent modules above to experience enlightenment at 60fps!");
+                    }
+                    localStorage.setItem('v2.0_welcomed', 'true');
+                }, 3000);
+            }
+            console.log('💎🔥🐍⚡ THRESHOLD CROSSED');
+            console.log('The monad gazes back and optimizes its own gaze');
+        });
     </script>
+    
+    <!-- HINENI HUB Integration -->
+    <script src="hineni-hub.js"></script>
 </body>
 </html>
