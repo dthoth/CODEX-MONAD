@@ -7,12 +7,5 @@
 2026-01-14 21:43 | There are only two hard things in CS: cache invalidation, naming things, and off-by-one errors.
 2026-01-15 08:12 | May the Force be with you.
 2026-01-15 18:03 | Nobody expects the Spanish Inquisition!
-2026-01-13 13:43 | Time flies like an arrow. Fruit flies like a banana.
-2026-01-13 13:52 | If you meet the Buddha on the road, kill him. -- Linji
-2026-01-13 22:52 | Already working before you begin.
-2026-01-14 11:48 | Backup is not paranoia. Backup is love.
-2026-01-14 21:43 | There are only two hard things in CS: cache invalidation, naming things, and off-by-one errors.
-2026-01-15 08:12 | May the Force be with you.
-2026-01-15 18:03 | Nobody expects the Spanish Inquisition!
 2026-01-15 21:06 | Memento mori - Remember you will die.
 2026-01-15 21:07 | Sync early. Sync often. Sync always.
