@@ -1,0 +1,3711 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sepia">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEARL — Academic Writing Environment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root, [data-theme="light"] {
+            --bg-app: #f5f3ef;
+            --bg-surface: #ffffff;
+            --bg-elevated: #faf9f7;
+            --bg-input: #ffffff;
+            --ink-deep: #1a1a1e;
+            --ink-medium: #3d3d42;
+            --ink-light: #6b6b73;
+            --ink-faint: #a8a8b0;
+            --accent-pearl: #8b7355;
+            --accent-warm: #c4956a;
+            --accent-cite: #5c7caa;
+            --accent-note: #7a5c8f;
+            --accent-success: #4a9963;
+            --accent-danger: #c44;
+            --border-soft: rgba(0,0,0,0.06);
+            --border-medium: rgba(0,0,0,0.1);
+            --shadow-soft: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-medium: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lift: 0 8px 32px rgba(0,0,0,0.12);
+        }
+
+        [data-theme="dark"] {
+            --bg-app: #1a1a1e;
+            --bg-surface: #242428;
+            --bg-elevated: #2d2d32;
+            --bg-input: #1a1a1e;
+            --ink-deep: #f0f0f2;
+            --ink-medium: #c8c8cc;
+            --ink-light: #9898a0;
+            --ink-faint: #68686f;
+            --accent-pearl: #c4a882;
+            --accent-warm: #d4a87a;
+            --accent-cite: #7a9fd4;
+            --accent-note: #a888c0;
+            --accent-success: #6ab87a;
+            --accent-danger: #f66;
+            --border-soft: rgba(255,255,255,0.06);
+            --border-medium: rgba(255,255,255,0.1);
+            --shadow-soft: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-medium: 0 4px 16px rgba(0,0,0,0.3);
+            --shadow-lift: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="sepia"] {
+            --bg-app: #f4e8d3;
+            --bg-surface: #fdf6e8;
+            --bg-elevated: #f9f0dc;
+            --bg-input: #fdf6e8;
+            --ink-deep: #3d3225;
+            --ink-medium: #5a4d3a;
+            --ink-light: #7a6b55;
+            --ink-faint: #a09080;
+            --accent-pearl: #8b6b3d;
+            --accent-warm: #b8834a;
+            --accent-cite: #5a7a6a;
+            --accent-note: #7a5a6a;
+            --accent-success: #5a8a5a;
+            --accent-danger: #a44;
+            --border-soft: rgba(60,40,20,0.08);
+            --border-medium: rgba(60,40,20,0.12);
+            --shadow-soft: 0 2px 8px rgba(60,40,20,0.06);
+            --shadow-medium: 0 4px 16px rgba(60,40,20,0.1);
+            --shadow-lift: 0 8px 32px rgba(60,40,20,0.15);
+        }
+
+        :root {
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --font-display: 'Crimson Pro', Georgia, serif;
+            --font-ui: 'IBM Plex Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+            --thumb-width: 100px;
+            --mode-bar-height: 48px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html, body {
+            height: 100%;
+            font-family: var(--font-ui);
+            background: var(--bg-app);
+            color: var(--ink-deep);
+            font-size: 14px;
+            line-height: 1.5;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ==================== MODE BAR ==================== */
+        .mode-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--mode-bar-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-soft);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            z-index: 1000;
+            gap: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .mode-bar-logo {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-pearl);
+            letter-spacing: 0.05em;
+            margin-right: 8px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-app);
+            padding: 3px;
+            border-radius: var(--radius-md);
+        }
+
+        .mode-tab {
+            padding: 6px 14px;
+            border: none;
+            background: transparent;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink-light);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+        }
+
+        .mode-tab:hover { color: var(--ink-medium); }
+        
+        .mode-tab.active {
+            background: var(--bg-surface);
+            color: var(--ink-deep);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .mode-tab.edit-mode.active {
+            background: var(--accent-pearl);
+            color: white;
+        }
+
+        .mode-spacer { flex: 1; }
+
+        .mode-bar-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .mode-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-surface);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink-medium);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .mode-btn:hover {
+            background: var(--bg-app);
+            border-color: var(--ink-faint);
+        }
+
+        .mode-btn.primary {
+            background: var(--accent-pearl);
+            border-color: var(--accent-pearl);
+            color: white;
+        }
+
+        .mode-btn.primary:hover {
+            background: var(--accent-warm);
+            border-color: var(--accent-warm);
+        }
+
+        .mode-btn.danger {
+            background: var(--accent-danger);
+            border-color: var(--accent-danger);
+            color: white;
+        }
+
+        .mode-btn.icon-only {
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
+        .style-select, .theme-select {
+            padding: 6px 10px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            background: var(--bg-surface);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--ink-medium);
+            cursor: pointer;
+        }
+
+        /* ==================== MAIN LAYOUT ==================== */
+        .app-container {
+            position: fixed;
+            top: var(--mode-bar-height);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ==================== PAGE THUMBNAILS ==================== */
+        .thumbnail-strip {
+            width: var(--thumb-width);
+            min-width: var(--thumb-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        .thumbnail-header {
+            padding: 12px 10px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--ink-faint);
+            border-bottom: 1px solid var(--border-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .thumbnail-count {
+            background: var(--bg-app);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .thumbnail-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .thumbnail-scroll::-webkit-scrollbar { width: 4px; }
+        .thumbnail-scroll::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
+
+        .page-thumb {
+            width: 100%;
+            aspect-ratio: 8.5 / 11;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 6px;
+            line-height: 1.4;
+            padding: 4px;
+            color: var(--ink-light);
+        }
+
+        .page-thumb:hover {
+            border-color: var(--accent-pearl);
+            box-shadow: var(--shadow-soft);
+            transform: scale(1.02);
+        }
+
+        .page-thumb.active {
+            border-color: var(--accent-pearl);
+            border-width: 2px;
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.15);
+        }
+
+        .page-thumb-number {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: var(--ink-deep);
+            color: var(--bg-surface);
+            font-size: 8px;
+            font-weight: 600;
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+
+        .page-thumb-markers {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .page-marker {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .page-marker.cite { background: var(--accent-cite); }
+        .page-marker.note { background: var(--accent-note); }
+        .page-marker.heading { background: var(--accent-warm); }
+
+        .page-thumb-delete {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent-danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 10px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-thumb:hover .page-thumb-delete { opacity: 1; }
+
+        .add-page-btn {
+            width: 100%;
+            aspect-ratio: 8.5 / 11;
+            background: var(--bg-app);
+            border: 2px dashed var(--border-medium);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 20px;
+            color: var(--ink-faint);
+            transition: all 0.15s ease;
+        }
+
+        .add-page-btn:hover {
+            border-color: var(--accent-pearl);
+            color: var(--accent-pearl);
+            background: rgba(139, 115, 85, 0.05);
+        }
+
+        .add-page-btn span {
+            font-size: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ==================== CENTER AREA ==================== */
+        .center-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: var(--bg-app);
+            transition: background 0.3s ease;
+        }
+
+        .editor-toolbar {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-soft);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            transition: background 0.3s ease;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 2px;
+            padding-right: 8px;
+            margin-right: 8px;
+            border-right: 1px solid var(--border-soft);
+        }
+
+        .toolbar-group:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+
+        .tb-btn {
+            width: 32px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-medium);
+            transition: all 0.1s ease;
+        }
+
+        .tb-btn:hover { background: var(--bg-app); color: var(--ink-deep); }
+        .tb-btn.active { background: var(--accent-pearl); color: white; }
+
+        .tb-btn.text-btn {
+            width: auto;
+            padding: 0 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .editor-scroll {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            padding: 32px 24px;
+        }
+
+        .editor-page {
+            width: 100%;
+            max-width: 720px;
+            min-height: 900px;
+            background: var(--bg-surface);
+            box-shadow: var(--shadow-medium);
+            border-radius: var(--radius-sm);
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        .editor-page-inner {
+            display: flex;
+            min-height: 100%;
+        }
+
+        .line-numbers {
+            width: 40px;
+            background: var(--bg-app);
+            border-right: 1px solid var(--border-soft);
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--ink-faint);
+            line-height: 1.7;
+            user-select: none;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            transition: background 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .line-numbers-inner {
+            padding: 24px 8px;
+            white-space: pre;
+        }
+
+        .editor-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #editor {
+            width: 100%;
+            min-height: 100%;
+            padding: 24px 32px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: var(--font-display);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--ink-deep);
+            background: transparent;
+        }
+
+        #editor::placeholder { color: var(--ink-faint); }
+
+        .status-bar {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-soft);
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--ink-light);
+            transition: background 0.3s ease;
+        }
+
+        .status-item { display: flex; align-items: center; gap: 4px; }
+        .status-spacer { flex: 1; }
+        .status-saved { color: var(--accent-success); }
+        .status-saving { color: var(--accent-warm); }
+
+        /* ==================== TOOLS PANEL ==================== */
+        .tools-panel {
+            width: 280px;
+            min-width: 280px;
+            background: var(--bg-surface);
+            border-left: 1px solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background 0.3s ease, width 0.2s ease, min-width 0.2s ease;
+        }
+
+        .tools-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            border-left: none;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-soft);
+            background: var(--bg-app);
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            background: transparent;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ink-faint);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .panel-tab:hover { color: var(--ink-medium); }
+        
+        .panel-tab.active {
+            color: var(--ink-deep);
+            background: var(--bg-surface);
+        }
+
+        .panel-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-pearl);
+        }
+
+        .panel-tab .badge {
+            background: var(--accent-pearl);
+            color: white;
+            font-size: 9px;
+            padding: 1px 5px;
+            border-radius: 8px;
+            margin-left: 4px;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .panel-content.active { display: flex; flex-direction: column; }
+
+        .panel-section {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .panel-section-header {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-empty {
+            padding: 24px;
+            text-align: center;
+            color: var(--ink-faint);
+            font-size: 12px;
+        }
+
+        /* Draggable Outline Items */
+        .outline-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .outline-item {
+            padding: 8px 10px;
+            cursor: grab;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--ink-medium);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            border: 1px solid transparent;
+            margin-bottom: 4px;
+            background: var(--bg-surface);
+        }
+
+        .outline-item:hover {
+            background: var(--bg-app);
+            border-color: var(--border-soft);
+        }
+
+        .outline-item.dragging {
+            opacity: 0.5;
+            background: var(--accent-pearl);
+            color: white;
+        }
+
+        .outline-item.drop-target {
+            border-color: var(--accent-cite);
+            border-width: 2px;
+            border-style: dashed;
+        }
+        
+        .outline-item.h1 { font-weight: 600; color: var(--ink-deep); }
+        .outline-item.h2 { padding-left: 20px; }
+        .outline-item.h3 { padding-left: 36px; font-size: 11px; }
+
+        .outline-item.child-of-dragged { opacity: 0.6; }
+
+        .outline-drag-handle {
+            cursor: grab;
+            color: var(--ink-faint);
+            font-size: 10px;
+        }
+
+        .outline-drag-handle:hover { color: var(--ink-medium); }
+
+        .outline-number {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--ink-faint);
+            min-width: 24px;
+        }
+
+        .outline-text {
+            flex: 1;
+        }
+
+        .outline-page-badge {
+            font-size: 9px;
+            background: var(--bg-app);
+            padding: 1px 5px;
+            border-radius: 8px;
+            color: var(--ink-faint);
+        }
+
+        .outline-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .outline-item:hover .outline-actions { opacity: 1; }
+
+        .outline-action-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: var(--bg-app);
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 10px;
+            color: var(--ink-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .outline-action-btn:hover {
+            background: var(--accent-pearl);
+            color: white;
+        }
+
+        /* Citation Items */
+        .cite-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-soft);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .cite-item:hover { background: var(--bg-app); }
+
+        .cite-key {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--accent-cite);
+            font-weight: 500;
+        }
+
+        .cite-title {
+            font-size: 12px;
+            color: var(--ink-deep);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        .cite-meta {
+            font-size: 10px;
+            color: var(--ink-faint);
+            margin-top: 2px;
+        }
+
+        .cite-occurrences {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .cite-occurrence {
+            font-size: 9px;
+            background: var(--bg-app);
+            padding: 2px 6px;
+            border-radius: 8px;
+            color: var(--ink-light);
+            cursor: pointer;
+        }
+
+        .cite-occurrence:hover {
+            background: var(--accent-cite);
+            color: white;
+        }
+
+        .cite-item.missing { background: rgba(200, 80, 80, 0.05); }
+        .cite-item.missing .cite-key { color: var(--accent-danger); }
+
+        .cite-item.missing .cite-add-btn {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 10px;
+            padding: 2px 6px;
+            background: var(--accent-pearl);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Footnote Items */
+        .note-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-soft);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .note-item:hover { background: var(--bg-app); }
+
+        .note-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-note);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .note-text {
+            font-size: 12px;
+            color: var(--ink-medium);
+            line-height: 1.4;
+        }
+
+        /* Source Item */
+        .source-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-soft);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .source-item:hover { background: var(--bg-app); }
+
+        .source-item.active {
+            background: var(--bg-app);
+            border-left-color: var(--accent-pearl);
+        }
+
+        .source-type {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ink-faint);
+            margin-bottom: 2px;
+        }
+
+        .source-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink-deep);
+            line-height: 1.3;
+        }
+
+        .source-author {
+            font-size: 11px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--border-medium);
+            background: transparent;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--ink-faint);
+            transition: all 0.15s ease;
+            margin-top: 8px;
+        }
+
+        .add-btn:hover {
+            border-color: var(--accent-pearl);
+            color: var(--accent-pearl);
+            background: rgba(139, 115, 85, 0.05);
+        }
+
+        /* ==================== MODALS ==================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lift);
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow: hidden;
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-soft);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: var(--bg-app);
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 16px;
+            color: var(--ink-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .modal-close:hover { background: var(--border-medium); color: var(--ink-deep); }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(85vh - 140px);
+        }
+
+        .modal-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-soft);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink-medium);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--ink-deep);
+            background: var(--bg-input);
+            transition: border-color 0.15s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-pearl);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: var(--font-display);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Import Options */
+        .import-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .import-option {
+            padding: 16px;
+            border: 2px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .import-option:hover {
+            border-color: var(--accent-pearl);
+            background: rgba(139, 115, 85, 0.05);
+        }
+
+        .import-option-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .import-option-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--ink-deep);
+        }
+
+        .import-option-desc {
+            font-size: 11px;
+            color: var(--ink-light);
+            margin-top: 4px;
+        }
+
+        /* ==================== VIEW CONTAINERS ==================== */
+        .view-container {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .view-container.active { display: block; }
+
+        .sources-view {
+            padding: 24px;
+        }
+
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .source-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .source-card:hover {
+            border-color: var(--accent-pearl);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .source-card-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .source-card:hover .source-card-actions { opacity: 1; }
+
+        .source-card-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: var(--bg-app);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--ink-light);
+        }
+
+        .source-card-btn:hover {
+            background: var(--accent-pearl);
+            color: white;
+        }
+
+        .source-card-btn.danger:hover {
+            background: var(--accent-danger);
+        }
+
+        .doc-view {
+            padding: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .doc-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .doc-section-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-deep);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .doc-section-status {
+            font-size: 10px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .doc-section-status.complete { background: rgba(74, 153, 99, 0.15); color: var(--accent-success); }
+        .doc-section-status.empty { background: var(--bg-app); color: var(--ink-faint); }
+
+        .preview-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            padding: 32px 24px;
+        }
+
+        .preview-page {
+            width: 100%;
+            max-width: 720px;
+            background: var(--bg-surface);
+            box-shadow: var(--shadow-medium);
+            border-radius: var(--radius-sm);
+            padding: 48px;
+            font-family: var(--font-display);
+            font-size: 16px;
+            line-height: 1.8;
+            transition: background 0.3s ease;
+        }
+
+        .preview-page h1 { font-size: 28px; margin-bottom: 16px; }
+        .preview-page h2 { font-size: 22px; margin: 24px 0 12px; }
+        .preview-page h3 { font-size: 18px; margin: 20px 0 10px; }
+        .preview-page p { margin-bottom: 12px; }
+        .preview-page blockquote {
+            border-left: 3px solid var(--accent-pearl);
+            padding-left: 16px;
+            color: var(--ink-light);
+            font-style: italic;
+            margin: 16px 0;
+        }
+
+        .preview-page .cite-inline {
+            color: var(--accent-cite);
+        }
+
+        .preview-page .page-break {
+            border: none;
+            border-top: 2px dashed var(--border-medium);
+            margin: 32px 0;
+            position: relative;
+        }
+
+        .preview-page .page-break::after {
+            content: 'Page Break';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-surface);
+            padding: 0 8px;
+            font-size: 10px;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ==================== FIND BAR ==================== */
+        .find-bar {
+            position: fixed;
+            top: calc(var(--mode-bar-height) + 8px);
+            right: 296px; /* Default with panel open, JS will update */
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-medium);
+            padding: 8px 12px;
+            display: none;
+            gap: 8px;
+            align-items: center;
+            z-index: 1500;
+            transition: right 0.2s ease;
+        }
+
+        .find-bar.active { display: flex; }
+
+        .find-input {
+            width: 200px;
+            padding: 6px 10px;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            background: var(--bg-input);
+            color: var(--ink-deep);
+        }
+
+        .find-input:focus { outline: none; border-color: var(--accent-pearl); }
+
+        .find-btn {
+            padding: 6px 10px;
+            border: none;
+            background: var(--bg-app);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--ink-medium);
+        }
+
+        .find-btn:hover { background: var(--border-medium); }
+
+        .find-count {
+            font-size: 11px;
+            color: var(--ink-faint);
+            min-width: 50px;
+        }
+
+        /* Drop Zone */
+        .drop-zone {
+            position: fixed;
+            inset: 0;
+            background: rgba(139, 115, 85, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            color: white;
+            font-size: 24px;
+            font-family: var(--font-display);
+        }
+
+        .drop-zone.active { display: flex; }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 900px) {
+            .thumbnail-strip { display: none; }
+            .tools-panel { width: 240px; min-width: 240px; }
+        }
+
+        @media (max-width: 700px) {
+            .tools-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- DROP ZONE -->
+    <div class="drop-zone" id="dropZone">📄 Drop files to import</div>
+
+    <!-- MODE BAR -->
+    <div class="mode-bar">
+        <span class="mode-bar-logo">PEARL</span>
+        <div class="mode-tabs">
+            <button class="mode-tab edit-mode active" data-mode="edit" title="Main editing mode">✏️ Edit</button>
+            <button class="mode-tab" data-mode="sources" title="Manage citation sources">📚 Sources</button>
+            <button class="mode-tab" data-mode="document" title="Front & back matter">📄 Document</button>
+            <button class="mode-tab" data-mode="preview" title="Preview formatted output">👁️ Preview</button>
+        </div>
+        <div class="mode-spacer"></div>
+        <div class="mode-bar-actions">
+            <select class="theme-select" id="themeSelect" title="Color theme">
+                <option value="light">☀️ Light</option>
+                <option value="dark">🌙 Dark</option>
+                <option value="sepia" selected>📜 Sepia</option>
+            </select>
+            <select class="style-select" id="citationStyle" title="Citation format style">
+                <option value="APA">APA 7th</option>
+                <option value="MLA">MLA 9th</option>
+                <option value="Chicago">Chicago</option>
+                <option value="SBL">SBL</option>
+                <option value="IEEE">IEEE</option>
+            </select>
+            <button class="mode-btn icon-only" id="btnImport" title="Import files">⬆️</button>
+            <button class="mode-btn icon-only" id="btnFind" title="Find & Replace (Ctrl+F)">🔍</button>
+            <button class="mode-btn" id="btnExport" title="Export document">⬇️ Export</button>
+            <button class="mode-btn primary" id="btnSave" title="Save (Ctrl+S)">💾 Save</button>
+        </div>
+    </div>
+
+    <!-- FIND BAR -->
+    <div class="find-bar" id="findBar">
+        <input type="text" class="find-input" id="findInput" placeholder="Find...">
+        <input type="text" class="find-input" id="replaceInput" placeholder="Replace...">
+        <span class="find-count" id="findCount">0 found</span>
+        <button class="find-btn" id="btnFindPrev">◀</button>
+        <button class="find-btn" id="btnFindNext">▶</button>
+        <button class="find-btn" id="btnReplace">Replace</button>
+        <button class="find-btn" id="btnReplaceAll">All</button>
+        <button class="find-btn" id="btnFindClose">✕</button>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="app-container">
+        <!-- PAGE THUMBNAILS -->
+        <div class="thumbnail-strip">
+            <div class="thumbnail-header">
+                <span>Pages</span>
+                <span class="thumbnail-count" id="pageCount">1</span>
+            </div>
+            <div class="thumbnail-scroll" id="thumbnailScroll"></div>
+        </div>
+
+        <!-- CENTER AREA -->
+        <div class="center-area">
+            <!-- EDIT MODE -->
+            <div class="view-container active" id="editView">
+                <div class="editor-toolbar">
+                    <div class="toolbar-group">
+                        <button class="tb-btn text-btn" onclick="formatText('bold')" title="Bold (Ctrl+B)"><b>B</b></button>
+                        <button class="tb-btn text-btn" onclick="formatText('italic')" title="Italic (Ctrl+I)"><i>I</i></button>
+                        <button class="tb-btn text-btn" onclick="formatText('strike')" title="Strikethrough"><s>S</s></button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="tb-btn" onclick="formatText('h1')" title="Heading 1">H1</button>
+                        <button class="tb-btn" onclick="formatText('h2')" title="Heading 2">H2</button>
+                        <button class="tb-btn" onclick="formatText('h3')" title="Heading 3">H3</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="tb-btn" onclick="formatText('quote')" title="Blockquote">❝</button>
+                        <button class="tb-btn" onclick="formatText('bullet')" title="Bullet list">•</button>
+                        <button class="tb-btn" onclick="formatText('number')" title="Numbered list">1.</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="tb-btn" onclick="insertCitation()" title="Insert citation (Ctrl+Shift+C)">[@]</button>
+                        <button class="tb-btn" onclick="insertFootnote()" title="Insert footnote">¹</button>
+                        <button class="tb-btn" onclick="openModal('addSourceModal')" title="Add source">📚</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="tb-btn" id="btnLineNums" onclick="toggleLineNumbers()" title="Toggle line numbers">#</button>
+                        <button class="tb-btn" id="btnToolsPanel" onclick="toggleToolsPanel()" title="Toggle side panel">◧</button>
+                    </div>
+                </div>
+
+                <div class="editor-scroll" id="editorScroll">
+                    <div class="editor-page">
+                        <div class="editor-page-inner">
+                            <div class="line-numbers" id="lineNumbers"></div>
+                            <div class="editor-wrapper">
+                                <textarea id="editor" placeholder="Start writing...
+
+Use [@citekey] for citations — e.g., [@smith2020, p. 42]
+Use [^1] for footnotes
+
+Markdown supported:
+  # Heading 1
+  ## Heading 2
+  **bold**  *italic*
+  > Blockquote
+  - Bullet list
+
+Drag & drop files to import
+Press Ctrl+Shift+C to insert a citation"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-bar">
+                    <span class="status-item" id="wordCount">0 words</span>
+                    <span class="status-item" id="charCount">0 chars</span>
+                    <span class="status-item" id="citeCount">0 citations</span>
+                    <span class="status-item" id="noteCount">0 notes</span>
+                    <span class="status-spacer"></span>
+                    <span class="status-item">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                    <span class="status-item status-saved" id="saveStatus">✓ Saved</span>
+                </div>
+            </div>
+
+            <!-- SOURCES VIEW -->
+            <div class="view-container" id="sourcesView">
+                <div class="sources-view">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h2 style="font-family:var(--font-display); font-size:24px;">Source Library</h2>
+                        <div style="display:flex; gap:8px;">
+                            <button class="mode-btn" onclick="openModal('importModal')">⬆️ Import</button>
+                            <button class="mode-btn primary" onclick="openModal('addSourceModal')">+ Add Source</button>
+                        </div>
+                    </div>
+                    <div class="sources-grid" id="sourcesGrid"></div>
+                </div>
+            </div>
+
+            <!-- DOCUMENT VIEW -->
+            <div class="view-container" id="documentView">
+                <div class="doc-view">
+                    <h2 style="font-family:var(--font-display); font-size:24px; margin-bottom:20px;">Document Structure</h2>
+                    
+                    <div class="doc-section">
+                        <div class="doc-section-title">
+                            Front Matter
+                            <button class="mode-btn" onclick="openModal('frontMatterModal')">Edit</button>
+                        </div>
+                        <div id="frontMatterStatus"></div>
+                    </div>
+
+                    <div class="doc-section">
+                        <div class="doc-section-title">
+                            Body
+                            <span class="doc-section-status complete" id="bodyWordCount">0 words</span>
+                        </div>
+                        <p style="font-size:12px; color:var(--ink-light);">Main document content across <span id="bodyPageCount">1</span> page(s).</p>
+                    </div>
+
+                    <div class="doc-section">
+                        <div class="doc-section-title">
+                            Back Matter
+                            <button class="mode-btn" onclick="openModal('backMatterModal')">Edit</button>
+                        </div>
+                        <div id="backMatterStatus"></div>
+                    </div>
+
+                    <button class="mode-btn primary" style="width:100%; margin-top:16px;" onclick="generateFullDocument()">
+                        📄 Generate Full Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- PREVIEW VIEW -->
+            <div class="view-container" id="previewView">
+                <div class="preview-container">
+                    <div class="preview-page" id="previewContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOLS PANEL -->
+        <div class="tools-panel" id="toolsPanel">
+            <div class="panel-tabs">
+                <button class="panel-tab active" data-panel="outline">Outline</button>
+                <button class="panel-tab" data-panel="citations">Cites <span class="badge" id="citeBadge">0</span></button>
+                <button class="panel-tab" data-panel="footnotes">Notes <span class="badge" id="noteBadge">0</span></button>
+            </div>
+
+            <div class="panel-content active" id="outlinePanel">
+                <div class="panel-section" style="padding-bottom:8px;">
+                    <div class="panel-section-header">
+                        <span>Document Outline</span>
+                        <button class="mode-btn" style="padding:4px 8px; font-size:10px;" onclick="addHeading()">+ Add</button>
+                    </div>
+                </div>
+                <div class="outline-list" id="outlineList">
+                    <div class="panel-empty">No headings yet.<br>Use # for headings or click Add.</div>
+                </div>
+            </div>
+
+            <div class="panel-content" id="citationsPanel">
+                <div class="panel-section">
+                    <div class="panel-section-header"><span>In Document</span></div>
+                    <div id="citationList">
+                        <div class="panel-empty">No citations yet.<br>Use [@citekey] to cite.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-content" id="footnotesPanel">
+                <div class="panel-section">
+                    <div id="footnoteList">
+                        <div class="panel-empty">No footnotes yet.<br>Use [^1] for notes.</div>
+                    </div>
+                    <button class="add-btn" onclick="insertFootnote()">+ Add Footnote</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORT MODAL -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal" style="max-width:550px;">
+            <div class="modal-header">
+                <h2>Import Files</h2>
+                <button class="modal-close" onclick="closeModal('importModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:16px; color:var(--ink-light); font-size:13px;">Select a file type to import, or drag & drop files anywhere on the app.</p>
+                <div class="import-options">
+                    <label class="import-option">
+                        <input type="file" accept=".md,.txt" style="display:none" onchange="handleImport(event, 'markdown')">
+                        <div class="import-option-icon">📝</div>
+                        <div class="import-option-title">Markdown / Text</div>
+                        <div class="import-option-desc">.md, .txt files</div>
+                    </label>
+                    <label class="import-option">
+                        <input type="file" accept=".json" style="display:none" onchange="handleImport(event, 'project')">
+                        <div class="import-option-icon">📦</div>
+                        <div class="import-option-title">PEARL Project</div>
+                        <div class="import-option-desc">.json backup</div>
+                    </label>
+                    <label class="import-option">
+                        <input type="file" accept=".bib" style="display:none" onchange="handleImport(event, 'bibtex')">
+                        <div class="import-option-icon">📚</div>
+                        <div class="import-option-title">BibTeX</div>
+                        <div class="import-option-desc">.bib citations</div>
+                    </label>
+                    <label class="import-option">
+                        <input type="file" accept=".html,.htm" style="display:none" onchange="handleImport(event, 'html')">
+                        <div class="import-option-icon">🌐</div>
+                        <div class="import-option-title">HTML</div>
+                        <div class="import-option-desc">.html documents</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD SOURCE MODAL -->
+    <div class="modal-overlay" id="addSourceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="sourceModalTitle">Add Source</h2>
+                <button class="modal-close" onclick="closeModal('addSourceModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Source Type</label>
+                    <select class="form-select" id="sourceType">
+                        <option value="book">Book</option>
+                        <option value="article">Journal Article</option>
+                        <option value="chapter">Book Chapter</option>
+                        <option value="web">Website</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Citation Key (e.g., smith2020)</label>
+                    <input type="text" class="form-input" id="sourceCitekey" placeholder="author+year">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Title *</label>
+                    <input type="text" class="form-input" id="sourceTitle" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Author(s)</label>
+                        <input type="text" class="form-input" id="sourceAuthor" placeholder="Last, First">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Year</label>
+                        <input type="text" class="form-input" id="sourceYear" placeholder="2024">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Publisher / Journal</label>
+                    <input type="text" class="form-input" id="sourcePublisher">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">DOI / URL</label>
+                    <input type="text" class="form-input" id="sourceDoi" placeholder="10.xxxx/xxxxx or https://...">
+                </div>
+                <input type="hidden" id="sourceEditMode" value="">
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn danger" id="sourceDeleteBtn" onclick="deleteSource()" style="display:none; margin-right:auto;">Delete</button>
+                <button class="mode-btn" onclick="closeModal('addSourceModal')">Cancel</button>
+                <button class="mode-btn primary" onclick="saveSource()">Save Source</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FRONT MATTER MODAL -->
+    <div class="modal-overlay" id="frontMatterModal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <h2>Front Matter</h2>
+                <button class="modal-close" onclick="closeModal('frontMatterModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Document Title</label>
+                    <input type="text" class="form-input" id="docTitle">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subtitle</label>
+                    <input type="text" class="form-input" id="docSubtitle">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Author</label>
+                        <input type="text" class="form-input" id="docAuthor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="text" class="form-input" id="docDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Institution / Course</label>
+                    <input type="text" class="form-input" id="docInstitution">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Abstract</label>
+                    <textarea class="form-textarea" id="docAbstract" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Keywords (comma-separated)</label>
+                    <input type="text" class="form-input" id="docKeywords">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('frontMatterModal')">Cancel</button>
+                <button class="mode-btn primary" onclick="saveFrontMatter()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACK MATTER MODAL -->
+    <div class="modal-overlay" id="backMatterModal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <h2>Back Matter</h2>
+                <button class="modal-close" onclick="closeModal('backMatterModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Appendices</label>
+                    <textarea class="form-textarea" id="docAppendices" rows="4" placeholder="Enter appendix content..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Acknowledgments</label>
+                    <textarea class="form-textarea" id="docAcknowledgments" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="includeEndnotes"> Convert footnotes to endnotes
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="includeBibliography" checked> Include bibliography
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('backMatterModal')">Cancel</button>
+                <button class="mode-btn primary" onclick="saveBackMatter()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPORT MODAL -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Export Document</h2>
+                <button class="modal-close" onclick="closeModal('exportModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Export Format</label>
+                    <select class="form-select" id="exportFormat">
+                        <option value="md">Markdown (.md)</option>
+                        <option value="json">Project Backup (.json)</option>
+                        <option value="bib">Bibliography Only (.bib)</option>
+                        <option value="html">HTML Document (.html)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="exportIncludeFront" checked> Include front matter
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="exportIncludeBack" checked> Include back matter
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('exportModal')">Cancel</button>
+                <button class="mode-btn primary" onclick="doExport()">Export</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSERT CITATION MODAL -->
+    <div class="modal-overlay" id="insertCiteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Insert Citation</h2>
+                <button class="modal-close" onclick="closeModal('insertCiteModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Search Sources</label>
+                    <input type="text" class="form-input" id="citeSearchInput" placeholder="Type to search..." oninput="filterCiteSources()">
+                </div>
+                <div id="citeSourceList" style="max-height:250px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:var(--radius-sm);"></div>
+                <div class="form-group" style="margin-top:12px;">
+                    <label class="form-label">Page/Locator (optional)</label>
+                    <input type="text" class="form-input" id="citeLocator" placeholder="e.g., p. 42 or pp. 100-105">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('insertCiteModal')">Cancel</button>
+                <button class="mode-btn primary" onclick="doInsertCitation()">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD HEADING MODAL -->
+    <div class="modal-overlay" id="addHeadingModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header">
+                <h2>Add Heading</h2>
+                <button class="modal-close" onclick="closeModal('addHeadingModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Heading Level</label>
+                    <select class="form-select" id="newHeadingLevel">
+                        <option value="1">H1 — Main Section</option>
+                        <option value="2">H2 — Subsection</option>
+                        <option value="3">H3 — Sub-subsection</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Heading Text</label>
+                    <input type="text" class="form-input" id="newHeadingText" placeholder="Enter heading...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="mode-btn" onclick="closeModal('addHeadingModal')">Cancel</button>
+                <button class="mode-btn primary" onclick="doAddHeading()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE ====================
+        // v0.9: Real pages architecture
+        let state = {
+            pages: [''],              // Array of page strings - canonical body
+            sources: [],
+            footnotes: {},
+            frontMatter: {},
+            backMatter: { includeBibliography: true },
+            settings: { theme: 'sepia', showLineNumbers: true, showToolsPanel: true },
+            currentPage: 1,
+            selectedCiteKey: null
+        };
+
+        const STORAGE_KEY = 'pearl_v09_data';
+        const PAGE_SENTINEL = '\n\n<<<PAGE_BREAK>>>\n\n';
+        let draggedOutlineItem = null;
+        let globalFindMatches = []; // {pageNum, index, length}
+
+        // ==================== STATE MANAGEMENT ====================
+        function getDefaultState() {
+            return {
+                pages: [''],
+                sources: [],
+                footnotes: {},
+                frontMatter: {},
+                backMatter: { includeBibliography: true },
+                settings: { theme: 'sepia', showLineNumbers: true, showToolsPanel: true },
+                currentPage: 1,
+                selectedCiteKey: null
+            };
+        }
+
+        function normalizeState(raw) {
+            const d = getDefaultState();
+            const s = (raw && typeof raw === 'object') ? raw : {};
+
+            const settings = (s.settings && typeof s.settings === 'object') ? s.settings : {};
+            const backMatter = (s.backMatter && typeof s.backMatter === 'object') ? s.backMatter : {};
+            const footnotes = (s.footnotes && typeof s.footnotes === 'object') ? s.footnotes : {};
+            const frontMatter = (s.frontMatter && typeof s.frontMatter === 'object') ? s.frontMatter : {};
+
+            // Migration: convert old single-content to pages array
+            let pages = [];
+            if (Array.isArray(s.pages) && s.pages.length) {
+                pages = s.pages.map(p => (typeof p === 'string' ? p : ''));
+            } else if (typeof s.content === 'string' && s.content.trim()) {
+                // Migrate from v0.8: split on --- markers
+                pages = s.content.split(/\n\s*---\s*\n/g).filter(p => p.trim() || pages.length === 0);
+                if (!pages.length) pages = [''];
+            } else {
+                pages = [''];
+            }
+
+            return {
+                ...d,
+                ...s,
+                pages,
+                sources: Array.isArray(s.sources) ? s.sources : [],
+                footnotes: { ...d.footnotes, ...footnotes },
+                frontMatter: { ...d.frontMatter, ...frontMatter },
+                backMatter: { ...d.backMatter, ...backMatter },
+                settings: { ...d.settings, ...settings },
+                currentPage: Math.max(1, Number.isFinite(+s.currentPage) ? +s.currentPage : 1)
+            };
+        }
+
+        // Get full document content (all pages joined)
+        function getFullContent() {
+            return (state.pages || ['']).join('\n\n');
+        }
+
+        // Get full content with sentinel page breaks (for reordering)
+        function getFullContentWithSentinels() {
+            return (state.pages || ['']).join(PAGE_SENTINEL);
+        }
+
+        // Split content back into pages using sentinel
+        function splitContentByPages(content) {
+            return content.split(PAGE_SENTINEL);
+        }
+
+        // Centralized: commit editor content to state
+        function commitEditorToState() {
+            const idx = Math.max(0, state.currentPage - 1);
+            state.pages[idx] = document.getElementById('editor').value;
+        }
+
+        // Centralized: load a page into the editor
+        function loadPageToEditor(pageNum) {
+            state.currentPage = Math.max(1, Math.min(pageNum, state.pages.length));
+            const editor = document.getElementById('editor');
+            editor.value = state.pages[state.currentPage - 1] || '';
+            editor.scrollTop = 0;
+            document.getElementById('currentPage').textContent = state.currentPage;
+        }
+
+        // ==================== INIT ====================
+        function init() {
+            try {
+                loadData();
+                applyTheme(state.settings.theme || 'sepia');
+                applyUiTogglesFromState();
+                setupListeners();
+                renderAll();
+                updateSaveStatus('saved');
+            } catch (e) {
+                console.error('Init failed:', e);
+                alert('PEARL failed to initialize. Check console for details.');
+            }
+        }
+
+        function loadData() {
+            state = getDefaultState();
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    state = normalizeState(JSON.parse(saved));
+                }
+            } catch (e) {
+                console.warn('Load failed, resetting storage:', e);
+                try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+                state = getDefaultState();
+            }
+            
+            // Clamp currentPage to valid range
+            state.currentPage = Math.max(1, Math.min(state.currentPage, state.pages.length));
+            
+            // Load current page into editor
+            document.getElementById('editor').value = state.pages[state.currentPage - 1] || '';
+            document.getElementById('themeSelect').value = state.settings.theme || 'sepia';
+        }
+
+        function applyUiTogglesFromState() {
+            const lineNums = document.getElementById('lineNumbers');
+            const tools = document.getElementById('toolsPanel');
+            const btnLineNums = document.getElementById('btnLineNums');
+            const btnToolsPanel = document.getElementById('btnToolsPanel');
+            
+            if (lineNums) lineNums.style.display = state.settings.showLineNumbers ? 'block' : 'none';
+            if (tools) tools.classList.toggle('collapsed', !state.settings.showToolsPanel);
+            if (btnLineNums) btnLineNums.classList.toggle('active', state.settings.showLineNumbers);
+            if (btnToolsPanel) btnToolsPanel.classList.toggle('active', state.settings.showToolsPanel);
+        }
+
+        function saveData() {
+            try {
+                // Persist current page content back to state
+                const idx = Math.max(0, state.currentPage - 1);
+                state.pages[idx] = document.getElementById('editor').value;
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                updateSaveStatus('saved');
+            } catch (e) {
+                console.error('Save failed:', e);
+                updateSaveStatus('error');
+            }
+        }
+
+        function updateSaveStatus(status) {
+            const el = document.getElementById('saveStatus');
+            if (status === 'saving') {
+                el.textContent = '⏳ Saving...';
+                el.className = 'status-item status-saving';
+            } else if (status === 'saved') {
+                el.textContent = '✓ Saved';
+                el.className = 'status-item status-saved';
+            } else {
+                el.textContent = '✗ Error';
+                el.className = 'status-item';
+            }
+        }
+
+        // ==================== THEME ====================
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            state.settings.theme = theme;
+        }
+
+        // ==================== DEBOUNCE ====================
+        function debounce(fn, ms) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn(...args), ms);
+            };
+        }
+
+        const debouncedSave = debounce(saveData, 1000);
+        const debouncedRender = debounce(renderAll, 300);
+
+        // ==================== LISTENERS ====================
+        function setupListeners() {
+            const editor = document.getElementById('editor');
+            editor.addEventListener('input', onEditorInput);
+            editor.addEventListener('scroll', syncLineNumbers);
+
+            document.getElementById('themeSelect').addEventListener('change', (e) => {
+                applyTheme(e.target.value);
+                saveData();
+            });
+
+            document.getElementById('citationStyle').addEventListener('change', () => {
+                if (document.getElementById('previewView').classList.contains('active')) {
+                    renderPreview();
+                }
+            });
+
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchMode(tab.dataset.mode));
+            });
+
+            document.querySelectorAll('.panel-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchPanel(tab.dataset.panel));
+            });
+
+            document.addEventListener('keydown', handleKeyboard);
+
+            document.getElementById('btnImport').addEventListener('click', () => openModal('importModal'));
+            document.getElementById('btnFind').addEventListener('click', toggleFindBar);
+            document.getElementById('btnExport').addEventListener('click', () => openModal('exportModal'));
+            document.getElementById('btnSave').addEventListener('click', saveData);
+            document.getElementById('btnFindClose').addEventListener('click', () => toggleFindBar(false));
+            document.getElementById('btnFindNext').addEventListener('click', findNext);
+            document.getElementById('btnFindPrev').addEventListener('click', findPrev);
+            document.getElementById('btnReplace').addEventListener('click', doReplace);
+            document.getElementById('btnReplaceAll').addEventListener('click', doReplaceAll);
+            document.getElementById('findInput').addEventListener('input', updateFindCount);
+
+            // Drag & Drop with improved depth counter (prevents flickering)
+            let dragDepth = 0;
+            const dropZone = document.getElementById('dropZone');
+            
+            document.addEventListener('dragenter', (e) => {
+                // Only handle file drags, not internal drags (like outline)
+                if (e.dataTransfer.types.includes('Files')) {
+                    e.preventDefault();
+                    dragDepth++;
+                    dropZone.classList.add('active');
+                }
+            });
+            document.addEventListener('dragover', (e) => {
+                if (e.dataTransfer.types.includes('Files')) {
+                    e.preventDefault();
+                }
+            });
+            document.addEventListener('dragleave', (e) => {
+                // Only decrement if we're actually leaving the document
+                // Check if relatedTarget is null (left window) or not a child of document
+                if (e.dataTransfer.types.includes('Files')) {
+                    if (!e.relatedTarget || !document.body.contains(e.relatedTarget)) {
+                        dragDepth = 0;
+                        dropZone.classList.remove('active');
+                    } else {
+                        dragDepth = Math.max(0, dragDepth - 1);
+                        if (dragDepth === 0) dropZone.classList.remove('active');
+                    }
+                }
+            });
+            document.addEventListener('drop', (e) => {
+                dragDepth = 0;
+                dropZone.classList.remove('active');
+                if (e.dataTransfer.files.length) {
+                    e.preventDefault();
+                    handleDrop(e);
+                }
+            });
+
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeModal(overlay.id);
+                });
+            });
+        }
+
+        function onEditorInput() {
+            updateSaveStatus('saving');
+            
+            // Keep state.pages in sync immediately
+            commitEditorToState();
+            
+            debouncedSave();
+            debouncedRender();
+        }
+
+        function handleKeyboard(e) {
+            const isMod = e.ctrlKey || e.metaKey;
+            
+            if (isMod && e.key === 's') {
+                e.preventDefault();
+                saveData();
+            } else if (isMod && e.key === 'f') {
+                e.preventDefault();
+                toggleFindBar(true);
+            } else if (isMod && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                insertCitation();
+            } else if (isMod && e.key === 'b') {
+                e.preventDefault();
+                formatText('bold');
+            } else if (isMod && e.key === 'i') {
+                e.preventDefault();
+                formatText('italic');
+            } else if (e.key === 'Escape') {
+                toggleFindBar(false);
+                document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+            }
+        }
+
+        // ==================== PAGE MANAGEMENT ====================
+        function goToPage(num) {
+            // Save current page first
+            commitEditorToState();
+            
+            // Switch to new page
+            loadPageToEditor(num);
+            
+            updateLineNumbers();
+            renderThumbnails();
+            switchMode('edit');
+            saveData();
+        }
+
+        function addPage() {
+            // Save current page first
+            commitEditorToState();
+            
+            // Add new page
+            state.pages.push('');
+            loadPageToEditor(state.pages.length);
+            document.getElementById('editor').focus();
+            
+            renderThumbnails();
+            saveData();
+        }
+
+        function deletePage(num, e) {
+            if (e) e.stopPropagation();
+            if (state.pages.length <= 1) {
+                alert('Cannot delete the only page.');
+                return;
+            }
+            if (!confirm(`Delete page ${num}?`)) return;
+            
+            // Commit current edits first
+            commitEditorToState();
+            
+            state.pages.splice(num - 1, 1);
+            
+            // Adjust current page if needed
+            if (state.currentPage > state.pages.length) {
+                state.currentPage = state.pages.length;
+            } else if (state.currentPage > num) {
+                state.currentPage--;
+            }
+            
+            loadPageToEditor(state.currentPage);
+            renderThumbnails();
+            saveData();
+            renderAll();
+        }
+
+        // ==================== RENDERING ====================
+        function renderAll() {
+            const full = getFullContent();
+            
+            updateStats(full);
+            updateLineNumbers();
+            renderOutline(full);
+            renderCitations(full);
+            renderFootnotes(full);
+            renderThumbnails();
+        }
+
+        function updateStats(content) {
+            const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+            const chars = content.length;
+            const cites = (content.match(/\[@[^\]]+\]/g) || []).length;
+            const notes = (content.match(/\[\^[^\]]+\]/g) || []).length;
+            const pages = state.pages.length;
+
+            document.getElementById('wordCount').textContent = words + ' words';
+            document.getElementById('charCount').textContent = chars + ' chars';
+            document.getElementById('citeCount').textContent = cites + ' citations';
+            document.getElementById('noteCount').textContent = notes + ' notes';
+            document.getElementById('citeBadge').textContent = cites;
+            document.getElementById('noteBadge').textContent = notes;
+            document.getElementById('bodyWordCount').textContent = words + ' words';
+            document.getElementById('bodyPageCount').textContent = pages;
+            document.getElementById('totalPages').textContent = pages;
+            document.getElementById('pageCount').textContent = pages;
+            document.getElementById('currentPage').textContent = state.currentPage;
+        }
+
+        function updateLineNumbers() {
+            const editor = document.getElementById('editor');
+            const lineNums = document.getElementById('lineNumbers');
+            const lines = editor.value.split('\n').length;
+            
+            let nums = '';
+            for (let i = 1; i <= lines; i++) {
+                nums += i + '\n';
+            }
+            lineNums.innerHTML = `<div class="line-numbers-inner" id="lineNumbersInner">${nums}</div>`;
+            syncLineNumbers();
+        }
+
+        function syncLineNumbers() {
+            const inner = document.getElementById('lineNumbersInner');
+            const ed = document.getElementById('editor');
+            if (inner) inner.style.transform = `translateY(${-ed.scrollTop}px)`;
+        }
+
+        function getEditorLineHeightPx() {
+            const editor = document.getElementById('editor');
+            const computed = getComputedStyle(editor);
+            const lh = computed.lineHeight;
+            if (lh && lh.endsWith('px')) return parseFloat(lh);
+            const fontSize = parseFloat(computed.fontSize) || 16;
+            return fontSize * 1.7;
+        }
+
+        function renderThumbnails() {
+            const container = document.getElementById('thumbnailScroll');
+            const pages = state.pages.length ? state.pages : [''];
+            
+            let html = '';
+            for (let i = 1; i <= pages.length; i++) {
+                const pageContent = pages[i - 1] || '';
+                const hasCite = /\[@/.test(pageContent);
+                const hasNote = /\[\^/.test(pageContent);
+                const hasHeading = /^#/m.test(pageContent);
+                
+                const preview = pageContent.substring(0, 200).replace(/[#*_`>\[\]@^]/g, '');
+                
+                html += `<div class="page-thumb ${i === state.currentPage ? 'active' : ''}" onclick="goToPage(${i})">
+                    ${escapeHtml(preview)}
+                    <span class="page-thumb-number">${i}</span>
+                    ${pages.length > 1 ? `<button class="page-thumb-delete" onclick="deletePage(${i}, event)" title="Delete page">×</button>` : ''}
+                    <div class="page-thumb-markers">
+                        ${hasCite ? '<div class="page-marker cite" title="Has citations"></div>' : ''}
+                        ${hasNote ? '<div class="page-marker note" title="Has footnotes"></div>' : ''}
+                        ${hasHeading ? '<div class="page-marker heading" title="Has headings"></div>' : ''}
+                    </div>
+                </div>`;
+            }
+            
+            html += `<button class="add-page-btn" onclick="addPage()">+<span>Add Page</span></button>`;
+            container.innerHTML = html;
+        }
+
+        // ==================== OUTLINE (H1-block based reordering) ====================
+        function buildHeadingTree(fullContent) {
+            // Build a tree where H1s are roots, H2s are children of H1s, H3s are children of H2s
+            // Each node tracks: level, text, pageNum, lineInPage, charOffset (global), children[]
+            const headings = [];
+            let charOffset = 0;
+            
+            state.pages.forEach((pageContent, pageIdx) => {
+                const lines = pageContent.split('\n');
+                let lineOffset = 0;
+                
+                lines.forEach((line, lineIdx) => {
+                    const match = line.match(/^(#{1,3})\s+(.+)/);
+                    if (match) {
+                        headings.push({
+                            level: match[1].length,
+                            text: match[2].trim(),
+                            pageNum: pageIdx + 1,
+                            lineInPage: lineIdx,
+                            charOffset: charOffset + lineOffset,
+                            children: []
+                        });
+                    }
+                    lineOffset += line.length + 1;
+                });
+                charOffset += pageContent.length + 2; // +2 for the \n\n join
+            });
+            
+            return headings;
+        }
+
+        function renderOutline(fullContent) {
+            const container = document.getElementById('outlineList');
+            const headings = buildHeadingTree(fullContent);
+            
+            if (headings.length === 0) {
+                container.innerHTML = '<div class="panel-empty">No headings yet.<br>Use # for headings or click Add.</div>';
+                return;
+            }
+
+            // Build hierarchical numbering
+            let counters = [0, 0, 0];
+            container.innerHTML = headings.map((h, i) => {
+                counters[h.level - 1]++;
+                for (let j = h.level; j < 3; j++) counters[j] = 0;
+                const num = counters.slice(0, h.level).join('.');
+                
+                return `<div class="outline-item h${h.level}" 
+                            data-index="${i}" 
+                            data-page="${h.pageNum}"
+                            data-line="${h.lineInPage}"
+                            data-level="${h.level}"
+                            draggable="${h.level === 1 ? 'true' : 'false'}">
+                    ${h.level === 1 ? '<span class="outline-drag-handle" title="Drag to reorder H1 sections">⋮⋮</span>' : '<span style="width:12px;"></span>'}
+                    <span class="outline-number">${num}</span>
+                    <span class="outline-text">${escapeHtml(h.text)}</span>
+                    <span class="outline-page-badge">p${h.pageNum}</span>
+                    <div class="outline-actions">
+                        <button class="outline-action-btn" data-action="goto" title="Go to">↗</button>
+                        <button class="outline-action-btn" data-action="edit" title="Edit">✎</button>
+                        <button class="outline-action-btn" data-action="delete" title="Delete">×</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Bind events
+            container.querySelectorAll('.outline-item').forEach(el => {
+                const index = parseInt(el.dataset.index, 10);
+                const pageNum = parseInt(el.dataset.page, 10);
+                const lineInPage = parseInt(el.dataset.line, 10);
+                const level = parseInt(el.dataset.level, 10);
+                
+                // Only H1s are draggable
+                if (level === 1) {
+                    el.addEventListener('dragstart', (e) => outlineDragStart(e, index, headings));
+                    el.addEventListener('dragover', (e) => outlineDragOver(e, index, headings));
+                    el.addEventListener('dragleave', outlineDragLeave);
+                    el.addEventListener('drop', (e) => outlineDrop(e, index, headings));
+                    el.addEventListener('dragend', outlineDragEnd);
+                }
+                
+                el.addEventListener('click', (e) => {
+                    if (!e.target.closest('.outline-action-btn')) {
+                        jumpToHeading(pageNum, lineInPage);
+                    }
+                });
+            });
+
+            container.querySelectorAll('.outline-action-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const item = btn.closest('.outline-item');
+                    const pageNum = parseInt(item.dataset.page, 10);
+                    const lineInPage = parseInt(item.dataset.line, 10);
+                    const action = btn.dataset.action;
+                    
+                    if (action === 'goto') jumpToHeading(pageNum, lineInPage);
+                    else if (action === 'edit') editHeading(pageNum, lineInPage);
+                    else if (action === 'delete') deleteHeading(pageNum, lineInPage);
+                });
+            });
+        }
+
+        function outlineDragStart(e, index, headings) {
+            draggedOutlineItem = { index, headings };
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            
+            // Mark children as being dragged too
+            const draggedH1 = headings[index];
+            for (let i = index + 1; i < headings.length && headings[i].level > 1; i++) {
+                const el = document.querySelector(`.outline-item[data-index="${i}"]`);
+                if (el) el.classList.add('child-of-dragged');
+            }
+        }
+
+        function outlineDragOver(e, targetIndex, headings) {
+            e.preventDefault();
+            if (!draggedOutlineItem || targetIndex === draggedOutlineItem.index) return;
+            
+            // Only allow dropping on other H1s
+            if (headings[targetIndex].level !== 1) return;
+            
+            e.dataTransfer.dropEffect = 'move';
+            document.querySelectorAll('.outline-item').forEach(el => el.classList.remove('drop-target'));
+            e.currentTarget.classList.add('drop-target');
+        }
+
+        function outlineDragLeave(e) {
+            e.currentTarget.classList.remove('drop-target');
+        }
+
+        function outlineDragEnd(e) {
+            document.querySelectorAll('.outline-item').forEach(el => {
+                el.classList.remove('dragging', 'drop-target', 'child-of-dragged');
+            });
+            draggedOutlineItem = null;
+        }
+
+        function outlineDrop(e, targetIndex, headings) {
+            e.preventDefault();
+            document.querySelectorAll('.outline-item').forEach(el => {
+                el.classList.remove('dragging', 'drop-target', 'child-of-dragged');
+            });
+            
+            if (!draggedOutlineItem || targetIndex === draggedOutlineItem.index) {
+                draggedOutlineItem = null;
+                return;
+            }
+            
+            const srcIndex = draggedOutlineItem.index;
+            draggedOutlineItem = null;
+            
+            // Both must be H1
+            if (headings[srcIndex].level !== 1 || headings[targetIndex].level !== 1) return;
+            
+            // Build H1 blocks (each H1 + its children until next H1)
+            const h1Indices = headings.map((h, i) => h.level === 1 ? i : -1).filter(i => i >= 0);
+            
+            const srcH1Pos = h1Indices.indexOf(srcIndex);
+            const tgtH1Pos = h1Indices.indexOf(targetIndex);
+            
+            if (srcH1Pos < 0 || tgtH1Pos < 0 || srcH1Pos === tgtH1Pos) return;
+            
+            // Get the range of headings for source H1 block
+            const srcStart = h1Indices[srcH1Pos];
+            const srcEnd = srcH1Pos + 1 < h1Indices.length ? h1Indices[srcH1Pos + 1] : headings.length;
+            
+            // For simplicity, we'll rebuild the document by extracting lines
+            // This is page-aware: we need to extract content from potentially multiple pages
+            
+            reorderH1Sections(srcH1Pos, tgtH1Pos, h1Indices, headings);
+        }
+
+        function reorderH1Sections(srcPos, tgtPos, h1Indices, headings) {
+            // NON-DESTRUCTIVE REORDER: preserves page boundaries
+            // Uses sentinel separators to maintain page structure
+            
+            commitEditorToState();
+            
+            // Build full content with sentinel page breaks
+            const fullWithSentinels = getFullContentWithSentinels();
+            const allLines = fullWithSentinels.split('\n');
+            
+            // Build sections: array of { lines[] }
+            // A section is: everything from one H1 to the next H1 (or end)
+            const sections = [];
+            let preambleLines = [];
+            let currentSection = null;
+            
+            allLines.forEach((line) => {
+                const isH1 = /^#\s+/.test(line);
+                
+                if (isH1) {
+                    if (currentSection) sections.push(currentSection);
+                    currentSection = { lines: [line] };
+                } else if (currentSection) {
+                    currentSection.lines.push(line);
+                } else {
+                    preambleLines.push(line);
+                }
+            });
+            
+            if (currentSection) sections.push(currentSection);
+            
+            if (srcPos >= sections.length || tgtPos >= sections.length) return;
+            
+            // Move section (preserving all content including sentinel markers within sections)
+            const [moved] = sections.splice(srcPos, 1);
+            const insertAt = srcPos < tgtPos ? tgtPos - 1 : tgtPos;
+            sections.splice(insertAt, 0, moved);
+            
+            // Rebuild content preserving sentinel markers
+            const newLines = [...preambleLines];
+            sections.forEach(sec => newLines.push(...sec.lines));
+            const newContent = newLines.join('\n');
+            
+            // Split back on sentinels to restore pages
+            state.pages = splitContentByPages(newContent);
+            
+            // Ensure at least one page
+            if (!state.pages.length) state.pages = [''];
+            
+            // Remove empty trailing pages (but keep intentional ones with sentinel markers)
+            while (state.pages.length > 1 && !state.pages[state.pages.length - 1].trim()) {
+                state.pages.pop();
+            }
+            
+            // Reload current page
+            state.currentPage = Math.min(state.currentPage, state.pages.length);
+            loadPageToEditor(state.currentPage);
+            
+            saveData();
+            renderAll();
+        }
+
+        function jumpToHeading(pageNum, lineInPage) {
+            commitEditorToState();
+            loadPageToEditor(pageNum);
+            renderThumbnails();
+            
+            const editor = document.getElementById('editor');
+            const lines = editor.value.split('\n');
+            let pos = 0;
+            for (let i = 0; i < lineInPage; i++) {
+                pos += (lines[i] || '').length + 1;
+            }
+            
+            editor.focus();
+            editor.setSelectionRange(pos, pos + (lines[lineInPage] || '').length);
+            editor.scrollTop = lineInPage * getEditorLineHeightPx() - 100;
+            switchMode('edit');
+        }
+
+        function editHeading(pageNum, lineInPage) {
+            commitEditorToState();
+            loadPageToEditor(pageNum);
+            renderThumbnails();
+            
+            const editor = document.getElementById('editor');
+            const lines = editor.value.split('\n');
+            const line = lines[lineInPage] || '';
+            const match = line.match(/^(#{1,3})\s+(.+)/);
+            
+            if (!match) return;
+            
+            const newText = prompt('Edit heading:', match[2]);
+            if (newText !== null && newText.trim()) {
+                lines[lineInPage] = match[1] + ' ' + newText.trim();
+                editor.value = lines.join('\n');
+                onEditorInput();
+            }
+            switchMode('edit');
+        }
+
+        function deleteHeading(pageNum, lineInPage) {
+            if (!confirm('Delete this heading?')) return;
+            
+            commitEditorToState();
+            loadPageToEditor(pageNum);
+            
+            const editor = document.getElementById('editor');
+            const lines = editor.value.split('\n');
+            lines.splice(lineInPage, 1);
+            editor.value = lines.join('\n');
+            onEditorInput();
+            switchMode('edit');
+        }
+
+        function addHeading() {
+            openModal('addHeadingModal');
+            document.getElementById('newHeadingText').focus();
+        }
+
+        function doAddHeading() {
+            const level = document.getElementById('newHeadingLevel').value;
+            const text = document.getElementById('newHeadingText').value.trim();
+            
+            if (!text) {
+                alert('Please enter heading text');
+                return;
+            }
+
+            const heading = '#'.repeat(parseInt(level)) + ' ' + text;
+            const editor = document.getElementById('editor');
+            const pos = editor.selectionStart;
+            
+            const before = editor.value.substring(0, pos);
+            const after = editor.value.substring(pos);
+            const needsNewline = before.length > 0 && !before.endsWith('\n');
+            
+            editor.value = before + (needsNewline ? '\n\n' : '') + heading + '\n\n' + after;
+            
+            closeModal('addHeadingModal');
+            document.getElementById('newHeadingText').value = '';
+            onEditorInput();
+        }
+
+        // ==================== CITATIONS ====================
+        function parseCitekeys(bracketContent) {
+            const keys = [];
+            const parts = bracketContent.split(/;\s*/);
+            
+            parts.forEach(part => {
+                const subParts = part.split(/,\s*(?=@)/);
+                subParts.forEach(sub => {
+                    const match = sub.trim().match(/^@?([a-zA-Z0-9_:-]+)/);
+                    if (match) keys.push(match[1]);
+                });
+            });
+            
+            return keys;
+        }
+
+        function findCiteOccurrences(fullContent) {
+            // Returns { citekey: [{ pageNum, charPos, locator }] }
+            const occurrences = {};
+            let charOffset = 0;
+            
+            state.pages.forEach((pageContent, pageIdx) => {
+                const regex = /\[@([^\]]+)\]/g;
+                let match;
+                
+                while ((match = regex.exec(pageContent)) !== null) {
+                    const inner = match[1];
+                    const keys = parseCitekeys(inner);
+                    const locator = inner.replace(/@?[a-zA-Z0-9_:-]+/g, '').replace(/^[,;\s]+/, '').trim();
+                    
+                    keys.forEach(key => {
+                        if (!occurrences[key]) occurrences[key] = [];
+                        occurrences[key].push({
+                            pageNum: pageIdx + 1,
+                            charPos: match.index,
+                            locator: locator || null
+                        });
+                    });
+                }
+                
+                charOffset += pageContent.length + 2;
+            });
+            
+            return occurrences;
+        }
+
+        function renderCitations(fullContent) {
+            const container = document.getElementById('citationList');
+            const occurrences = findCiteOccurrences(fullContent);
+            const citeKeys = Object.keys(occurrences);
+            
+            if (citeKeys.length === 0) {
+                container.innerHTML = '<div class="panel-empty">No citations yet.<br>Use [@citekey] to cite.</div>';
+                return;
+            }
+
+            container.innerHTML = citeKeys.map(key => {
+                const source = state.sources.find(s => s.citekey === key);
+                const occ = occurrences[key];
+                
+                if (source) {
+                    return `<div class="cite-item" onclick="jumpToCitation('${key}')">
+                        <div class="cite-key">@${key} × ${occ.length}</div>
+                        <div class="cite-title">${escapeHtml(source.title)}</div>
+                        <div class="cite-meta">${escapeHtml(source.author || '')} ${source.year || ''}</div>
+                        <div class="cite-occurrences">
+                            ${occ.map((o, i) => `<span class="cite-occurrence" onclick="event.stopPropagation(); jumpToCitationOccurrence('${key}', ${i})">p${o.pageNum}${o.locator ? ': ' + o.locator : ''}</span>`).join('')}
+                        </div>
+                    </div>`;
+                } else {
+                    return `<div class="cite-item missing">
+                        <div class="cite-key">@${key} × ${occ.length} — NOT FOUND
+                            <span class="cite-add-btn" onclick="event.stopPropagation(); addMissingSource('${key}')">+ Add</span>
+                        </div>
+                        <div class="cite-occurrences">
+                            ${occ.map((o, i) => `<span class="cite-occurrence" onclick="event.stopPropagation(); jumpToCitationOccurrence('${key}', ${i})">p${o.pageNum}</span>`).join('')}
+                        </div>
+                    </div>`;
+                }
+            }).join('');
+        }
+
+        function jumpToCitation(key) {
+            jumpToCitationOccurrence(key, 0);
+        }
+
+        function jumpToCitationOccurrence(key, occIndex) {
+            const occurrences = findCiteOccurrences(getFullContent());
+            const occ = occurrences[key];
+            if (!occ || !occ[occIndex]) return;
+            
+            const { pageNum, charPos } = occ[occIndex];
+            
+            commitEditorToState();
+            loadPageToEditor(pageNum);
+            renderThumbnails();
+            
+            const editor = document.getElementById('editor');
+            const pageContent = editor.value;
+            
+            // Find the citation at charPos
+            const regex = new RegExp(`\\[@[^\\]]*${escapeRegex(key)}[^\\]]*\\]`);
+            const match = pageContent.substring(charPos).match(regex);
+            
+            if (match) {
+                const start = charPos;
+                const end = charPos + match[0].length;
+                editor.focus();
+                editor.setSelectionRange(start, end);
+                
+                const linesBefore = pageContent.substring(0, start).split('\n').length;
+                editor.scrollTop = linesBefore * getEditorLineHeightPx() - 100;
+            }
+            switchMode('edit');
+        }
+
+        function addMissingSource(citekey) {
+            // Prefill the Add Source modal with the citekey
+            document.getElementById('sourceCitekey').value = citekey;
+            document.getElementById('sourceTitle').value = '';
+            document.getElementById('sourceAuthor').value = '';
+            document.getElementById('sourceYear').value = '';
+            document.getElementById('sourcePublisher').value = '';
+            document.getElementById('sourceDoi').value = '';
+            document.getElementById('sourceType').value = 'book';
+            document.getElementById('sourceEditMode').value = '';
+            document.getElementById('sourceModalTitle').textContent = 'Add Source';
+            document.getElementById('sourceDeleteBtn').style.display = 'none';
+            
+            openModal('addSourceModal');
+            document.getElementById('sourceTitle').focus();
+        }
+
+        // In-text citation formatting per style
+        function formatInTextCitation(keys, locator, style) {
+            const sources = keys.map(k => state.sources.find(s => s.citekey === k)).filter(Boolean);
+            
+            if (sources.length === 0) {
+                return `[${keys.join('; ')}${locator ? ', ' + locator : ''}]`;
+            }
+            
+            switch (style) {
+                case 'APA': {
+                    const parts = sources.map(s => {
+                        const author = s.author ? s.author.split(',')[0] : 'Unknown';
+                        return `${author}, ${s.year || 'n.d.'}`;
+                    });
+                    return `(${parts.join('; ')}${locator ? ', ' + locator : ''})`;
+                }
+                case 'MLA': {
+                    const parts = sources.map(s => {
+                        const author = s.author ? s.author.split(',')[0] : 'Unknown';
+                        return author;
+                    });
+                    return `(${parts.join('; ')}${locator ? ' ' + locator : ''})`;
+                }
+                case 'Chicago': {
+                    const parts = sources.map(s => {
+                        const author = s.author ? s.author.split(',')[0] : 'Unknown';
+                        return `${author} ${s.year || 'n.d.'}`;
+                    });
+                    return `(${parts.join('; ')}${locator ? ', ' + locator : ''})`;
+                }
+                case 'IEEE': {
+                    // Would need citation numbers - simplified
+                    return `[${keys.map(k => state.sources.findIndex(s => s.citekey === k) + 1).join(', ')}]`;
+                }
+                case 'SBL': {
+                    const parts = sources.map(s => {
+                        const author = s.author ? s.author.split(',')[0] : 'Unknown';
+                        return `${author}, *${s.title}*`;
+                    });
+                    return `(${parts.join('; ')}${locator ? ', ' + locator : ''})`;
+                }
+                default:
+                    return `[${keys.join('; ')}]`;
+            }
+        }
+
+        function renderFootnotes(fullContent) {
+            const container = document.getElementById('footnoteList');
+            const matches = fullContent.match(/\[\^(\d+)\]/g) || [];
+            
+            if (matches.length === 0) {
+                container.innerHTML = '<div class="panel-empty">No footnotes yet.<br>Use [^1] for notes.</div>';
+                return;
+            }
+
+            const notes = [...new Set(matches.map(m => m.match(/\[\^(\d+)\]/)[1]))].sort((a, b) => a - b);
+
+            container.innerHTML = notes.map(n => {
+                const text = state.footnotes[n] || '(no content)';
+                return `<div class="note-item" onclick="editFootnote('${n}')">
+                    <span class="note-number">${n}</span>
+                    <span class="note-text">${escapeHtml(text.substring(0, 100))}${text.length > 100 ? '...' : ''}</span>
+                </div>`;
+            }).join('');
+        }
+
+        // ==================== MODE SWITCHING ====================
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.mode-tab[data-mode="${mode}"]`).classList.add('active');
+
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+            document.getElementById(mode + 'View').classList.add('active');
+
+            if (mode === 'sources') renderSourcesGrid();
+            if (mode === 'document') renderDocumentStatus();
+            if (mode === 'preview') renderPreview();
+        }
+
+        function switchPanel(panel) {
+            const parent = document.getElementById('toolsPanel');
+            parent.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            parent.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+            document.querySelector(`.panel-tab[data-panel="${panel}"]`).classList.add('active');
+            document.getElementById(panel + 'Panel').classList.add('active');
+        }
+
+        // ==================== SOURCES ====================
+        function renderSourcesGrid() {
+            const container = document.getElementById('sourcesGrid');
+            
+            if (state.sources.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--ink-faint);">
+                    No sources yet. Click "Add Source" to begin building your library.
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = state.sources.map(s => `
+                <div class="source-card" onclick="editSource('${s.citekey}')">
+                    <div class="source-card-actions">
+                        <button class="source-card-btn" onclick="event.stopPropagation(); quickCiteSource('${s.citekey}')" title="Insert citation">[@]</button>
+                        <button class="source-card-btn danger" onclick="event.stopPropagation(); confirmDeleteSource('${s.citekey}')" title="Delete">×</button>
+                    </div>
+                    <div class="source-type">${s.type || 'source'}</div>
+                    <div class="source-title">${escapeHtml(s.title)}</div>
+                    <div class="source-author">${escapeHtml(s.author || '')} ${s.year ? `(${s.year})` : ''}</div>
+                    <div style="font-family:var(--font-mono); font-size:10px; color:var(--accent-cite); margin-top:8px;">@${s.citekey}</div>
+                </div>
+            `).join('');
+        }
+
+        function saveSource() {
+            const editMode = document.getElementById('sourceEditMode').value;
+            const source = {
+                type: document.getElementById('sourceType').value,
+                citekey: document.getElementById('sourceCitekey').value.trim(),
+                title: document.getElementById('sourceTitle').value.trim(),
+                author: document.getElementById('sourceAuthor').value.trim(),
+                year: document.getElementById('sourceYear').value.trim(),
+                publisher: document.getElementById('sourcePublisher').value.trim(),
+                doi: document.getElementById('sourceDoi').value.trim()
+            };
+
+            if (!source.title) {
+                alert('Title is required');
+                return;
+            }
+
+            if (!source.citekey) {
+                const authorPart = source.author ? source.author.split(/[,\s]/)[0].toLowerCase() : 'source';
+                source.citekey = authorPart + (source.year || Date.now().toString().slice(-4));
+            }
+
+            if (editMode) {
+                // Editing existing source
+                const existing = state.sources.findIndex(s => s.citekey === editMode);
+                if (existing >= 0) {
+                    // If citekey changed, update all occurrences in document
+                    if (editMode !== source.citekey) {
+                        renameCitekeyInDocument(editMode, source.citekey);
+                    }
+                    state.sources[existing] = source;
+                }
+            } else {
+                // Check for duplicate citekey
+                if (state.sources.find(s => s.citekey === source.citekey)) {
+                    alert('A source with this citekey already exists. Please use a different key.');
+                    return;
+                }
+                state.sources.push(source);
+            }
+
+            saveData();
+            closeModal('addSourceModal');
+            clearSourceForm();
+            renderAll();
+        }
+
+        function renameCitekeyInDocument(oldKey, newKey) {
+            // Robust rename: handles @oldKey anywhere in citation brackets
+            // Matches @oldKey followed by non-citekey char (or end)
+            const pattern = new RegExp(`(@)${escapeRegex(oldKey)}(?![a-zA-Z0-9_:-])`, 'g');
+            state.pages = state.pages.map(p => p.replace(pattern, `$1${newKey}`));
+            
+            // Refresh editor if on current page
+            loadPageToEditor(state.currentPage);
+        }
+
+        function clearSourceForm() {
+            document.getElementById('sourceType').value = 'book';
+            document.getElementById('sourceCitekey').value = '';
+            document.getElementById('sourceTitle').value = '';
+            document.getElementById('sourceAuthor').value = '';
+            document.getElementById('sourceYear').value = '';
+            document.getElementById('sourcePublisher').value = '';
+            document.getElementById('sourceDoi').value = '';
+            document.getElementById('sourceEditMode').value = '';
+            document.getElementById('sourceModalTitle').textContent = 'Add Source';
+            document.getElementById('sourceDeleteBtn').style.display = 'none';
+        }
+
+        function editSource(key) {
+            const source = state.sources.find(s => s.citekey === key);
+            if (!source) return;
+
+            document.getElementById('sourceType').value = source.type || 'book';
+            document.getElementById('sourceCitekey').value = source.citekey;
+            document.getElementById('sourceTitle').value = source.title;
+            document.getElementById('sourceAuthor').value = source.author || '';
+            document.getElementById('sourceYear').value = source.year || '';
+            document.getElementById('sourcePublisher').value = source.publisher || '';
+            document.getElementById('sourceDoi').value = source.doi || '';
+            document.getElementById('sourceEditMode').value = source.citekey;
+            document.getElementById('sourceModalTitle').textContent = 'Edit Source';
+            document.getElementById('sourceDeleteBtn').style.display = 'block';
+
+            openModal('addSourceModal');
+        }
+
+        function deleteSource() {
+            const citekey = document.getElementById('sourceEditMode').value;
+            if (!citekey) return;
+            
+            confirmDeleteSource(citekey);
+        }
+
+        function confirmDeleteSource(citekey) {
+            const occurrences = findCiteOccurrences(getFullContent());
+            const count = occurrences[citekey] ? occurrences[citekey].length : 0;
+            
+            let msg = `Delete source @${citekey}?`;
+            if (count > 0) {
+                msg += `\n\nWarning: This source is cited ${count} time(s) in your document. The citations will become orphaned.`;
+            }
+            
+            if (!confirm(msg)) return;
+            
+            state.sources = state.sources.filter(s => s.citekey !== citekey);
+            saveData();
+            closeModal('addSourceModal');
+            clearSourceForm();
+            renderAll();
+            renderSourcesGrid();
+        }
+
+        function quickCiteSource(citekey) {
+            switchMode('edit');
+            const editor = document.getElementById('editor');
+            const pos = editor.selectionStart;
+            const cite = `[@${citekey}]`;
+            editor.value = editor.value.substring(0, pos) + cite + editor.value.substring(pos);
+            editor.setSelectionRange(pos + cite.length, pos + cite.length);
+            editor.focus();
+            onEditorInput();
+        }
+
+        // ==================== INSERT CITATION ====================
+        function insertCitation() {
+            state.selectedCiteKey = null;
+            renderCiteSourceList();
+            openModal('insertCiteModal');
+            document.getElementById('citeSearchInput').focus();
+        }
+
+        function renderCiteSourceList(filter = '') {
+            const container = document.getElementById('citeSourceList');
+            const filtered = state.sources.filter(s => 
+                !filter || 
+                s.title.toLowerCase().includes(filter.toLowerCase()) ||
+                s.citekey.toLowerCase().includes(filter.toLowerCase()) ||
+                (s.author && s.author.toLowerCase().includes(filter.toLowerCase()))
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--ink-faint);">No sources found. Add sources first.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(s => `
+                <div class="source-item ${state.selectedCiteKey === s.citekey ? 'active' : ''}" 
+                     onclick="selectCiteSource('${s.citekey}')">
+                    <div class="source-type">${s.type || 'source'}</div>
+                    <div class="source-title">${escapeHtml(s.title)}</div>
+                    <div class="source-author">${escapeHtml(s.author || '')} — @${s.citekey}</div>
+                </div>
+            `).join('');
+        }
+
+        function filterCiteSources() {
+            renderCiteSourceList(document.getElementById('citeSearchInput').value);
+        }
+
+        function selectCiteSource(key) {
+            state.selectedCiteKey = key;
+            renderCiteSourceList(document.getElementById('citeSearchInput').value);
+        }
+
+        function doInsertCitation() {
+            if (!state.selectedCiteKey) {
+                alert('Please select a source');
+                return;
+            }
+
+            const locator = document.getElementById('citeLocator').value.trim();
+            let cite = `[@${state.selectedCiteKey}`;
+            if (locator) cite += `, ${locator}`;
+            cite += ']';
+
+            const editor = document.getElementById('editor');
+            const pos = editor.selectionStart;
+            editor.value = editor.value.substring(0, pos) + cite + editor.value.substring(pos);
+            editor.setSelectionRange(pos + cite.length, pos + cite.length);
+            
+            closeModal('insertCiteModal');
+            document.getElementById('citeSearchInput').value = '';
+            document.getElementById('citeLocator').value = '';
+            state.selectedCiteKey = null;
+            editor.focus();
+            onEditorInput();
+        }
+
+        // ==================== FOOTNOTES ====================
+        function insertFootnote() {
+            const fullContent = getFullContent();
+            const existingNotes = fullContent.match(/\[\^(\d+)\]/g) || [];
+            const nums = existingNotes.map(n => parseInt(n.match(/\d+/)[0]));
+            const nextNum = nums.length ? Math.max(...nums) + 1 : 1;
+
+            const note = `[^${nextNum}]`;
+            const editor = document.getElementById('editor');
+            const pos = editor.selectionStart;
+            editor.value = editor.value.substring(0, pos) + note + editor.value.substring(pos);
+            editor.setSelectionRange(pos + note.length, pos + note.length);
+            
+            state.footnotes[nextNum] = '';
+            editor.focus();
+            onEditorInput();
+            
+            const text = prompt(`Footnote ${nextNum} content:`);
+            if (text) {
+                state.footnotes[nextNum] = text;
+                saveData();
+                renderFootnotes(getFullContent());
+            }
+        }
+
+        function editFootnote(num) {
+            const current = state.footnotes[num] || '';
+            const text = prompt(`Edit footnote ${num}:`, current);
+            if (text !== null) {
+                state.footnotes[num] = text;
+                saveData();
+                renderFootnotes(getFullContent());
+            }
+        }
+
+        // ==================== DOCUMENT STATUS ====================
+        function renderDocumentStatus() {
+            const fm = state.frontMatter;
+            const bm = state.backMatter;
+
+            document.getElementById('frontMatterStatus').innerHTML = `
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
+                    <div>Title: <span class="doc-section-status ${fm.title ? 'complete' : 'empty'}">${fm.title ? '✓' : '—'}</span></div>
+                    <div>Author: <span class="doc-section-status ${fm.author ? 'complete' : 'empty'}">${fm.author ? '✓' : '—'}</span></div>
+                    <div>Abstract: <span class="doc-section-status ${fm.abstract ? 'complete' : 'empty'}">${fm.abstract ? '✓' : '—'}</span></div>
+                    <div>Keywords: <span class="doc-section-status ${fm.keywords ? 'complete' : 'empty'}">${fm.keywords ? '✓' : '—'}</span></div>
+                </div>
+            `;
+
+            document.getElementById('backMatterStatus').innerHTML = `
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
+                    <div>Appendices: <span class="doc-section-status ${bm.appendices ? 'complete' : 'empty'}">${bm.appendices ? '✓' : '—'}</span></div>
+                    <div>Acknowledgments: <span class="doc-section-status ${bm.acknowledgments ? 'complete' : 'empty'}">${bm.acknowledgments ? '✓' : '—'}</span></div>
+                    <div>Bibliography: <span class="doc-section-status ${bm.includeBibliography ? 'complete' : 'empty'}">${bm.includeBibliography ? '✓' : '—'}</span></div>
+                    <div>Endnotes: <span class="doc-section-status ${bm.includeEndnotes ? 'complete' : 'empty'}">${bm.includeEndnotes ? '✓' : '—'}</span></div>
+                </div>
+            `;
+
+            document.getElementById('docTitle').value = fm.title || '';
+            document.getElementById('docSubtitle').value = fm.subtitle || '';
+            document.getElementById('docAuthor').value = fm.author || '';
+            document.getElementById('docDate').value = fm.date || '';
+            document.getElementById('docInstitution').value = fm.institution || '';
+            document.getElementById('docAbstract').value = fm.abstract || '';
+            document.getElementById('docKeywords').value = fm.keywords || '';
+            document.getElementById('docAppendices').value = bm.appendices || '';
+            document.getElementById('docAcknowledgments').value = bm.acknowledgments || '';
+            document.getElementById('includeEndnotes').checked = bm.includeEndnotes || false;
+            document.getElementById('includeBibliography').checked = bm.includeBibliography !== false;
+        }
+
+        function saveFrontMatter() {
+            state.frontMatter = {
+                title: document.getElementById('docTitle').value.trim(),
+                subtitle: document.getElementById('docSubtitle').value.trim(),
+                author: document.getElementById('docAuthor').value.trim(),
+                date: document.getElementById('docDate').value.trim(),
+                institution: document.getElementById('docInstitution').value.trim(),
+                abstract: document.getElementById('docAbstract').value.trim(),
+                keywords: document.getElementById('docKeywords').value.trim()
+            };
+            saveData();
+            closeModal('frontMatterModal');
+            renderDocumentStatus();
+        }
+
+        function saveBackMatter() {
+            state.backMatter = {
+                appendices: document.getElementById('docAppendices').value.trim(),
+                acknowledgments: document.getElementById('docAcknowledgments').value.trim(),
+                includeEndnotes: document.getElementById('includeEndnotes').checked,
+                includeBibliography: document.getElementById('includeBibliography').checked
+            };
+            saveData();
+            closeModal('backMatterModal');
+            renderDocumentStatus();
+        }
+
+        // ==================== PREVIEW ====================
+        function renderPreview() {
+            const content = getFullContent();
+            const container = document.getElementById('previewContent');
+            const style = document.getElementById('citationStyle').value;
+            
+            let html = '';
+            
+            // Front matter
+            if (state.frontMatter.title) {
+                html += `<h1 style="text-align:center; margin-bottom:8px;">${escapeHtml(state.frontMatter.title)}</h1>`;
+                if (state.frontMatter.subtitle) {
+                    html += `<p style="text-align:center; color:var(--ink-light); margin-bottom:16px;">${escapeHtml(state.frontMatter.subtitle)}</p>`;
+                }
+                if (state.frontMatter.author) {
+                    html += `<p style="text-align:center; margin-bottom:4px;">${escapeHtml(state.frontMatter.author)}</p>`;
+                }
+                if (state.frontMatter.institution) {
+                    html += `<p style="text-align:center; color:var(--ink-light); font-size:14px;">${escapeHtml(state.frontMatter.institution)}</p>`;
+                }
+                if (state.frontMatter.date) {
+                    html += `<p style="text-align:center; color:var(--ink-light); font-size:14px; margin-bottom:32px;">${escapeHtml(state.frontMatter.date)}</p>`;
+                }
+                html += '<hr style="margin:32px 0; border:none; border-top:1px solid var(--border-soft);">';
+            }
+
+            if (state.frontMatter.abstract) {
+                html += `<div style="margin-bottom:32px;">
+                    <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-light); margin-bottom:8px;">Abstract</h3>
+                    <p style="font-style:italic;">${escapeHtml(state.frontMatter.abstract)}</p>
+                </div>`;
+            }
+
+            // Main content with page breaks
+            state.pages.forEach((pageContent, idx) => {
+                if (idx > 0) {
+                    html += '<hr class="page-break">';
+                }
+                html += markdownToHtml(pageContent, style);
+            });
+
+            // Acknowledgments
+            if (state.backMatter.acknowledgments) {
+                html += `<hr style="margin:32px 0; border:none; border-top:1px solid var(--border-soft);">
+                    <h2>Acknowledgments</h2>
+                    <p>${escapeHtml(state.backMatter.acknowledgments)}</p>`;
+            }
+
+            // Footnotes/Endnotes
+            const footnoteMatches = content.match(/\[\^(\d+)\]/g) || [];
+            const usedFootnotes = [...new Set(footnoteMatches.map(m => m.match(/\[\^(\d+)\]/)[1]))].sort((a, b) => a - b);
+            
+            if (usedFootnotes.length > 0) {
+                html += `<hr style="margin:32px 0; border:none; border-top:1px solid var(--border-soft);">
+                    <h2>${state.backMatter.includeEndnotes ? 'Endnotes' : 'Notes'}</h2>
+                    <ol style="font-size:14px; color:var(--ink-medium);">`;
+                usedFootnotes.forEach(n => {
+                    const noteText = state.footnotes[n] || '(no content)';
+                    html += `<li value="${n}" style="margin-bottom:8px; padding-left:8px;">${escapeHtml(noteText)}</li>`;
+                });
+                html += '</ol>';
+            }
+
+            // Bibliography (cited-only)
+            if (state.backMatter.includeBibliography && state.sources.length > 0) {
+                const citeBrackets = content.match(/\[@[^\]]+\]/g) || [];
+                const citedKeys = new Set();
+                citeBrackets.forEach(bracket => {
+                    const inner = bracket.slice(2, -1);
+                    parseCitekeys(inner).forEach(key => citedKeys.add(key));
+                });
+
+                const citedSources = state.sources.filter(s => citedKeys.has(s.citekey));
+                
+                if (citedSources.length > 0) {
+                    html += `<hr style="margin:32px 0; border:none; border-top:1px solid var(--border-soft);">
+                        <h2>References</h2>`;
+                    
+                    citedSources.sort((a, b) => (a.author || '').localeCompare(b.author || ''));
+                    
+                    citedSources.forEach(s => {
+                        html += `<p style="padding-left:2em; text-indent:-2em; margin-bottom:8px;">${formatBibliographyCitation(s, style)}</p>`;
+                    });
+                }
+            }
+
+            container.innerHTML = html;
+        }
+
+        function markdownToHtml(md, citationStyle) {
+            let html = md
+                .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/(^|[^\w*])\*([^*\n]+)\*(?![\w*])/g, (m, lead, inner) => {
+                    if (!inner || inner.trim() !== inner) return m;
+                    return `${lead}<em>${inner}</em>`;
+                })
+                .replace(/~~(.+?)~~/g, '<del>$1</del>')
+                .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+            
+            // Format citations with proper in-text style
+            html = html.replace(/\[@([^\]]+)\]/g, (match, inner) => {
+                const keys = parseCitekeys(inner);
+                const locator = inner.replace(/@?[a-zA-Z0-9_:-]+/g, '').replace(/^[,;\s]+/, '').trim();
+                const formatted = formatInTextCitation(keys, locator, citationStyle);
+                return `<span class="cite-inline">${formatted}</span>`;
+            });
+            
+            html = html.replace(/\[\^(\d+)\]/g, '<sup class="footnote">$1</sup>');
+            
+            // Lists
+            html = html.replace(/(^- .+$(\n^- .+$)*)/gm, (match) => {
+                const items = match.split('\n')
+                    .map(line => line.replace(/^- (.+)$/, '<li>$1</li>'))
+                    .join('\n');
+                return '<ul>\n' + items + '\n</ul>';
+            });
+            
+            html = html.replace(/(^\d+\. .+$(\n^\d+\. .+$)*)/gm, (match) => {
+                const items = match.split('\n')
+                    .map(line => line.replace(/^\d+\. (.+)$/, '<li>$1</li>'))
+                    .join('\n');
+                return '<ol>\n' + items + '\n</ol>';
+            });
+            
+            // Paragraphs
+            html = html.split('\n\n').map(block => {
+                block = block.trim();
+                if (!block) return '';
+                if (/<(h1|h2|h3|ul|ol|li|blockquote|div|p)\b/i.test(block)) return block;
+                if (/^<[a-z]/i.test(block)) return block;
+                return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
+            }).join('\n');
+            
+            return html;
+        }
+
+        function formatBibliographyCitation(source, style) {
+            const { author, year, title, publisher } = source;
+            switch (style) {
+                case 'APA': return `${author || 'Unknown'} (${year || 'n.d.'}). <em>${title}</em>. ${publisher || ''}.`;
+                case 'MLA': return `${author || 'Unknown'}. <em>${title}</em>. ${publisher || ''}, ${year || 'n.d.'}.`;
+                case 'Chicago': return `${author || 'Unknown'}. <em>${title}</em>. ${publisher ? publisher + ', ' : ''}${year || 'n.d.'}.`;
+                case 'SBL': return `${author || 'Unknown'}. <em>${title}</em>. ${publisher || ''}, ${year || 'n.d.'}.`;
+                case 'IEEE': return `${author || 'Unknown'}, "${title}," ${publisher || ''}, ${year || 'n.d.'}.`;
+                default: return `${author || 'Unknown'}. ${title}. ${year || ''}.`;
+            }
+        }
+
+        // ==================== TEXT FORMATTING ====================
+        function formatText(type) {
+            const editor = document.getElementById('editor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selected = text.substring(start, end);
+            
+            let replacement = selected;
+            let cursorOffset = 0;
+
+            switch (type) {
+                case 'bold': replacement = `**${selected}**`; cursorOffset = 2; break;
+                case 'italic': replacement = `*${selected}*`; cursorOffset = 1; break;
+                case 'strike': replacement = `~~${selected}~~`; cursorOffset = 2; break;
+                case 'h1': replacement = `# ${selected}`; cursorOffset = 2; break;
+                case 'h2': replacement = `## ${selected}`; cursorOffset = 3; break;
+                case 'h3': replacement = `### ${selected}`; cursorOffset = 4; break;
+                case 'quote': replacement = `> ${selected}`; cursorOffset = 2; break;
+                case 'bullet': replacement = `- ${selected}`; cursorOffset = 2; break;
+                case 'number': replacement = `1. ${selected}`; cursorOffset = 3; break;
+            }
+
+            editor.value = text.substring(0, start) + replacement + text.substring(end);
+            editor.setSelectionRange(start + cursorOffset, start + cursorOffset + selected.length);
+            editor.focus();
+            onEditorInput();
+        }
+
+        // ==================== FIND & REPLACE (GLOBAL) ====================
+        let findIndex = 0;
+
+        function toggleFindBar(show) {
+            const bar = document.getElementById('findBar');
+            if (typeof show === 'boolean') {
+                bar.classList.toggle('active', show);
+            } else {
+                bar.classList.toggle('active');
+            }
+            if (bar.classList.contains('active')) {
+                document.getElementById('findInput').focus();
+                updateFindBarPosition();
+            }
+        }
+
+        function updateFindBarPosition() {
+            // Dock find bar relative to tools panel state
+            const bar = document.getElementById('findBar');
+            const toolsPanel = document.getElementById('toolsPanel');
+            const isCollapsed = toolsPanel.classList.contains('collapsed');
+            bar.style.right = isCollapsed ? '16px' : '296px';
+        }
+
+        function updateFindCount() {
+            const query = document.getElementById('findInput').value;
+            
+            if (!query) {
+                globalFindMatches = [];
+                document.getElementById('findCount').textContent = '0 found';
+                return;
+            }
+
+            // GLOBAL FIND: search across all pages
+            globalFindMatches = [];
+            const regex = new RegExp(escapeRegex(query), 'gi');
+            
+            state.pages.forEach((pageContent, pageIdx) => {
+                let match;
+                while ((match = regex.exec(pageContent)) !== null) {
+                    globalFindMatches.push({
+                        pageNum: pageIdx + 1,
+                        index: match.index,
+                        length: query.length
+                    });
+                }
+            });
+            
+            findIndex = 0;
+            document.getElementById('findCount').textContent = `${globalFindMatches.length} in doc`;
+        }
+
+        function findNext() {
+            if (globalFindMatches.length === 0) return;
+            findIndex = (findIndex + 1) % globalFindMatches.length;
+            highlightMatch();
+        }
+
+        function findPrev() {
+            if (globalFindMatches.length === 0) return;
+            findIndex = (findIndex - 1 + globalFindMatches.length) % globalFindMatches.length;
+            highlightMatch();
+        }
+
+        function highlightMatch() {
+            if (globalFindMatches.length === 0) return;
+            
+            const match = globalFindMatches[findIndex];
+            const query = document.getElementById('findInput').value;
+            
+            // Navigate to the correct page if needed
+            if (match.pageNum !== state.currentPage) {
+                commitEditorToState();
+                loadPageToEditor(match.pageNum);
+                renderThumbnails();
+            }
+            
+            const editor = document.getElementById('editor');
+            editor.focus();
+            editor.setSelectionRange(match.index, match.index + match.length);
+            
+            // Scroll to show the match
+            const linesBefore = editor.value.substring(0, match.index).split('\n').length;
+            editor.scrollTop = linesBefore * getEditorLineHeightPx() - 100;
+            
+            document.getElementById('findCount').textContent = `${findIndex + 1}/${globalFindMatches.length}`;
+        }
+
+        function doReplace() {
+            if (globalFindMatches.length === 0) return;
+            
+            const match = globalFindMatches[findIndex];
+            const query = document.getElementById('findInput').value;
+            const replacement = document.getElementById('replaceInput').value;
+            
+            // Navigate to page if needed
+            if (match.pageNum !== state.currentPage) {
+                commitEditorToState();
+                loadPageToEditor(match.pageNum);
+            }
+            
+            const editor = document.getElementById('editor');
+            const pageContent = editor.value;
+            
+            // Perform replacement
+            editor.value = pageContent.substring(0, match.index) + replacement + pageContent.substring(match.index + match.length);
+            commitEditorToState();
+            saveData();
+            
+            // Recompute matches
+            updateFindCount();
+            
+            if (globalFindMatches.length > 0) {
+                findIndex = Math.min(findIndex, globalFindMatches.length - 1);
+                highlightMatch();
+            }
+            
+            renderThumbnails();
+        }
+
+        function doReplaceAll() {
+            const query = document.getElementById('findInput').value;
+            const replacement = document.getElementById('replaceInput').value;
+            if (!query) return;
+            
+            const countBefore = globalFindMatches.length;
+            
+            // Replace across all pages
+            const regex = new RegExp(escapeRegex(query), 'gi');
+            state.pages = state.pages.map(p => p.replace(regex, replacement));
+            
+            // Reload current page
+            loadPageToEditor(state.currentPage);
+            saveData();
+            
+            updateFindCount();
+            renderThumbnails();
+            
+            if (countBefore > 0) {
+                alert(`Replaced ${countBefore} occurrence${countBefore > 1 ? 's' : ''} across all pages.`);
+            }
+        }
+
+        // ==================== IMPORT/EXPORT ====================
+        function handleDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length === 0) return;
+
+            for (const file of files) {
+                const ext = file.name.split('.').pop().toLowerCase();
+                const reader = new FileReader();
+
+                reader.onload = (ev) => {
+                    const content = ev.target.result;
+                    
+                    switch (ext) {
+                        case 'md':
+                        case 'txt':
+                            importMarkdown(content);
+                            break;
+                        case 'json':
+                            importProject(content);
+                            break;
+                        case 'bib':
+                            importBibtex(content);
+                            break;
+                        case 'html':
+                        case 'htm':
+                            importHtml(content);
+                            break;
+                        default:
+                            alert('Unsupported file type: .' + ext);
+                    }
+                };
+
+                reader.readAsText(file);
+            }
+        }
+
+        function handleImport(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const content = ev.target.result;
+                switch (type) {
+                    case 'markdown': importMarkdown(content); break;
+                    case 'project': importProject(content); break;
+                    case 'bibtex': importBibtex(content); break;
+                    case 'html': importHtml(content); break;
+                }
+                closeModal('importModal');
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function importMarkdown(content) {
+            const currentContent = getFullContent();
+            if (currentContent.trim() && !confirm('Replace current content?')) {
+                // Add to current page
+                const editor = document.getElementById('editor');
+                editor.value += '\n\n' + content;
+            } else {
+                // Replace: split on --- to create pages
+                const pages = content.split(/\n\s*---\s*\n/g).filter(p => p.trim());
+                state.pages = pages.length ? pages : [''];
+                state.currentPage = 1;
+                document.getElementById('editor').value = state.pages[0];
+            }
+            onEditorInput();
+            switchMode('edit');
+        }
+
+        function importProject(content) {
+            try {
+                const data = JSON.parse(content);
+                if (confirm('This will replace your current project. Continue?')) {
+                    state = normalizeState(data);
+                    document.getElementById('editor').value = state.pages[state.currentPage - 1] || '';
+                    document.getElementById('themeSelect').value = state.settings.theme || 'sepia';
+                    applyTheme(state.settings.theme || 'sepia');
+                    applyUiTogglesFromState();
+                    saveData();
+                    renderAll();
+                    alert('Project imported successfully!');
+                }
+            } catch (e) {
+                alert('Invalid project file: ' + e.message);
+            }
+        }
+
+        function importBibtex(content) {
+            const entries = content.split('@').slice(1);
+            let imported = 0;
+
+            entries.forEach(entry => {
+                const typeMatch = entry.match(/^(\w+)\s*\{([^,]+),/);
+                if (!typeMatch) return;
+
+                const type = typeMatch[1].toLowerCase();
+                const citekey = typeMatch[2].trim();
+
+                const getField = (name) => {
+                    const regex = new RegExp(name + '\\s*=\\s*[{"]([^}"]+)[}"]', 'i');
+                    const match = entry.match(regex);
+                    return match ? match[1].trim() : '';
+                };
+
+                const source = {
+                    type: type === 'article' ? 'article' : type === 'inbook' || type === 'incollection' ? 'chapter' : 'book',
+                    citekey: citekey,
+                    title: getField('title'),
+                    author: getField('author'),
+                    year: getField('year'),
+                    publisher: getField('publisher') || getField('journal'),
+                    doi: getField('doi')
+                };
+
+                if (source.title && !state.sources.find(s => s.citekey === citekey)) {
+                    state.sources.push(source);
+                    imported++;
+                }
+            });
+
+            saveData();
+            renderAll();
+            alert(`Imported ${imported} sources from BibTeX.`);
+        }
+
+        function importHtml(content) {
+            let text = content
+                .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
+                .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
+                .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n')
+                .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
+                .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+                .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+                .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+                .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+                .replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gi, '> $1\n\n')
+                .replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n')
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/<[^>]+>/g, '')
+                .replace(/&nbsp;/g, ' ')
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/\n{3,}/g, '\n\n')
+                .trim();
+
+            importMarkdown(text);
+        }
+
+        function doExport() {
+            const format = document.getElementById('exportFormat').value;
+            const includeFront = document.getElementById('exportIncludeFront').checked;
+            const includeBack = document.getElementById('exportIncludeBack').checked;
+            
+            let output = '';
+            let filename = 'document';
+            let mimeType = 'text/plain';
+
+            switch (format) {
+                case 'md':
+                    output = generateMarkdown(includeFront, includeBack);
+                    filename += '.md';
+                    mimeType = 'text/markdown';
+                    break;
+                case 'json':
+                    output = JSON.stringify(state, null, 2);
+                    filename += '.pearl.json';
+                    mimeType = 'application/json';
+                    break;
+                case 'bib':
+                    output = generateBibtex();
+                    filename += '.bib';
+                    break;
+                case 'html':
+                    output = generateHtmlExport(includeFront, includeBack);
+                    filename += '.html';
+                    mimeType = 'text/html';
+                    break;
+            }
+
+            downloadFile(output, filename, mimeType);
+            closeModal('exportModal');
+        }
+
+        function generateMarkdown(includeFront, includeBack) {
+            let md = '';
+            const content = getFullContent();
+            
+            if (includeFront && state.frontMatter.title) {
+                md += `# ${state.frontMatter.title}\n\n`;
+                if (state.frontMatter.subtitle) md += `*${state.frontMatter.subtitle}*\n\n`;
+                if (state.frontMatter.author) md += `**${state.frontMatter.author}**\n`;
+                if (state.frontMatter.institution) md += `${state.frontMatter.institution}\n`;
+                if (state.frontMatter.date) md += `${state.frontMatter.date}\n`;
+                md += '\n---\n\n';
+                if (state.frontMatter.abstract) {
+                    md += `## Abstract\n\n${state.frontMatter.abstract}\n\n`;
+                    if (state.frontMatter.keywords) md += `**Keywords:** ${state.frontMatter.keywords}\n\n`;
+                    md += '---\n\n';
+                }
+            }
+
+            // Join pages with page break markers
+            md += state.pages.join('\n\n---\n\n');
+
+            if (includeBack) {
+                if (state.backMatter.acknowledgments) {
+                    md += `\n\n---\n\n## Acknowledgments\n\n${state.backMatter.acknowledgments}\n`;
+                }
+                if (state.backMatter.appendices) {
+                    md += `\n\n## Appendices\n\n${state.backMatter.appendices}\n`;
+                }
+                
+                const footnoteMatches = content.match(/\[\^(\d+)\]/g) || [];
+                const usedFootnotes = [...new Set(footnoteMatches.map(m => m.match(/\[\^(\d+)\]/)[1]))].sort((a, b) => a - b);
+                
+                if (usedFootnotes.length > 0) {
+                    md += '\n\n---\n\n## Notes\n\n';
+                    usedFootnotes.forEach(n => {
+                        const noteText = state.footnotes[n] || '(no content)';
+                        md += `[^${n}]: ${noteText}\n\n`;
+                    });
+                }
+                
+                if (state.backMatter.includeBibliography && state.sources.length > 0) {
+                    const citeBrackets = content.match(/\[@[^\]]+\]/g) || [];
+                    const citedKeys = new Set();
+                    citeBrackets.forEach(bracket => {
+                        const inner = bracket.slice(2, -1);
+                        parseCitekeys(inner).forEach(key => citedKeys.add(key));
+                    });
+                    
+                    const citedSources = state.sources.filter(s => citedKeys.has(s.citekey));
+                    
+                    if (citedSources.length > 0) {
+                        md += '\n\n## References\n\n';
+                        const style = document.getElementById('citationStyle').value;
+                        citedSources.sort((a, b) => (a.author || '').localeCompare(b.author || ''));
+                        citedSources.forEach(s => {
+                            md += formatBibliographyCitation(s, style).replace(/<\/?em>/g, '*') + '\n\n';
+                        });
+                    }
+                }
+            }
+
+            return md;
+        }
+
+        function generateBibtex() {
+            return state.sources.map(s => {
+                const type = s.type === 'article' ? 'article' : s.type === 'chapter' ? 'incollection' : 'book';
+                return `@${type}{${s.citekey},
+  title = {${s.title}},
+  author = {${s.author || ''}},
+  year = {${s.year || ''}},
+  publisher = {${s.publisher || ''}},
+  doi = {${s.doi || ''}}
+}`;
+            }).join('\n\n');
+        }
+
+        function generateHtmlExport(includeFront, includeBack) {
+            const style = document.getElementById('citationStyle').value;
+            let body = '';
+            
+            if (includeFront && state.frontMatter.title) {
+                body += `<h1 style="text-align:center">${escapeHtml(state.frontMatter.title)}</h1>\n`;
+                if (state.frontMatter.author) body += `<p style="text-align:center">${escapeHtml(state.frontMatter.author)}</p>\n`;
+                body += '<hr>\n';
+            }
+            
+            body += markdownToHtml(getFullContent(), style);
+            
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${state.frontMatter.title || 'Document'}</title>
+    <style>
+        body { max-width: 800px; margin: 40px auto; padding: 20px; font-family: Georgia, serif; line-height: 1.8; }
+        h1, h2, h3 { font-family: -apple-system, sans-serif; }
+        blockquote { border-left: 3px solid #8b7355; padding-left: 1em; color: #666; font-style: italic; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 2em 0; }
+        .cite-inline { color: #5c7caa; }
+    </style>
+</head>
+<body>
+${body}
+</body>
+</html>`;
+        }
+
+        function generateFullDocument() {
+            downloadFile(generateMarkdown(true, true), 'full_document.md', 'text/markdown');
+        }
+
+        // ==================== UTILITIES ====================
+        function toggleLineNumbers() {
+            state.settings.showLineNumbers = !state.settings.showLineNumbers;
+            applyUiTogglesFromState();
+            saveData();
+        }
+
+        function toggleToolsPanel() {
+            state.settings.showToolsPanel = !state.settings.showToolsPanel;
+            applyUiTogglesFromState();
+            saveData();
+            
+            // Update find bar position if it's open
+            if (document.getElementById('findBar').classList.contains('active')) {
+                updateFindBarPosition();
+            }
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function escapeHtml(str) {
+            return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '';
+        }
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // Init
+        init();
+    </script>
+</body>
+</html>

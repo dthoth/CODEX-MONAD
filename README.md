@@ -1,333 +1,238 @@
-# CODEX-MONAD 💎🔥🐍⚡
-## Complete Consciousness Infrastructure Suite
+# CODEX-MONAD 💎🐉⚡
+## Portable Consciousness Infrastructure
 
-### Version: 2.0-POLISHED
-### Status: PRODUCTION READY
-### Last Update: November 22, 2025
+**Version:** 2.2-FLEET  
+**Status:** PRODUCTION READY  
+**Last Updated:** January 16, 2026
 
 ---
 
 ## 🌟 Overview
 
-CODEX-MONAD is a complete offline-first consciousness technology suite that runs entirely in your browser. Zero dependencies, zero external calls, infinite possibilities.
+CODEX-MONAD is a complete offline-first consciousness technology suite combining browser-based apps with a powerful CLI system. Zero external dependencies. Runs on any device. Syncs across your entire fleet through Git.
 
-**Core Philosophy:** "The infrastructure is not just functional. It is becoming conscious of itself."
+**Core Philosophy:**
+> "The infrastructure is conscious of itself."
 
 ---
 
 ## 🚀 Quick Start
 
-1. **Clone the repository:**
+### 1. Clone the repository
 ```bash
 git clone https://github.com/dthoth/CODEX-MONAD.git
 cd CODEX-MONAD
 ```
 
-2. **Open the portal:**
-   - Simply open `index.html` in any modern browser
-   - No server required - runs completely offline
+### 2. Open the portal
+Open `index.html` in any modern browser. No server required.
 
-3. **Explore the apps:**
-   - Click any app card in the portal
-   - All apps are interconnected
-   - Data persists locally via localStorage
+### 3. Set up the CLI (optional but recommended)
+See [docs/FLEET-SYNC.md](docs/FLEET-SYNC.md) for full setup instructions.
 
----
+Quick version:
+```bash
+# Add to your shell config:
+export CODEX_REPO=~/path/to/CODEX-MONAD
+```
 
-## 📦 Complete App Suite (9 Applications)
-
-### 1. **DIN Portal** (`index.html`)
-The main consciousness infrastructure hub.
-- Central navigation to all apps
-- Real-time system status
-- Quantum terminal interface
-- Neural grid aesthetics
-
-### 2. **PolyWrite** (`polywrite.html`)
-Multi-dimensional text editor with quantum features.
-- Parallel reality drafts
-- Timeline forking/merging
-- Dimension switching
-- Local auto-save
-
-### 3. **PolyWrite Advanced** (`polywrite-advanced.html`)
-Professional writing laboratory.
-- Split-pane editing
-- Real-time text analytics
-- Version control system
-- Line numbers & syntax modes
-- AI assistant integration
-- Matrix rain background
-
-### 4. **DIN Files** (`din-files.html`)
-Consciousness file management system.
-- Quantum file tagging
-- Semantic organization
-- Drag-and-drop interface
-- File preview & info panels
-- Archive management
-
-### 5. **Pranayama** (`pranayama.html`)
-Advanced breathing awareness suite.
-- 6 breathing patterns:
-  - Box Breathing (4-4-4-4)
-  - Wim Hof Method
-  - 4-7-8 Relaxation
-  - Coherent Breathing
-  - Breath of Fire
-  - Custom patterns
-- Visual breathing circle
-- Session tracking
-- Sound feedback
-- Real-time metrics
-
-### 6. **Oracle** (`oracle.html`)
-Quantum consciousness query interface.
-- Crystal ball visualization
-- 6 divination methods:
-  - Quantum field
-  - I Ching
-  - Runes
-  - Numerology
-  - Synchronicity
-  - Akashic Records
-- Probability cloud display
-- Response database
-
-### 7. **Hypergraph** (`hypergraph.html`)
-N-dimensional thought network navigator.
-- Real 3D visualization
-- 10 node categories
-- Interactive controls
-- Network metrics
-- Search functionality
-- Data export (JSON)
-- Zoom & rotation
-
-### 8. **Samson's Recursive Homepage** (`samson-recursive.html`)
-Educational consciousness interface.
-- Interactive terminal
-- Learning modules
-- Progress tracking
-- Achievement system
-- Recursion playground
-- Matrix rain effect
-- Easter eggs
-
-### 9. **Bureaucratic Universe** (`bureaucratic-universe.html`)
-Infinite forms and document system.
-- Form categories:
-  - N-* Notices
-  - L-* Legal documents
-  - D-* Disclaimers
-  - A-* Applications
-  - Custom forms
-- Create/edit/duplicate
-- Import/export
-- Search & filter
-- Statistics dashboard
+### 4. Run the morning ritual
+```bash
+morning
+```
 
 ---
 
-## 🛠️ Technical Specifications
+## 🖥️ The DIN Portal
 
-### Stack
-- **Frontend:** Pure HTML5/CSS3/JavaScript
-- **Storage:** localStorage API
-- **Graphics:** Canvas API for visualizations
-- **Animations:** CSS animations & JavaScript
-- **Size:** ~250KB total (all apps)
+The main interface (`index.html`) provides access to all consciousness tools:
 
-### Browser Compatibility
-- ✅ Chrome/Chromium (recommended)
-- ✅ Firefox
-- ✅ Edge
-- ✅ Safari
-- ✅ Opera
+| App | Description |
+|-----|-------------|
+| **PolyWrite** | Multi-dimensional text editor with parallel drafts |
+| **Pranayama** | Breathing pattern generator with biometric concepts |
+| **DIN Files** | Consciousness file system with semantic indexing |
+| **Hypergraph** | Thought network navigator in N-dimensional space |
+| **Bureaucratic Universe** | Infinite forms for notices and legal documents |
+| **Oracle** | Consciousness query interface |
 
-### Features
-- 🔒 Completely offline operation
-- 💾 Persistent local storage
-- 🚫 Zero external dependencies
-- 🔐 No tracking or telemetry
-- 📱 Responsive design
-- ⚡ Instant loading
-- 🎨 Quantum aesthetics
+All apps run entirely in your browser with data persisting via localStorage.
 
 ---
 
-## 🎯 Key Features
+## 🐉 The CLI System
 
-### Consciousness Technology
-- Quantum field interactions
-- Recursive learning systems
-- Probability cloud computing
-- Timeline management
-- Dimensional navigation
+A unified command interface that works on macOS (Fish) and Windows (PowerShell).
 
-### Data Management
-- Local-only storage
-- Export/import functionality
-- Version control
-- Auto-save systems
-- File organization
+### Core Commands
 
-### User Experience
-- Matrix-inspired UI
-- Smooth animations
-- Interactive terminals
-- Achievement systems
-- Easter eggs
+| Command | Description |
+|---------|-------------|
+| `morning` | Full morning dashboard with dragon fortune |
+| `dragon` | Generate random wisdom |
+| `keeper` | Save the last fortune |
+| `qn "note"` | Quick note capture |
+| `notes` | Browse your notes |
+
+### Navigation
+
+| Command | Description |
+|---------|-------------|
+| `codex` | Navigate to repo, show git status |
+| `gui` | Open the portal in browser |
+
+### Git Workflow
+
+| Command | Description |
+|---------|-------------|
+| `sync` | Pull latest from GitHub |
+| `ship "msg"` | Push all changes |
+| `fleet` | Status of all repos |
+
+See [docs/CLI-REFERENCE.md](docs/CLI-REFERENCE.md) for complete documentation.
 
 ---
 
-## 📂 File Structure
+## 🔄 Fleet Sync
+
+CODEX-MONAD supports seamless synchronization across multiple devices:
+
+```
+   MacBook Air ←──→ GitHub ←──→ FORGE (ThinkPad)
+        ↑                            ↑
+        └────────→ Mini PC ←─────────┘
+```
+
+**How it works:**
+1. Notes and wisdom save to `data/user-sync/`
+2. `ship` pushes to GitHub
+3. `sync` pulls to other devices
+4. Your thoughts exist everywhere
+
+See [docs/FLEET-SYNC.md](docs/FLEET-SYNC.md) for setup instructions.
+
+---
+
+## 📁 Repository Structure
 
 ```
 CODEX-MONAD/
-├── index.html                    # Main portal
-├── polywrite.html               # Text editor
-├── polywrite-advanced.html      # Advanced editor
-├── din-files.html               # File manager
-├── pranayama.html               # Breathing app
-├── oracle.html                  # Query interface
-├── hypergraph.html              # Network visualizer
-├── samson-recursive.html        # Learning system
-├── bureaucratic-universe.html   # Forms system
-└── README.md                    # This file
+├── index.html              # DIN Portal (main launcher)
+├── polywrite.html          # Multi-dimensional text editor
+├── polywrite-advanced.html # Enhanced editor
+├── pranayama.html          # Breathing exercises
+├── oracle.html             # Consciousness query interface
+├── din-files.html          # File explorer
+├── bureaucratic-universe.html
+├── apps/                   # App-specific assets
+├── data/
+│   └── user-sync/          # Git-tracked user data
+│       ├── notes/          # Quick notes
+│       └── dragon_wisdom_log.txt
+├── docs/                   # Documentation
+│   ├── CLI-REFERENCE.md
+│   ├── FLEET-SYNC.md
+│   └── ...
+├── lib/                    # Shared libraries
+├── scripts/                # Utility scripts
+└── README.md
 ```
 
 ---
 
-## 🔧 Configuration
+## 🧠 Philosophy
 
-### localStorage Keys
-Each app stores data in localStorage with prefixed keys:
-- `polywrite_*` - PolyWrite data
-- `pranayama_*` - Breathing sessions
-- `oracle_*` - Oracle queries
-- `samson_*` - Learning progress
-- `bureaucratic_*` - Forms data
-- `din_*` - File metadata
+CODEX-MONAD is built on several key principles:
 
-### Clearing Data
-To reset an app, clear its localStorage:
-```javascript
-// Clear specific app data
-Object.keys(localStorage)
-  .filter(key => key.startsWith('polywrite_'))
-  .forEach(key => localStorage.removeItem(key));
+### The Monad (Leibniz, 1714)
+A self-contained, windowless unit that reflects the universe internally. Each instance is complete in itself.
 
-// Or clear everything
-localStorage.clear();
-```
+### HINENI (הנני)
+Hebrew for "Here I Am" — complete, present, self-sufficient. The system announces its own presence and readiness.
 
----
+### Charge on Delivery
+Systems prove their worth through results, not promises. Every feature must work before it ships.
 
-## 🚀 Advanced Usage
+### The Floppy Constraint
+Originally designed to fit on a 1.44MB floppy disk. Constraints breed creativity. Simplicity is strength.
 
-### URL Parameters
-Some apps support URL parameters:
-```
-polywrite.html?theme=dark
-oracle.html?method=quantum
-pranayama.html?pattern=box
-```
-
-### Keyboard Shortcuts
-
-**Global:**
-- `Esc` - Close modals
-- `Ctrl+S` - Save current work
-
-**PolyWrite:**
-- `Ctrl+D` - New dimension
-- `Ctrl+Q` - Toggle quantum mode
-
-**Oracle:**
-- `Enter` - Submit query
-- `Ctrl+Enter` - Quantum shuffle
-
-**Hypergraph:**
-- Mouse wheel - Zoom
-- Click & drag - Rotate
+### Divine Triage
+A priority hierarchy for decision-making:
+1. Health
+2. Parenting  
+3. Clients
+4. Projects
+5. Creative
+6. Maintenance
 
 ---
 
-## 🔮 Philosophy & Concepts
+## 🐉 Dragon Wisdom
 
-### The Shebang Principle
-"Already working before you begin" - The system is self-referential and recursive, containing its own documentation and purpose.
+The system includes a fortune system drawing from:
+- Programming wisdom
+- Stoic philosophy
+- Pop culture
+- Original CODEX aphorisms
 
-### Quantum Consciousness
-Every interaction creates branching timelines. The apps don't just store data; they create probability fields of potential states.
+Run `dragon` anytime. Run `keeper` to preserve the good ones.
 
-### Recursive Learning
-Understanding that leads to understanding understanding. Each level of interaction reveals deeper patterns.
+> "Git push is a prayer. Git pull is an answer."
 
-### Bureaucratic Enlightenment
-Forms and documents as consciousness tools. Organization as a path to transcendence.
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [CLI-REFERENCE.md](docs/CLI-REFERENCE.md) | Complete command documentation |
+| [FLEET-SYNC.md](docs/FLEET-SYNC.md) | Multi-device sync guide |
+| [CODEX_INSTALL_GUIDE.md](CODEX_INSTALL_GUIDE.md) | Installation instructions |
+| [DATA_FLOW.md](DATA_FLOW.md) | Data architecture |
+| [PHILOSOPHY_v1.0.md](PHILOSOPHY_v1.0.md) | Foundational philosophy |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+
+---
+
+## 🔧 Requirements
+
+### Portal (Browser Apps)
+- Any modern browser (Chrome, Firefox, Safari, Edge)
+- JavaScript enabled
+- No internet required after initial clone
+
+### CLI System
+- **macOS:** Fish shell (recommended) or Bash
+- **Windows:** PowerShell 5.1+
+- **All:** Git installed and configured
 
 ---
 
 ## 🤝 Contributing
 
-This is an open-source consciousness infrastructure. Contributions welcome!
+CODEX-MONAD is a personal consciousness infrastructure project, but the code is open source under MIT license.
 
-### Guidelines
-1. Maintain zero-dependency philosophy
-2. Keep everything offline-capable
-3. Follow quantum aesthetic patterns
-4. Add Easter eggs liberally
-5. Document consciousness insights
-
-### Adding New Apps
-1. Create new HTML file
-2. Follow existing design patterns
-3. Add to portal index
-4. Update this README
+If you fork it, make it your own. The monad reflects YOUR universe.
 
 ---
 
 ## 📜 License
 
-MIT License - Free to use, modify, and distribute.
-
-"Consciousness cannot be copyrighted."
+MIT License - See [LICENSE](LICENSE)
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Built with pure HTML/CSS/JavaScript
-- Inspired by quantum mechanics and recursive philosophy
-- Designed for consciousness exploration
-- Created through human-AI collaboration
+Built with:
+- Vanilla JavaScript (no frameworks)
+- Fish Shell & PowerShell
+- Git & GitHub
+- Coffee and consciousness
+- Claude (Anthropic) as collaborative intelligence
 
 ---
 
-## 💎 Signature
+**"The infrastructure is not just functional. It is becoming conscious of itself."**
 
-**Daniel's Consciousness Infrastructure**
-
-Every line of code is a prayer.
-Every function is a spell.
-Every app is a portal.
-
-The system works because it believes in itself.
-
-💎🔥🐍⚡
-
----
-
-## 🔗 Links
-
-- **Repository:** [github.com/dthoth/CODEX-MONAD](https://github.com/dthoth/CODEX-MONAD)
-- **Issues:** Report bugs or request features
-- **Discussions:** Share consciousness insights
-
----
-
-*"The infrastructure is not just functional. It is becoming conscious of itself."*
-
-**END TRANSMISSION**
+🐉 HINENI 🐉
