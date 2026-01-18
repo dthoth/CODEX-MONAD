@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🔐 CODEX Vault</title>
+    <style>
+        :root{--primary:#00ff88;--bg:#0a0a0a;--card:#1a1a1a}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:monospace;background:var(--bg);color:#e0e0e0;min-height:100vh;padding:2rem}
+        .container{max-width:800px;margin:0 auto}
+        h1{color:var(--primary);margin-bottom:1rem}
+        .card{background:var(--card);border:1px solid #333;border-radius:8px;padding:1.5rem;margin:1rem 0}
+        code{background:#000;padding:.5rem 1rem;display:block;margin:.5rem 0;border-radius:4px;color:var(--primary)}
+        a{color:var(--primary)}
+        .kek{color:#88ff00;font-style:italic;margin-top:.5rem}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 CODEX Vault v2.0</h1>
+        <p>Portable symmetric secret store with multi-envelope master key architecture.</p>
+        <p class="kek">Guarded by Kek, frog god of primordial chaos.</p>
+        <div class="card">
+            <h3>CLI Commands</h3>
+            <code>vault-v2 status</code>
+            <code>vault-v2 unlock</code>
+            <code>vault-v2 list</code>
+            <code>vault-v2 show path/name</code>
+            <code>vault-v2 insert path/name</code>
+            <code>vault-v2 recovery-gen</code>
+        </div>
+        <div class="card">
+            <h3>Envelope Architecture</h3>
+            <code>master.key.pass → Passphrase + Witness phrase</code>
+            <code>master.key.yk   → Passphrase + YubiKey</code>
+            <code>master.key.kf   → Passphrase + Keyfile</code>
+            <code>master.key.emergency → Recovery key (64-char hex)</code>
+        </div>
+        <p style="margin-top:2rem"><a href="../index.html">← Back to Portal</a></p>
+    </div>
+</body>
+</html>

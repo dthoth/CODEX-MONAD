@@ -1,0 +1,676 @@
+#!/usr/bin/env bash
+# CODEX-VAULT v2.0.0: Portable symmetric password/secret store
+# 
+# Architecture: Master Key (MK) wrapped in multiple envelopes
+# - Any envelope can unlock the vault if you have the right factors
+# - Add/remove keys without re-encrypting entries
+# - Proper KeePass-class security model
+#
+# Part of CODEX-MONAD Consciousness Infrastructure
+
+set -o pipefail
+umask 077
+
+VERSION="2.0.0"
+
+# Configuration
+VAULT_DIR="${CODEX_VAULT_DIR:-$HOME/.codex-vault}"
+VAULT_CLIP_TIME="${CODEX_VAULT_CLIP_TIME:-45}"
+VAULT_SESSION_TIMEOUT="${CODEX_VAULT_SESSION_TIMEOUT:-0}"
+VAULT_AUTO_LOCK="${CODEX_VAULT_AUTO_LOCK:-false}"
+
+# Derived paths
+KEYRING_DIR="$VAULT_DIR/.keyring"
+ENTRIES_DIR="$VAULT_DIR/entries"
+
+# Session cache (memory-backed if available)
+if [[ -d /dev/shm ]]; then
+    VAULT_SESSION_DIR="/dev/shm/.codex-vault-$UID"
+else
+    VAULT_SESSION_DIR="/tmp/.codex-vault-$UID"
+fi
+VAULT_SESSION_MK="$VAULT_SESSION_DIR/mk"
+
+# GPG options
+GPG_OPTS="--batch --yes --quiet --pinentry-mode loopback"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+BOLD='\033[1m'
+DIM='\033[2m'
+NC='\033[0m'
+
+# Source modules
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[[ -f "$SCRIPT_DIR/vault-keyring-v3.sh" ]] && source "$SCRIPT_DIR/vault-keyring-v3.sh"
+[[ -f "$SCRIPT_DIR/vault-envelopes.sh" ]] && source "$SCRIPT_DIR/vault-envelopes.sh"
+
+# Portable mode detection
+if [[ -f "$SCRIPT_DIR/.vault-portable" ]]; then
+    VAULT_DIR="$SCRIPT_DIR/store"
+    KEYRING_DIR="$VAULT_DIR/.keyring"
+    ENTRIES_DIR="$VAULT_DIR/entries"
+fi
+
+# Load config if exists (safe parsing)
+if [[ -f "$VAULT_DIR/.vault-config" ]]; then
+    while IFS='=' read -r key value; do
+        [[ "$key" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "$key" ]] && continue
+        case "$key" in
+            VAULT_SESSION_TIMEOUT) VAULT_SESSION_TIMEOUT="$value" ;;
+            VAULT_AUTO_LOCK) VAULT_AUTO_LOCK="$value" ;;
+            VAULT_CLIP_TIME) VAULT_CLIP_TIME="$value" ;;
+        esac
+    done < "$VAULT_DIR/.vault-config"
+fi
+
+die() { echo -e "${RED}Error: $*${NC}" >&2; exit 1; }
+info() { echo -e "${GREEN}$*${NC}"; }
+warn() { echo -e "${YELLOW}$*${NC}"; }
+header() { echo -e "${BLUE}${BOLD}$*${NC}"; }
+
+# ============================================================================
+# SESSION MANAGEMENT (now caches MK, not passphrase)
+# ============================================================================
+
+session_init() {
+    mkdir -p "$VAULT_SESSION_DIR"
+    chmod 700 "$VAULT_SESSION_DIR"
+}
+
+session_save_mk() {
+    local mk="$1"
+    session_init
+    printf '%s' "$mk" > "$VAULT_SESSION_MK"
+    chmod 600 "$VAULT_SESSION_MK"
+    
+    if [[ "$VAULT_SESSION_TIMEOUT" -gt 0 ]]; then
+        ( sleep "$VAULT_SESSION_TIMEOUT" && rm -f "$VAULT_SESSION_MK" ) &>/dev/null &
+        disown 2>/dev/null
+    fi
+}
+
+session_load_mk() {
+    if [[ -f "$VAULT_SESSION_MK" ]]; then
+        cat "$VAULT_SESSION_MK"
+        return 0
+    fi
+    return 1
+}
+
+session_clear() {
+    if [[ -f "$VAULT_SESSION_MK" ]]; then
+        dd if=/dev/urandom of="$VAULT_SESSION_MK" bs=64 count=1 2>/dev/null
+        rm -f "$VAULT_SESSION_MK"
+    fi
+    rm -rf "$VAULT_SESSION_DIR" 2>/dev/null
+}
+
+session_active() {
+    [[ -f "$VAULT_SESSION_MK" ]]
+}
+
+# ============================================================================
+# MASTER KEY ACCESS
+# ============================================================================
+
+get_master_key() {
+    # 1. Check session cache
+    local mk
+    mk=$(session_load_mk)
+    if [[ -n "$mk" ]]; then
+        printf '%s' "$mk"
+        return 0
+    fi
+    
+    # 2. Need to unlock - get passphrase
+    local passphrase
+    read -rsp "Vault passphrase: " passphrase
+    echo >&2
+    
+    # 3. Try to unlock via envelopes
+    # For now, no witness/anchor (can be added for software-only mode)
+    mk=$(attempt_unlock "$passphrase" "" "")
+    
+    if [[ -z "$mk" ]]; then
+        die "Unlock failed - wrong passphrase or missing physical key"
+    fi
+    
+    # 4. Cache in session
+    session_save_mk "$mk"
+    
+    printf '%s' "$mk"
+}
+
+require_unlocked() {
+    if ! session_active; then
+        get_master_key > /dev/null || die "Vault is locked"
+    fi
+}
+
+# ============================================================================
+# ENCRYPTION HELPERS (now use MK)
+# ============================================================================
+
+encrypt_with_mk() {
+    local mk="$1"
+    local outfile="$2"
+    
+    gpg $GPG_OPTS --symmetric --cipher-algo AES256 --armor \
+        --passphrase "$mk" -o "$outfile"
+}
+
+decrypt_with_mk() {
+    local mk="$1"
+    local infile="$2"
+    
+    gpg $GPG_OPTS --decrypt --passphrase "$mk" "$infile" 2>/dev/null
+}
+
+# ============================================================================
+# GIT INTEGRATION
+# ============================================================================
+
+git_add_and_commit() {
+    [[ -d "$VAULT_DIR/.git" ]] || return 0
+    local msg="$1"
+    git -C "$VAULT_DIR" add -A
+    if ! git -C "$VAULT_DIR" diff --cached --quiet; then
+        git -C "$VAULT_DIR" commit -m "$msg" --quiet
+    fi
+}
+
+git_cmd() {
+    [[ -d "$VAULT_DIR/.git" ]] || die "Git not initialized. Run: vault git init"
+    git -C "$VAULT_DIR" "$@"
+}
+
+# ============================================================================
+# CORE COMMANDS
+# ============================================================================
+
+cmd_init() {
+    [[ -d "$VAULT_DIR" && -d "$KEYRING_DIR" ]] && \
+        die "Vault already exists at $VAULT_DIR"
+    
+    echo -e "${MAGENTA}${BOLD}════════════════════════════════════════${NC}"
+    echo -e "${MAGENTA}${BOLD}     CODEX-VAULT GENESIS CEREMONY       ${NC}"
+    echo -e "${MAGENTA}${BOLD}════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${DIM}       .---.${NC}"
+    echo -e "${DIM}      /     \\    ${NC}${CYAN}𓆏 KEK${NC}${DIM} - The frog god guards${NC}"
+    echo -e "${DIM}     | () () |   ${NC}${DIM}your Key Encryption Keys${NC}"
+    echo -e "${DIM}      \\  ^  /${NC}"
+    echo -e "${DIM}       |||||${NC}"
+    echo -e "${DIM}       |||||${NC}"
+    echo ""
+    
+    # Handle portable mode
+    if [[ "$1" == "--portable" ]]; then
+        touch "$SCRIPT_DIR/.vault-portable"
+        VAULT_DIR="$SCRIPT_DIR/store"
+        KEYRING_DIR="$VAULT_DIR/.keyring"
+        ENTRIES_DIR="$VAULT_DIR/entries"
+        info "Portable mode enabled"
+    fi
+    
+    # Create directories
+    mkdir -p "$VAULT_DIR" "$KEYRING_DIR" "$ENTRIES_DIR"
+    chmod 700 "$VAULT_DIR" "$KEYRING_DIR"
+    
+    # Step 1: Passphrase
+    echo -e "\n${CYAN}Step 1: Master Passphrase${NC}"
+    local pass1 pass2
+    read -rsp "Enter new vault passphrase: " pass1; echo
+    read -rsp "Confirm passphrase: " pass2; echo
+    [[ "$pass1" == "$pass2" ]] || die "Passphrases do not match"
+    [[ ${#pass1} -ge 8 ]] || die "Passphrase must be at least 8 characters"
+    
+    # Step 2: Physical key ceremony
+    echo -e "\n${CYAN}Step 2: Physical Key Setup${NC}"
+    keyring_ceremony || warn "Keyring setup skipped"
+    
+    # Step 3: Witness phrase (for software-only recovery)
+    echo -e "\n${CYAN}Step 3: Witness Phrase (optional)${NC}"
+    echo -e "${DIM}A witness phrase allows software-only unlock (no physical key).${NC}"
+    echo -e "${DIM}Leave blank to require physical key for every unlock.${NC}"
+    read -rp "Witness phrase: " witness
+    
+    local witness_hash=""
+    if [[ -n "$witness" ]]; then
+        witness_hash=$(printf '%s' "$witness" | sha256)
+    fi
+    
+    # Step 4: Emergency anchor (optional)
+    local anchor=""
+    if [[ -n "$witness_hash" ]]; then
+        echo -e "\n${CYAN}Step 4: Emergency Anchor (optional)${NC}"
+        echo -e "${DIM}A memorable number for emergency recovery.${NC}"
+        read -rp "Emergency anchor number: " anchor
+    fi
+    
+    # Initialize envelopes with MK
+    echo -e "\n${CYAN}Creating Master Key and Envelopes...${NC}"
+    init_envelopes "$pass1" "$witness_hash" "$anchor"
+    
+    # Create config
+    cat > "$VAULT_DIR/.vault-config" << CONFIG
+# CODEX-VAULT Configuration v2
+# Generated: $(date -Iseconds)
+VAULT_SESSION_TIMEOUT=0
+VAULT_AUTO_LOCK=false
+VAULT_CLIP_TIME=45
+CONFIG
+    chmod 600 "$VAULT_DIR/.vault-config"
+    
+    # Create .gitignore
+    cat > "$VAULT_DIR/.gitignore" << 'GITIGNORE'
+# Never commit session files
+.vault-session*
+# Config may contain sensitive paths
+.vault-config
+GITIGNORE
+    
+    echo ""
+    echo -e "${GREEN}${BOLD}════════════════════════════════════════${NC}"
+    echo -e "${GREEN}${BOLD}          VAULT INITIALIZED             ${NC}"
+    echo -e "${GREEN}${BOLD}════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "  Location: ${CYAN}$VAULT_DIR${NC}"
+    echo -e "  Envelopes: $(list_envelopes | tr '\n' ' ')"
+    echo ""
+    echo -e "  ${DIM}Next: vault insert <name> to add secrets${NC}"
+}
+
+cmd_unlock() {
+    get_master_key > /dev/null
+    info "Vault unlocked 𓆏 (Kek permits passage)"
+    if [[ "$VAULT_SESSION_TIMEOUT" -gt 0 ]]; then
+        echo -e "${DIM}Auto-locks in ${VAULT_SESSION_TIMEOUT}s${NC}"
+    fi
+}
+
+cmd_lock() {
+    session_clear
+    info "Vault locked 𓆏 (Kek returns to the waters)"
+}
+
+cmd_status() {
+    header "CODEX-VAULT Status"
+    echo ""
+    
+    if [[ ! -d "$VAULT_DIR" ]]; then
+        warn "Vault not initialized"
+        echo "Run: vault init"
+        return
+    fi
+    
+    echo -e "Location:   ${CYAN}$VAULT_DIR${NC}"
+    
+    local entry_count
+    entry_count=$(find "$ENTRIES_DIR" -name "*.gpg" -type f 2>/dev/null | wc -l)
+    echo "Entries:    $entry_count"
+    
+    if session_active; then
+        echo -e "Session:    ${GREEN}UNLOCKED${NC}"
+    else
+        echo -e "Session:    ${RED}LOCKED${NC}"
+    fi
+    
+    echo ""
+    keyring_status
+    echo ""
+    envelope_status
+}
+
+cmd_list() {
+    [[ -d "$ENTRIES_DIR" ]] || die "Vault not initialized"
+    
+    if [[ -z "$(ls -A "$ENTRIES_DIR" 2>/dev/null)" ]]; then
+        echo -e "${DIM}(empty vault)${NC}"
+        return
+    fi
+    
+    find "$ENTRIES_DIR" -name "*.gpg" -type f | \
+        sed "s|$ENTRIES_DIR/||; s|\.gpg$||" | sort
+}
+
+cmd_show() {
+    [[ -z "$1" ]] && die "Usage: vault show <name>"
+    local name="$1"
+    local path="$ENTRIES_DIR/${name}.gpg"
+    [[ -f "$path" ]] || die "Entry not found: $name"
+    
+    local mk
+    mk=$(get_master_key)
+    
+    decrypt_with_mk "$mk" "$path"
+    
+    [[ "$VAULT_AUTO_LOCK" == "true" ]] && session_clear
+}
+
+cmd_clip() {
+    [[ -z "$1" ]] && die "Usage: vault clip <name>"
+    local name="$1"
+    local path="$ENTRIES_DIR/${name}.gpg"
+    [[ -f "$path" ]] || die "Entry not found: $name"
+    
+    local mk
+    mk=$(get_master_key)
+    
+    local content
+    content=$(decrypt_with_mk "$mk" "$path")
+    local first_line
+    first_line=$(echo "$content" | head -1)
+    
+    # Copy to clipboard
+    if command -v pbcopy &>/dev/null; then
+        printf '%s' "$first_line" | pbcopy
+    elif command -v xclip &>/dev/null; then
+        printf '%s' "$first_line" | xclip -selection clipboard
+    elif command -v xsel &>/dev/null; then
+        printf '%s' "$first_line" | xsel --clipboard --input
+    else
+        die "No clipboard command found"
+    fi
+    
+    info "Copied to clipboard (clears in ${VAULT_CLIP_TIME}s)"
+    
+    # Schedule clipboard clear
+    ( sleep "$VAULT_CLIP_TIME" && {
+        if command -v pbcopy &>/dev/null; then
+            echo -n | pbcopy
+        elif command -v xclip &>/dev/null; then
+            echo -n | xclip -selection clipboard
+        elif command -v xsel &>/dev/null; then
+            xsel --clipboard --delete
+        fi
+    } ) &>/dev/null &
+    disown 2>/dev/null
+    
+    [[ "$VAULT_AUTO_LOCK" == "true" ]] && session_clear
+}
+
+cmd_insert() {
+    [[ -z "$1" ]] && die "Usage: vault insert <name> [-m]"
+    local name="$1"
+    local multiline="${2:-}"
+    local path="$ENTRIES_DIR/${name}.gpg"
+    
+    [[ -f "$path" ]] && die "Entry already exists: $name (use 'vault edit')"
+    
+    local mk
+    mk=$(get_master_key)
+    
+    local content
+    if [[ ! -t 0 ]]; then
+        # Piped input
+        content=$(cat)
+    elif [[ "$multiline" == "-m" ]]; then
+        echo "Enter content (Ctrl+D to finish):"
+        content=$(cat)
+    else
+        read -rsp "Enter secret: " content; echo
+    fi
+    
+    mkdir -p "$(dirname "$path")"
+    printf '%s' "$content" | encrypt_with_mk "$mk" "$path"
+    git_add_and_commit "Add $name"
+    
+    info "Stored: $name"
+    
+    [[ "$VAULT_AUTO_LOCK" == "true" ]] && session_clear
+}
+
+cmd_generate() {
+    [[ -z "$1" ]] && die "Usage: vault generate <name> [length] [charset]"
+    local name="$1"
+    local length="${2:-24}"
+    local charset="${3:-A-Za-z0-9!@#\$%^&*}"
+    local path="$ENTRIES_DIR/${name}.gpg"
+    
+    [[ -f "$path" ]] && die "Entry already exists: $name"
+    
+    local mk
+    mk=$(get_master_key)
+    
+    local password
+    password=$(tr -dc "$charset" < /dev/urandom | head -c "$length")
+    
+    mkdir -p "$(dirname "$path")"
+    printf '%s' "$password" | encrypt_with_mk "$mk" "$path"
+    git_add_and_commit "Generate $name"
+    
+    info "Generated: $name ($length chars)"
+    echo "$password"
+    
+    [[ "$VAULT_AUTO_LOCK" == "true" ]] && session_clear
+}
+
+cmd_rm() {
+    [[ -z "$1" ]] && die "Usage: vault rm <name>"
+    local name="$1"
+    local path="$ENTRIES_DIR/${name}.gpg"
+    [[ -f "$path" ]] || die "Entry not found: $name"
+    
+    if [[ -t 0 ]]; then
+        read -rp "Delete $name? [y/N] " yn
+        [[ "$yn" =~ ^[Yy] ]] || exit 0
+    fi
+    
+    # Secure delete
+    if command -v shred &>/dev/null; then
+        shred -u "$path"
+    else
+        rm -f "$path"
+    fi
+    
+    rmdir --ignore-fail-on-non-empty -p "$(dirname "$path")" 2>/dev/null
+    git_add_and_commit "Remove $name"
+    info "Deleted: $name"
+}
+
+cmd_mv() {
+    [[ -z "$1" || -z "$2" ]] && die "Usage: vault mv <old> <new>"
+    local old_path="$ENTRIES_DIR/${1}.gpg"
+    local new_path="$ENTRIES_DIR/${2}.gpg"
+    
+    [[ -f "$old_path" ]] || die "Entry not found: $1"
+    [[ -f "$new_path" ]] && die "Destination exists: $2"
+    
+    mkdir -p "$(dirname "$new_path")"
+    mv "$old_path" "$new_path"
+    rmdir --ignore-fail-on-non-empty -p "$(dirname "$old_path")" 2>/dev/null
+    git_add_and_commit "Move $1 -> $2"
+    info "Moved: $1 -> $2"
+}
+
+cmd_edit() {
+    [[ -z "$1" ]] && die "Usage: vault edit <name>"
+    local name="$1"
+    local path="$ENTRIES_DIR/${name}.gpg"
+    
+    local mk
+    mk=$(get_master_key)
+    
+    local tmpfile
+    tmpfile=$(mktemp)
+    trap "shred -u '$tmpfile' 2>/dev/null || rm -f '$tmpfile'" EXIT
+    
+    if [[ -f "$path" ]]; then
+        decrypt_with_mk "$mk" "$path" > "$tmpfile" || die "Decryption failed"
+    fi
+    
+    ${EDITOR:-nano} "$tmpfile"
+    
+    mkdir -p "$(dirname "$path")"
+    encrypt_with_mk "$mk" "$path" < "$tmpfile"
+    git_add_and_commit "Edit $name"
+    
+    info "Saved: $name"
+    
+    [[ "$VAULT_AUTO_LOCK" == "true" ]] && session_clear
+}
+
+cmd_find() {
+    [[ -z "$1" ]] && die "Usage: vault find <pattern>"
+    find "$ENTRIES_DIR" -name "*${1}*.gpg" -type f | \
+        sed "s|$ENTRIES_DIR/||; s|\.gpg$||" | sort
+}
+
+cmd_grep() {
+    [[ -z "$1" ]] && die "Usage: vault grep <pattern>"
+    
+    local mk
+    mk=$(get_master_key)
+    
+    local pattern="$1"
+    while IFS= read -r file; do
+        local name="${file#$ENTRIES_DIR/}"
+        name="${name%.gpg}"
+        if decrypt_with_mk "$mk" "$file" | grep -qi "$pattern"; then
+            echo "$name"
+        fi
+    done < <(find "$ENTRIES_DIR" -name "*.gpg" -type f)
+    
+    [[ "$VAULT_AUTO_LOCK" == "true" ]] && session_clear
+}
+
+cmd_keyring() {
+    case "${1:-status}" in
+        status)   keyring_status ;;
+        ceremony) keyring_ceremony ;;
+        *)        echo "Usage: vault keyring {status|ceremony}" ;;
+    esac
+}
+
+cmd_envelope() {
+    case "${1:-status}" in
+        status) envelope_status ;;
+        list)   list_envelopes ;;
+        add)
+            [[ -z "$2" ]] && die "Usage: vault envelope add <yk|kf>"
+            read -rsp "Vault passphrase: " pass; echo
+            add_envelope "$2" "$pass"
+            ;;
+        revoke)
+            [[ -z "$2" ]] && die "Usage: vault envelope revoke <type>"
+            revoke_envelope "$2"
+            ;;
+        *)
+            echo "Usage: vault envelope {status|list|add|revoke}"
+            ;;
+    esac
+}
+
+cmd_help() {
+    cat << 'EOF'
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  CODEX-VAULT v2.0.0 - Portable Symmetric Secret Store                     ║
+║  Multi-envelope Master Key Architecture                                   ║
+║  Part of the CODEX-MONAD Consciousness Infrastructure                     ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  𓆏 KEK (Key Encryption Key) - Standard cryptographic terminology.        ║
+║     Also: Kek, Egyptian frog god of primordial chaos.                     ║
+║     The cryptographers named it this by accident. We noticed.             ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+USAGE: vault <command> [args]
+
+SESSION:
+    unlock                Unlock vault (cache master key)
+    lock                  Lock vault (clear session)
+    status                Show vault status
+
+SECRETS:
+    init [--portable]     Initialize vault
+    ls, list              List all entries
+    show <name>           Decrypt and display entry
+    clip <name>           Copy first line to clipboard
+    insert <name> [-m]    Add entry (-m for multiline)
+    generate <name> [len] Generate random password
+    edit <name>           Edit entry in $EDITOR
+    rm <name>             Delete entry
+    mv <old> <new>        Rename/move entry
+    find <pattern>        Search entry names
+    grep <pattern>        Search decrypted content
+
+KEY MANAGEMENT:
+    keyring status        Show physical key status
+    keyring ceremony      Configure physical keys
+    envelope status       Show envelope status
+    envelope add <type>   Add unlock method (yk|kf)
+    envelope revoke <type> Remove unlock method
+
+GIT:
+    git init              Initialize git tracking
+    git <cmd>             Run git command in vault
+
+ENVIRONMENT:
+    CODEX_VAULT_DIR       Override vault location
+    EDITOR                Editor for 'edit' command
+
+The Master Key is wrapped in multiple envelopes. Any envelope can unlock
+the vault if you have the right factors:
+  - pass: Passphrase + Witness phrase
+  - yk:   Passphrase + YubiKey
+  - kf:   Passphrase + Keyfile
+  - em:   Emergency (all recovery factors)
+
+EOF
+}
+
+# ============================================================================
+# MAIN
+# ============================================================================
+
+case "${1:-}" in
+    # Session
+    unlock)         cmd_unlock ;;
+    lock)           cmd_lock ;;
+    status)         cmd_status ;;
+    
+    # Core
+    init)           shift; cmd_init "$@" ;;
+    ls|list|"")     cmd_list ;;
+    show|cat)       shift; cmd_show "$@" ;;
+    clip|copy)      shift; cmd_clip "$@" ;;
+    insert|add)     shift; cmd_insert "$@" ;;
+    generate|gen)   shift; cmd_generate "$@" ;;
+    rm|delete)      shift; cmd_rm "$@" ;;
+    mv|move)        shift; cmd_mv "$@" ;;
+    edit)           shift; cmd_edit "$@" ;;
+    find)           shift; cmd_find "$@" ;;
+    grep|search)    shift; cmd_grep "$@" ;;
+    
+    # Key management
+    keyring)        shift; cmd_keyring "$@" ;;
+    envelope)       shift; cmd_envelope "$@" ;;
+    
+    # Git
+    git)
+        shift
+        case "${1:-}" in
+            init)   
+                [[ -d "$VAULT_DIR/.git" ]] && die "Git already initialized"
+                git -C "$VAULT_DIR" init
+                git -C "$VAULT_DIR" add -A
+                git -C "$VAULT_DIR" commit -m "Initial vault commit"
+                info "Git initialized"
+                ;;
+            *)      git_cmd "$@" ;;
+        esac
+        ;;
+    
+    # Help
+    help|--help|-h) cmd_help ;;
+    version|--version|-v) echo "CODEX-VAULT v$VERSION" ;;
+    
+    *)              die "Unknown command: $1. Try 'vault help'" ;;
+esac

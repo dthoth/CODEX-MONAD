@@ -69,5 +69,11 @@
         "name":  "Conflict Lab",
         "kind":  "html",
         "entry":  "index.html"
+    },
+    {
+        "id":  "vault",
+        "name":  "CODEX Vault",
+        "kind":  "bash",
+        "entry":  "index.html"
     }
 ]
