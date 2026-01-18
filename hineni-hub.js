@@ -116,7 +116,18 @@
                     hubPath: 'apps/vault/index.html',
                     launchType: 'html',
                     isLocal: true
-                } ]
+                } 
+,
+                {
+                    id: 'polywrite',
+                    label: 'PolyWrite Pro',
+                    icon: '✍️',
+                    status: 'active',
+                    description: 'Multi-editor writing environment with session restore, focus mode, and markdown preview.',
+                    hubPath: 'apps/polywrite/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                }]
         },
         {
             id: 'toolbox-cli',
