@@ -106,7 +106,17 @@
                     launchType: 'html',
                     isLocal: true
                 }
-            ]
+           ,
+                {
+                    id: 'vault',
+                    label: 'CODEX Vault',
+                    icon: '🔐',
+                    status: 'active',
+                    description: 'Portable secret store with KEK envelope architecture. Guarded by Kek.',
+                    hubPath: 'apps/vault/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                } ]
         },
         {
             id: 'toolbox-cli',
