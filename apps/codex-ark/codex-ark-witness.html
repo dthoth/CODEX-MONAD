@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODEX-ARK WITNESS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg-deep: #07070a;
+      --bg-surface: #0e0e14;
+      --bg-elevated: #16161f;
+      --border-subtle: #252535;
+      --border-active: #3a3a50;
+      --text-primary: #e8e8f0;
+      --text-secondary: #888898;
+      --text-muted: #555566;
+      --accent-cyan: #00d4aa;
+      --accent-magenta: #d444ff;
+      --accent-gold: #ffaa00;
+      --accent-red: #ff4455;
+      --accent-green: #44ff88;
+      --glow-cyan: rgba(0, 212, 170, 0.15);
+    }
+    
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 40px var(--glow-cyan);
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    
+    .mode-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 2rem;
+      background: var(--bg-surface);
+      border-radius: 6px;
+      padding: 4px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .mode-btn {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .mode-btn:hover { color: var(--text-primary); }
+    
+    .mode-btn.active {
+      background: var(--accent-cyan);
+      color: var(--bg-deep);
+      font-weight: 600;
+    }
+    
+    .panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    
+    .panel-header {
+      padding: 0.8rem 1.2rem;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .panel-body { padding: 1.2rem; }
+    
+    .drop-zone {
+      border: 2px dashed var(--border-subtle);
+      border-radius: 6px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 212, 170, 0.03);
+    }
+    
+    .drop-zone.loaded {
+      border-color: var(--accent-green);
+      border-style: solid;
+      background: rgba(68, 255, 136, 0.03);
+    }
+    
+    .drop-zone-icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5; }
+    .drop-zone p { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .drop-zone .hint { font-size: 0.7rem; color: var(--text-muted); }
+    .drop-zone input { display: none; }
+    
+    .loaded-info {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    
+    .loaded-stat {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      padding: 0.2rem 0;
+    }
+    
+    .loaded-stat .label { color: var(--text-muted); }
+    .loaded-stat .value { color: var(--accent-cyan); }
+    
+    .dna-container {
+      background: linear-gradient(180deg, #030305 0%, #08080c 50%, #030305 100%);
+      border-radius: 6px;
+      padding: 2px;
+      margin-bottom: 1rem;
+    }
+    
+    canvas { width: 100%; border-radius: 4px; cursor: crosshair; }
+    #dna-canvas, #archive-dna-canvas { height: 80px; }
+    #ref-dna, #current-dna { height: 40px; }
+    
+    .hash-box {
+      background: var(--bg-deep);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hash-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+    
+    .hash-value {
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      word-break: break-all;
+      font-weight: 500;
+    }
+    
+    .hash-value.match { color: var(--accent-green); }
+    .hash-value.mismatch { color: var(--accent-red); }
+    
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    
+    .btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 0.7rem 1.2rem;
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover:not(:disabled) { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, #00a888 100%);
+      border: none;
+      color: var(--bg-deep);
+      font-weight: 600;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      color: var(--bg-deep);
+      box-shadow: 0 4px 20px var(--glow-cyan);
+      transform: translateY(-1px);
+    }
+    
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    @media (max-width: 700px) { .results-grid { grid-template-columns: repeat(2, 1fr); } }
+    
+    .stat-card {
+      background: var(--bg-elevated);
+      border-radius: 6px;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .stat-value { font-size: 1.8rem; font-weight: 600; line-height: 1.2; }
+    .stat-value.green { color: var(--accent-green); }
+    .stat-value.red { color: var(--accent-red); }
+    .stat-value.gold { color: var(--accent-gold); }
+    .stat-value.cyan { color: var(--accent-cyan); }
+    
+    .stat-label {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-top: 0.3rem;
+    }
+    
+    .entry-list { max-height: 350px; overflow-y: auto; }
+    
+    .entry-item {
+      display: grid;
+      grid-template-columns: 6px 1fr auto;
+      gap: 0.8rem;
+      align-items: center;
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+      transition: background 0.15s ease;
+    }
+    
+    .entry-item:hover { background: var(--bg-elevated); }
+    .entry-item:last-child { border-bottom: none; }
+    
+    .entry-color { width: 6px; height: 24px; border-radius: 2px; }
+    .entry-path { color: var(--text-primary); word-break: break-all; }
+    
+    .entry-status {
+      font-size: 0.6rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+    
+    .entry-status.match { background: rgba(68, 255, 136, 0.15); color: var(--accent-green); }
+    .entry-status.modified { background: rgba(255, 170, 0, 0.15); color: var(--accent-gold); }
+    .entry-status.added { background: rgba(0, 212, 170, 0.15); color: var(--accent-cyan); }
+    .entry-status.removed { background: rgba(255, 68, 85, 0.15); color: var(--accent-red); }
+    
+    #tooltip {
+      position: fixed;
+      background: var(--bg-elevated);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.7rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 1000;
+      max-width: 350px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    
+    #tooltip.visible { opacity: 1; }
+    #tooltip .tt-path { color: var(--accent-cyan); font-weight: 500; margin-bottom: 0.2rem; word-break: break-all; }
+    #tooltip .tt-hash { color: var(--text-muted); font-size: 0.65rem; }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    
+    .status-badge.verified { background: rgba(68, 255, 136, 0.15); color: var(--accent-green); border: 1px solid rgba(68, 255, 136, 0.3); }
+    .status-badge.tampered { background: rgba(255, 68, 85, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 68, 85, 0.3); }
+    .status-badge.pending { background: rgba(255, 170, 0, 0.15); color: var(--accent-gold); border: 1px solid rgba(255, 170, 0, 0.3); }
+    .status-badge.packaged { background: rgba(255, 170, 0, 0.15); color: var(--accent-gold); border: 1px solid rgba(255, 170, 0, 0.3); }
+    
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    
+    .empty-state { text-align: center; padding: 3rem 2rem; color: var(--text-muted); }
+    .empty-state p { margin-bottom: 0.3rem; }
+    
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 1rem;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+    
+    .compare-arrow { text-align: center; font-size: 1.5rem; color: var(--text-muted); padding-top: 2rem; }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>WITNESS</h1>
+      <p class="subtitle">CODEX-ARK Tamper Seal // Cryptographic State Witness</p>
+    </header>
+    
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-mode="seal">Seal</button>
+      <button class="mode-btn" data-mode="archive">Archive</button>
+      <button class="mode-btn" data-mode="verify">Verify</button>
+    </div>
+    
+    <!-- SEAL MODE -->
+    <div id="seal-mode">
+      <div class="panel">
+        <div class="panel-header">
+          <span>Source Directory</span>
+          <span style="color:var(--accent-cyan);font-size:0.6rem;">HASH-ONLY • NO CONTENT STORED</span>
+        </div>
+        <div class="panel-body">
+          <div class="drop-zone" id="source-drop">
+            <div class="drop-zone-icon">📁</div>
+            <p>Drop folder here or click to select</p>
+            <p class="hint">All files will be hashed (contents not stored)</p>
+            <input type="file" id="source-input" webkitdirectory multiple>
+            <div class="loaded-info hidden" id="source-info">
+              <div class="loaded-stat">
+                <span class="label">Files</span>
+                <span class="value" id="source-count">0</span>
+              </div>
+              <div class="loaded-stat">
+                <span class="label">Total Size</span>
+                <span class="value" id="source-size">0 B</span>
+              </div>
+              <div class="loaded-stat">
+                <span class="label">Categories</span>
+                <span class="value" id="source-cats">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel hidden" id="witness-output-panel">
+        <div class="panel-header">
+          <span>Witness Generated</span>
+          <span class="status-badge verified">SEALED</span>
+        </div>
+        <div class="panel-body">
+          <div class="dna-container">
+            <canvas id="dna-canvas"></canvas>
+          </div>
+          <div class="hash-box">
+            <div class="hash-label">Archive Seal (SHA-256)</div>
+            <div class="hash-value" id="archive-hash">—</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="export-witness">Export .witness</button>
+            <button class="btn" id="export-png">Export Signature PNG</button>
+            <button class="btn" id="export-combined">Export All</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel hidden" id="entries-panel">
+        <div class="panel-header">
+          <span>Witnessed Entries</span>
+          <span id="entry-count-label">0 files</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <div class="entry-list" id="entries-list"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ARCHIVE MODE -->
+    <div id="archive-mode" class="hidden">
+      <div class="panel">
+        <div class="panel-header">
+          <span>Source Directory</span>
+          <span style="color:var(--accent-gold);font-size:0.6rem;">FULL ARCHIVE • CONTENT INCLUDED</span>
+        </div>
+        <div class="panel-body">
+          <div class="drop-zone" id="archive-source-drop">
+            <div class="drop-zone-icon">📦</div>
+            <p>Drop folder here or click to select</p>
+            <p class="hint">Full content will be archived (for backup/transport)</p>
+            <input type="file" id="archive-source-input" webkitdirectory multiple>
+            <div class="loaded-info hidden" id="archive-source-info">
+              <div class="loaded-stat">
+                <span class="label">Files</span>
+                <span class="value" id="archive-source-count">0</span>
+              </div>
+              <div class="loaded-stat">
+                <span class="label">Source Size</span>
+                <span class="value" id="archive-source-size">0 B</span>
+              </div>
+              <div class="loaded-stat">
+                <span class="label">Archive Size</span>
+                <span class="value" id="archive-output-size">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel hidden" id="archive-output-panel">
+        <div class="panel-header">
+          <span>Archive Generated</span>
+          <span class="status-badge packaged">PACKAGED</span>
+        </div>
+        <div class="panel-body">
+          <div class="dna-container">
+            <canvas id="archive-dna-canvas"></canvas>
+          </div>
+          <div class="hash-box">
+            <div class="hash-label">Archive Seal (SHA-256) — Identical to Witness</div>
+            <div class="hash-value" id="archive-archive-hash">—</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="export-ark">Export .ark</button>
+            <button class="btn" id="export-ark-png">Export Signature PNG</button>
+            <button class="btn" id="export-ark-witness">Export .witness</button>
+            <button class="btn" id="export-ark-all">Export All</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel hidden" id="archive-entries-panel">
+        <div class="panel-header">
+          <span>Archived Entries</span>
+          <span id="archive-entry-count-label">0 files</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <div class="entry-list" id="archive-entries-list"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- VERIFY MODE -->
+    <div id="verify-mode" class="hidden">
+      <div class="compare-row">
+        <div class="panel">
+          <div class="panel-header">Reference Witness</div>
+          <div class="panel-body">
+            <div class="drop-zone" id="ref-drop">
+              <div class="drop-zone-icon">🔏</div>
+              <p>Drop .witness or .ark file</p>
+              <p class="hint">The trusted reference seal</p>
+              <input type="file" id="ref-input" accept=".witness,.ark,.json">
+            </div>
+            <div class="dna-container hidden" id="ref-dna-container" style="margin-top:1rem;">
+              <canvas id="ref-dna"></canvas>
+            </div>
+            <div class="hash-box hidden" id="ref-hash-box">
+              <div class="hash-label">Reference Seal</div>
+              <div class="hash-value" id="ref-hash">—</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="compare-arrow">→</div>
+        
+        <div class="panel">
+          <div class="panel-header">Current State</div>
+          <div class="panel-body">
+            <div class="drop-zone" id="current-drop">
+              <div class="drop-zone-icon">📁</div>
+              <p>Drop folder to verify</p>
+              <p class="hint">Will hash and compare</p>
+              <input type="file" id="current-input" webkitdirectory multiple>
+            </div>
+            <div class="dna-container hidden" id="current-dna-container" style="margin-top:1rem;">
+              <canvas id="current-dna"></canvas>
+            </div>
+            <div class="hash-box hidden" id="current-hash-box">
+              <div class="hash-label">Current State</div>
+              <div class="hash-value" id="current-hash">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" id="verify-btn" style="width:100%;margin-bottom:1.5rem;" disabled>Verify Integrity</button>
+      
+      <div class="panel hidden" id="verify-results-panel">
+        <div class="panel-header">
+          <span>Verification Results</span>
+          <span class="status-badge pending" id="verify-status">PENDING</span>
+        </div>
+        <div class="panel-body">
+          <div class="results-grid">
+            <div class="stat-card">
+              <div class="stat-value green" id="stat-match">0</div>
+              <div class="stat-label">Unchanged</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value gold" id="stat-modified">0</div>
+              <div class="stat-label">Modified</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value cyan" id="stat-added">0</div>
+              <div class="stat-label">Added</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value red" id="stat-removed">0</div>
+              <div class="stat-label">Removed</div>
+            </div>
+          </div>
+          <div class="entry-list" id="diff-list"></div>
+          <div class="btn-row" style="margin-top:1rem;">
+            <button class="btn" id="export-report">Export Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="tooltip">
+    <div class="tt-path"></div>
+    <div class="tt-hash"></div>
+  </div>
+
+  <script>
+    const CATEGORIES = {
+      consciousness: { hueRange: [0, 30], patterns: [/conscious/i, /aware/i, /meditat/i, /presence/i, /mind/i] },
+      practice: { hueRange: [180, 210], patterns: [/practice/i, /exercise/i, /routine/i, /breath/i, /pranayama/i] },
+      sigil: { hueRange: [270, 300], patterns: [/sigil/i, /symbol/i, /glyph/i, /seal/i] },
+      sacred: { hueRange: [45, 60], patterns: [/hebrew/i, /aramaic/i, /greek/i, /sacred/i, /torah/i, /קודש/] },
+      document: { hueRange: [0, 0], saturation: 15, patterns: [/\.md$/i, /\.txt$/i, /\.doc/i, /\.pdf$/i] },
+      code: { hueRange: [120, 150], patterns: [/\.js$/i, /\.py$/i, /\.html$/i, /\.css$/i, /\.sh$/i, /\.json$/i] },
+      data: { hueRange: [35, 50], patterns: [/\.csv$/i, /\.xml$/i, /\.yaml$/i, /data/i] },
+      media: { hueRange: [300, 330], patterns: [/\.png$/i, /\.jpg$/i, /\.gif$/i, /\.mp3$/i, /\.mp4$/i, /\.svg$/i] }
+    };
+    
+    class WitnessEngine {
+      constructor() {
+        this.entries = [];
+        this.archiveHash = null;
+      }
+      
+      async processFiles(files, includeContent = false) {
+        this.entries = [];
+        
+        for (const file of files) {
+          if (file.name.startsWith('.')) continue;
+          
+          const buffer = await this.readFileAsBuffer(file);
+          const hash = await this.sha256(buffer);
+          const path = file.webkitRelativePath || file.name;
+          const category = this.detectCategory(path);
+          const color = this.hashToColor(hash, category);
+          
+          const entry = {
+            path,
+            size: file.size,
+            hash,
+            category,
+            color,
+            modified: new Date(file.lastModified).toISOString()
+          };
+          
+          if (includeContent) {
+            entry.content = await this.readFileAsText(file);
+            entry.encoding = 'utf8';
+          }
+          
+          this.entries.push(entry);
+        }
+        
+        this.entries.sort((a, b) => {
+          const catOrder = Object.keys(CATEGORIES);
+          const catDiff = catOrder.indexOf(a.category) - catOrder.indexOf(b.category);
+          if (catDiff !== 0) return catDiff;
+          return a.path.localeCompare(b.path);
+        });
+        
+        this.archiveHash = await this.sha256String(this.entries.map(e => e.hash).join(''));
+        
+        return {
+          entries: this.entries,
+          archiveHash: this.archiveHash,
+          totalSize: this.entries.reduce((sum, e) => sum + e.size, 0),
+          categories: [...new Set(this.entries.map(e => e.category))]
+        };
+      }
+      
+      readFileAsBuffer(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(new Uint8Array(reader.result));
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(file);
+        });
+      }
+      
+      readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsText(file);
+        });
+      }
+      
+      async sha256(buffer) {
+        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      
+      async sha256String(str) {
+        return await this.sha256(new TextEncoder().encode(str));
+      }
+      
+      detectCategory(path) {
+        for (const [cat, config] of Object.entries(CATEGORIES)) {
+          if (config.patterns.some(p => p.test(path))) return cat;
+        }
+        return 'document';
+      }
+      
+      hashToColor(hash, category) {
+        const config = CATEGORIES[category] || CATEGORIES.document;
+        const h1 = parseInt(hash.slice(0, 4), 16);
+        const h2 = parseInt(hash.slice(4, 6), 16);
+        const h3 = parseInt(hash.slice(6, 8), 16);
+        
+        let hue, saturation, lightness;
+        
+        if (config.saturation !== undefined) {
+          hue = 0; saturation = config.saturation; lightness = 25 + (h3 % 35);
+        } else {
+          const [hueMin, hueMax] = config.hueRange;
+          hue = hueMin + (h1 % ((hueMax - hueMin) || 360));
+          saturation = 55 + (h2 % 35);
+          lightness = 30 + (h3 % 30);
+        }
+        
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      }
+      
+      toWitnessFormat() {
+        return JSON.stringify({
+          version: '0.1',
+          type: 'CODEX-ARK-WITNESS',
+          created: new Date().toISOString(),
+          archiveHash: this.archiveHash,
+          stats: {
+            entries: this.entries.length,
+            totalSize: this.entries.reduce((sum, e) => sum + e.size, 0),
+            categories: [...new Set(this.entries.map(e => e.category))]
+          },
+          entries: this.entries.map(e => ({
+            path: e.path, size: e.size, hash: e.hash,
+            category: e.category, color: e.color, modified: e.modified
+          }))
+        }, null, 2);
+      }
+      
+      toArkFormat() {
+        const now = new Date().toISOString();
+        let output = `╔══════════════════════════════════════════════════════════════╗
+║  CODEX-ARK v0.1                                              ║
+║  Created: ${now.padEnd(46)}║
+║  Archive Hash: ${this.archiveHash.slice(0, 40)}...  ║
+╚══════════════════════════════════════════════════════════════╝
+
+`;
+        for (const entry of this.entries) {
+          output += `═══ ENTRY ═══════════════════════════════════════════════════════
+path: ${entry.path}
+size: ${entry.size}
+encoding: ${entry.encoding || 'utf8'}
+compressed: none
+category: ${entry.category}
+hash: sha256:${entry.hash}
+color: ${entry.color}
+modified: ${entry.modified}
+─────────────────────────────────────────────────────────────────
+[CONTENT BEGINS]
+${entry.content || ''}
+[CONTENT ENDS]
+═════════════════════════════════════════════════════════════════
+
+`;
+        }
+        return output;
+      }
+      
+      parseWitness(json) {
+        const data = JSON.parse(json);
+        this.entries = data.entries;
+        this.archiveHash = data.archiveHash;
+        return data;
+      }
+      
+      parseArk(content) {
+        const entries = [];
+        const re = /═══ ENTRY[═\s]+\npath: (.+)\nsize: (\d+)\nencoding: (\w+)\ncompressed: (\w+)\ncategory: (\w+)\nhash: sha256:(\w+)\ncolor: ([^\n]+)\nmodified: ([^\n]+)\n[─]+\n\[CONTENT BEGINS\]\n([\s\S]*?)\n\[CONTENT ENDS\]/g;
+        let m;
+        while ((m = re.exec(content)) !== null) {
+          entries.push({ path: m[1], size: parseInt(m[2]), encoding: m[3], category: m[5], hash: m[6], color: m[7], modified: m[8], content: m[9] });
+        }
+        const hashMatch = content.match(/Archive Hash: ([a-f0-9]+)/);
+        this.entries = entries;
+        this.archiveHash = hashMatch ? hashMatch[1] : null;
+        return { entries, archiveHash: this.archiveHash };
+      }
+      
+      compare(reference, subject) {
+        const results = {
+          match: reference.archiveHash === subject.archiveHash,
+          referenceHash: reference.archiveHash,
+          subjectHash: subject.archiveHash,
+          entries: [],
+          stats: { total: 0, matched: 0, modified: 0, added: 0, removed: 0 }
+        };
+        
+        const refMap = new Map(reference.entries.map(e => [e.path, e]));
+        const subMap = new Map(subject.entries.map(e => [e.path, e]));
+        
+        for (const [path, refEntry] of refMap) {
+          results.stats.total++;
+          const subEntry = subMap.get(path);
+          if (!subEntry) {
+            results.entries.push({ path, status: 'removed', ref: refEntry, sub: null });
+            results.stats.removed++;
+          } else if (refEntry.hash === subEntry.hash) {
+            results.entries.push({ path, status: 'match', ref: refEntry, sub: subEntry });
+            results.stats.matched++;
+          } else {
+            results.entries.push({ path, status: 'modified', ref: refEntry, sub: subEntry });
+            results.stats.modified++;
+          }
+        }
+        
+        for (const [path, subEntry] of subMap) {
+          if (!refMap.has(path)) {
+            results.stats.total++;
+            results.entries.push({ path, status: 'added', ref: null, sub: subEntry });
+            results.stats.added++;
+          }
+        }
+        
+        results.entries.sort((a, b) => ({ removed: 0, modified: 1, added: 2, match: 3 })[a.status] - ({ removed: 0, modified: 1, added: 2, match: 3 })[b.status]);
+        return results;
+      }
+    }
+    
+    class DNARenderer {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.entries = [];
+        this.stripes = [];
+      }
+      
+      render(entries) {
+        this.entries = entries;
+        const rect = this.canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        this.ctx.scale(dpr, dpr);
+        const width = rect.width, height = rect.height;
+        
+        const bg = this.ctx.createLinearGradient(0, 0, 0, height);
+        bg.addColorStop(0, '#030305'); bg.addColorStop(0.5, '#08080c'); bg.addColorStop(1, '#030305');
+        this.ctx.fillStyle = bg;
+        this.ctx.fillRect(0, 0, width, height);
+        
+        if (entries.length === 0) return;
+        
+        const sizes = entries.map(e => Math.log(e.size + 1));
+        const maxSize = Math.max(...sizes), minSize = Math.min(...sizes), range = maxSize - minSize || 1;
+        
+        let totalWidth = 0;
+        const stripeData = entries.map(e => {
+          const w = 3 + ((Math.log(e.size + 1) - minSize) / range) * 25;
+          totalWidth += w;
+          return { ...e, width: w };
+        });
+        
+        const scale = width / totalWidth;
+        let x = 0;
+        this.stripes = [];
+        
+        for (const stripe of stripeData) {
+          const sw = Math.max(1, stripe.width * scale);
+          this.ctx.fillStyle = stripe.color;
+          this.ctx.fillRect(x, 0, sw, height);
+          
+          const grad = this.ctx.createLinearGradient(0, 0, 0, height);
+          grad.addColorStop(0, 'rgba(255,255,255,0.08)'); grad.addColorStop(0.5, 'rgba(0,0,0,0)'); grad.addColorStop(1, 'rgba(0,0,0,0.15)');
+          this.ctx.fillStyle = grad;
+          this.ctx.fillRect(x, 0, sw, height);
+          
+          this.ctx.fillStyle = 'rgba(0,0,0,0.4)';
+          this.ctx.fillRect(x + sw - 0.5, 0, 0.5, height);
+          
+          this.stripes.push({ ...stripe, x, scaledWidth: sw });
+          x += sw;
+        }
+      }
+      
+      getStripeAt(clientX) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = clientX - rect.left;
+        for (const s of this.stripes) {
+          if (x >= s.x && x < s.x + s.scaledWidth) return s;
+        }
+        return null;
+      }
+      
+      toDataURL() { return this.canvas.toDataURL('image/png'); }
+    }
+    
+    class WitnessUI {
+      constructor() {
+        this.engine = new WitnessEngine();
+        this.archiveEngine = new WitnessEngine();
+        this.createRenderer = null;
+        this.archiveRenderer = null;
+        this.refRenderer = null;
+        this.currentRenderer = null;
+        this.refData = null;
+        this.currentData = null;
+        this.init();
+      }
+      
+      init() {
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+          btn.addEventListener('click', () => this.setMode(btn.dataset.mode));
+        });
+        
+        this.setupDropZone('source-drop', 'source-input', async (files) => {
+          const result = await this.engine.processFiles(files, false);
+          this.showSealResult(result);
+        });
+        
+        document.getElementById('export-witness').addEventListener('click', () => this.exportWitness());
+        document.getElementById('export-png').addEventListener('click', () => this.exportPNG());
+        document.getElementById('export-combined').addEventListener('click', () => this.exportCombined());
+        
+        this.setupDropZone('archive-source-drop', 'archive-source-input', async (files) => {
+          const result = await this.archiveEngine.processFiles(files, true);
+          this.showArchiveResult(result);
+        });
+        
+        document.getElementById('export-ark').addEventListener('click', () => this.exportArk());
+        document.getElementById('export-ark-png').addEventListener('click', () => this.exportArkPNG());
+        document.getElementById('export-ark-witness').addEventListener('click', () => this.exportArkWitness());
+        document.getElementById('export-ark-all').addEventListener('click', () => this.exportArkAll());
+        
+        this.setupDropZone('ref-drop', 'ref-input', async (files) => {
+          const content = await this.readTextFile(files[0]);
+          this.refData = files[0].name.endsWith('.ark') ? this.engine.parseArk(content) : this.engine.parseWitness(content);
+          this.showRefLoaded();
+        }, false);
+        
+        this.setupDropZone('current-drop', 'current-input', async (files) => {
+          const engine = new WitnessEngine();
+          const result = await engine.processFiles(files, false);
+          this.currentData = { entries: result.entries, archiveHash: result.archiveHash };
+          this.showCurrentLoaded(this.currentData);
+        });
+        
+        document.getElementById('verify-btn').addEventListener('click', () => this.runVerify());
+        document.getElementById('export-report').addEventListener('click', () => this.exportReport());
+        
+        document.addEventListener('mousemove', (e) => this.handleTooltip(e));
+      }
+      
+      setMode(mode) {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+        document.getElementById('seal-mode').classList.toggle('hidden', mode !== 'seal');
+        document.getElementById('archive-mode').classList.toggle('hidden', mode !== 'archive');
+        document.getElementById('verify-mode').classList.toggle('hidden', mode !== 'verify');
+      }
+      
+      setupDropZone(dropId, inputId, callback, isDirectory = true) {
+        const drop = document.getElementById(dropId);
+        const input = document.getElementById(inputId);
+        if (!drop || !input) return;
+        
+        drop.addEventListener('click', () => input.click());
+        drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragover'); });
+        drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+        drop.addEventListener('drop', async (e) => {
+          e.preventDefault(); drop.classList.remove('dragover'); drop.classList.add('loaded');
+          callback(e.dataTransfer.files);
+        });
+        input.addEventListener('change', (e) => { drop.classList.add('loaded'); callback(e.target.files); });
+      }
+      
+      readTextFile(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsText(file);
+        });
+      }
+      
+      showSealResult(result) {
+        document.getElementById('source-info').classList.remove('hidden');
+        document.getElementById('source-count').textContent = result.entries.length;
+        document.getElementById('source-size').textContent = this.formatSize(result.totalSize);
+        document.getElementById('source-cats').textContent = result.categories.join(', ');
+        document.getElementById('witness-output-panel').classList.remove('hidden');
+        document.getElementById('entries-panel').classList.remove('hidden');
+        
+        this.createRenderer = new DNARenderer(document.getElementById('dna-canvas'));
+        this.createRenderer.render(result.entries);
+        document.getElementById('archive-hash').textContent = result.archiveHash;
+        
+        document.getElementById('entry-count-label').textContent = `${result.entries.length} files`;
+        document.getElementById('entries-list').innerHTML = result.entries.map(e => `
+          <div class="entry-item">
+            <div class="entry-color" style="background:${e.color}"></div>
+            <div class="entry-path">${e.path}</div>
+            <div style="font-size:0.65rem;color:var(--text-muted)">${this.formatSize(e.size)}</div>
+          </div>
+        `).join('');
+      }
+      
+      showArchiveResult(result) {
+        document.getElementById('archive-source-info').classList.remove('hidden');
+        document.getElementById('archive-source-count').textContent = result.entries.length;
+        document.getElementById('archive-source-size').textContent = this.formatSize(result.totalSize);
+        document.getElementById('archive-output-size').textContent = this.formatSize(this.archiveEngine.toArkFormat().length);
+        document.getElementById('archive-output-panel').classList.remove('hidden');
+        document.getElementById('archive-entries-panel').classList.remove('hidden');
+        
+        this.archiveRenderer = new DNARenderer(document.getElementById('archive-dna-canvas'));
+        this.archiveRenderer.render(result.entries);
+        document.getElementById('archive-archive-hash').textContent = result.archiveHash;
+        
+        document.getElementById('archive-entry-count-label').textContent = `${result.entries.length} files`;
+        document.getElementById('archive-entries-list').innerHTML = result.entries.map(e => `
+          <div class="entry-item">
+            <div class="entry-color" style="background:${e.color}"></div>
+            <div class="entry-path">${e.path}</div>
+            <div style="font-size:0.65rem;color:var(--text-muted)">${this.formatSize(e.size)}</div>
+          </div>
+        `).join('');
+      }
+      
+      showRefLoaded() {
+        document.getElementById('ref-dna-container').classList.remove('hidden');
+        document.getElementById('ref-hash-box').classList.remove('hidden');
+        this.refRenderer = new DNARenderer(document.getElementById('ref-dna'));
+        this.refRenderer.render(this.refData.entries);
+        document.getElementById('ref-hash').textContent = this.refData.archiveHash;
+        this.checkVerifyReady();
+      }
+      
+      showCurrentLoaded(result) {
+        document.getElementById('current-dna-container').classList.remove('hidden');
+        document.getElementById('current-hash-box').classList.remove('hidden');
+        this.currentRenderer = new DNARenderer(document.getElementById('current-dna'));
+        this.currentRenderer.render(result.entries);
+        document.getElementById('current-hash').textContent = result.archiveHash;
+        this.checkVerifyReady();
+      }
+      
+      checkVerifyReady() { document.getElementById('verify-btn').disabled = !(this.refData && this.currentData); }
+      
+      runVerify() {
+        const results = this.engine.compare(this.refData, this.currentData);
+        this.verifyResults = results;
+        
+        document.getElementById('verify-results-panel').classList.remove('hidden');
+        const badge = document.getElementById('verify-status');
+        badge.textContent = results.match ? 'VERIFIED ✓' : 'TAMPERED ✗';
+        badge.className = 'status-badge ' + (results.match ? 'verified' : 'tampered');
+        
+        document.getElementById('stat-match').textContent = results.stats.matched;
+        document.getElementById('stat-modified').textContent = results.stats.modified;
+        document.getElementById('stat-added').textContent = results.stats.added;
+        document.getElementById('stat-removed').textContent = results.stats.removed;
+        
+        const currentHashEl = document.getElementById('current-hash');
+        currentHashEl.classList.toggle('match', results.match);
+        currentHashEl.classList.toggle('mismatch', !results.match);
+        
+        const show = results.entries.filter(e => e.status !== 'match').slice(0, 100);
+        document.getElementById('diff-list').innerHTML = show.length === 0 
+          ? '<div class="empty-state"><p>All files unchanged</p></div>'
+          : show.map(e => `
+            <div class="entry-item">
+              <div class="entry-color" style="background:${e.ref?.color || e.sub?.color}"></div>
+              <div class="entry-path">${e.path}</div>
+              <span class="entry-status ${e.status}">${e.status}</span>
+            </div>
+          `).join('');
+      }
+      
+      handleTooltip(e) {
+        const tooltip = document.getElementById('tooltip');
+        for (const renderer of [this.createRenderer, this.archiveRenderer, this.refRenderer, this.currentRenderer].filter(Boolean)) {
+          const rect = renderer.canvas.getBoundingClientRect();
+          if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+            const stripe = renderer.getStripeAt(e.clientX);
+            if (stripe) {
+              tooltip.querySelector('.tt-path').textContent = stripe.path;
+              tooltip.querySelector('.tt-hash').textContent = stripe.hash.slice(0, 24) + '...';
+              tooltip.style.left = (e.clientX + 15) + 'px';
+              tooltip.style.top = (e.clientY + 15) + 'px';
+              tooltip.classList.add('visible');
+              return;
+            }
+          }
+        }
+        tooltip.classList.remove('visible');
+      }
+      
+      exportWitness() { this.download(this.engine.toWitnessFormat(), 'witness-' + this.timestamp() + '.witness', 'application/json'); }
+      exportPNG() { if (this.createRenderer) { const link = document.createElement('a'); link.download = 'signature-' + this.timestamp() + '.png'; link.href = this.createRenderer.toDataURL(); link.click(); } }
+      exportCombined() { this.exportWitness(); setTimeout(() => this.exportPNG(), 100); }
+      
+      exportArk() { this.download(this.archiveEngine.toArkFormat(), 'archive-' + this.timestamp() + '.ark', 'text/plain'); }
+      exportArkPNG() { if (this.archiveRenderer) { const link = document.createElement('a'); link.download = 'signature-' + this.timestamp() + '.png'; link.href = this.archiveRenderer.toDataURL(); link.click(); } }
+      exportArkWitness() { this.download(this.archiveEngine.toWitnessFormat(), 'witness-' + this.timestamp() + '.witness', 'application/json'); }
+      exportArkAll() { this.exportArk(); setTimeout(() => this.exportArkWitness(), 100); setTimeout(() => this.exportArkPNG(), 200); }
+      
+      exportReport() {
+        if (!this.verifyResults) return;
+        const r = this.verifyResults;
+        let report = `CODEX-ARK VERIFICATION REPORT\nGenerated: ${new Date().toISOString()}\n${'═'.repeat(60)}\n\nSTATUS: ${r.match ? 'VERIFIED ✓' : 'TAMPERED ✗'}\n\nReference: ${r.referenceHash}\nCurrent:   ${r.subjectHash}\n\nUnchanged: ${r.stats.matched} | Modified: ${r.stats.modified} | Added: ${r.stats.added} | Removed: ${r.stats.removed}\n\nCHANGES:\n`;
+        for (const e of r.entries.filter(x => x.status !== 'match')) {
+          report += `[${e.status.toUpperCase()}] ${e.path}\n`;
+        }
+        this.download(report, 'verify-report-' + this.timestamp() + '.txt', 'text/plain');
+      }
+      
+      download(content, filename, type) {
+        const blob = new Blob([content], { type });
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+      
+      formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+      }
+      
+      timestamp() { return new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-'); }
+    }
+    
+    new WitnessUI();
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ARK Decoder</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font:12px/1.5 monospace;background:#111;color:#0fa}
+    .c{max-width:800px;margin:0 auto;padding:1rem}
+    h1{font-size:1rem;border-bottom:1px solid #333;padding-bottom:.5rem;margin-bottom:1rem}
+    textarea{width:100%;height:200px;background:#000;color:#0fa;border:1px solid #333;padding:.5rem;font:inherit;resize:vertical}
+    button{background:#0fa;color:#000;border:0;padding:.5rem 1rem;margin:.5rem .5rem 0 0;cursor:pointer;font:inherit}
+    button:hover{background:#0f8}
+    #out{margin-top:1rem;padding:1rem;background:#000;border:1px solid #333;max-height:400px;overflow:auto}
+    .e{border-bottom:1px solid #222;padding:.5rem 0}
+    .ep{color:#ff0}
+    .em{color:#666;font-size:10px}
+    .ec{white-space:pre-wrap;color:#888;max-height:100px;overflow:hidden}
+    .ec.x{max-height:none}
+  </style>
+</head>
+<body>
+<div class="c">
+  <h1>CODEX-ARK DECODER // MINIMAL</h1>
+  <textarea id="i" placeholder="Paste .ark file contents here or drop file..."></textarea>
+  <button onclick="parse()">DECODE</button>
+  <button onclick="dl()">DOWNLOAD ALL</button>
+  <div id="out"></div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const parse = () => {
+  const t = $('#i').value;
+  const entries = [];
+  const re = /═══ ENTRY[═\s]+\npath: (.+)\nsize: (\d+)\nencoding: (\w+)\ncompressed: (\w+)\ncategory: (\w+)\nhash: sha256:(\w+)\ncolor: ([^\n]+)\nmodified: ([^\n]+)\n[─]+\n\[CONTENT BEGINS\]\n([\s\S]*?)\n\[CONTENT ENDS\]/g;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    entries.push({ path: m[1], size: parseInt(m[2]), encoding: m[3], category: m[5], hash: m[6], color: m[7], modified: m[8], content: m[9] });
+  }
+  render(entries);
+  window._entries = entries;
+};
+
+const render = (entries) => {
+  const out = $('#out');
+  if (!entries.length) { out.innerHTML = '<span style="color:#f00">No entries found.</span>'; return; }
+  out.innerHTML = entries.map((e, i) => `
+    <div class="e">
+      <div class="ep">${e.path}</div>
+      <div class="em">${e.category} | ${e.size}B | ${e.hash.slice(0,8)}...</div>
+      <div class="ec" onclick="this.classList.toggle('x')">${esc(e.content.slice(0, 500))}${e.content.length > 500 ? '\n[click to expand]' : ''}</div>
+    </div>
+  `).join('');
+};
+
+const esc = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const dl = () => {
+  const entries = window._entries || [];
+  if (!entries.length) return alert('Decode first');
+  entries.forEach(e => {
+    const blob = new Blob([e.content], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = e.path.split('/').pop();
+    a.click();
+  });
+};
+
+$('#i').ondragover = e => e.preventDefault();
+$('#i').ondrop = e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f) { const r = new FileReader(); r.onload = () => { $('#i').value = r.result; parse(); }; r.readAsText(f); }
+};
+</script>
+</body>
+</html>
