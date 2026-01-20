@@ -1,0 +1,10 @@
+{
+  "id": "pearl",
+  "name": "Pearl",
+  "kind": "html",
+  "entry": "index.html",
+  "description": "Minimalist AI conversation interface and writing companion for focused dialogue",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "💎"
+}

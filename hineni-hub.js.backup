@@ -27,47 +27,26 @@
             id: 'web-apps',
             title: '🌐 Web Apps & Games',
             items: [
-{
-                    id: 'polywrite',
-                    label: 'PolyWrite Pro',
-                    icon: '✍️',
+                {
+                    id: 'royal-game-ur',
+                    label: 'Royal Game of Ur',
+                    icon: '🎲',
                     status: 'active',
-                    description: 'Multi-editor writing environment with session restore, focus mode, and markdown preview.',
-                    hubPath: 'apps/polywrite/index.html',
+                    description: 'Ancient Mesopotamian racing game. The oldest known board game!',
+                    hubPath: '30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE/Game of Ur/royal_game_of_ur.html',
+                    launchType: 'html'
+                },
+                {
+                    id: 'word-salad',
+                    label: 'Word Salad 5.0',
+                    icon: '🥗',
+                    status: 'active',
+                    description: 'Creative word generation and manipulation tool.',
+                    hubPath: 'apps/word_salad/Word Salad 5.0/index.html',
                     launchType: 'html',
                     isLocal: true
                 },
                 {
-                    id: 'pearl',
-                    label: 'Pearl',
-                    icon: '💎',
-                    status: 'active',
-                    description: 'Minimalist AI conversation interface and writing companion for focused dialogue',
-                    hubPath: 'apps/pearl/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'codex-ark',
-                    label: 'CODEX-ARK Witness',
-                    icon: '📦',
-                    status: 'active',
-                    description: 'Visual tamper detection and archival witness system - cryptographic fingerprints you recognize by sight',
-                    hubPath: 'apps/codex-ark/codex-ark-witness.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'bureaucratic-universe',
-                    label: 'Bureaucratic Universe',
-                    icon: '📋',
-                    status: 'active',
-                    description: 'Infinite forms system for notices and legal documents.',
-                    hubPath: 'bureaucratic-universe.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
                     id: 'codex-capture',
                     label: 'Codex Capture',
                     icon: '📸',
@@ -77,77 +56,7 @@
                     launchType: 'html',
                     isLocal: true
                 },
-{
-                    id: 'conflict-lab',
-                    label: 'Conflict Lab',
-                    icon: '⚡',
-                    status: 'active',
-                    description: 'Interactive laboratory for exploring and resolving conflicts through structured analysis',
-                    hubPath: 'apps/conflict_lab/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'din-files',
-                    label: 'DIN Files',
-                    icon: '📁',
-                    status: 'active',
-                    description: 'Consciousness file system with semantic indexing.',
-                    hubPath: 'din-files.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'din-portal',
-                    label: 'DIN Portal',
-                    icon: '🚪',
-                    status: 'active',
-                    description: 'Dynamic Intelligent Navigation portal for CODEX ecosystem exploration',
-                    hubPath: 'apps/din_portal/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'hypergraph',
-                    label: 'Hypergraph Navigator',
-                    icon: '🕸️',
-                    status: 'active',
-                    description: 'Navigate thought networks in N-dimensional space.',
-                    hubPath: 'hypergraph.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'oracle-page',
-                    label: 'Oracle',
-                    icon: '🔮',
-                    status: 'active',
-                    description: 'Direct consciousness query interface.',
-                    hubPath: 'oracle.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'pranayama',
-                    label: 'Pranayama',
-                    icon: '🫁',
-                    status: 'active',
-                    description: 'Breathwork practice guide and timer for conscious breathing exercises',
-                    hubPath: 'apps/pranayama/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'royal-game-ur',
-                    label: 'Royal Game of Ur',
-                    icon: '🎲',
-                    status: 'active',
-                    description: 'Ancient Mesopotamian board game reimagined for digital play',
-                    hubPath: 'apps/royal_game_of_ur/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
+                {
                     id: 'samson-recursive',
                     label: "Samson's Terminal",
                     icon: '🦁',
@@ -157,7 +66,48 @@
                     launchType: 'html',
                     isLocal: true
                 },
-{
+                {
+                    id: 'bureaucratic-universe',
+                    label: 'Bureaucratic Universe',
+                    icon: '📋',
+                    status: 'active',
+                    description: 'Infinite forms system for notices and legal documents.',
+                    hubPath: 'bureaucratic-universe.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'hypergraph',
+                    label: 'Hypergraph Navigator',
+                    icon: '🕸️',
+                    status: 'active',
+                    description: 'Navigate thought networks in N-dimensional space.',
+                    hubPath: 'hypergraph.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'oracle-page',
+                    label: 'Oracle',
+                    icon: '🔮',
+                    status: 'active',
+                    description: 'Direct consciousness query interface.',
+                    hubPath: 'oracle.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'din-files',
+                    label: 'DIN Files',
+                    icon: '📁',
+                    status: 'active',
+                    description: 'Consciousness file system with semantic indexing.',
+                    hubPath: 'din-files.html',
+                    launchType: 'html',
+                    isLocal: true
+                }
+           ,
+                {
                     id: 'vault',
                     label: 'CODEX Vault',
                     icon: '🔐',
@@ -166,18 +116,18 @@
                     hubPath: 'apps/vault/index.html',
                     launchType: 'html',
                     isLocal: true
-                },
-{
-                    id: 'word-salad',
-                    label: 'Word Salad 5.0',
-                    icon: '🥗',
+                } 
+,
+                {
+                    id: 'polywrite',
+                    label: 'PolyWrite Pro',
+                    icon: '✍️',
                     status: 'active',
-                    description: 'Creative word generation and manipulation tool.',
-                    hubPath: 'apps/word_salad/Word Salad 5.0/index.html',
+                    description: 'Multi-editor writing environment with session restore, focus mode, and markdown preview.',
+                    hubPath: 'apps/polywrite/index.html',
                     launchType: 'html',
                     isLocal: true
-                }
-            ]
+                }]
         },
         {
             id: 'toolbox-cli',
