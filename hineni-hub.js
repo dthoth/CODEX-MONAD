@@ -82,6 +82,16 @@
                     isLocal: true
                 },
 {
+                    id: 'codex-monad',
+                    label: 'Codex Monad Seedline',
+                    icon: '🌱',
+                    status: 'active',
+                    description: 'The foundational entry point to the CODEX-MONAD ecosystem',
+                    hubPath: 'apps/codex_monad/START_HERE.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+{
                     id: 'bureaucratic-universe',
                     label: 'Bureaucratic Universe',
                     icon: '📋',

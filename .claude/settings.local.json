@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(init)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for path in \"apps/polywrite/index.html\" \"apps/pearl/index.html\" \"apps/codex-ark/codex-ark-witness.html\" \"bureaucratic-universe.html\" \"apps/codex_capture/index.html\" \"apps/conflict_lab/index.html\" \"din-files.html\" \"apps/din_portal/index.html\" \"hypergraph.html\" \"oracle.html\" \"apps/pranayama/index.html\" \"apps/royal_game_of_ur/index.html\" \"samson-recursive.html\" \"apps/vault/index.html\" \"apps/word_salad/Word Salad 5.0/index.html\")",
+      "Bash(do if [ -f \"$path\" ])",
+      "Bash(then echo \"✓ $path\")",
+      "Bash(else echo \"✗ MISSING: $path\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

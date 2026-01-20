@@ -75,5 +75,23 @@
         "name":  "CODEX Vault",
         "kind":  "bash",
         "entry":  "index.html"
+    },
+    {
+        "id":  "codex-ark",
+        "name":  "CODEX-ARK Witness",
+        "kind":  "html",
+        "entry":  "codex-ark-witness.html"
+    },
+    {
+        "id":  "pearl",
+        "name":  "Pearl",
+        "kind":  "html",
+        "entry":  "index.html"
+    },
+    {
+        "id":  "word_salad",
+        "name":  "Word Salad Laboratory",
+        "kind":  "html",
+        "entry":  "Word Salad 5.0/index.html"
     }
 ]
