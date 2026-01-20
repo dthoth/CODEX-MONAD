@@ -2,5 +2,9 @@
   "id": "pranayama",
   "name": "Pranayama",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Breathwork practice guide and timer for conscious breathing exercises",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🫁"
 }

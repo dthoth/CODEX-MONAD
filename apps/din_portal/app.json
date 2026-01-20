@@ -2,5 +2,9 @@
   "id": "din_portal",
   "name": "DIN Portal",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Dynamic Intelligent Navigation portal for CODEX ecosystem exploration",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🚪"
 }

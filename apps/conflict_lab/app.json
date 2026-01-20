@@ -1,6 +1,10 @@
-﻿{
+{
   "id": "conflict_lab",
   "name": "Conflict Lab",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Interactive laboratory for exploring and resolving conflicts through structured analysis",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "⚡"
 }

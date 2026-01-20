@@ -2,5 +2,9 @@
   "id": "samson_recursive",
   "name": "Samson's Recursive Homepage",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Self-referential homepage exploring recursive patterns and meta-documentation",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "♾️"
 }

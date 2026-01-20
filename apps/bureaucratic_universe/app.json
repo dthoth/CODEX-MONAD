@@ -2,5 +2,9 @@
   "id": "bureaucratic_universe",
   "name": "Bureaucratic Universe",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Interactive exploration of bureaucratic systems and organizational dynamics",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🏛️"
 }

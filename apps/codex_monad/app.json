@@ -2,5 +2,9 @@
   "id": "codex_monad",
   "name": "Codex Monad Seedline",
   "kind": "html",
-  "entry": "START_HERE.html"
+  "entry": "START_HERE.html",
+  "description": "The foundational entry point to the CODEX-MONAD ecosystem",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🌱"
 }

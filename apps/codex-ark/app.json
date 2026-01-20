@@ -1,0 +1,10 @@
+{
+  "id": "codex-ark",
+  "name": "CODEX-ARK Witness",
+  "kind": "html",
+  "entry": "codex-ark-witness.html",
+  "description": "Visual tamper detection and archival witness system - cryptographic fingerprints you recognize by sight",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🔏"
+}

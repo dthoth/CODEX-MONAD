@@ -1,10 +1,10 @@
-﻿{
-    "id": "vault",
-    "name": "CODEX Vault",
-    "kind": "bash",
-    "entry": "index.html",
-    "description": "Portable symmetric secret store with physical key support",
-    "version": "2.0.0",
-    "author": "Rev. LL Dan-i-El + Claude + Kek",
-    "icon": "🔐"
+{
+  "id": "vault",
+  "name": "CODEX Vault",
+  "kind": "bash",
+  "entry": "index.html",
+  "description": "Portable symmetric secret store with physical key support",
+  "version": "2.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🔐"
 }

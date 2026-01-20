@@ -1,6 +1,10 @@
-﻿{
+{
   "id": "royal_game_of_ur",
   "name": "Royal Game of Ur",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Ancient Mesopotamian board game reimagined for digital play",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🎲"
 }

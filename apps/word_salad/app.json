@@ -1,0 +1,10 @@
+{
+  "id": "word_salad",
+  "name": "Word Salad Laboratory",
+  "kind": "html",
+  "entry": "Word Salad 5.0/index.html",
+  "description": "Advanced text analysis and generation tool for linguistic pattern detection and word chaos experiments",
+  "version": "5.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🥗"
+}

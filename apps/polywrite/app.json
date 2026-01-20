@@ -2,5 +2,9 @@
   "id": "polywrite",
   "name": "PolyWrite Pro",
   "kind": "html",
-  "entry": "index.html"
+  "entry": "index.html",
+  "description": "Multi-dimensional writing environment with advanced composition tools",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "✍️"
 }
