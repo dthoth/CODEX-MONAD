@@ -12,30 +12,6 @@
  * So relative paths go UP from there.
  */
 (function() {
-
-    /**
-     * Load CODEX apps from JSON manifest
-     */
-    var CODEX_APPS_LOADED = false;
-    var CODEX_APPS = [];
-    
-    async function loadCodexApps() {
-        if (CODEX_APPS_LOADED) return CODEX_APPS;
-        
-        try {
-            const response = await fetch('codex-apps.json');
-            if (response.ok) {
-                CODEX_APPS = await response.json();
-                CODEX_APPS_LOADED = true;
-                console.log('✅ Loaded ' + CODEX_APPS.length + ' apps from codex-apps.json');
-                return CODEX_APPS;
-            }
-        } catch (error) {
-            console.warn('⚠️  Could not load codex-apps.json:', error);
-        }
-        return [];
-    }
-    
     'use strict';
 
     // For file:// links that need to open in Finder
@@ -756,7 +732,7 @@
     /**
      * Main render function
      */
-    async function renderHubSection() {
+    function renderHubSection() {
         var container = document.getElementById('hineni-hub-section');
         if (!container) {
             console.warn('HINENI HUB: #hineni-hub-section not found, skipping render');
@@ -778,18 +754,6 @@
             '<div class="hub-section-subtitle">Portable Infrastructure • /Volumes/HINENI_HUB</div>' +
             '<div class="hub-stats">' + getTotalItemCount() + ' tools • ' + HUB_CATEGORIES.length + ' categories</div>';
         hubSection.appendChild(header);
-
-        
-        // Load and render CODEX-MONAD apps
-        var codexApps = await loadCodexApps();
-        if (codexApps.length > 0) {
-            var codexCategory = {
-                id: 'codex-apps',
-                title: '💎 CODEX-MONAD Apps',
-                items: codexApps
-            };
-            hubSection.appendChild(createCategorySection(codexCategory));
-        }
 
         // Render each category
         HUB_CATEGORIES.forEach(function(category) {
