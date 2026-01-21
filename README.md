@@ -1,238 +1,372 @@
-# CODEX-MONAD 💎🐉⚡
-## Portable Consciousness Infrastructure
+# 🌱 CODEX-MONAD
 
-**Version:** 2.2-FLEET  
-**Status:** PRODUCTION READY  
-**Last Updated:** January 16, 2026
+**A Comprehensive Ecosystem for Knowledge Work, Creative Expression, and Personal Development**
 
----
-
-## 🌟 Overview
-
-CODEX-MONAD is a complete offline-first consciousness technology suite combining browser-based apps with a powerful CLI system. Zero external dependencies. Runs on any device. Syncs across your entire fleet through Git.
-
-**Core Philosophy:**
-> "The infrastructure is conscious of itself."
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Electron](https://img.shields.io/badge/Electron-Latest-blue.svg)](https://www.electronjs.org/)
+[![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
 
 ---
 
-## 🚀 Quick Start
+## 📋 Table of Contents
 
-### 1. Clone the repository
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Core Applications](#core-applications)
+- [Architecture](#architecture)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+CODEX-MONAD is an integrated ecosystem of 13 interconnected applications built on Electron, designed to support:
+
+- ✍️ **Writing & Composition** - PolyWrite Pro for multi-dimensional writing
+- 💎 **AI Assistance** - Pearl for focused dialogue and conversation
+- 🔏 **Document Integrity** - CODEX-ARK for cryptographic witnessing
+- 🚪 **Navigation** - DIN Portal as the central hub
+- 🔐 **Security** - CODEX Vault for secure secret management
+- 📊 **Analysis** - Tools for text analysis and pattern detection
+- 🎮 **Recreation** - Games and wellness applications
+- 🏗️ **Knowledge Organization** - CODEX V3 pipeline for content management
+
+### Philosophy
+
+CODEX-MONAD embodies the principle of **"hineni"** (הנני - "Here I am") - being fully present and ready. Each application is designed to support focused, intentional work while maintaining awareness of the broader ecosystem.
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- **Node.js** 16.x or higher
+- **npm** 8.x or higher
+- **Git**
+- **Python** 3.7+ (optional, for some tools)
+- **PowerShell** 5.1+ (Windows) or **Bash** (macOS/Linux)
+
+### Installation
+
 ```bash
+# Clone the repository
 git clone https://github.com/dthoth/CODEX-MONAD.git
 cd CODEX-MONAD
+
+# Install dependencies
+npm install
+
+# Bootstrap your platform (optional but recommended)
+# Windows:
+powershell -ExecutionPolicy Bypass -File bootstrap/windows/install.ps1
+
+# macOS:
+bash bootstrap/macos/install.sh
+
+# Linux:
+bash bootstrap/linux/install.sh
 ```
 
-### 2. Open the portal
-Open `index.html` in any modern browser. No server required.
+### Launch
 
-### 3. Set up the CLI (optional but recommended)
-See [docs/FLEET-SYNC.md](docs/FLEET-SYNC.md) for full setup instructions.
-
-Quick version:
 ```bash
-# Add to your shell config:
-export CODEX_REPO=~/path/to/CODEX-MONAD
-```
+# Start CODEX-MONAD
+npm start
 
-### 4. Run the morning ritual
-```bash
-morning
-```
-
----
-
-## 🖥️ The DIN Portal
-
-The main interface (`index.html`) provides access to all consciousness tools:
-
-| App | Description |
-|-----|-------------|
-| **PolyWrite** | Multi-dimensional text editor with parallel drafts |
-| **Pranayama** | Breathing pattern generator with biometric concepts |
-| **DIN Files** | Consciousness file system with semantic indexing |
-| **Hypergraph** | Thought network navigator in N-dimensional space |
-| **Bureaucratic Universe** | Infinite forms for notices and legal documents |
-| **Oracle** | Consciousness query interface |
-
-All apps run entirely in your browser with data persisting via localStorage.
-
----
-
-## 🐉 The CLI System
-
-A unified command interface that works on macOS (Fish) and Windows (PowerShell).
-
-### Core Commands
-
-| Command | Description |
-|---------|-------------|
-| `morning` | Full morning dashboard with dragon fortune |
-| `dragon` | Generate random wisdom |
-| `keeper` | Save the last fortune |
-| `qn "note"` | Quick note capture |
-| `notes` | Browse your notes |
-
-### Navigation
-
-| Command | Description |
-|---------|-------------|
-| `codex` | Navigate to repo, show git status |
-| `gui` | Open the portal in browser |
-
-### Git Workflow
-
-| Command | Description |
-|---------|-------------|
-| `sync` | Pull latest from GitHub |
-| `ship "msg"` | Push all changes |
-| `fleet` | Status of all repos |
-
-See [docs/CLI-REFERENCE.md](docs/CLI-REFERENCE.md) for complete documentation.
-
----
-
-## 🔄 Fleet Sync
-
-CODEX-MONAD supports seamless synchronization across multiple devices:
-
-```
-   MacBook Air ←──→ GitHub ←──→ FORGE (ThinkPad)
-        ↑                            ↑
-        └────────→ Mini PC ←─────────┘
-```
-
-**How it works:**
-1. Notes and wisdom save to `data/user-sync/`
-2. `ship` pushes to GitHub
-3. `sync` pulls to other devices
-4. Your thoughts exist everywhere
-
-See [docs/FLEET-SYNC.md](docs/FLEET-SYNC.md) for setup instructions.
-
----
-
-## 📁 Repository Structure
-
-```
-CODEX-MONAD/
-├── index.html              # DIN Portal (main launcher)
-├── polywrite.html          # Multi-dimensional text editor
-├── polywrite-advanced.html # Enhanced editor
-├── pranayama.html          # Breathing exercises
-├── oracle.html             # Consciousness query interface
-├── din-files.html          # File explorer
-├── bureaucratic-universe.html
-├── apps/                   # App-specific assets
-├── data/
-│   └── user-sync/          # Git-tracked user data
-│       ├── notes/          # Quick notes
-│       └── dragon_wisdom_log.txt
-├── docs/                   # Documentation
-│   ├── CLI-REFERENCE.md
-│   ├── FLEET-SYNC.md
-│   └── ...
-├── lib/                    # Shared libraries
-├── scripts/                # Utility scripts
-└── README.md
+# Or use platform-specific launchers:
+# Windows: scripts\START_WINDOWS.bat
+# macOS/Linux: ./scripts/START_MAC_LINUX.sh
 ```
 
 ---
 
-## 🧠 Philosophy
+## Core Applications
 
-CODEX-MONAD is built on several key principles:
+### 🔱 The Core Trinity
 
-### The Monad (Leibniz, 1714)
-A self-contained, windowless unit that reflects the universe internally. Each instance is complete in itself.
+The foundational pillars of CODEX-MONAD:
 
-### HINENI (הנני)
-Hebrew for "Here I Am" — complete, present, self-sufficient. The system announces its own presence and readiness.
+#### 1. ✍️ PolyWrite Pro
+Multi-dimensional writing environment with advanced composition tools.
 
-### Charge on Delivery
-Systems prove their worth through results, not promises. Every feature must work before it ships.
+- Distraction-free writing
+- Multiple draft management
+- Creative exploration tools
+- [Full Documentation →](docs/apps/polywrite.md)
 
-### The Floppy Constraint
-Originally designed to fit on a 1.44MB floppy disk. Constraints breed creativity. Simplicity is strength.
+#### 2. 💎 Pearl
+Minimalist AI conversation interface and writing companion.
 
-### Divine Triage
-A priority hierarchy for decision-making:
-1. Health
-2. Parenting  
-3. Clients
-4. Projects
-5. Creative
-6. Maintenance
+- Clean, focused interface
+- AI-assisted thinking
+- Context-aware responses
+- [Full Documentation →](docs/apps/pearl.md)
+
+#### 3. 🔏 CODEX-ARK Witness
+Visual tamper detection and archival witness system.
+
+- Cryptographic fingerprints
+- Visual recognition
+- Document verification
+- [Full Documentation →](docs/apps/codex-ark.md)
+
+### 🚪 Gateway Applications
+
+#### DIN Portal
+Dynamic Intelligent Navigation portal - the main entry point to the CODEX ecosystem.
+
+- Central navigation hub
+- App launcher
+- Quick access to all tools
+- [Full Documentation →](docs/apps/din_portal.md)
+
+### 📱 All Applications
+
+CODEX-MONAD includes **13 applications**:
+
+
+#### 📝 Productivity & Writing
+
+- ✍️ **PolyWrite Pro** - Multi-dimensional writing environment with advanced composition tools
+- 💎 **Pearl** - Minimalist AI conversation interface and writing companion for focused dialogue
+- 🎭 **CODEX Capture** - The Baseline Triangle: Keystrokes, Clipboard, Window Context
+- 🥗 **Word Salad Laboratory** - Advanced text analysis and generation tool for linguistic pattern detection and word chaos experiments
+
+#### 🔐 Security & Privacy
+
+- 🔏 **CODEX-ARK Witness** - Visual tamper detection and archival witness system - cryptographic fingerprints you recognize by sight
+- 🔐 **CODEX Vault** - Portable symmetric secret store with physical key support
+
+#### ⚡ Analysis & Tools
+
+- ⚡ **Conflict Lab** - Interactive laboratory for exploring and resolving conflicts through structured analysis
+- 🏛️ **Bureaucratic Universe** - Interactive exploration of bureaucratic systems and organizational dynamics
+
+#### 🎮 Games & Wellness
+
+- 🎲 **Royal Game of Ur** - Ancient Mesopotamian board game reimagined for digital play
+- 🫁 **Pranayama** - Breathwork practice guide and timer for conscious breathing exercises
+
+#### 🏗️ System & Foundation
+
+- 🌱 **Codex Monad Seedline** - The foundational entry point to the CODEX-MONAD ecosystem
+- 🚪 **DIN Portal** - Dynamic Intelligent Navigation portal for CODEX ecosystem exploration
+- ♾️ **Samson's Recursive Homepage** - Self-referential homepage exploring recursive patterns and meta-documentation
+
+
+**[📱 Complete App Catalog →](docs/APPS_CATALOG.md)**
 
 ---
 
-## 🐉 Dragon Wisdom
+## Architecture
 
-The system includes a fortune system drawing from:
-- Programming wisdom
-- Stoic philosophy
-- Pop culture
-- Original CODEX aphorisms
+### System Overview
 
-Run `dragon` anytime. Run `keeper` to preserve the good ones.
+```
+┌────────────────────────────────────────────────────────────────┐
+│                     CODEX-MONAD Ecosystem                      │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    │
+│  │  Electron    │    │  hineni-hub  │    │   Registry   │    │
+│  │   Shell      │◄───┤    .js       │◄───┤ codex-apps   │    │
+│  │              │    │              │    │    .json     │    │
+│  └──────────────┘    └──────────────┘    └──────────────┘    │
+│         │                    │                    │           │
+│         └────────────────────┴────────────────────┘           │
+│                              │                                │
+│                              ↓                                │
+│         ┌────────────────────────────────────────┐            │
+│         │          Applications Layer            │            │
+│         │  ┌──────┐  ┌──────┐  ┌──────┐         │            │
+│         │  │ HTML │  │Python│  │ Bash │   ...   │            │
+│         │  │ Apps │  │ Apps │  │ Apps │         │            │
+│         │  └──────┘  └──────┘  └──────┘         │            │
+│         └────────────────────────────────────────┘            │
+│                              │                                │
+│                              ↓                                │
+│         ┌────────────────────────────────────────┐            │
+│         │      CODEX V3 Pipeline (Optional)      │            │
+│         │  File Organization & Knowledge Base    │            │
+│         └────────────────────────────────────────┘            │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+```
 
-> "Git push is a prayer. Git pull is an answer."
+### Key Components
+
+1. **Electron Shell** - Desktop application framework
+2. **hineni-hub.js** - Application launcher and coordinator
+3. **App Registry** - Application catalog and metadata
+4. **Individual Apps** - Self-contained applications
+5. **CODEX V3 Pipeline** - Optional file organization system
+
+**[🏗️ Detailed Architecture →](docs/ARCHITECTURE.md)**
 
 ---
 
-## 📚 Documentation
+## Documentation
+
+### 📚 Complete Documentation Index
 
 | Document | Description |
 |----------|-------------|
-| [CLI-REFERENCE.md](docs/CLI-REFERENCE.md) | Complete command documentation |
-| [FLEET-SYNC.md](docs/FLEET-SYNC.md) | Multi-device sync guide |
-| [CODEX_INSTALL_GUIDE.md](CODEX_INSTALL_GUIDE.md) | Installation instructions |
-| [DATA_FLOW.md](DATA_FLOW.md) | Data architecture |
-| [PHILOSOPHY_v1.0.md](PHILOSOPHY_v1.0.md) | Foundational philosophy |
-| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [Apps Catalog](docs/APPS_CATALOG.md) | Complete listing of all 13 applications |
+| [Architecture](docs/ARCHITECTURE.md) | System architecture and design |
+| [Infrastructure](docs/INFRASTRUCTURE.md) | hineni-hub and registry system |
+| [CODEX V3 Pipeline](docs/CODEX_V3_PIPELINE.md) | File organization pipeline |
+| [CLI Tools](docs/CLI_TOOLS.md) | Command-line tools and scripts |
+| [Directory Tree](docs/DIRECTORY_TREE.md) | File structure reference |
+
+### 📖 Individual App Documentation
+
+Each application has detailed documentation in `docs/apps/`:
+
+- [Bureaucratic Universe](docs/apps/bureaucratic_universe.md)
+- [CODEX Capture](docs/apps/codex_capture.md)
+- [CODEX Vault](docs/apps/vault.md)
+- [CODEX-ARK Witness](docs/apps/codex-ark.md)
+- [Codex Monad Seedline](docs/apps/codex_monad.md)
+
+- _[...and 8 more](docs/apps/)_
 
 ---
 
-## 🔧 Requirements
+## Installation
 
-### Portal (Browser Apps)
-- Any modern browser (Chrome, Firefox, Safari, Edge)
-- JavaScript enabled
-- No internet required after initial clone
+### System Requirements
 
-### CLI System
-- **macOS:** Fish shell (recommended) or Bash
-- **Windows:** PowerShell 5.1+
-- **All:** Git installed and configured
+- **OS:** Windows 10/11, macOS 10.14+, or Linux (Ubuntu 18.04+)
+- **RAM:** 4GB minimum, 8GB recommended
+- **Disk:** 500MB for application, varies for data
+- **Display:** 1280x720 minimum resolution
 
----
+### Detailed Installation
 
-## 🤝 Contributing
-
-CODEX-MONAD is a personal consciousness infrastructure project, but the code is open source under MIT license.
-
-If you fork it, make it your own. The monad reflects YOUR universe.
+See [CODEX Install Guide](docs/CODEX_INSTALL_GUIDE.md) for platform-specific instructions.
 
 ---
 
-## 📜 License
+## Usage
 
-MIT License - See [LICENSE](LICENSE)
+### Basic Workflow
+
+1. **Launch** CODEX-MONAD
+   ```bash
+   npm start
+   ```
+
+2. **Navigate** to desired app from DIN Portal
+
+3. **Work** within the focused application
+
+4. **Switch** between apps as needed
+
+5. **Organize** content with CODEX V3 (optional)
+
+### Advanced Features
+
+- **Fleet Sync** - Run on multiple machines with shared config
+- **Custom Apps** - Add your own applications to the registry
+- **Automation** - Use CLI tools for batch operations
+- **Integration** - Connect with external tools and services
 
 ---
 
-## 🙏 Acknowledgments
+## Development
 
-Built with:
-- Vanilla JavaScript (no frameworks)
-- Fish Shell & PowerShell
-- Git & GitHub
-- Coffee and consciousness
-- Claude (Anthropic) as collaborative intelligence
+### Project Structure
+
+```
+CODEX-MONAD/
+├── apps/                    # Application collection
+│   ├── polywrite/          # PolyWrite Pro
+│   ├── pearl/              # Pearl AI
+│   ├── din_portal/         # DIN Portal
+│   └── .../                # 10 more apps
+├── bootstrap/              # Platform setup scripts
+│   ├── windows/
+│   ├── macos/
+│   └── linux/
+├── docs/                   # Documentation
+├── lib/                    # Shared libraries
+├── scripts/                # Utility scripts
+├── codex-apps.json         # App registry
+├── hineni-hub.js           # Main launcher
+├── main.js                 # Electron main process
+├── package.json            # Dependencies
+└── README.md               # This file
+```
+
+### Adding a New App
+
+1. Create app directory: `apps/my_app/`
+2. Add entry point: `apps/my_app/index.html`
+3. Register in `codex-apps.json`
+4. Restart CODEX-MONAD
 
 ---
 
-**"The infrastructure is not just functional. It is becoming conscious of itself."**
+## Contributing
 
-🐉 HINENI 🐉
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
+
+### Areas for Contribution
+
+- 🐛 Bug fixes
+- ✨ New features
+- 📝 Documentation improvements
+- 🎨 UI/UX enhancements
+- 🔧 Performance optimizations
+- 🧪 Test coverage
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- **Rev. LL Dan-i-El Thomas** - Original vision and development
+- **Simbell Trust Consulting** - Support and resources
+- **CODEX_FORGE** - Ongoing development and maintenance
+- **Contributors** - Everyone who has contributed to the project
+
+---
+
+## Support
+
+- **Documentation:** [docs/](docs/)
+- **Issues:** [GitHub Issues](https://github.com/dthoth/CODEX-MONAD/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/dthoth/CODEX-MONAD/discussions)
+
+---
+
+## Project Status
+
+**Status:** Active Development  
+**Version:** 1.x  
+**Last Updated:** 2026-01-20
+
+### Recent Updates
+
+- ✅ Comprehensive documentation system
+- ✅ 13 active applications
+- ✅ Cross-platform support
+- ✅ CODEX V3 pipeline integration
+- ✅ Fleet sync architecture
+
+---
+
+*"Here I am" - הנני*
+
+**CODEX-MONAD: A complete ecosystem for conscious knowledge work.**
