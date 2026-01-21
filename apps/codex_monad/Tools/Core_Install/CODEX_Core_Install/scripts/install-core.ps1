@@ -19,7 +19,7 @@ foreach($d in $dirs){ New-Item -ItemType Directory -Path $d -ErrorAction Silentl
 if ($CreateVenv) {
   try {
     & $Py -m venv "$Root\.venv"
-    "$Root\.venv\Scripts\python.exe" -m pip install --upgrade pip > "$Root\logs\pip_upgrade.log" 2>&1
+    & "$Root\.venv\Scripts\python.exe" -m pip install --upgrade pip > "$Root\logs\pip_upgrade.log" 2>&1
   } catch {
     Write-Host "Venv creation failed: $($_.Exception.Message)"
   }
