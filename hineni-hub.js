@@ -1,15 +1,18 @@
 /**
- * HINENI HUB - Portal Integration v2.3
+ * HINENI HUB - Portal Integration v2.4
  * Renders the hub inventory as categorized cards inside the DIN Portal
- * 
- * Mount point: /Volumes/HINENI_HUB
+ *
+ * Mount point: /Volumes/HINENI_HUB (macOS) - Windows shows local apps only
  * This script injects into #hineni-hub-section
- * 
- * Updated: 2025-12-14 - COMPLETE tool inventory + relative paths for HTML apps
- * 
- * IMPORTANT: This portal lives at:
- *   /Volumes/HINENI_HUB/10-repos-central/CODEX-MONAD/index.html
- * So relative paths go UP from there.
+ *
+ * Updated: 2026-01-20 - Cross-platform support (Windows/macOS/Linux)
+ *
+ * PLATFORM BEHAVIOR:
+ *   macOS:   Full hub access when HINENI_HUB mounted
+ *   Windows: Local CODEX-MONAD apps only (hub items show as "Hub Only")
+ *   Linux:   Same as Windows (hub items unavailable)
+ *
+ * Local apps (isLocal: true) work on ALL platforms.
  */
 (function() {
 
@@ -38,12 +41,31 @@
     
     'use strict';
 
-    // For file:// links that need to open in Finder
-    var HUB_ROOT = '/Volumes/HINENI_HUB';
-    
+    // ═══════════════════════════════════════════════════════════════════
+    // PLATFORM DETECTION
+    // ═══════════════════════════════════════════════════════════════════
+    var PLATFORM = (function() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf('win') !== -1) return 'windows';
+        if (ua.indexOf('mac') !== -1) return 'macos';
+        if (ua.indexOf('linux') !== -1) return 'linux';
+        return 'unknown';
+    })();
+
+    var IS_WINDOWS = PLATFORM === 'windows';
+    var IS_MACOS = PLATFORM === 'macos';
+
+    // For file:// links that need to open in Finder/Explorer
+    // On macOS: /Volumes/HINENI_HUB
+    // On Windows: External hub not typically mounted, so null
+    var HUB_ROOT = IS_MACOS ? '/Volumes/HINENI_HUB' : null;
+
     // For relative links (portal is at 10-repos-central/CODEX-MONAD/)
-    // So ../../ gets us to HINENI_HUB root
+    // So ../../ gets us to HINENI_HUB root (only relevant when hub is mounted)
     var RELATIVE_ROOT = '../..';
+
+    // Hub availability - external items only work when hub is mounted
+    var HUB_AVAILABLE = IS_MACOS; // TODO: Could check if actually mounted
 
     // Hub items organized by category - ALL REAL TOOLS
     var HUB_CATEGORIES = [
@@ -643,23 +665,41 @@
     ];
 
     /**
-     * Build the href for an item based on its type
+     * Build the href for an item based on its type and platform
      */
     function buildHref(item) {
         if (!item.hubPath) return null;
-        
+
         // HTML apps that are LOCAL to CODEX-MONAD use direct relative paths
+        // These work on ALL platforms
         if (item.launchType === 'html' && item.isLocal) {
             return item.hubPath;
         }
-        
+
+        // Non-local items require the hub to be available
+        if (!HUB_AVAILABLE) {
+            return null; // Will show as unavailable
+        }
+
         // HTML apps elsewhere in the hub use relative from portal
         if (item.launchType === 'html') {
             return RELATIVE_ROOT + '/' + item.hubPath;
         }
-        
+
         // Everything else (folders, files, CLI) uses file:// for Finder
         return 'file://' + HUB_ROOT + '/' + item.hubPath;
+    }
+
+    /**
+     * Check if an item is available on the current platform
+     */
+    function isItemAvailable(item) {
+        // Local HTML apps always available
+        if (item.launchType === 'html' && item.isLocal) {
+            return true;
+        }
+        // Everything else requires hub
+        return HUB_AVAILABLE;
     }
 
     /**
@@ -671,11 +711,17 @@
         card.dataset.hubId = item.id;
         card.dataset.launchType = item.launchType || 'folder';
 
+        var available = isItemAvailable(item);
+        var href = buildHref(item);
+
+        // Add unavailable class for styling
+        if (!available) {
+            card.className += ' hub-unavailable';
+        }
+
         var statusClass = (item.status || '').toLowerCase() === 'transcendent'
             ? 'status transcendent'
             : 'status active';
-
-        var href = buildHref(item);
 
         var statusHtml = item.status
             ? '<span class="' + statusClass + '">' + item.status.toUpperCase() + '</span>'
@@ -685,7 +731,7 @@
         var buttonIcon = '📂';
         var buttonText = 'Open';
         var buttonClass = 'app-link hub-link';
-        
+
         switch(item.launchType) {
             case 'html':
                 buttonIcon = '🚀';
@@ -708,14 +754,18 @@
 
         // Build link HTML
         var linkHtml = '';
-        if (href) {
+        if (href && available) {
             if (item.launchType === 'html') {
                 // HTML apps open in browser
                 linkHtml = '<a href="' + href + '" class="' + buttonClass + '">' + buttonIcon + ' ' + buttonText + '</a>';
             } else {
-                // Everything else shows path and opens in Finder
-                linkHtml = '<a href="' + href + '" class="' + buttonClass + '" title="Open in Finder">' + buttonIcon + ' ' + buttonText + '</a>';
+                // Everything else shows path and opens in Finder/Explorer
+                var openIn = IS_MACOS ? 'Finder' : 'Explorer';
+                linkHtml = '<a href="' + href + '" class="' + buttonClass + '" title="Open in ' + openIn + '">' + buttonIcon + ' ' + buttonText + '</a>';
             }
+        } else if (!available) {
+            // Show unavailable state
+            linkHtml = '<span class="app-link hub-link unavailable" title="Requires HINENI_HUB mount (macOS)">🔒 Hub Only</span>';
         }
 
         // Add command hint for CLI tools
@@ -723,7 +773,7 @@
             linkHtml += '<code class="cli-hint">$ ' + item.command + '</code>';
         }
 
-        card.innerHTML = 
+        card.innerHTML =
             '<div class="card-header">' +
                 '<span class="card-icon">' + (item.icon || '📦') + '</span>' +
                 '<h2 class="card-title">' + item.label + '</h2>' +
@@ -835,8 +885,10 @@
         categories: HUB_CATEGORIES,
         root: HUB_ROOT,
         relativeRoot: RELATIVE_ROOT,
+        platform: PLATFORM,
+        hubAvailable: HUB_AVAILABLE,
         refresh: renderHubSection,
-        version: '2.3'
+        version: '2.4'
     };
 
 })();

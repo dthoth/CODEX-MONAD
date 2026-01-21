@@ -121,3 +121,33 @@
     color: #888;
     font-size: 0.95em;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CROSS-PLATFORM UNAVAILABLE STATE
+   Items that require HINENI_HUB mount (not available on Windows/Linux)
+   ═══════════════════════════════════════════════════════════════════ */
+
+.hub-unavailable {
+    opacity: 0.5;
+    filter: grayscale(50%);
+}
+
+.hub-unavailable:hover {
+    opacity: 0.7;
+}
+
+.hub-unavailable .card-icon {
+    filter: grayscale(100%);
+}
+
+.app-link.unavailable {
+    background: rgba(128, 128, 128, 0.2) !important;
+    border-color: rgba(128, 128, 128, 0.3) !important;
+    color: #888 !important;
+    cursor: not-allowed;
+}
+
+.app-link.unavailable:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
