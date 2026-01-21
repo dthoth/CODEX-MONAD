@@ -9,7 +9,8 @@
       "Bash(then echo \"✓ $path\")",
       "Bash(else echo \"✗ MISSING: $path\")",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
