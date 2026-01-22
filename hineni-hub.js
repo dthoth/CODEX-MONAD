@@ -124,6 +124,16 @@
                     isLocal: true
                 },
 {
+                    id: 'codex-media-player',
+                    label: 'CODEX Media Player',
+                    icon: '🎬',
+                    status: 'active',
+                    description: 'Universal multimedia interface - documents, images, audio, video (VLC-style viewer)',
+                    hubPath: 'codex-media-player.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+{
                     id: 'codex-capture',
                     label: 'Codex Capture',
                     icon: '📸',

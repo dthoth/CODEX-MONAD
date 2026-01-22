@@ -1,0 +1,12 @@
+{
+  "id": "codex_media_player",
+  "label": "CODEX Media Player",
+  "icon": "🎬",
+  "status": "active",
+  "description": "Universal multimedia interface - documents, images, audio, video (VLC-style viewer)",
+  "hubPath": "codex-media-player.html",
+  "isLocal": true,
+  "launchType": "html",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting"
+}

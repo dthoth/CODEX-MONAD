@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODEX Media Player | Universal Multimedia Interface</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body, #root { height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+
+// CODEX-MONAD Universal Media Player
+// A VLC-inspired multimedia interface for the portable consciousness infrastructure
+// Handles: Documents (txt, md, pdf), Images (png, jpg, gif, svg, webp), Audio (mp3, wav, ogg), Video (mp4, webm)
+
+const CodexMediaPlayer = () => {
+  const [currentFile, setCurrentFile] = useState(null);
+  const [fileType, setFileType] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.7);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [playlist, setPlaylist] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showPlaylist, setShowPlaylist] = useState(true);
+  const [documentContent, setDocumentContent] = useState('');
+  const [imageScale, setImageScale] = useState(1);
+  const [showControls, setShowControls] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [loopMode, setLoopMode] = useState('none'); // none, one, all
+  const [shuffleMode, setShuffleMode] = useState(false);
+  const [equalizerVisible, setEqualizerVisible] = useState(false);
+  const [consoleOutput, setConsoleOutput] = useState([]);
+
+  const mediaRef = useRef(null);
+  const containerRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const controlsTimeoutRef = useRef(null);
+
+  // Console logging for CODEX integration
+  const logToConsole = useCallback((message, type = 'info') => {
+    const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+    setConsoleOutput(prev => [...prev.slice(-50), { timestamp, message, type }]);
+  }, []);
+
+  // Determine file type from extension
+  const getFileType = (filename) => {
+    const ext = filename.split('.').pop().toLowerCase();
+    const types = {
+      document: ['txt', 'md', 'json', 'xml', 'html', 'css', 'js', 'py', 'sh', 'log'],
+      image: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'bmp', 'ico'],
+      audio: ['mp3', 'wav', 'ogg', 'flac', 'm4a', 'aac', 'wma'],
+      video: ['mp4', 'webm', 'mkv', 'avi', 'mov', 'wmv', 'flv']
+    };
+    for (const [type, exts] of Object.entries(types)) {
+      if (exts.includes(ext)) return type;
+    }
+    return 'document'; // default to document for unknown types
+  };
+
+  // Handle file selection
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    const newPlaylist = files.map(file => ({
+      name: file.name,
+      type: getFileType(file.name),
+      file: file,
+      url: URL.createObjectURL(file),
+      size: file.size,
+      lastModified: new Date(file.lastModified).toLocaleString()
+    }));
+
+    setPlaylist(prev => [...prev, ...newPlaylist]);
+    logToConsole(`Added ${files.length} file(s) to playlist`, 'success');
+
+    if (!currentFile) {
+      loadFile(newPlaylist[0], playlist.length);
+    }
+  };
+
+  // Load a file for viewing/playing
+  const loadFile = async (item, index) => {
+    setCurrentFile(item);
+    setCurrentIndex(index);
+    setFileType(item.type);
+    setCurrentTime(0);
+    setIsPlaying(false);
+    logToConsole(`Loading: ${item.name} [${item.type}]`, 'info');
+
+    if (item.type === 'document') {
+      try {
+        const text = await item.file.text();
+        setDocumentContent(text);
+        logToConsole(`Document loaded: ${text.length} characters`, 'success');
+      } catch (err) {
+        logToConsole(`Error reading document: ${err.message}`, 'error');
+      }
+    } else if (item.type === 'image') {
+      setImageScale(1);
+    }
+  };
+
+  // Media controls
+  const togglePlay = () => {
+    if (!mediaRef.current) return;
+    if (isPlaying) {
+      mediaRef.current.pause();
+    } else {
+      mediaRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleTimeUpdate = () => {
+    if (mediaRef.current) {
+      setCurrentTime(mediaRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (mediaRef.current) {
+      setDuration(mediaRef.current.duration);
+      logToConsole(`Duration: ${formatTime(mediaRef.current.duration)}`, 'info');
+    }
+  };
+
+  const handleSeek = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    const newTime = percent * duration;
+    if (mediaRef.current) {
+      mediaRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const handleVolumeChange = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    const newVolume = Math.max(0, Math.min(1, percent));
+    setVolume(newVolume);
+    if (mediaRef.current) {
+      mediaRef.current.volume = newVolume;
+    }
+    setIsMuted(newVolume === 0);
+  };
+
+  const toggleMute = () => {
+    if (mediaRef.current) {
+      mediaRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const handleEnded = () => {
+    if (loopMode === 'one') {
+      mediaRef.current.currentTime = 0;
+      mediaRef.current.play();
+    } else if (loopMode === 'all' || currentIndex < playlist.length - 1) {
+      playNext();
+    } else {
+      setIsPlaying(false);
+    }
+  };
+
+  const playNext = () => {
+    if (playlist.length === 0) return;
+    let nextIndex;
+    if (shuffleMode) {
+      nextIndex = Math.floor(Math.random() * playlist.length);
+    } else {
+      nextIndex = (currentIndex + 1) % playlist.length;
+    }
+    loadFile(playlist[nextIndex], nextIndex);
+    if (playlist[nextIndex].type === 'audio' || playlist[nextIndex].type === 'video') {
+      setTimeout(() => {
+        if (mediaRef.current) {
+          mediaRef.current.play();
+          setIsPlaying(true);
+        }
+      }, 100);
+    }
+  };
+
+  const playPrevious = () => {
+    if (playlist.length === 0) return;
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : playlist.length - 1;
+    loadFile(playlist[prevIndex], prevIndex);
+  };
+
+  const removeFromPlaylist = (index) => {
+    const newPlaylist = playlist.filter((_, i) => i !== index);
+    setPlaylist(newPlaylist);
+    if (index === currentIndex) {
+      if (newPlaylist.length > 0) {
+        loadFile(newPlaylist[Math.min(index, newPlaylist.length - 1)], Math.min(index, newPlaylist.length - 1));
+      } else {
+        setCurrentFile(null);
+        setFileType(null);
+      }
+    } else if (index < currentIndex) {
+      setCurrentIndex(currentIndex - 1);
+    }
+    logToConsole(`Removed item from playlist`, 'info');
+  };
+
+  const clearPlaylist = () => {
+    setPlaylist([]);
+    setCurrentFile(null);
+    setFileType(null);
+    setCurrentIndex(0);
+    logToConsole('Playlist cleared', 'info');
+  };
+
+  // Fullscreen toggle
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
+  // Image zoom controls
+  const zoomIn = () => setImageScale(prev => Math.min(prev * 1.2, 5));
+  const zoomOut = () => setImageScale(prev => Math.max(prev / 1.2, 0.1));
+  const resetZoom = () => setImageScale(1);
+
+  // Format time display
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return '00:00';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) {
+      return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  // Format file size
+  const formatSize = (bytes) => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
+  // Drag and drop handling
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      const event = { target: { files } };
+      handleFileSelect(event);
+    }
+  };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      switch (e.key.toLowerCase()) {
+        case ' ':
+          e.preventDefault();
+          if (fileType === 'audio' || fileType === 'video') togglePlay();
+          break;
+        case 'arrowleft':
+          if (mediaRef.current) mediaRef.current.currentTime -= 5;
+          break;
+        case 'arrowright':
+          if (mediaRef.current) mediaRef.current.currentTime += 5;
+          break;
+        case 'arrowup':
+          setVolume(prev => Math.min(1, prev + 0.1));
+          break;
+        case 'arrowdown':
+          setVolume(prev => Math.max(0, prev - 0.1));
+          break;
+        case 'm':
+          toggleMute();
+          break;
+        case 'f':
+          toggleFullscreen();
+          break;
+        case 'n':
+          playNext();
+          break;
+        case 'p':
+          playPrevious();
+          break;
+        case 'l':
+          setLoopMode(prev => prev === 'none' ? 'one' : prev === 'one' ? 'all' : 'none');
+          break;
+        case 's':
+          setShuffleMode(prev => !prev);
+          break;
+        case '+':
+        case '=':
+          if (fileType === 'image') zoomIn();
+          break;
+        case '-':
+          if (fileType === 'image') zoomOut();
+          break;
+        case '0':
+          if (fileType === 'image') resetZoom();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [fileType, isPlaying, isMuted]);
+
+  // Update volume on media element
+  useEffect(() => {
+    if (mediaRef.current) {
+      mediaRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  // Auto-hide controls
+  useEffect(() => {
+    if (isFullscreen && (fileType === 'video' || fileType === 'image')) {
+      const hideControls = () => {
+        controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
+      };
+
+      const showControlsHandler = () => {
+        setShowControls(true);
+        clearTimeout(controlsTimeoutRef.current);
+        hideControls();
+      };
+
+      window.addEventListener('mousemove', showControlsHandler);
+      hideControls();
+
+      return () => {
+        window.removeEventListener('mousemove', showControlsHandler);
+        clearTimeout(controlsTimeoutRef.current);
+      };
+    } else {
+      setShowControls(true);
+    }
+  }, [isFullscreen, fileType]);
+
+  // Type icons
+  const TypeIcon = ({ type }) => {
+    const icons = {
+      document: '\u{1F4C4}',
+      image: '\u{1F5BC}\uFE0F',
+      audio: '\u{1F3B5}',
+      video: '\u{1F3AC}'
+    };
+    return <span>{icons[type] || '\u{1F4C1}'}</span>;
+  };
+
+  // Equalizer visualization (decorative)
+  const Equalizer = () => (
+    <div className="equalizer">
+      {[...Array(16)].map((_, i) => (
+        <div
+          key={i}
+          className="eq-bar"
+          style={{
+            animationDelay: `${i * 0.05}s`,
+            height: isPlaying ? `${20 + Math.random() * 60}%` : '20%'
+          }}
+        />
+      ))}
+    </div>
+  );
+
+  return (
+    <>
+      <style>{`
+        .codex-player {
+          --cone-orange: #ff6611;
+          --cone-orange-dark: #cc5500;
+          --cone-orange-glow: rgba(255, 102, 17, 0.4);
+          --bg-primary: #0a0a0f;
+          --bg-secondary: #12121a;
+          --bg-tertiary: #1a1a25;
+          --bg-elevated: #22222f;
+          --text-primary: #e8e8f0;
+          --text-secondary: #8888a0;
+          --text-muted: #555566;
+          --border-color: #2a2a3a;
+          --success: #44dd88;
+          --warning: #ffaa33;
+          --error: #ff4455;
+
+          font-family: 'JetBrains Mono', monospace;
+          background: var(--bg-primary);
+          color: var(--text-primary);
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+          background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+          border-bottom: 1px solid var(--border-color);
+          padding: 12px 20px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          position: relative;
+          z-index: 100;
+        }
+
+        .logo {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .logo-cone {
+          width: 36px;
+          height: 36px;
+          position: relative;
+        }
+
+        .logo-cone::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 18px solid transparent;
+          border-right: 18px solid transparent;
+          border-bottom: 32px solid var(--cone-orange);
+          filter: drop-shadow(0 0 8px var(--cone-orange-glow));
+        }
+
+        .logo-cone::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 24px;
+          height: 4px;
+          background: var(--cone-orange-dark);
+          border-radius: 2px;
+        }
+
+        .logo-text {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          background: linear-gradient(135deg, var(--cone-orange) 0%, #ffaa44 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .header-actions {
+          margin-left: auto;
+          display: flex;
+          gap: 8px;
+        }
+
+        .btn {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-family: inherit;
+          font-size: 12px;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .btn:hover {
+          background: var(--bg-elevated);
+          border-color: var(--cone-orange);
+          box-shadow: 0 0 12px var(--cone-orange-glow);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, var(--cone-orange) 0%, var(--cone-orange-dark) 100%);
+          border-color: var(--cone-orange);
+          font-weight: 600;
+        }
+
+        .btn-primary:hover {
+          filter: brightness(1.1);
+        }
+
+        /* Main content area */
+        .main-content {
+          flex: 1;
+          display: flex;
+          overflow: hidden;
+        }
+
+        /* Viewer area */
+        .viewer-area {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          background: var(--bg-primary);
+          position: relative;
+        }
+
+        .viewer-content {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .drop-zone {
+          position: absolute;
+          inset: 20px;
+          border: 2px dashed var(--border-color);
+          border-radius: 12px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          transition: all 0.3s;
+          background: var(--bg-secondary);
+        }
+
+        .drop-zone.active {
+          border-color: var(--cone-orange);
+          background: rgba(255, 102, 17, 0.05);
+          box-shadow: inset 0 0 40px var(--cone-orange-glow);
+        }
+
+        .drop-icon {
+          font-size: 64px;
+          opacity: 0.6;
+        }
+
+        .drop-text {
+          font-size: 18px;
+          color: var(--text-secondary);
+        }
+
+        .drop-hint {
+          font-size: 12px;
+          color: var(--text-muted);
+        }
+
+        /* Document viewer */
+        .document-viewer {
+          width: 100%;
+          height: 100%;
+          padding: 40px;
+          overflow: auto;
+          background: var(--bg-secondary);
+        }
+
+        .document-content {
+          max-width: 800px;
+          margin: 0 auto;
+          white-space: pre-wrap;
+          font-size: 14px;
+          line-height: 1.7;
+          color: var(--text-primary);
+          font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Image viewer */
+        .image-viewer {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          background: repeating-conic-gradient(var(--bg-tertiary) 0% 25%, var(--bg-secondary) 0% 50%) 50% / 20px 20px;
+        }
+
+        .image-viewer img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+          transition: transform 0.2s;
+        }
+
+        .image-controls {
+          position: absolute;
+          bottom: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 8px;
+          background: var(--bg-elevated);
+          padding: 8px 12px;
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+        }
+
+        .image-controls .btn {
+          padding: 6px 12px;
+        }
+
+        /* Video/Audio viewer */
+        .media-viewer {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #000;
+        }
+
+        .media-viewer video {
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        .audio-viewer {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 40px;
+          padding: 40px;
+        }
+
+        .audio-visualizer {
+          width: 300px;
+          height: 300px;
+          background: radial-gradient(circle at center, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          border: 3px solid var(--border-color);
+          box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 60px rgba(0,0,0,0.3);
+          cursor: pointer;
+        }
+
+        .audio-visualizer::before {
+          content: '';
+          position: absolute;
+          width: 60%;
+          height: 60%;
+          background: linear-gradient(135deg, var(--cone-orange) 0%, var(--cone-orange-dark) 100%);
+          border-radius: 50%;
+          box-shadow: 0 0 30px var(--cone-orange-glow);
+        }
+
+        .audio-visualizer.playing::before {
+          animation: pulse 1s ease-in-out infinite;
+        }
+
+        .audio-visualizer .play-icon {
+          position: relative;
+          z-index: 1;
+          font-size: 48px;
+          color: var(--bg-primary);
+        }
+
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .audio-info {
+          text-align: center;
+        }
+
+        .audio-title {
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+
+        .audio-meta {
+          font-size: 12px;
+          color: var(--text-secondary);
+        }
+
+        /* Equalizer */
+        .equalizer {
+          display: flex;
+          gap: 4px;
+          align-items: flex-end;
+          height: 80px;
+          padding: 10px;
+          background: var(--bg-tertiary);
+          border-radius: 8px;
+        }
+
+        .eq-bar {
+          width: 8px;
+          background: linear-gradient(to top, var(--cone-orange-dark), var(--cone-orange));
+          border-radius: 2px;
+          transition: height 0.1s ease;
+        }
+
+        /* Controls bar */
+        .controls-bar {
+          background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+          border-top: 1px solid var(--border-color);
+          padding: 16px 20px;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .controls-bar.hidden {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+
+        .progress-bar {
+          height: 6px;
+          background: var(--bg-primary);
+          border-radius: 3px;
+          cursor: pointer;
+          margin-bottom: 16px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .progress-bar:hover {
+          height: 8px;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--cone-orange-dark), var(--cone-orange));
+          border-radius: 3px;
+          position: relative;
+        }
+
+        .progress-fill::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 12px;
+          height: 12px;
+          background: var(--cone-orange);
+          border-radius: 50%;
+          box-shadow: 0 0 8px var(--cone-orange-glow);
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+
+        .progress-bar:hover .progress-fill::after {
+          opacity: 1;
+        }
+
+        .controls-row {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .control-btn {
+          background: none;
+          border: none;
+          color: var(--text-primary);
+          font-size: 20px;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 50%;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+        }
+
+        .control-btn:hover {
+          background: var(--bg-elevated);
+          color: var(--cone-orange);
+        }
+
+        .control-btn.active {
+          color: var(--cone-orange);
+        }
+
+        .control-btn.play-btn {
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, var(--cone-orange) 0%, var(--cone-orange-dark) 100%);
+          color: var(--bg-primary);
+          font-size: 24px;
+        }
+
+        .control-btn.play-btn:hover {
+          filter: brightness(1.1);
+          transform: scale(1.05);
+        }
+
+        .time-display {
+          font-size: 12px;
+          color: var(--text-secondary);
+          font-variant-numeric: tabular-nums;
+          min-width: 100px;
+        }
+
+        .volume-control {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-left: auto;
+        }
+
+        .volume-slider {
+          width: 80px;
+          height: 4px;
+          background: var(--bg-primary);
+          border-radius: 2px;
+          cursor: pointer;
+          position: relative;
+        }
+
+        .volume-fill {
+          height: 100%;
+          background: var(--cone-orange);
+          border-radius: 2px;
+        }
+
+        .file-info {
+          margin-left: 20px;
+          padding-left: 20px;
+          border-left: 1px solid var(--border-color);
+        }
+
+        .file-name {
+          font-size: 13px;
+          font-weight: 500;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .file-meta {
+          font-size: 11px;
+          color: var(--text-muted);
+        }
+
+        /* Playlist panel */
+        .playlist-panel {
+          width: 320px;
+          background: var(--bg-secondary);
+          border-left: 1px solid var(--border-color);
+          display: flex;
+          flex-direction: column;
+          transition: width 0.3s, opacity 0.3s;
+        }
+
+        .playlist-panel.collapsed {
+          width: 0;
+          opacity: 0;
+          overflow: hidden;
+        }
+
+        .playlist-header {
+          padding: 16px;
+          border-bottom: 1px solid var(--border-color);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .playlist-title {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          color: var(--cone-orange);
+        }
+
+        .playlist-count {
+          font-size: 11px;
+          color: var(--text-muted);
+        }
+
+        .playlist-items {
+          flex: 1;
+          overflow-y: auto;
+          padding: 8px;
+        }
+
+        .playlist-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s;
+          border: 1px solid transparent;
+        }
+
+        .playlist-item:hover {
+          background: var(--bg-tertiary);
+        }
+
+        .playlist-item.active {
+          background: var(--bg-tertiary);
+          border-color: var(--cone-orange);
+          box-shadow: 0 0 12px var(--cone-orange-glow);
+        }
+
+        .playlist-item-icon {
+          font-size: 20px;
+        }
+
+        .playlist-item-info {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .playlist-item-name {
+          font-size: 12px;
+          font-weight: 500;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .playlist-item-meta {
+          font-size: 10px;
+          color: var(--text-muted);
+        }
+
+        .playlist-item-remove {
+          opacity: 0;
+          color: var(--text-muted);
+          cursor: pointer;
+          padding: 4px;
+          transition: all 0.2s;
+        }
+
+        .playlist-item:hover .playlist-item-remove {
+          opacity: 1;
+        }
+
+        .playlist-item-remove:hover {
+          color: var(--error);
+        }
+
+        /* Console panel */
+        .console-panel {
+          height: 120px;
+          background: var(--bg-tertiary);
+          border-top: 1px solid var(--border-color);
+          padding: 8px 16px;
+          overflow-y: auto;
+          font-size: 11px;
+        }
+
+        .console-line {
+          display: flex;
+          gap: 12px;
+          padding: 2px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .console-time {
+          color: var(--text-muted);
+          font-variant-numeric: tabular-nums;
+        }
+
+        .console-message {
+          color: var(--text-secondary);
+        }
+
+        .console-message.success { color: var(--success); }
+        .console-message.error { color: var(--error); }
+        .console-message.warning { color: var(--warning); }
+
+        /* Hidden file input */
+        .hidden-input {
+          display: none;
+        }
+
+        /* Fullscreen styles */
+        .codex-player:fullscreen {
+          background: #000;
+        }
+
+        .codex-player:fullscreen .header,
+        .codex-player:fullscreen .playlist-panel,
+        .codex-player:fullscreen .console-panel {
+          display: none;
+        }
+
+        .codex-player:fullscreen .viewer-content {
+          background: #000;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: var(--bg-elevated);
+          border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: var(--border-color);
+        }
+      `}</style>
+
+      <div
+        className="codex-player"
+        ref={containerRef}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {/* Header */}
+        <div className="header">
+          <div className="logo">
+            <div className="logo-cone" />
+            <span className="logo-text">CODEX MEDIA</span>
+          </div>
+
+          <div className="header-actions">
+            <button className="btn" onClick={() => setShowPlaylist(!showPlaylist)}>
+              {showPlaylist ? '\u25C0' : '\u25B6'} Playlist
+            </button>
+            <button className="btn" onClick={() => setEqualizerVisible(!equalizerVisible)}>
+              \u2261 EQ
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden-input"
+              multiple
+              onChange={handleFileSelect}
+              accept="*/*"
+            />
+            <button className="btn btn-primary" onClick={() => fileInputRef.current?.click()}>
+              + Open Files
+            </button>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div className="main-content">
+          {/* Viewer area */}
+          <div className="viewer-area">
+            <div className="viewer-content">
+              {!currentFile ? (
+                <div className={`drop-zone ${isDragging ? 'active' : ''}`}>
+                  <div className="drop-icon">{'\u{1F4C2}'}</div>
+                  <div className="drop-text">Drop files here or click Open Files</div>
+                  <div className="drop-hint">
+                    Supports: Documents \u2022 Images \u2022 Audio \u2022 Video
+                  </div>
+                </div>
+              ) : fileType === 'document' ? (
+                <div className="document-viewer">
+                  <div className="document-content">{documentContent}</div>
+                </div>
+              ) : fileType === 'image' ? (
+                <div className="image-viewer">
+                  <img
+                    src={currentFile.url}
+                    alt={currentFile.name}
+                    style={{ transform: `scale(${imageScale})` }}
+                  />
+                  <div className="image-controls">
+                    <button className="btn" onClick={zoomOut}>\u2212</button>
+                    <button className="btn" onClick={resetZoom}>{Math.round(imageScale * 100)}%</button>
+                    <button className="btn" onClick={zoomIn}>+</button>
+                  </div>
+                </div>
+              ) : fileType === 'video' ? (
+                <div className="media-viewer">
+                  <video
+                    ref={mediaRef}
+                    src={currentFile.url}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onEnded={handleEnded}
+                    onClick={togglePlay}
+                  />
+                </div>
+              ) : fileType === 'audio' ? (
+                <div className="audio-viewer">
+                  <div className={`audio-visualizer ${isPlaying ? 'playing' : ''}`} onClick={togglePlay}>
+                    <span className="play-icon">{isPlaying ? '\u275A\u275A' : '\u25B6'}</span>
+                  </div>
+                  <div className="audio-info">
+                    <div className="audio-title">{currentFile.name}</div>
+                    <div className="audio-meta">{formatSize(currentFile.size)}</div>
+                  </div>
+                  {equalizerVisible && <Equalizer />}
+                  <audio
+                    ref={mediaRef}
+                    src={currentFile.url}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onEnded={handleEnded}
+                  />
+                </div>
+              ) : null}
+            </div>
+
+            {/* Controls bar */}
+            <div className={`controls-bar ${!showControls && isFullscreen ? 'hidden' : ''}`}>
+              {(fileType === 'audio' || fileType === 'video') && (
+                <div
+                  className="progress-bar"
+                  onClick={handleSeek}
+                >
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                  />
+                </div>
+              )}
+
+              <div className="controls-row">
+                <button
+                  className={`control-btn ${shuffleMode ? 'active' : ''}`}
+                  onClick={() => setShuffleMode(!shuffleMode)}
+                  title="Shuffle"
+                >
+                  {'\u{1F500}'}
+                </button>
+
+                <button className="control-btn" onClick={playPrevious} title="Previous">
+                  {'\u23EE'}
+                </button>
+
+                {(fileType === 'audio' || fileType === 'video') && (
+                  <button className="control-btn play-btn" onClick={togglePlay}>
+                    {isPlaying ? '\u275A\u275A' : '\u25B6'}
+                  </button>
+                )}
+
+                <button className="control-btn" onClick={playNext} title="Next">
+                  {'\u23ED'}
+                </button>
+
+                <button
+                  className={`control-btn ${loopMode !== 'none' ? 'active' : ''}`}
+                  onClick={() => setLoopMode(prev => prev === 'none' ? 'one' : prev === 'one' ? 'all' : 'none')}
+                  title={`Loop: ${loopMode}`}
+                >
+                  {loopMode === 'one' ? '\u{1F502}' : '\u{1F501}'}
+                </button>
+
+                {(fileType === 'audio' || fileType === 'video') && (
+                  <span className="time-display">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
+                )}
+
+                <div className="volume-control">
+                  <button className="control-btn" onClick={toggleMute}>
+                    {isMuted || volume === 0 ? '\u{1F507}' : volume < 0.5 ? '\u{1F509}' : '\u{1F50A}'}
+                  </button>
+                  <div className="volume-slider" onClick={handleVolumeChange}>
+                    <div className="volume-fill" style={{ width: `${(isMuted ? 0 : volume) * 100}%` }} />
+                  </div>
+                </div>
+
+                <button className="control-btn" onClick={toggleFullscreen} title="Fullscreen">
+                  {'\u26F6'}
+                </button>
+
+                {currentFile && (
+                  <div className="file-info">
+                    <div className="file-name">{currentFile.name}</div>
+                    <div className="file-meta">
+                      <TypeIcon type={fileType} /> {formatSize(currentFile.size)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Playlist panel */}
+          <div className={`playlist-panel ${!showPlaylist ? 'collapsed' : ''}`}>
+            <div className="playlist-header">
+              <div>
+                <div className="playlist-title">QUEUE</div>
+                <div className="playlist-count">{playlist.length} items</div>
+              </div>
+              {playlist.length > 0 && (
+                <button className="btn" onClick={clearPlaylist}>Clear</button>
+              )}
+            </div>
+
+            <div className="playlist-items">
+              {playlist.map((item, index) => (
+                <div
+                  key={index}
+                  className={`playlist-item ${index === currentIndex ? 'active' : ''}`}
+                  onClick={() => loadFile(item, index)}
+                >
+                  <span className="playlist-item-icon">
+                    <TypeIcon type={item.type} />
+                  </span>
+                  <div className="playlist-item-info">
+                    <div className="playlist-item-name">{item.name}</div>
+                    <div className="playlist-item-meta">{formatSize(item.size)}</div>
+                  </div>
+                  <span
+                    className="playlist-item-remove"
+                    onClick={(e) => { e.stopPropagation(); removeFromPlaylist(index); }}
+                  >
+                    {'\u2715'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Console panel */}
+        <div className="console-panel">
+          {consoleOutput.map((entry, i) => (
+            <div key={i} className="console-line">
+              <span className="console-time">[{entry.timestamp}]</span>
+              <span className={`console-message ${entry.type}`}>{entry.message}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<CodexMediaPlayer />);
+    </script>
+</body>
+</html>
