@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Tool · CODEX-ARK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --orange: #ff6611;
+            --text: #e8e8f0;
+            --text-dim: #888899;
+            --border: #2a2a3a;
+            --success: #44dd88;
+            --error: #ff4444;
+            --string: #98c379;
+            --number: #d19a66;
+            --bool: #56b6c2;
+            --null: #888899;
+            --key: #e06c75;
+        }
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: var(--orange); text-align: center; margin-bottom: 5px; letter-spacing: 2px; }
+        .subtitle { text-align: center; color: var(--text-dim); font-size: 12px; margin-bottom: 20px; }
+
+        .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 700px) { .columns { grid-template-columns: 1fr; } }
+
+        .column h2 { font-size: 14px; color: var(--orange); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        textarea, .output-area {
+            width: 100%;
+            height: 400px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 12px;
+            padding: 15px;
+            border-radius: 8px;
+            resize: vertical;
+        }
+        textarea:focus { outline: none; border-color: var(--orange); }
+
+        .output-area {
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--orange); color: var(--bg); }
+        .btn.active { background: var(--orange); color: var(--bg); }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+        .status.valid { background: rgba(68, 221, 136, 0.1); color: var(--success); border: 1px solid var(--success); }
+        .status.invalid { background: rgba(255, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); }
+        .status.neutral { background: var(--bg-card); color: var(--text-dim); border: 1px solid var(--border); }
+
+        .path-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+        .path-input:focus { outline: none; border-color: var(--orange); }
+
+        /* Syntax highlighting */
+        .json-key { color: var(--key); }
+        .json-string { color: var(--string); }
+        .json-number { color: var(--number); }
+        .json-bool { color: var(--bool); }
+        .json-null { color: var(--null); }
+
+        .info {
+            color: var(--text-dim);
+            font-size: 11px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .stats {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{ } JSON TOOL</h1>
+        <div class="subtitle">Format · Validate · Query · CODEX-ARK</div>
+
+        <div class="status neutral" id="status">Paste JSON to validate</div>
+
+        <input type="text" class="path-input" id="pathInput" placeholder="Query path (e.g., data.users[0].name, or leave empty for full output)" oninput="queryJSON()">
+
+        <div class="columns">
+            <div class="column">
+                <h2>📥 INPUT <span class="stats" id="inputStats"></span></h2>
+                <textarea id="input" placeholder='Paste JSON here...
+
+Example:
+{
+  "name": "CODEX",
+  "version": 1.0,
+  "active": true
+}'></textarea>
+            </div>
+            <div class="column">
+                <h2>📤 OUTPUT <span class="stats" id="outputStats"></span></h2>
+                <div class="output-area" id="output"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="formatJSON(2)">Format (2 space)</button>
+            <button class="btn" onclick="formatJSON(4)">Format (4 space)</button>
+            <button class="btn" onclick="minifyJSON()">Minify</button>
+            <button class="btn" onclick="sortKeys()">Sort Keys</button>
+            <button class="btn" onclick="copyOutput()">📋 Copy</button>
+            <button class="btn" onclick="downloadOutput()">💾 Download</button>
+        </div>
+
+        <div class="info">
+            <strong>Query Examples:</strong><br>
+            • <code>users</code> - Get "users" property<br>
+            • <code>users[0]</code> - First item in users array<br>
+            • <code>users[0].name</code> - Name of first user<br>
+            • <code>config.settings.theme</code> - Nested property<br>
+            • <code>[0]</code> - First item if root is array
+        </div>
+    </div>
+
+    <script>
+        let parsedJSON = null;
+
+        document.getElementById('input').addEventListener('input', validateAndFormat);
+        document.getElementById('input').addEventListener('paste', () => setTimeout(validateAndFormat, 50));
+
+        function validateAndFormat() {
+            const input = document.getElementById('input').value.trim();
+            const status = document.getElementById('status');
+            const output = document.getElementById('output');
+
+            if (!input) {
+                status.className = 'status neutral';
+                status.textContent = 'Paste JSON to validate';
+                output.innerHTML = '';
+                parsedJSON = null;
+                updateStats();
+                return;
+            }
+
+            try {
+                parsedJSON = JSON.parse(input);
+                status.className = 'status valid';
+
+                const type = Array.isArray(parsedJSON) ? 'Array' : typeof parsedJSON === 'object' ? 'Object' : typeof parsedJSON;
+                const count = Array.isArray(parsedJSON) ? parsedJSON.length + ' items' :
+                              typeof parsedJSON === 'object' ? Object.keys(parsedJSON).length + ' keys' : '';
+
+                status.textContent = `✓ Valid JSON (${type}${count ? ': ' + count : ''})`;
+
+                queryJSON();
+            } catch (e) {
+                status.className = 'status invalid';
+                status.textContent = `✗ Invalid JSON: ${e.message}`;
+                output.innerHTML = `<span style="color: var(--error)">${escapeHtml(e.message)}</span>`;
+                parsedJSON = null;
+            }
+
+            updateStats();
+        }
+
+        function queryJSON() {
+            if (!parsedJSON) return;
+
+            const path = document.getElementById('pathInput').value.trim();
+            let result = parsedJSON;
+
+            if (path) {
+                try {
+                    result = getByPath(parsedJSON, path);
+                } catch (e) {
+                    document.getElementById('output').innerHTML = `<span style="color: var(--error)">Path error: ${escapeHtml(e.message)}</span>`;
+                    return;
+                }
+            }
+
+            const formatted = JSON.stringify(result, null, 2);
+            document.getElementById('output').innerHTML = syntaxHighlight(formatted);
+            updateStats();
+        }
+
+        function getByPath(obj, path) {
+            const parts = path.match(/[^.\[\]]+|\[\d+\]/g) || [];
+            let current = obj;
+
+            for (let part of parts) {
+                if (part.startsWith('[') && part.endsWith(']')) {
+                    const index = parseInt(part.slice(1, -1));
+                    if (!Array.isArray(current)) throw new Error(`Cannot index non-array at ${part}`);
+                    if (index < 0 || index >= current.length) throw new Error(`Index ${index} out of bounds`);
+                    current = current[index];
+                } else {
+                    if (current === null || typeof current !== 'object') {
+                        throw new Error(`Cannot access property "${part}" of ${typeof current}`);
+                    }
+                    if (!(part in current)) throw new Error(`Property "${part}" not found`);
+                    current = current[part];
+                }
+            }
+
+            return current;
+        }
+
+        function formatJSON(indent) {
+            if (!parsedJSON) return;
+            document.getElementById('input').value = JSON.stringify(parsedJSON, null, indent);
+            queryJSON();
+        }
+
+        function minifyJSON() {
+            if (!parsedJSON) return;
+            document.getElementById('input').value = JSON.stringify(parsedJSON);
+            queryJSON();
+        }
+
+        function sortKeys() {
+            if (!parsedJSON) return;
+
+            function sortObject(obj) {
+                if (Array.isArray(obj)) {
+                    return obj.map(sortObject);
+                } else if (obj !== null && typeof obj === 'object') {
+                    return Object.keys(obj).sort().reduce((result, key) => {
+                        result[key] = sortObject(obj[key]);
+                        return result;
+                    }, {});
+                }
+                return obj;
+            }
+
+            parsedJSON = sortObject(parsedJSON);
+            document.getElementById('input').value = JSON.stringify(parsedJSON, null, 2);
+            queryJSON();
+        }
+
+        function syntaxHighlight(json) {
+            json = escapeHtml(json);
+            return json.replace(
+                /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                function (match) {
+                    let cls = 'json-number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'json-key';
+                        } else {
+                            cls = 'json-string';
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'json-bool';
+                    } else if (/null/.test(match)) {
+                        cls = 'json-null';
+                    }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                }
+            );
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateStats() {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output').textContent;
+
+            document.getElementById('inputStats').textContent = input ? `${input.length} chars` : '';
+            document.getElementById('outputStats').textContent = output ? `${output.length} chars` : '';
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').textContent;
+            navigator.clipboard.writeText(output).then(() => {
+                const btn = event.target;
+                btn.textContent = '✓ Copied';
+                setTimeout(() => btn.textContent = '📋 Copy', 1500);
+            });
+        }
+
+        function downloadOutput() {
+            const output = document.getElementById('output').textContent;
+            if (!output) return;
+
+            const blob = new Blob([output], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `json-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

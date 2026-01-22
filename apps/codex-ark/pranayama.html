@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pranayama Pacer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-secondary: #12121a;
+            --orange: #ff6611;
+            --orange-glow: rgba(255, 102, 17, 0.4);
+            --text: #e8e8f0;
+            --text-dim: #888899;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--orange);
+            font-size: 24px;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+
+        /* Breathing Circle */
+        .breath-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 30px;
+        }
+
+        .breath-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--orange) 0%, var(--bg) 70%);
+            box-shadow: 0 0 60px var(--orange-glow);
+            transition: all 0.3s ease-out;
+        }
+
+        .breath-circle.inhale {
+            width: 240px;
+            height: 240px;
+        }
+
+        .breath-circle.hold {
+            box-shadow: 0 0 80px var(--orange-glow), 0 0 120px var(--orange-glow);
+        }
+
+        .breath-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 260px;
+            height: 260px;
+            border: 2px solid var(--orange);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .phase-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--bg);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--orange);
+            margin-bottom: 10px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .cycle-count {
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Pattern Selection */
+        .patterns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .pattern-btn {
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a3a;
+            color: var(--text);
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .pattern-btn:hover, .pattern-btn.active {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        .pattern-btn.active {
+            background: rgba(255, 102, 17, 0.1);
+        }
+
+        /* Custom Pattern */
+        .custom-pattern {
+            display: none;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .custom-pattern.visible {
+            display: flex;
+        }
+
+        .custom-input {
+            width: 60px;
+            background: var(--bg-secondary);
+            border: 1px solid #2a2a3a;
+            color: var(--text);
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+
+        .custom-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--orange);
+            color: var(--orange);
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn:hover {
+            background: var(--orange);
+            color: var(--bg);
+        }
+
+        .ctrl-btn.stop {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .ctrl-btn.stop:hover {
+            background: #ff4444;
+            color: var(--bg);
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            color: var(--text-dim);
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .sound-toggle:hover {
+            color: var(--orange);
+        }
+
+        /* Info */
+        .info {
+            color: var(--text-dim);
+            font-size: 11px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .info strong {
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PRANAYAMA</h1>
+        <div class="subtitle">Breath Pacer · CODEX-ARK</div>
+
+        <div class="breath-container">
+            <div class="breath-ring"></div>
+            <div class="breath-circle" id="circle">
+                <span class="phase-text" id="phase">READY</span>
+            </div>
+        </div>
+
+        <div class="timer" id="timer">0</div>
+        <div class="cycle-count" id="cycles">Cycle: 0</div>
+
+        <div class="patterns">
+            <button class="pattern-btn active" data-pattern="box" onclick="setPattern('box')">Box 4-4-4-4</button>
+            <button class="pattern-btn" data-pattern="relax" onclick="setPattern('relax')">4-7-8 Relax</button>
+            <button class="pattern-btn" data-pattern="energize" onclick="setPattern('energize')">4-0-4-0 Energy</button>
+            <button class="pattern-btn" data-pattern="coherence" onclick="setPattern('coherence')">5-5 Coherence</button>
+            <button class="pattern-btn" data-pattern="custom" onclick="setPattern('custom')">Custom</button>
+        </div>
+
+        <div class="custom-pattern" id="customInputs">
+            <div>
+                <input type="number" class="custom-input" id="customInhale" value="4" min="1" max="20">
+                <span class="custom-label">Inhale</span>
+            </div>
+            <div>
+                <input type="number" class="custom-input" id="customHold1" value="4" min="0" max="20">
+                <span class="custom-label">Hold</span>
+            </div>
+            <div>
+                <input type="number" class="custom-input" id="customExhale" value="4" min="1" max="20">
+                <span class="custom-label">Exhale</span>
+            </div>
+            <div>
+                <input type="number" class="custom-input" id="customHold2" value="4" min="0" max="20">
+                <span class="custom-label">Hold</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="ctrl-btn" id="startBtn" onclick="toggleBreathing()">START</button>
+            <button class="ctrl-btn stop" onclick="resetBreathing()">RESET</button>
+        </div>
+
+        <div class="sound-toggle" onclick="toggleSound()">
+            🔊 Sound: <span id="soundStatus">ON</span>
+        </div>
+
+        <div class="info">
+            <strong>Box Breathing:</strong> Navy SEAL technique for calm focus<br>
+            <strong>4-7-8:</strong> Dr. Weil's relaxation breath<br>
+            <strong>Coherence:</strong> Heart-brain synchronization<br>
+            <strong>Energy:</strong> Quick energizing breath
+        </div>
+    </div>
+
+    <script>
+        // Patterns: [inhale, hold, exhale, hold]
+        const patterns = {
+            box: [4, 4, 4, 4],
+            relax: [4, 7, 8, 0],
+            energize: [4, 0, 4, 0],
+            coherence: [5, 0, 5, 0],
+            custom: [4, 4, 4, 4]
+        };
+
+        let currentPattern = 'box';
+        let isRunning = false;
+        let currentPhase = 0; // 0=inhale, 1=hold, 2=exhale, 3=hold
+        let currentSecond = 0;
+        let cycleCount = 0;
+        let intervalId = null;
+        let soundEnabled = true;
+
+        // Audio context for beeps
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function beep(frequency = 440, duration = 100, volume = 0.3) {
+            if (!soundEnabled || !audioCtx) return;
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            gainNode.gain.value = volume;
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration / 1000);
+        }
+
+        function setPattern(name) {
+            currentPattern = name;
+
+            // Update button states
+            document.querySelectorAll('.pattern-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.pattern === name);
+            });
+
+            // Show/hide custom inputs
+            document.getElementById('customInputs').classList.toggle('visible', name === 'custom');
+
+            if (name === 'custom') {
+                updateCustomPattern();
+            }
+
+            resetBreathing();
+        }
+
+        function updateCustomPattern() {
+            patterns.custom = [
+                parseInt(document.getElementById('customInhale').value) || 4,
+                parseInt(document.getElementById('customHold1').value) || 0,
+                parseInt(document.getElementById('customExhale').value) || 4,
+                parseInt(document.getElementById('customHold2').value) || 0
+            ];
+        }
+
+        // Listen for custom input changes
+        document.querySelectorAll('.custom-input').forEach(input => {
+            input.addEventListener('change', updateCustomPattern);
+        });
+
+        function toggleBreathing() {
+            if (isRunning) {
+                pauseBreathing();
+            } else {
+                startBreathing();
+            }
+        }
+
+        function startBreathing() {
+            initAudio();
+
+            if (currentPattern === 'custom') {
+                updateCustomPattern();
+            }
+
+            isRunning = true;
+            document.getElementById('startBtn').textContent = 'PAUSE';
+
+            // Start first phase
+            if (currentSecond === 0) {
+                startPhase();
+            }
+
+            intervalId = setInterval(tick, 1000);
+        }
+
+        function pauseBreathing() {
+            isRunning = false;
+            document.getElementById('startBtn').textContent = 'RESUME';
+            clearInterval(intervalId);
+        }
+
+        function resetBreathing() {
+            isRunning = false;
+            clearInterval(intervalId);
+            currentPhase = 0;
+            currentSecond = 0;
+            cycleCount = 0;
+
+            document.getElementById('startBtn').textContent = 'START';
+            document.getElementById('timer').textContent = '0';
+            document.getElementById('cycles').textContent = 'Cycle: 0';
+            document.getElementById('phase').textContent = 'READY';
+
+            const circle = document.getElementById('circle');
+            circle.className = 'breath-circle';
+        }
+
+        function tick() {
+            currentSecond++;
+
+            const pattern = patterns[currentPattern];
+            const phaseDuration = pattern[currentPhase];
+
+            // Update timer display (countdown)
+            const remaining = phaseDuration - currentSecond;
+            document.getElementById('timer').textContent = remaining >= 0 ? remaining : 0;
+
+            // Phase complete?
+            if (currentSecond >= phaseDuration) {
+                currentSecond = 0;
+                currentPhase = (currentPhase + 1) % 4;
+
+                // Skip phases with 0 duration
+                while (patterns[currentPattern][currentPhase] === 0) {
+                    currentPhase = (currentPhase + 1) % 4;
+                    if (currentPhase === 0) {
+                        cycleCount++;
+                        document.getElementById('cycles').textContent = `Cycle: ${cycleCount}`;
+                    }
+                }
+
+                if (currentPhase === 0) {
+                    cycleCount++;
+                    document.getElementById('cycles').textContent = `Cycle: ${cycleCount}`;
+                }
+
+                startPhase();
+            }
+        }
+
+        function startPhase() {
+            const phaseNames = ['INHALE', 'HOLD', 'EXHALE', 'HOLD'];
+            const pattern = patterns[currentPattern];
+
+            document.getElementById('phase').textContent = phaseNames[currentPhase];
+            document.getElementById('timer').textContent = pattern[currentPhase];
+
+            const circle = document.getElementById('circle');
+            circle.className = 'breath-circle';
+
+            // Visual feedback
+            if (currentPhase === 0) {
+                circle.classList.add('inhale');
+                beep(440, 150, 0.2);
+            } else if (currentPhase === 1) {
+                circle.classList.add('inhale', 'hold');
+                beep(550, 100, 0.15);
+            } else if (currentPhase === 2) {
+                // exhale - circle shrinks (default)
+                beep(330, 150, 0.2);
+            } else if (currentPhase === 3) {
+                circle.classList.add('hold');
+                beep(550, 100, 0.15);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundStatus').textContent = soundEnabled ? 'ON' : 'OFF';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                toggleBreathing();
+            } else if (e.code === 'Escape') {
+                resetBreathing();
+            }
+        });
+    </script>
+</body>
+</html>

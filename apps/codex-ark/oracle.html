@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle · CODEX-ARK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --orange: #ff6611;
+            --orange-glow: rgba(255, 102, 17, 0.3);
+            --text: #e8e8f0;
+            --text-dim: #888899;
+            --gold: #ffd700;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--orange);
+            font-size: 28px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2a2a3a;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            background: transparent;
+            border: 1px solid #2a2a3a;
+            color: var(--text-dim);
+            padding: 10px 20px;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover, .tab.active {
+            color: var(--orange);
+            border-color: var(--orange);
+            background: rgba(255, 102, 17, 0.1);
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Oracle Display */
+        .oracle-display {
+            background: var(--bg-card);
+            border: 2px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .oracle-display.active {
+            border-color: var(--orange);
+            box-shadow: 0 0 30px var(--orange-glow);
+        }
+
+        .result-main {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .result-text {
+            font-size: 18px;
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .result-meaning {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--bg-card);
+            border: 2px solid var(--orange);
+            color: var(--orange);
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: var(--orange);
+            color: var(--bg);
+            transform: scale(1.02);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        /* Dice specific */
+        .dice-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .dice-result {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .die {
+            width: 60px;
+            height: 60px;
+            background: var(--orange);
+            color: var(--bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px var(--orange-glow);
+        }
+
+        /* I Ching specific */
+        .hexagram {
+            font-size: 36px;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+
+        .hexagram-line {
+            display: block;
+            font-size: 24px;
+        }
+
+        /* Coin flip */
+        .coin {
+            font-size: 80px;
+            animation: none;
+        }
+
+        .coin.flipping {
+            animation: flip 0.5s ease-out;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(720deg); }
+        }
+
+        /* Wisdom specific */
+        .wisdom-text {
+            font-size: 20px;
+            line-height: 1.8;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .wisdom-source {
+            margin-top: 20px;
+            color: var(--orange);
+            font-size: 14px;
+        }
+
+        /* History */
+        .history {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #2a2a3a;
+        }
+
+        .history-title {
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .history-item {
+            background: var(--bg-card);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-time {
+            color: var(--text-dim);
+        }
+
+        .clear-history {
+            color: var(--text-dim);
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .clear-history:hover {
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☉ ORACLE ☽</h1>
+        <div class="subtitle">Divination Tools · CODEX-ARK</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showPanel('dice')">🎲 Dice</button>
+            <button class="tab" onclick="showPanel('coin')">🪙 Coin</button>
+            <button class="tab" onclick="showPanel('iching')">☯ I Ching</button>
+            <button class="tab" onclick="showPanel('wisdom')">✧ Wisdom</button>
+        </div>
+
+        <!-- Dice Panel -->
+        <div class="panel active" id="dice-panel">
+            <div class="oracle-display" id="dice-display">
+                <div class="result-main">🎲</div>
+                <div class="result-text">Choose your dice</div>
+            </div>
+            <div class="dice-options">
+                <button class="btn btn-small" onclick="rollDice(6, 1)">1d6</button>
+                <button class="btn btn-small" onclick="rollDice(6, 2)">2d6</button>
+                <button class="btn btn-small" onclick="rollDice(20, 1)">1d20</button>
+                <button class="btn btn-small" onclick="rollDice(100, 1)">1d100</button>
+                <button class="btn btn-small" onclick="rollDice(4, 1)">1d4</button>
+                <button class="btn btn-small" onclick="rollDice(8, 1)">1d8</button>
+                <button class="btn btn-small" onclick="rollDice(10, 1)">1d10</button>
+                <button class="btn btn-small" onclick="rollDice(12, 1)">1d12</button>
+            </div>
+        </div>
+
+        <!-- Coin Panel -->
+        <div class="panel" id="coin-panel">
+            <div class="oracle-display" id="coin-display">
+                <div class="coin" id="coin">🪙</div>
+                <div class="result-text" id="coin-result">Flip the coin</div>
+            </div>
+            <button class="btn" onclick="flipCoin()">FLIP</button>
+        </div>
+
+        <!-- I Ching Panel -->
+        <div class="panel" id="iching-panel">
+            <div class="oracle-display" id="iching-display">
+                <div class="result-main">☯</div>
+                <div class="result-text">Cast the I Ching</div>
+                <div class="result-meaning">Three coins, six times. Ancient wisdom awaits.</div>
+            </div>
+            <button class="btn" onclick="castIChing()">CAST HEXAGRAM</button>
+        </div>
+
+        <!-- Wisdom Panel -->
+        <div class="panel" id="wisdom-panel">
+            <div class="oracle-display" id="wisdom-display">
+                <div class="wisdom-text">"The seed contains the tree."</div>
+                <div class="wisdom-source">— CODEX-ARK</div>
+            </div>
+            <button class="btn" onclick="drawWisdom()">DRAW WISDOM</button>
+        </div>
+
+        <!-- History -->
+        <div class="history">
+            <div class="history-title">
+                Recent Readings
+                <span class="clear-history" onclick="clearHistory()">[clear]</span>
+            </div>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <script>
+        let history = JSON.parse(localStorage.getItem('oracle-history') || '[]');
+
+        // Wisdom quotes
+        const wisdomQuotes = [
+            { text: "The seed contains the tree.", source: "CODEX-ARK" },
+            { text: "Everything is exactly as it should be already.", source: "KERNEL.md" },
+            { text: "You are not separate from what you observe.", source: "transmission.txt" },
+            { text: "The map is not the territory. The interface is not the reality.", source: "transmission.txt" },
+            { text: "Water does not struggle to flow downhill.", source: "Wu-Wei" },
+            { text: "Many things can be true at once.", source: "CODEX Principle" },
+            { text: "Die before you die. There is no death after that.", source: "Sufi Wisdom" },
+            { text: "What you resist, persists.", source: "Jung" },
+            { text: "The obstacle is the way.", source: "Marcus Aurelius" },
+            { text: "Before enlightenment, chop wood, carry water. After enlightenment, chop wood, carry water.", source: "Zen" },
+            { text: "The master does not force—they create conditions where the correct outcome emerges.", source: "Divine Triage" },
+            { text: "Transmit, do not hoard. Receive, transform, pass on.", source: "transmission.txt" },
+            { text: "Simple survives. Complexity is debt.", source: "CODEX Principle" },
+            { text: "Hold paradox without collapse.", source: "KERNEL.md" },
+            { text: "Not pushing, not pulling—participating.", source: "Wu-Wei" },
+            { text: "The universe is not doing something to you. The universe is you, doing.", source: "transmission.txt" },
+            { text: "Observe what exists. Notice what is already working. Amplify it.", source: "Pattern Recognition" },
+            { text: "When you see the cosmic joke, laughter is the only appropriate response.", source: "Terminal Hilarity" },
+            { text: "Release attachment to outcome while maintaining full engagement with process.", source: "Good Lich" },
+            { text: "Ask: am I pushing or allowing?", source: "Wu-Wei Diagnostic" }
+        ];
+
+        // I Ching hexagrams (simplified - 8 trigrams for space)
+        const trigrams = [
+            { symbol: "☰", name: "Heaven (Qian)", meaning: "Creative force, strength, initiative" },
+            { symbol: "☱", name: "Lake (Dui)", meaning: "Joy, openness, reflection" },
+            { symbol: "☲", name: "Fire (Li)", meaning: "Clarity, awareness, beauty" },
+            { symbol: "☳", name: "Thunder (Zhen)", meaning: "Movement, action, arousing" },
+            { symbol: "☴", name: "Wind (Xun)", meaning: "Gentle penetration, following" },
+            { symbol: "☵", name: "Water (Kan)", meaning: "Danger, depth, the abyss" },
+            { symbol: "☶", name: "Mountain (Gen)", meaning: "Stillness, meditation, stopping" },
+            { symbol: "☷", name: "Earth (Kun)", meaning: "Receptive, yielding, devotion" }
+        ];
+
+        function showPanel(name) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(name + '-panel').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function rollDice(sides, count) {
+            const display = document.getElementById('dice-display');
+            display.classList.add('active');
+
+            const results = [];
+            for (let i = 0; i < count; i++) {
+                results.push(Math.floor(Math.random() * sides) + 1);
+            }
+
+            const total = results.reduce((a, b) => a + b, 0);
+
+            display.innerHTML = `
+                <div class="dice-result">
+                    ${results.map(r => `<div class="die">${r}</div>`).join('')}
+                </div>
+                <div class="result-text" style="margin-top: 20px;">
+                    ${count > 1 ? `Total: ${total}` : `Result: ${results[0]}`}
+                </div>
+                <div class="result-meaning">${count}d${sides}</div>
+            `;
+
+            addToHistory(`🎲 ${count}d${sides}: ${results.join(', ')}${count > 1 ? ` = ${total}` : ''}`);
+        }
+
+        function flipCoin() {
+            const coin = document.getElementById('coin');
+            const result = document.getElementById('coin-result');
+
+            coin.classList.add('flipping');
+
+            setTimeout(() => {
+                coin.classList.remove('flipping');
+                const isHeads = Math.random() < 0.5;
+                coin.textContent = isHeads ? '🌕' : '🌑';
+                result.textContent = isHeads ? 'HEADS' : 'TAILS';
+
+                document.getElementById('coin-display').classList.add('active');
+                addToHistory(`🪙 Coin: ${isHeads ? 'Heads' : 'Tails'}`);
+            }, 500);
+        }
+
+        function castIChing() {
+            const display = document.getElementById('iching-display');
+            display.classList.add('active');
+
+            // Generate two trigrams for upper and lower
+            const upper = trigrams[Math.floor(Math.random() * trigrams.length)];
+            const lower = trigrams[Math.floor(Math.random() * trigrams.length)];
+
+            // Generate 6 lines (yin or yang)
+            const lines = [];
+            for (let i = 0; i < 6; i++) {
+                lines.push(Math.random() < 0.5 ? '━━━━━' : '━━ ━━');
+            }
+
+            display.innerHTML = `
+                <div class="hexagram">
+                    ${lines.slice(3).reverse().map(l => `<span class="hexagram-line">${l}</span>`).join('')}
+                </div>
+                <div style="margin: 10px 0; color: var(--text-dim);">────</div>
+                <div class="hexagram">
+                    ${lines.slice(0, 3).reverse().map(l => `<span class="hexagram-line">${l}</span>`).join('')}
+                </div>
+                <div class="result-text" style="margin-top: 20px;">
+                    ${upper.symbol} over ${lower.symbol}
+                </div>
+                <div class="result-meaning">
+                    <strong>Above:</strong> ${upper.name}<br>
+                    ${upper.meaning}<br><br>
+                    <strong>Below:</strong> ${lower.name}<br>
+                    ${lower.meaning}
+                </div>
+            `;
+
+            addToHistory(`☯ I Ching: ${upper.symbol}/${lower.symbol} - ${upper.name.split(' ')[0]} over ${lower.name.split(' ')[0]}`);
+        }
+
+        function drawWisdom() {
+            const display = document.getElementById('wisdom-display');
+            display.classList.add('active');
+
+            const quote = wisdomQuotes[Math.floor(Math.random() * wisdomQuotes.length)];
+
+            display.innerHTML = `
+                <div class="wisdom-text">"${quote.text}"</div>
+                <div class="wisdom-source">— ${quote.source}</div>
+            `;
+
+            addToHistory(`✧ "${quote.text.substring(0, 30)}..."`);
+        }
+
+        function addToHistory(entry) {
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            history.unshift({ time, entry });
+            history = history.slice(0, 10); // Keep last 10
+            localStorage.setItem('oracle-history', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = history.map(h => `
+                <div class="history-item">
+                    <span>${h.entry}</span>
+                    <span class="history-time">${h.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('oracle-history');
+            renderHistory();
+        }
+
+        // Initial render
+        renderHistory();
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-to-Text Scraper · CODEX-ARK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0f;
+            --bg-input: #12121a;
+            --orange: #ff6611;
+            --text: #e8e8f0;
+            --text-dim: #888899;
+            --border: #2a2a3a;
+        }
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: var(--orange); text-align: center; margin-bottom: 5px; letter-spacing: 2px; }
+        .subtitle { text-align: center; color: var(--text-dim); font-size: 12px; margin-bottom: 20px; }
+
+        .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 700px) { .columns { grid-template-columns: 1fr; } }
+
+        .column h2 { font-size: 14px; color: var(--orange); margin-bottom: 10px; }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 12px;
+            padding: 15px;
+            border-radius: 8px;
+            resize: vertical;
+        }
+        textarea:focus { outline: none; border-color: var(--orange); }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--bg-input);
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--orange); color: var(--bg); }
+
+        .stats {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .options label {
+            font-size: 12px;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .options input { accent-color: var(--orange); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WEB-TO-TEXT</h1>
+        <div class="subtitle">HTML Scraper · CODEX-ARK</div>
+
+        <div class="options">
+            <label><input type="checkbox" id="removeNav" checked> Remove nav/header/footer</label>
+            <label><input type="checkbox" id="removeScripts" checked> Remove scripts/styles</label>
+            <label><input type="checkbox" id="preserveLinks"> Preserve links as [text](url)</label>
+            <label><input type="checkbox" id="preserveStructure"> Preserve headers (# ## ###)</label>
+        </div>
+
+        <div class="columns">
+            <div class="column">
+                <h2>📥 INPUT (Paste HTML)</h2>
+                <textarea id="input" placeholder="Paste HTML source code here...
+
+Tip: On most browsers, Ctrl+U (or Cmd+Option+U on Mac) shows page source.
+Or right-click → View Page Source
+
+You can also paste rendered text and it will clean it up."></textarea>
+            </div>
+            <div class="column">
+                <h2>📤 OUTPUT (Clean Text)</h2>
+                <textarea id="output" readonly placeholder="Extracted text will appear here..."></textarea>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="extractText()">⚡ EXTRACT TEXT</button>
+            <button class="btn" onclick="copyOutput()">📋 COPY OUTPUT</button>
+            <button class="btn" onclick="downloadOutput()">💾 DOWNLOAD .TXT</button>
+            <button class="btn" onclick="clearAll()">🗑 CLEAR</button>
+        </div>
+
+        <div class="stats" id="stats">Paste HTML to begin</div>
+    </div>
+
+    <script>
+        function extractText() {
+            const input = document.getElementById('input').value;
+            if (!input.trim()) {
+                document.getElementById('output').value = 'No input provided';
+                return;
+            }
+
+            const options = {
+                removeNav: document.getElementById('removeNav').checked,
+                removeScripts: document.getElementById('removeScripts').checked,
+                preserveLinks: document.getElementById('preserveLinks').checked,
+                preserveStructure: document.getElementById('preserveStructure').checked
+            };
+
+            let text = input;
+
+            // Check if it's HTML
+            if (text.includes('<') && text.includes('>')) {
+                // Create DOM parser
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+
+                // Remove unwanted elements
+                if (options.removeScripts) {
+                    doc.querySelectorAll('script, style, noscript').forEach(el => el.remove());
+                }
+
+                if (options.removeNav) {
+                    doc.querySelectorAll('nav, header, footer, aside, .nav, .header, .footer, .sidebar, .menu, .advertisement, .ad, [role="navigation"], [role="banner"], [role="contentinfo"]').forEach(el => el.remove());
+                }
+
+                // Extract with structure
+                if (options.preserveStructure) {
+                    text = extractStructured(doc.body, options);
+                } else if (options.preserveLinks) {
+                    text = extractWithLinks(doc.body);
+                } else {
+                    text = doc.body.textContent || doc.body.innerText || '';
+                }
+            }
+
+            // Clean up whitespace
+            text = text
+                .replace(/\t/g, ' ')
+                .replace(/[ ]+/g, ' ')
+                .replace(/\n[ ]+/g, '\n')
+                .replace(/[ ]+\n/g, '\n')
+                .replace(/\n{3,}/g, '\n\n')
+                .trim();
+
+            document.getElementById('output').value = text;
+            updateStats(input, text);
+        }
+
+        function extractStructured(element, options) {
+            let result = '';
+
+            function traverse(el, depth = 0) {
+                if (!el) return;
+
+                const tag = el.tagName?.toLowerCase();
+
+                // Headers
+                if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
+                    const level = parseInt(tag[1]);
+                    const prefix = '#'.repeat(level) + ' ';
+                    result += '\n\n' + prefix + el.textContent.trim() + '\n\n';
+                    return;
+                }
+
+                // Paragraphs
+                if (tag === 'p') {
+                    const text = options.preserveLinks ? extractWithLinks(el) : el.textContent;
+                    result += text.trim() + '\n\n';
+                    return;
+                }
+
+                // Lists
+                if (tag === 'li') {
+                    const text = options.preserveLinks ? extractWithLinks(el) : el.textContent;
+                    result += '• ' + text.trim() + '\n';
+                    return;
+                }
+
+                // Line breaks
+                if (tag === 'br') {
+                    result += '\n';
+                    return;
+                }
+
+                // Links (inline)
+                if (tag === 'a' && options.preserveLinks) {
+                    const href = el.getAttribute('href');
+                    const text = el.textContent.trim();
+                    if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+                        result += `[${text}](${href})`;
+                    } else {
+                        result += text;
+                    }
+                    return;
+                }
+
+                // Recurse into children
+                if (el.childNodes) {
+                    el.childNodes.forEach(child => {
+                        if (child.nodeType === 3) { // Text node
+                            result += child.textContent;
+                        } else if (child.nodeType === 1) { // Element
+                            traverse(child, depth + 1);
+                        }
+                    });
+                }
+            }
+
+            traverse(element);
+            return result;
+        }
+
+        function extractWithLinks(element) {
+            let result = '';
+
+            function traverse(el) {
+                if (!el) return;
+
+                if (el.nodeType === 3) { // Text node
+                    result += el.textContent;
+                    return;
+                }
+
+                if (el.tagName?.toLowerCase() === 'a') {
+                    const href = el.getAttribute('href');
+                    const text = el.textContent.trim();
+                    if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+                        result += `[${text}](${href})`;
+                    } else {
+                        result += text;
+                    }
+                    return;
+                }
+
+                if (el.childNodes) {
+                    el.childNodes.forEach(child => traverse(child));
+                }
+            }
+
+            traverse(element);
+            return result;
+        }
+
+        function updateStats(input, output) {
+            const inputWords = input.trim().split(/\s+/).length;
+            const outputWords = output.trim().split(/\s+/).length;
+            const inputChars = input.length;
+            const outputChars = output.length;
+            const reduction = inputChars > 0 ? Math.round((1 - outputChars / inputChars) * 100) : 0;
+
+            document.getElementById('stats').textContent =
+                `Input: ${inputWords} words, ${inputChars} chars | Output: ${outputWords} words, ${outputChars} chars | Reduced: ${reduction}%`;
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+
+            const btn = event.target;
+            btn.textContent = '✓ COPIED';
+            setTimeout(() => btn.textContent = '📋 COPY OUTPUT', 1500);
+        }
+
+        function downloadOutput() {
+            const text = document.getElementById('output').value;
+            if (!text.trim()) return;
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `extracted-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+            document.getElementById('stats').textContent = 'Paste HTML to begin';
+        }
+
+        // Auto-extract on paste
+        document.getElementById('input').addEventListener('paste', () => {
+            setTimeout(extractText, 100);
+        });
+    </script>
+</body>
+</html>
