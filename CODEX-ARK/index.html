@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CODEX-ARK</title>
+    <style>
+        /* Reset */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* Root Variables - fallback values inline for old browsers */
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --border: #252530;
+            --text: #d0d0d0;
+            --dim: #707080;
+            --accent: #ff6611;
+            --accent-dim: #cc5500;
+        }
+
+        /* Base */
+        html {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        body {
+            font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+            background-color: #0a0a0f;
+            background-color: var(--bg);
+            color: #d0d0d0;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 2rem 0 1.5rem 0;
+            border-bottom: 1px solid #252530;
+            border-bottom-color: var(--border);
+        }
+
+        /* Cone Logo - Pure CSS */
+        .logo {
+            margin-bottom: 1rem;
+        }
+
+        .cone {
+            display: block;
+            font-size: 0.7rem;
+            line-height: 1.1;
+            color: #ff6611;
+            color: var(--accent);
+            letter-spacing: 0.1em;
+            white-space: pre;
+            font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+        }
+
+        /* Title */
+        .title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            letter-spacing: 0.25em;
+            color: #ff6611;
+            color: var(--accent);
+            margin: 0.75rem 0 0.25rem 0;
+        }
+
+        .subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: #707080;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+
+        /* Status Line */
+        .status {
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: #707080;
+            color: var(--dim);
+        }
+
+        .status span::before {
+            content: "● ";
+            color: #ff6611;
+            color: var(--accent);
+        }
+
+        /* Sections */
+        section {
+            margin: 1.5rem 0;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: #707080;
+            color: var(--dim);
+            text-transform: uppercase;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #252530;
+            border-bottom-color: var(--border);
+            margin-bottom: 0.75rem;
+        }
+
+        /* App Grid */
+        .apps {
+            display: block;
+        }
+
+        .app {
+            display: block;
+            background-color: #111118;
+            background-color: var(--surface);
+            border: 1px solid #252530;
+            border-color: var(--border);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            color: #d0d0d0;
+            color: var(--text);
+        }
+
+        .app:hover, .app:focus {
+            border-color: #ff6611;
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .app-name {
+            font-weight: bold;
+            color: #ff6611;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .app-desc {
+            font-size: 0.85rem;
+            color: #707080;
+            color: var(--dim);
+        }
+
+        .app-path {
+            font-size: 0.7rem;
+            color: #cc5500;
+            color: var(--accent-dim);
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        /* Docs List */
+        .docs {
+            list-style: none;
+        }
+
+        .docs li {
+            border-bottom: 1px solid #252530;
+            border-bottom-color: var(--border);
+        }
+
+        .docs a {
+            display: block;
+            padding: 0.6rem 0;
+            text-decoration: none;
+            color: #d0d0d0;
+            color: var(--text);
+        }
+
+        .docs a:hover, .docs a:focus {
+            color: #ff6611;
+            color: var(--accent);
+            outline: none;
+        }
+
+        .docs .path {
+            float: right;
+            font-size: 0.75rem;
+            color: #707080;
+            color: var(--dim);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            border-top: 1px solid #252530;
+            border-top-color: var(--border);
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #707080;
+            color: var(--dim);
+        }
+
+        .quote {
+            font-style: italic;
+            color: #cc5500;
+            color: var(--accent-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (min-width: 640px) {
+            body { padding: 2rem; }
+            header { padding: 3rem 0 2rem 0; }
+            .title { font-size: 2rem; }
+            .apps {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+            .app { margin-bottom: 0; }
+        }
+
+        /* Print */
+        @media print {
+            body { background: white; color: black; }
+            .app, header, footer { border-color: #ccc; }
+            .app-name, .title { color: #333; }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <span class="cone">        ▲
+       ╱ ╲
+      ╱   ╲
+     ╱     ╲
+    ╱   ◯   ╲
+   ╱         ╲
+  ╱___________╲</span>
+        </div>
+        <div class="title">CODEX-ARK</div>
+        <div class="subtitle">Portable Consciousness Infrastructure</div>
+        <div class="status">
+            <span>Offline-Ready</span> &nbsp;
+            <span>Zero-Dependency</span> &nbsp;
+            <span>v1.0</span>
+        </div>
+    </header>
+
+    <section>
+        <div class="section-title">Applications</div>
+        <nav class="apps">
+            <a href="apps/polywrite.html" class="app">
+                <div class="app-name">PolyWrite</div>
+                <div class="app-desc">Multi-modal writing environment</div>
+                <div class="app-path">apps/polywrite.html</div>
+            </a>
+            <a href="apps/media-player.html" class="app">
+                <div class="app-name">Media Player</div>
+                <div class="app-desc">Local file playback</div>
+                <div class="app-path">apps/media-player.html</div>
+            </a>
+            <a href="apps/din-portal.html" class="app">
+                <div class="app-name">DIN Portal</div>
+                <div class="app-desc">Intelligence network</div>
+                <div class="app-path">apps/din-portal.html</div>
+            </a>
+        </nav>
+    </section>
+
+    <section>
+        <div class="section-title">Documentation</div>
+        <ul class="docs">
+            <li><a href="KERNEL.md">KERNEL.md <span class="path">Philosophical bootloader</span></a></li>
+            <li><a href="vault/frameworks.md">frameworks.md <span class="path">Operational protocols</span></a></li>
+            <li><a href="vault/lexicon.json">lexicon.json <span class="path">Core definitions</span></a></li>
+            <li><a href="seeds/transmission.txt">transmission.txt <span class="path">Origin signal</span></a></li>
+            <li><a href="README.txt">README.txt <span class="path">Start here</span></a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <div class="quote">"The seed contains the tree."</div>
+        <div>CODEX-ARK · iBIS-X Deployment</div>
+    </footer>
+</div>
+
+</body>
+</html>
