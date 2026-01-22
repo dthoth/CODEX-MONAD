@@ -1,0 +1,89 @@
+{
+  "manifest_version": "1.0",
+  "generated": "2026-01-21",
+  "machine": "MINI_PC",
+  "drive": {
+    "letter": "F:",
+    "label": "HINENI",
+    "capacity_gb": 115,
+    "used_gb": 1.1,
+    "free_gb": 114,
+    "total_files": 8594
+  },
+  "folders": {
+    "HINENI_BACKUP": {
+      "size_kb": 384,
+      "description": "Witness data backup",
+      "contents": ["noticing_store.json", "witness/"]
+    },
+    "ARCHIVED SOURCES": {
+      "size_mb": 864,
+      "description": "Historical code archives",
+      "subfolders": ["Code/hineni", "Code/toolbox-cli", "Codex/CODEX-MONAD"]
+    },
+    "_OLD_FILES_2025-12-01": {
+      "size_mb": 3,
+      "description": "HINENI module backups from Dec 1 2025"
+    },
+    "repos": {
+      "size_mb": 65,
+      "description": "Active Git repositories",
+      "breakdown": {
+        "CODEX-MONAD": "54 MB",
+        "toolbox-cli": "6.9 MB",
+        "hineni": "4.2 MB"
+      }
+    }
+  },
+  "file_types": {
+    "js": 3157,
+    "ts": 772,
+    "md": 720,
+    "json": 541,
+    "map": 435,
+    "html": 229,
+    "DS_Store": 209,
+    "py": 174,
+    "pyc": 102,
+    "txt": 68,
+    "ps1": 68,
+    "yml": 60
+  },
+  "hashes": {
+    "md5": {
+      "/f/repos/hineni/hineni_cli.py": "a47b970c1ea66524ec91cc452a95545f",
+      "/f/repos/hineni/README.md": "b40b257dab599f3de74d9722ed28344d",
+      "/f/repos/hineni/data/bible_masoretic.json": "e4c1a8ebdf2b14052f2a4508ad205029",
+      "/f/repos/hineni/data/bible_web.json": "0b59e4289ba63351020d9239791a9584",
+      "/f/repos/CODEX-MONAD/README.md": "474f12edf1e21a449a17725ea6d45b2c",
+      "/f/repos/CODEX-MONAD/package.json": "3471448ca2fb9703ffb750b5603199d6",
+      "/f/HINENI_BACKUP/noticing_store.json": "97d9860b9605b91aeffe675679d6601c"
+    }
+  },
+  "cross_device_comparison": {
+    "matches": {
+      "noticing_store.json": {
+        "e_drive": "97d9860b9605b91aeffe675679d6601c",
+        "f_drive": "97d9860b9605b91aeffe675679d6601c",
+        "status": "MATCH"
+      }
+    },
+    "diverged": {
+      "hineni_cli.py": {
+        "e_drive": "fa147e32bc958820f590fb55a9f34d5a",
+        "f_drive": "a47b970c1ea66524ec91cc452a95545f",
+        "status": "DIFFERENT"
+      },
+      "bible_masoretic.json": {
+        "e_drive": "348024b35a53b36314339016fabbcc22",
+        "f_drive": "e4c1a8ebdf2b14052f2a4508ad205029",
+        "status": "DIFFERENT"
+      },
+      "bible_web.json": {
+        "e_drive": "076ee61de34dede69d9c3b1df92f7f39",
+        "f_drive": "0b59e4289ba63351020d9239791a9584",
+        "status": "DIFFERENT"
+      }
+    }
+  }
+}

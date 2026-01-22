@@ -1,0 +1,119 @@
+{
+  "manifest_version": "1.0",
+  "generated": "2026-01-21T13:13:49",
+  "machine": "MINI_PC",
+  "drive": {
+    "letter": "E:",
+    "label": "HINENI_HUB_PC",
+    "capacity_tb": 1.86,
+    "used_gb": 942,
+    "free_gb": 922,
+    "total_files": 191804
+  },
+  "folders": {
+    "00-system": {
+      "size_mb": 21,
+      "description": "System logs and configuration",
+      "contents": ["logs/onedrive_*.log"]
+    },
+    "10-repos": {
+      "size_kb": 458,
+      "description": "Git repositories",
+      "subfolders": ["CLAUDE", "CODEX_NEWEST", "HINENI", "HINENI_BACKUP"]
+    },
+    "20-archive": {
+      "size_gb": 873,
+      "description": "Cloud backups and archives",
+      "breakdown": {
+        "cloud-mirrors/OneDrive": "853 GB",
+        "cloud-mirrors/GoogleDrive": "0 (empty)",
+        "Email Archive attempt 111": "21 GB",
+        "PRESERVE_TEMP": "280 KB"
+      }
+    },
+    "30-media": {
+      "size_gb": 22,
+      "description": "Photos and videos",
+      "subfolders": ["iPhone Media Backup", "Media", "VIDEOS"]
+    },
+    "40-projects": {
+      "size_gb": 47,
+      "description": "Active project work",
+      "subfolders": ["2028 Prep", "CODE PROJECTS", "EOM OCT WORKING", "FULL PROJECTS", "WRITING WORK"]
+    },
+    "90-private": {
+      "size_mb": 51,
+      "description": "Private/personal data",
+      "subfolders": ["Phone vault"]
+    }
+  },
+  "file_types": {
+    "images": {
+      "count": 89996,
+      "extensions": {
+        "png": 47151,
+        "jpg": 38977,
+        "jpeg": 2016,
+        "heic": 1778,
+        "HEIC": 1174,
+        "JPG": 1025,
+        "gif": 981,
+        "webp": 336
+      }
+    },
+    "code": {
+      "count": 48000,
+      "extensions": {
+        "js": 33996,
+        "ts": 8665,
+        "html": 1244,
+        "cs": 552,
+        "py": 327,
+        "css": 300
+      }
+    },
+    "documents": {
+      "count": 22239,
+      "extensions": {
+        "md": 20694,
+        "txt": 682,
+        "docx": 543,
+        "pdf": 320
+      }
+    },
+    "data": {
+      "count": 10969,
+      "extensions": {
+        "json": 5275,
+        "map": 5064,
+        "yml": 630
+      }
+    },
+    "video": {
+      "count": 1280,
+      "extensions": {
+        "mp4": 1280
+      }
+    },
+    "archives": {
+      "count": 256,
+      "extensions": ["zip", "tar", "gz", "7z", "rar"]
+    }
+  },
+  "hashes": {
+    "md5": {
+      "/e/10-repos/HINENI/README.md": "e09d00af8b4eac34049c2e15a3bd67bb",
+      "/e/10-repos/HINENI/hineni_cli.py": "fa147e32bc958820f590fb55a9f34d5a",
+      "/e/10-repos/HINENI/data/bible_masoretic.json": "348024b35a53b36314339016fabbcc22",
+      "/e/10-repos/HINENI/data/bible_web.json": "076ee61de34dede69d9c3b1df92f7f39",
+      "/e/10-repos/HINENI_BACKUP/noticing_store.json": "97d9860b9605b91aeffe675679d6601c",
+      "/e/40-projects/CODE PROJECTS/html-app/package.json": "f47ad55372f2279ae6763f93166b9ce0",
+      "/e/40-projects/CODE PROJECTS/suite_foundation_release_portalplus/package.json": "a7538306b475d2f5bacc42bf50fdaadf",
+      "/e/40-projects/FULL PROJECTS/RECENT AI CONVOS/conversations.json": "be71d256143b347c6858d47a5ad910c4"
+    },
+    "sha256": {
+      "/e/10-repos/HINENI/README.md": "87d9e814e305f68eabf55fbff589ba6d293a87075d29e9205f49230882b23a72",
+      "/e/10-repos/HINENI/hineni_cli.py": "c3dc7db7b72ccb7684c7c72bf46a784ce1af212e6cf0468c0a4abb0900872c97"
+    }
+  }
+}

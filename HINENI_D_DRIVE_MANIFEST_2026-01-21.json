@@ -1,0 +1,147 @@
+{
+  "manifest_version": "1.0",
+  "generated": "2026-01-21",
+  "machine": "MINI_PC",
+  "drive": {
+    "letter": "D:",
+    "label": "Data",
+    "capacity_tb": 1.86,
+    "used_tb": 1.75,
+    "free_gb": 70,
+    "total_files": 386717
+  },
+  "space_analysis": {
+    "top_consumers": [
+      {"path": "D:\\Games\\SteamLibrary", "size_gb": 650, "percent": 37},
+      {"path": "D:\\SteamLibrary", "size_gb": 247, "percent": 14},
+      {"path": "D:\\Diablo IV", "size_gb": 132, "percent": 8},
+      {"path": "D:\\Games\\World_of_Tanks_NA", "size_gb": 124, "percent": 7},
+      {"path": "D:\\Users\\dthot\\OneDrive", "size_gb": 94, "percent": 5},
+      {"path": "D:\\World_of_Tanks_NA", "size_gb": 79, "percent": 5},
+      {"path": "D:\\Games\\World_of_Warships", "size_gb": 79, "percent": 5},
+      {"path": "D:\\Games\\Diablo IV", "size_gb": 75, "percent": 4},
+      {"path": "D:\\World_of_Warplanes", "size_gb": 68, "percent": 4},
+      {"path": "D:\\Games\\World_of_Warplanes", "size_gb": 49, "percent": 3},
+      {"path": "D:\\Users\\dthot\\iCloudDrive", "size_gb": 45, "percent": 3}
+    ],
+    "potential_duplicates": [
+      {
+        "game": "Diablo IV",
+        "locations": ["D:\\ (132 GB)", "D:\\Games\\ (75 GB)"],
+        "combined_gb": 207
+      },
+      {
+        "game": "World of Tanks NA",
+        "locations": ["D:\\ (79 GB)", "D:\\Games\\ (124 GB)"],
+        "combined_gb": 203
+      },
+      {
+        "game": "World of Warplanes",
+        "locations": ["D:\\ (68 GB)", "D:\\Games\\ (49 GB)"],
+        "combined_gb": 117
+      },
+      {
+        "game": "StarCraft II",
+        "locations": ["D:\\ (26 GB)", "D:\\Games\\ (26 GB)"],
+        "combined_gb": 52
+      },
+      {
+        "game": "Hearthstone",
+        "locations": ["D:\\ (11 GB)", "D:\\Games\\ (11 GB)"],
+        "combined_gb": 22
+      }
+    ],
+    "potential_savings_gb": 300
+  },
+  "folders": {
+    "Diablo IV": {"size_gb": 132, "type": "game", "publisher": "Blizzard"},
+    "Games": {
+      "size_tb": 1.1,
+      "type": "game_collection",
+      "subfolders": {
+        "SteamLibrary": "650 GB",
+        "World_of_Tanks_NA": "124 GB",
+        "World_of_Warships": "79 GB",
+        "Diablo IV": "75 GB",
+        "World_of_Warplanes": "49 GB",
+        "Warcraft III": "29 GB",
+        "Diablo II Resurrected": "28 GB",
+        "StarCraft II": "26 GB",
+        "Diablo III": "16 GB",
+        "Hearthstone": "11 GB",
+        "StarCraft": "5.5 GB",
+        "Diablo": "1.3 GB",
+        "Warcraft Orcs & Humans": "90 MB",
+        "EA": "0"
+      }
+    },
+    "SteamLibrary": {
+      "size_gb": 247,
+      "type": "steam_library",
+      "games": {
+        "Baldurs Gate 3": {"size_gb": 149, "app_id": 1086940},
+        "Counter-Strike 2": {"size_gb": 56, "app_id": 730},
+        "Civilization VII": {"size_gb": 20, "app_id": 1295660},
+        "Alice Madness Returns": {"size_gb": 8.4, "app_id": 19680},
+        "Stronghold Crusader DE": {"size_gb": 5.9, "app_id": 3024040},
+        "Pharaoh A New Era": {"size_gb": 5.6, "app_id": 1351080},
+        "Stronghold Crusader 2": {"size_gb": 3.5, "app_id": 232890}
+      }
+    },
+    "Users": {
+      "size_gb": 138,
+      "subfolders": {
+        "OneDrive": "94 GB",
+        "iCloudDrive": "45 GB",
+        "Dropbox": "4.2 MB"
+      }
+    },
+    "World_of_Tanks_NA": {"size_gb": 79, "type": "game", "publisher": "Wargaming"},
+    "World_of_Warplanes": {"size_gb": 68, "type": "game", "publisher": "Wargaming"},
+    "StarCraft II": {"size_gb": 26, "type": "game", "publisher": "Blizzard"},
+    "Hearthstone": {"size_gb": 11, "type": "game", "publisher": "Blizzard"},
+    "ProgramData": {"size_gb": 5.5, "type": "system"},
+    "OneDriveTemp": {"size_mb": 153, "type": "temp"},
+    "Scripts": {"size_kb": 4, "type": "scripts"}
+  },
+  "file_types": {
+    "wem": 35432,
+    "xml": 17403,
+    "md": 12274,
+    "wav": 10393,
+    "pyc": 9820,
+    "js": 9668,
+    "framework": 9401,
+    "png": 8712,
+    "mp3": 8659,
+    "unity3d": 8395,
+    "vtt": 7418,
+    "dds": 5698,
+    "txt": 4029,
+    "py": 3523,
+    "dll": 3471,
+    "pak": 3375,
+    "map": 2961,
+    "json": 2892,
+    "jpeg": 2623,
+    "bfdlac": 2441
+  },
+  "hashes": {
+    "md5": {
+      "/d/SteamLibrary/steamapps/appmanifest_1086940.acf": "9d373764c8ce76bd13eaf4e3a34b3258",
+      "/d/SteamLibrary/steamapps/appmanifest_1295660.acf": "e98168b7311ea39d2bd9ea5db0f70964",
+      "/d/SteamLibrary/steamapps/appmanifest_1351080.acf": "6365407b8ea18cb7cda7f8f26939c8c2",
+      "/d/SteamLibrary/steamapps/appmanifest_19680.acf": "0ab751a300bc2e038d9469c1d1e6ee98",
+      "/d/SteamLibrary/steamapps/appmanifest_232890.acf": "4745c3cd038c5b4500279bac864a23b9",
+      "/d/SteamLibrary/steamapps/appmanifest_3024040.acf": "804d984bf20559e86066d77fc8f1becc",
+      "/d/SteamLibrary/steamapps/appmanifest_730.acf": "8ec965e9f9163784839e703be20925e6",
+      "/d/Scripts/system_clone.ps1": "d5a2a7d6c0d142437c91c58b932284e8"
+    }
+  },
+  "game_summary": {
+    "steam_games_count": 7,
+    "blizzard_games_count": 9,
+    "wargaming_games_count": 3,
+    "total_game_space_tb": 1.5
+  }
+}
