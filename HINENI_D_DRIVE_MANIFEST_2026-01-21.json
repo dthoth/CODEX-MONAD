@@ -1,6 +1,7 @@
 {
   "manifest_version": "1.0",
   "generated": "2026-01-21",
+  "updated": "2026-01-21T16:51:00",
   "machine": "MINI_PC",
   "drive": {
     "letter": "D:",
@@ -69,6 +70,7 @@
         "StarCraft II": "26 GB",
         "Diablo III": "16 GB",
         "Hearthstone": "11 GB",
+        "Myth II": "602 MB",
         "StarCraft": "5.5 GB",
         "Diablo": "1.3 GB",
         "Warcraft Orcs & Humans": "90 MB",
@@ -135,13 +137,26 @@
       "/d/SteamLibrary/steamapps/appmanifest_232890.acf": "4745c3cd038c5b4500279bac864a23b9",
       "/d/SteamLibrary/steamapps/appmanifest_3024040.acf": "804d984bf20559e86066d77fc8f1becc",
       "/d/SteamLibrary/steamapps/appmanifest_730.acf": "8ec965e9f9163784839e703be20925e6",
-      "/d/Scripts/system_clone.ps1": "d5a2a7d6c0d142437c91c58b932284e8"
+      "/d/Scripts/system_clone.ps1": "d5a2a7d6c0d142437c91c58b932284e8",
+      "/d/Games/Myth II/Myth II/Myth II.exe": "7c22feaa31bd822b4557ce7dce9c713c"
+    }
+  },
+  "classic_games": {
+    "Myth II Soulblighter": {
+      "path": "D:\\Games\\Myth II",
+      "size_mb": 602,
+      "version": "1.8 (Community Patch)",
+      "publisher": "Bungie (1998)",
+      "executables": ["Myth II.exe", "Fear 1.8.exe", "Loathing 1.8.exe"],
+      "plugins": ["Magma HD Textures", "MariusNet", "Gate of Storms", "Patches 1.2-1.8"],
+      "compatibility": "Native DirectX 11, tested working 2026-01-21"
     }
   },
   "game_summary": {
     "steam_games_count": 7,
     "blizzard_games_count": 9,
     "wargaming_games_count": 3,
+    "classic_games_count": 1,
     "total_game_space_tb": 1.5
   }
 }

@@ -1,7 +1,7 @@
 # Data Drive (D:) Inventory Manifest
 **Drive:** D:\
 **Label:** Data
-**Generated:** 2026-01-21
+**Generated:** 2026-01-21 (Updated: 2026-01-21 16:51)
 **Machine:** MINI_PC
 
 ---
@@ -71,6 +71,7 @@ D:\
 │   ├── Diablo IV/          [75 GB]     (duplicate?)
 │   ├── EA/                 [0 GB]      Empty
 │   ├── Hearthstone/        [11 GB]
+│   ├── Myth II/            [602 MB]    Myth II: Soulblighter (v1.8)
 │   ├── StarCraft/          [5.5 GB]    StarCraft Remastered
 │   ├── StarCraft II/       [26 GB]
 │   ├── SteamLibrary/       [650 GB]    Secondary Steam library
@@ -209,6 +210,20 @@ Additional Steam games (not enumerated)
 
 ---
 
+## Classic Games
+
+| Game | Size | Version | Location |
+|------|------|---------|----------|
+| Myth II: Soulblighter | 602 MB | 1.8 (Community Patch) | D:\Games\Myth II |
+
+**Myth II Details:**
+- Executables: `Myth II.exe`, `Fear 1.8.exe` (map editor), `Loathing 1.8.exe` (tag editor)
+- Plugins included: Magma HD Textures, MariusNet, Gate of Storms, Patches 1.2-1.8
+- Runs natively on Windows 10/11 via DirectX 11
+- Tested and working: 2026-01-21
+
+---
+
 ## Cloud Sync Folders
 
 | Service | Size | Location |
@@ -235,6 +250,11 @@ e98168b7311ea39d2bd9ea5db0f70964  appmanifest_1295660.acf  (Civ VII)
 ### Scripts
 ```
 d5a2a7d6c0d142437c91c58b932284e8  /d/Scripts/system_clone.ps1
+```
+
+### Classic Games
+```
+7c22feaa31bd822b4557ce7dce9c713c  /d/Games/Myth II/Myth II/Myth II.exe
 ```
 
 ---
