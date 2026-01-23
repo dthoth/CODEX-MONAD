@@ -119,7 +119,7 @@
                     icon: '📋',
                     status: 'active',
                     description: 'Infinite forms system for notices and legal documents.',
-                    hubPath: 'bureaucratic-universe.html',
+                    hubPath: 'apps/bureaucratic_universe/index.html',
                     launchType: 'html',
                     isLocal: true
                 },
@@ -141,7 +141,8 @@
                     description: 'Capture and archive tool for the CODEX system.',
                     hubPath: 'apps/codex_capture/index.html',
                     launchType: 'html',
-                    isLocal: true
+                    isLocal: true,
+                    command: 'python capture.py'
                 },
 {
                     id: 'conflict-lab',
@@ -159,7 +160,7 @@
                     icon: '📁',
                     status: 'active',
                     description: 'Consciousness file system with semantic indexing.',
-                    hubPath: 'din-files.html',
+                    hubPath: 'apps/din_portal/index.html',
                     launchType: 'html',
                     isLocal: true
                 },
@@ -215,11 +216,11 @@
                 },
 {
                     id: 'samson-recursive',
-                    label: "Samson's Terminal",
+                    label: "Samson's Infinite Life Proof",
                     icon: '🦁',
                     status: 'active',
-                    description: 'Recursive consciousness terminal for the young lion.',
-                    hubPath: 'samson-recursive.html',
+                    description: 'Interactive mathematical proof that you are eternal - for the young lion.',
+                    hubPath: 'apps/samson_recursive/index.html',
                     launchType: 'html',
                     isLocal: true
                 },
@@ -231,7 +232,8 @@
                     description: 'Portable secret store with KEK envelope architecture. Guarded by Kek.',
                     hubPath: 'apps/vault/index.html',
                     launchType: 'html',
-                    isLocal: true
+                    isLocal: true,
+                    command: 'vault-v2 status'
                 },
 {
                     id: 'word-salad',
@@ -240,6 +242,26 @@
                     status: 'active',
                     description: 'Creative word generation and manipulation tool.',
                     hubPath: 'apps/word_salad/Word Salad 5.0/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+{
+                    id: 'grok-integration',
+                    label: 'Grok Integration Demo',
+                    icon: '🔥',
+                    status: 'active',
+                    description: 'Live demo of transcendent module integration - QR Whisper, Mandala, Serpent, Compression.',
+                    hubPath: 'grok-integration-demo.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+{
+                    id: 'polywrite-advanced',
+                    label: 'PolyWrite Advanced',
+                    icon: '⚗️',
+                    status: 'active',
+                    description: 'Quantum Text Laboratory - advanced writing environment with experimental features.',
+                    hubPath: 'polywrite-advanced.html',
                     launchType: 'html',
                     isLocal: true
                 }
