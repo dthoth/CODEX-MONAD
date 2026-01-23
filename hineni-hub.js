@@ -244,16 +244,6 @@
                     hubPath: 'grok-integration-demo.html',
                     launchType: 'html',
                     isLocal: true
-                },
-{
-                    id: 'polywrite-advanced',
-                    label: 'PolyWrite Advanced',
-                    icon: '⚗️',
-                    status: 'active',
-                    description: 'Quantum Text Laboratory - advanced writing environment with experimental features.',
-                    hubPath: 'polywrite-advanced.html',
-                    launchType: 'html',
-                    isLocal: true
                 }
             ]
         },

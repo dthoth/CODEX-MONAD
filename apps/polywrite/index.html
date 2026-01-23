@@ -123,6 +123,10 @@
             overflow: hidden;
         }
 
+        .main-content.with-analytics {
+            grid-template-columns: 260px 1fr 280px;
+        }
+
         /* Sidebar */
         .sidebar {
             background: var(--bg-secondary);
@@ -1131,6 +1135,139 @@
             font-size: 0.75rem;
         }
 
+        /* ============================================
+           ANALYTICS PANEL (Right Sidebar)
+           ============================================ */
+        .analytics-panel {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .analytics-panel.hidden {
+            display: none;
+        }
+
+        .analytics-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .analytics-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .analytics-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .analytics-card {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-card-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .analytics-card-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .analytics-card-value.small {
+            font-size: 1rem;
+        }
+
+        .word-freq-list {
+            list-style: none;
+        }
+
+        .word-freq-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .word-freq-item:last-child {
+            border-bottom: none;
+        }
+
+        .word-freq-word {
+            color: var(--text-primary);
+        }
+
+        .word-freq-count {
+            color: var(--accent-secondary);
+            font-weight: 500;
+        }
+
+        /* ============================================
+           VERSION CONTROL
+           ============================================ */
+        .version-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .version-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .version-item:hover {
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .version-info {
+            flex: 1;
+        }
+
+        .version-time {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .version-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 4px;
+        }
+
         /* Layout Selector */
         .layout-selector {
             display: flex;
@@ -1432,6 +1569,9 @@
                 <button class="btn small" onclick="app.createNewFile()" title="New file (Ctrl+N)">📄 New</button>
                 <button class="btn small" onclick="app.showImportModal()" title="Import from disk">📥 Import</button>
                 <button class="btn small" onclick="app.exportToDisk()" title="Export to disk">📤 Export</button>
+                <button class="btn small" onclick="app.toggleLineNumbers()" title="Toggle line numbers (Ctrl+L)" id="lineNumBtn">🔢</button>
+                <button class="btn small" onclick="app.showVersionsModal()" title="Version history">📜</button>
+                <button class="btn small" onclick="app.toggleAnalytics()" title="Toggle analytics panel" id="analyticsBtn">📊</button>
                 <button class="btn small" onclick="app.showSettingsModal()" title="Settings">⚙️</button>
                 <button class="btn small" onclick="app.showShortcutsModal()" title="Keyboard shortcuts">⌨️</button>
             </div>
@@ -1485,6 +1625,47 @@
                     <!-- Editors will be dynamically inserted here -->
                 </div>
             </div>
+
+            <!-- Analytics Panel (Right Sidebar) -->
+            <aside class="analytics-panel hidden" id="analyticsPanel">
+                <div class="analytics-header">
+                    <span class="analytics-title">📊 Analytics</span>
+                    <button class="btn small icon-only" onclick="app.toggleAnalytics()" title="Close">×</button>
+                </div>
+                <div class="analytics-content">
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Reading Time</div>
+                        <div class="analytics-card-value" id="analyticsReadTime">0 min</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Words</div>
+                        <div class="analytics-card-value" id="analyticsWords">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Characters</div>
+                        <div class="analytics-card-value" id="analyticsChars">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Complexity</div>
+                        <div class="analytics-card-value small" id="analyticsComplexity">—</div>
+                        <div class="form-hint" style="margin-top:4px;">Based on avg word/sentence length</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Structure</div>
+                        <div style="font-size:0.85rem; color:var(--text-secondary);">
+                            <div>Paragraphs: <span id="analyticsParagraphs">0</span></div>
+                            <div>Sentences: <span id="analyticsSentences">0</span></div>
+                            <div>Lines: <span id="analyticsLines">0</span></div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Top Words</div>
+                        <ul class="word-freq-list" id="analyticsTopWords">
+                            <li class="word-freq-item"><span class="word-freq-word">—</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
         </main>
 
         <!-- Status Bar -->
@@ -1796,6 +1977,35 @@
         </div>
     </div>
 
+    <!-- Versions Modal -->
+    <div class="modal-overlay" id="versionsModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">📜 Version History</h3>
+                <button class="modal-close" onclick="app.hideModal('versionsModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">
+                        Save snapshots of your current file to restore later. Versions are stored per-file.
+                    </p>
+                    <button class="btn primary" onclick="app.saveVersion()" style="width: 100%;">
+                        💾 Save Current Version
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Saved Versions</label>
+                    <ul class="version-list" id="versionsList">
+                        <li style="color: var(--text-muted); padding: 12px; text-align: center;">No versions saved yet</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('versionsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     // ============================================
     // POLYWRITE 2.0 - CORE APPLICATION
@@ -1837,7 +2047,12 @@
             // Storage key
             this.STORAGE_KEY = 'polywrite_v2';
             this.SETTINGS_KEY = 'polywrite_v2_settings';
-            
+            this.VERSIONS_KEY = 'polywrite_v2_versions';
+
+            // Analytics state
+            this.analyticsEnabled = false;
+            this.versions = {}; // fileId -> array of versions
+
             // Initialize
             this.init();
         }
@@ -1921,7 +2136,7 @@
 
         handleKeyboard(e) {
             const ctrl = e.ctrlKey || e.metaKey;
-            
+
             if (ctrl && e.key === 'n') {
                 e.preventDefault();
                 this.createNewFile();
@@ -1943,6 +2158,9 @@
             } else if (ctrl && e.key === ',') {
                 e.preventDefault();
                 this.showSettingsModal();
+            } else if (ctrl && e.key === 'l') {
+                e.preventDefault();
+                this.toggleLineNumbers();
             } else if (e.key === 'Escape') {
                 this.hideAllModals();
                 this.hideContextMenu();
@@ -2003,6 +2221,271 @@
         }
         showShortcutsModal() { this.showModal('shortcutsModal'); }
         showImportModal() { this.showModal('importModal'); }
+
+        // ============================================
+        // ANALYTICS PANEL
+        // ============================================
+
+        toggleAnalytics() {
+            this.analyticsEnabled = !this.analyticsEnabled;
+            const panel = document.getElementById('analyticsPanel');
+            const mainContent = document.querySelector('.main-content');
+            const btn = document.getElementById('analyticsBtn');
+
+            if (this.analyticsEnabled) {
+                panel.classList.remove('hidden');
+                mainContent.classList.add('with-analytics');
+                btn.style.background = 'var(--accent-primary)';
+                btn.style.color = 'var(--bg-primary)';
+                this.updateAnalytics();
+            } else {
+                panel.classList.add('hidden');
+                mainContent.classList.remove('with-analytics');
+                btn.style.background = '';
+                btn.style.color = '';
+            }
+        }
+
+        updateAnalytics() {
+            if (!this.analyticsEnabled) return;
+
+            // Get content from active editor
+            let content = '';
+            if (this.activeEditorId && this.editors[this.activeEditorId]) {
+                content = this.editors[this.activeEditorId].element.querySelector('.editor-textarea').value;
+            }
+
+            // Word count
+            const words = content.trim() ? content.trim().split(/\s+/).filter(w => w.length > 0) : [];
+            const wordCount = words.length;
+
+            // Character count
+            const charCount = content.length;
+
+            // Reading time (200 words per minute)
+            const readingTime = Math.ceil(wordCount / 200);
+
+            // Lines, paragraphs, sentences
+            const lines = content.split('\n').length;
+            const paragraphs = content.split(/\n\n+/).filter(p => p.trim()).length;
+            const sentences = content.split(/[.!?]+/).filter(s => s.trim()).length;
+
+            // Complexity score (Flesch-Kincaid inspired: based on avg word/sentence length)
+            const avgWordLength = wordCount > 0 ? (charCount - content.split(/\s+/).length) / wordCount : 0;
+            const avgSentenceLength = sentences > 0 ? wordCount / sentences : 0;
+            let complexity = '—';
+            if (wordCount > 10) {
+                const score = Math.min(10, (avgWordLength * 0.8 + avgSentenceLength * 0.1));
+                if (score < 4) complexity = 'Simple';
+                else if (score < 6) complexity = 'Moderate';
+                else if (score < 8) complexity = 'Complex';
+                else complexity = 'Advanced';
+            }
+
+            // Top words (frequency)
+            const wordFreq = {};
+            words.forEach(w => {
+                const word = w.toLowerCase().replace(/[^a-z]/g, '');
+                if (word.length > 3) {
+                    wordFreq[word] = (wordFreq[word] || 0) + 1;
+                }
+            });
+            const topWords = Object.entries(wordFreq)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            // Update DOM
+            document.getElementById('analyticsReadTime').textContent = readingTime + ' min';
+            document.getElementById('analyticsWords').textContent = wordCount.toLocaleString();
+            document.getElementById('analyticsChars').textContent = charCount.toLocaleString();
+            document.getElementById('analyticsComplexity').textContent = complexity;
+            document.getElementById('analyticsParagraphs').textContent = paragraphs;
+            document.getElementById('analyticsSentences').textContent = sentences;
+            document.getElementById('analyticsLines').textContent = lines;
+
+            const topWordsList = document.getElementById('analyticsTopWords');
+            if (topWords.length > 0) {
+                topWordsList.innerHTML = topWords.map(([word, count]) =>
+                    `<li class="word-freq-item">
+                        <span class="word-freq-word">${word}</span>
+                        <span class="word-freq-count">${count}</span>
+                    </li>`
+                ).join('');
+            } else {
+                topWordsList.innerHTML = '<li class="word-freq-item"><span class="word-freq-word">—</span></li>';
+            }
+        }
+
+        // ============================================
+        // LINE NUMBERS TOGGLE
+        // ============================================
+
+        toggleLineNumbers() {
+            this.settings.lineNumbersEnabled = !this.settings.lineNumbersEnabled;
+
+            // Update button state
+            const btn = document.getElementById('lineNumBtn');
+            if (this.settings.lineNumbersEnabled) {
+                btn.style.background = 'var(--accent-primary)';
+                btn.style.color = 'var(--bg-primary)';
+            } else {
+                btn.style.background = '';
+                btn.style.color = '';
+            }
+
+            // Apply to all editors
+            Object.values(this.editors).forEach(editor => {
+                const lineNumbers = editor.element.querySelector('.line-numbers');
+                lineNumbers.style.display = this.settings.lineNumbersEnabled ? 'block' : 'none';
+            });
+
+            // Save settings
+            localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings));
+        }
+
+        // ============================================
+        // VERSION CONTROL
+        // ============================================
+
+        showVersionsModal() {
+            this.loadVersions();
+            this.updateVersionsList();
+            this.showModal('versionsModal');
+        }
+
+        loadVersions() {
+            const saved = localStorage.getItem(this.VERSIONS_KEY);
+            if (saved) {
+                try {
+                    this.versions = JSON.parse(saved);
+                } catch (e) {
+                    this.versions = {};
+                }
+            }
+        }
+
+        saveVersions() {
+            localStorage.setItem(this.VERSIONS_KEY, JSON.stringify(this.versions));
+        }
+
+        saveVersion() {
+            if (!this.activeEditorId) {
+                this.toast('No active editor', 'warning');
+                return;
+            }
+
+            const editor = this.editors[this.activeEditorId];
+            if (!editor.fileId) {
+                this.toast('Save the file first before creating versions', 'warning');
+                return;
+            }
+
+            const file = this.files[editor.fileId];
+            const content = editor.element.querySelector('.editor-textarea').value;
+            const wordCount = this.countWords(content);
+
+            // Initialize versions array for this file if needed
+            if (!this.versions[editor.fileId]) {
+                this.versions[editor.fileId] = [];
+            }
+
+            // Create version snapshot
+            const version = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                content: content,
+                wordCount: wordCount,
+                name: file.name
+            };
+
+            this.versions[editor.fileId].push(version);
+
+            // Keep only last 10 versions per file
+            if (this.versions[editor.fileId].length > 10) {
+                this.versions[editor.fileId] = this.versions[editor.fileId].slice(-10);
+            }
+
+            this.saveVersions();
+            this.updateVersionsList();
+            this.toast(`Version saved (${wordCount} words)`, 'success');
+        }
+
+        loadVersion(fileId, versionId) {
+            const versions = this.versions[fileId];
+            if (!versions) return;
+
+            const version = versions.find(v => v.id === versionId);
+            if (!version) return;
+
+            // Find editor with this file or use active editor
+            let targetEditorId = null;
+            Object.entries(this.editors).forEach(([id, editor]) => {
+                if (editor.fileId === fileId) {
+                    targetEditorId = id;
+                }
+            });
+
+            if (!targetEditorId) {
+                targetEditorId = this.activeEditorId;
+            }
+
+            if (targetEditorId && this.editors[targetEditorId]) {
+                const editor = this.editors[targetEditorId];
+                editor.element.querySelector('.editor-textarea').value = version.content;
+
+                // Mark as unsaved (since we're restoring a previous version)
+                if (editor.fileId && this.files[editor.fileId]) {
+                    this.files[editor.fileId].saved = false;
+                }
+
+                this.updateLineNumbers(parseInt(targetEditorId));
+                this.updateEditorStatus(parseInt(targetEditorId));
+                this.updateAnalytics();
+                this.toast(`Restored version from ${new Date(version.timestamp).toLocaleString()}`, 'success');
+                this.hideModal('versionsModal');
+            }
+        }
+
+        deleteVersion(fileId, versionId) {
+            if (!this.versions[fileId]) return;
+
+            this.versions[fileId] = this.versions[fileId].filter(v => v.id !== versionId);
+            this.saveVersions();
+            this.updateVersionsList();
+            this.toast('Version deleted', 'info');
+        }
+
+        updateVersionsList() {
+            const list = document.getElementById('versionsList');
+
+            // Get current file's versions
+            let fileId = null;
+            if (this.activeEditorId && this.editors[this.activeEditorId]) {
+                fileId = this.editors[this.activeEditorId].fileId;
+            }
+
+            if (!fileId || !this.versions[fileId] || this.versions[fileId].length === 0) {
+                list.innerHTML = '<li style="color: var(--text-muted); padding: 12px; text-align: center;">No versions saved for this file</li>';
+                return;
+            }
+
+            // Show versions newest first
+            const versions = [...this.versions[fileId]].reverse();
+            list.innerHTML = versions.map(v => {
+                const date = new Date(v.timestamp);
+                return `
+                    <li class="version-item" onclick="app.loadVersion('${fileId}', ${v.id})">
+                        <div class="version-info">
+                            <div class="version-time">${date.toLocaleDateString()} ${date.toLocaleTimeString()}</div>
+                            <div class="version-meta">${v.wordCount} words</div>
+                        </div>
+                        <div class="version-actions">
+                            <button class="btn small" onclick="event.stopPropagation(); app.deleteVersion('${fileId}', ${v.id})" title="Delete">🗑️</button>
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
 
         // ============================================
         // FILE MANAGEMENT
@@ -2317,21 +2800,22 @@
         onEditorInput(editorId) {
             const editor = this.editors[editorId];
             if (!editor) return;
-            
+
             // Mark file as unsaved
             if (editor.fileId && this.files[editor.fileId]) {
                 this.files[editor.fileId].saved = false;
-                this.files[editor.fileId].content = 
+                this.files[editor.fileId].content =
                     editor.element.querySelector('.editor-textarea').value;
             }
-            
+
             this.updateEditorStatus(editorId);
             this.updateLineNumbers(editorId);
             this.updateUI();
-            
+            this.updateAnalytics();
+
             // Update tabs (for first-line title display)
             this.updateTabs();
-            
+
             // Debounced auto-save
             this.scheduleAutoSave(editorId);
         }
@@ -3218,16 +3702,28 @@
             Object.values(this.editors).forEach(editor => {
                 const textarea = editor.element.querySelector('.editor-textarea');
                 const lineNumbers = editor.element.querySelector('.line-numbers');
-                
+
                 textarea.style.fontSize = this.settings.fontSize + 'px';
                 lineNumbers.style.fontSize = (this.settings.fontSize * 0.9) + 'px';
                 lineNumbers.style.display = this.settings.lineNumbersEnabled ? 'block' : 'none';
             });
-            
+
+            // Update line numbers button state
+            const lineNumBtn = document.getElementById('lineNumBtn');
+            if (lineNumBtn) {
+                if (this.settings.lineNumbersEnabled) {
+                    lineNumBtn.style.background = 'var(--accent-primary)';
+                    lineNumBtn.style.color = 'var(--bg-primary)';
+                } else {
+                    lineNumBtn.style.background = '';
+                    lineNumBtn.style.color = '';
+                }
+            }
+
             // Update autosave indicator
             const indicator = document.getElementById('autoSaveIndicator');
             const status = document.getElementById('autoSaveStatus');
-            
+
             if (this.settings.autoSaveEnabled) {
                 indicator.classList.remove('warning');
                 status.textContent = `Auto-save every ${this.settings.autoSaveInterval}s`;
@@ -3235,7 +3731,7 @@
                 indicator.classList.add('warning');
                 status.textContent = 'Auto-save disabled';
             }
-            
+
             // Apply theme
             this.applyTheme();
         }
