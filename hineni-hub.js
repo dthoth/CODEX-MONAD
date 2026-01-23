@@ -155,16 +155,6 @@
                     isLocal: true
                 },
 {
-                    id: 'din-files',
-                    label: 'DIN Files',
-                    icon: '📁',
-                    status: 'active',
-                    description: 'Consciousness file system with semantic indexing.',
-                    hubPath: 'apps/din_portal/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
                     id: 'din-portal',
                     label: 'DIN Portal',
                     icon: '🚪',
