@@ -3,698 +3,1193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hypergraph | N-Dimensional Thought Navigator</title>
+    <title>Hypergraph | CODEX Consciousness Map</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             background: #000;
             color: #fff;
-            font-family: 'Courier New', monospace;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             overflow: hidden;
-            position: relative;
         }
-        
+
         canvas {
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1;
         }
-        
-        .ui-overlay {
+
+        /* Header Bar */
+        .header-bar {
             position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-        }
-        
-        .controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            pointer-events: all;
-            z-index: 20;
-            min-width: 250px;
-        }
-        
-        .control-title {
-            color: #00ff88;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-        
-        .control-group {
-            margin-bottom: 15px;
-        }
-        
-        .control-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9em;
-            margin-bottom: 5px;
-            display: block;
-        }
-        
-        .control-slider {
-            width: 100%;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 5px;
-            background: rgba(0, 136, 255, 0.3);
-            outline: none;
-            border-radius: 5px;
-        }
-        
-        .control-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 15px;
-            height: 15px;
-            background: #00ff88;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-        
-        .control-button {
-            background: rgba(0, 136, 255, 0.2);
-            border: 1px solid rgba(0, 136, 255, 0.5);
-            color: #00aaff;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            width: 100%;
-            margin: 5px 0;
-            transition: all 0.3s;
-        }
-        
-        .control-button:hover {
-            background: rgba(0, 136, 255, 0.3);
-            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
-        }
-        
-        .control-button.active {
-            background: rgba(0, 255, 136, 0.3);
-            border-color: #00ff88;
-            color: #00ff88;
-        }
-        
-        .info-panel {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            pointer-events: all;
-            z-index: 20;
-        }
-        
-        .info-title {
-            color: #00ff88;
-            margin-bottom: 10px;
-        }
-        
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
-            font-size: 0.9em;
-        }
-        
-        .info-label {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .info-value {
-            color: #00aaff;
-        }
-        
-        .node-tooltip {
-            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
             background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(0, 255, 136, 0.5);
-            border-radius: 8px;
-            padding: 10px;
-            pointer-events: none;
-            z-index: 30;
-            display: none;
-            max-width: 300px;
-        }
-        
-        .node-tooltip.visible {
-            display: block;
-        }
-        
-        .tooltip-title {
-            color: #00ff88;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .tooltip-content {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9em;
-        }
-        
-        .home-link {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 136, 255, 0.2);
-            border: 1px solid rgba(0, 136, 255, 0.5);
-            color: #00aaff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
             z-index: 100;
         }
-        
-        .home-link:hover {
-            background: rgba(0, 255, 136, 0.3);
-            border-color: #00ff88;
-            color: #00ff88;
-        }
-        
-        .dimension-selector {
-            position: fixed;
-            top: 80px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            z-index: 20;
-        }
-        
-        .dimension-title {
-            color: #00ff88;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-        }
-        
-        .dimension-list {
+
+        .header-left {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            gap: 20px;
         }
-        
-        .dimension-item {
-            background: rgba(0, 136, 255, 0.1);
-            border: 1px solid rgba(0, 136, 255, 0.3);
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.85em;
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .dimension-item:hover {
+
+        .home-link {
             background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: #00aaff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
         }
-        
-        .dimension-item.active {
+
+        .home-link:hover {
             background: rgba(0, 255, 136, 0.2);
             border-color: #00ff88;
             color: #00ff88;
         }
-        
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
         .search-bar {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 25px;
-            padding: 10px 20px;
-            z-index: 20;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            width: 350px;
         }
-        
+
         .search-input {
             background: transparent;
             border: none;
             color: #fff;
-            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
             outline: none;
-            width: 300px;
+            width: 100%;
         }
-        
+
         .search-input::placeholder {
             color: rgba(255, 255, 255, 0.3);
         }
-        
-        .search-icon {
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+            min-width: 200px;
+        }
+
+        .stats-title {
             color: #00ff88;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat-value {
+            color: #00aaff;
+            font-weight: 500;
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+        }
+
+        .legend-title {
+            color: #00ff88;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .legend-item.dimmed {
+            opacity: 0.3;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .legend-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .legend-count {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-btn {
+            background: rgba(0, 136, 255, 0.15);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            color: #00aaff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 136, 255, 0.25);
+            border-color: #00aaff;
+        }
+
+        .control-btn.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .control-slider-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-slider-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            min-width: 60px;
+        }
+
+        .control-slider {
+            width: 100px;
+            -webkit-appearance: none;
+            height: 4px;
+            background: rgba(0, 136, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Node Detail Panel */
+        .detail-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 50;
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .detail-panel.visible {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .detail-title {
+            color: #00ff88;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .detail-close:hover {
+            color: #fff;
+        }
+
+        .detail-meta {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .detail-content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .detail-connections {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .detail-btn {
+            width: 100%;
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .detail-btn:hover {
+            background: rgba(0, 255, 136, 0.25);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            border-radius: 8px;
+            padding: 10px 14px;
+            z-index: 200;
+            pointer-events: none;
+            display: none;
+            max-width: 250px;
+        }
+
+        .tooltip.visible {
+            display: block;
+        }
+
+        .tooltip-title {
+            color: #00ff88;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .tooltip-type {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 50;
+            display: none;
+        }
+
+        .empty-state.visible {
+            display: block;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .empty-text {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .empty-btn {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .empty-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
         }
     </style>
 </head>
 <body>
-    <canvas id="hypergraph"></canvas>
-    
-    <div class="ui-overlay"></div>
-    
-    <a href="index.html" class="home-link">🏠 Portal</a>
-    
-    <div class="search-bar">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" placeholder="Search consciousness nodes..." id="searchInput">
-    </div>
-    
-    <div class="dimension-selector">
-        <div class="dimension-title">DIMENSIONS</div>
-        <div class="dimension-list">
-            <div class="dimension-item active" data-dim="3">3D Space</div>
-            <div class="dimension-item" data-dim="4">4D Time</div>
-            <div class="dimension-item" data-dim="5">5D Probability</div>
-            <div class="dimension-item" data-dim="n">N-Dimensional</div>
+    <canvas id="canvas"></canvas>
+
+    <div class="header-bar">
+        <div class="header-left">
+            <div class="logo">🕸️ Hypergraph</div>
+            <a href="index.html" class="home-link">← Portal</a>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" class="search-input" placeholder="Search your consciousness map..." id="searchInput">
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="control-btn" onclick="app.refresh()">🔄 Refresh</button>
         </div>
     </div>
-    
+
+    <div class="stats-panel">
+        <div class="stats-title">📊 Network Stats</div>
+        <div class="stat-item">
+            <span class="stat-label">Total Nodes</span>
+            <span class="stat-value" id="statNodes">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Connections</span>
+            <span class="stat-value" id="statEdges">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Density</span>
+            <span class="stat-value" id="statDensity">0%</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Data Sources</span>
+            <span class="stat-value" id="statSources">0</span>
+        </div>
+    </div>
+
+    <div class="legend" id="legend">
+        <div class="legend-title">🎨 Data Sources</div>
+        <!-- Dynamic legend items -->
+    </div>
+
     <div class="controls">
-        <div class="control-title">HYPERGRAPH CONTROLS</div>
-        
-        <div class="control-group">
-            <label class="control-label">Node Density</label>
-            <input type="range" class="control-slider" id="densitySlider" min="10" max="200" value="50">
+        <div class="control-row">
+            <button class="control-btn active" onclick="app.toggleAnimation()" id="playBtn">⏸ Pause</button>
+            <button class="control-btn" onclick="app.resetView()">🎯 Reset</button>
+            <button class="control-btn" onclick="app.exportGraph()">📤 Export</button>
         </div>
-        
-        <div class="control-group">
-            <label class="control-label">Connection Threshold</label>
-            <input type="range" class="control-slider" id="thresholdSlider" min="0" max="100" value="30">
-        </div>
-        
-        <div class="control-group">
-            <label class="control-label">Rotation Speed</label>
-            <input type="range" class="control-slider" id="rotationSlider" min="0" max="100" value="50">
-        </div>
-        
-        <button class="control-button" onclick="toggleAnimation()">Pause/Play</button>
-        <button class="control-button" onclick="resetView()">Reset View</button>
-        <button class="control-button" onclick="generateNew()">Generate New</button>
-        <button class="control-button" onclick="toggleMode()">Toggle Mode</button>
-        <button class="control-button" onclick="exportGraph()">Export Data</button>
-    </div>
-    
-    <div class="info-panel">
-        <div class="info-title">NETWORK METRICS</div>
-        <div class="info-item">
-            <span class="info-label">Nodes:</span>
-            <span class="info-value" id="nodeCount">0</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Edges:</span>
-            <span class="info-value" id="edgeCount">0</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Dimensions:</span>
-            <span class="info-value" id="dimensionCount">3</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Coherence:</span>
-            <span class="info-value" id="coherence">98.7%</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Entropy:</span>
-            <span class="info-value" id="entropy">0.42</span>
+        <div class="control-row">
+            <div class="control-slider-group">
+                <span class="control-slider-label">Speed</span>
+                <input type="range" class="control-slider" id="speedSlider" min="0" max="100" value="30">
+            </div>
+            <div class="control-slider-group">
+                <span class="control-slider-label">Zoom</span>
+                <input type="range" class="control-slider" id="zoomSlider" min="20" max="200" value="100">
+            </div>
         </div>
     </div>
-    
-    <div class="node-tooltip" id="nodeTooltip">
+
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <div class="detail-title" id="detailTitle">Node Details</div>
+            <button class="detail-close" onclick="app.closeDetail()">&times;</button>
+        </div>
+        <div class="detail-meta" id="detailMeta"></div>
+        <div class="detail-content" id="detailContent"></div>
+        <div class="detail-connections" id="detailConnections"></div>
+        <button class="detail-btn" id="detailBtn" onclick="app.openSource()">Open in Source App</button>
+    </div>
+
+    <div class="tooltip" id="tooltip">
         <div class="tooltip-title" id="tooltipTitle"></div>
-        <div class="tooltip-content" id="tooltipContent"></div>
+        <div class="tooltip-type" id="tooltipType"></div>
     </div>
-    
+
+    <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🌌</div>
+        <div class="empty-title">Your Consciousness Map is Empty</div>
+        <div class="empty-text">
+            Start using CODEX apps to populate your hypergraph.
+            Create files in PolyWrite, capture content, or write in Pearl.
+        </div>
+        <a href="index.html" class="empty-btn">Go to Portal</a>
+    </div>
+
     <script>
-        const canvas = document.getElementById('hypergraph');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        // Graph data
-        let nodes = [];
-        let edges = [];
-        let animationId;
-        let isAnimating = true;
-        let rotationX = 0;
-        let rotationY = 0;
-        let rotationZ = 0;
-        let rotationSpeed = 0.005;
-        let mouseX = 0;
-        let mouseY = 0;
-        let zoom = 1;
-        
-        // Node categories for semantic meaning
-        const categories = [
-            'Consciousness', 'Quantum', 'Memory', 'Pattern', 'Energy',
-            'Information', 'Time', 'Space', 'Probability', 'Emergence'
-        ];
-        
-        class Node {
-            constructor(x, y, z, category) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.category = category;
-                this.connections = [];
-                this.radius = 3 + Math.random() * 4;
-                this.color = this.getCategoryColor(category);
-                this.pulsePhase = Math.random() * Math.PI * 2;
-                this.label = this.generateLabel();
-            }
-            
-            getCategoryColor(category) {
-                const colors = {
-                    'Consciousness': '#00ff88',
-                    'Quantum': '#0088ff',
-                    'Memory': '#ff00ff',
-                    'Pattern': '#ffaa00',
-                    'Energy': '#ff0088',
-                    'Information': '#00ffff',
-                    'Time': '#8800ff',
-                    'Space': '#ff8800',
-                    'Probability': '#88ff00',
-                    'Emergence': '#ff0044'
-                };
-                return colors[category] || '#ffffff';
-            }
-            
-            generateLabel() {
-                const prefixes = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Theta', 'Omega', 'Sigma', 'Tau'];
-                const suffix = Math.floor(Math.random() * 1000);
-                return `${prefixes[Math.floor(Math.random() * prefixes.length)]}-${suffix}`;
-            }
-            
-            project(width, height) {
-                // 3D to 2D projection with perspective
-                const perspective = 800;
-                const scale = perspective / (perspective + this.z * zoom);
-                
-                return {
-                    x: width / 2 + this.x * scale,
-                    y: height / 2 + this.y * scale,
-                    scale: scale
-                };
+    // ============================================
+    // HYPERGRAPH - CODEX CONSCIOUSNESS MAP
+    // ============================================
+
+    class Hypergraph {
+        constructor() {
+            this.canvas = document.getElementById('canvas');
+            this.ctx = this.canvas.getContext('2d');
+
+            // Data
+            this.nodes = [];
+            this.edges = [];
+            this.sources = {};
+
+            // View state
+            this.isAnimating = true;
+            this.rotationX = 0;
+            this.rotationY = 0;
+            this.rotationSpeed = 0.003;
+            this.zoom = 1;
+            this.selectedNode = null;
+            this.hoveredNode = null;
+            this.mouseX = 0;
+            this.mouseY = 0;
+
+            // Filter state
+            this.visibleSources = new Set();
+
+            // Source colors
+            this.sourceColors = {
+                'polywrite': { color: '#00ff88', icon: '✍️', label: 'PolyWrite', path: 'apps/polywrite/index.html' },
+                'pearl': { color: '#ff00ff', icon: '💎', label: 'Pearl', path: 'apps/pearl/index.html' },
+                'capture': { color: '#ffaa00', icon: '📸', label: 'Capture', path: 'apps/codex_capture/index.html' },
+                'oracle': { color: '#8800ff', icon: '🔮', label: 'Oracle', path: 'apps/codex-ark/oracle.html' },
+                'notes': { color: '#00aaff', icon: '📝', label: 'Notes', path: 'apps/codex-ark/gui-portal.html' },
+                'clipboard': { color: '#ff0088', icon: '📋', label: 'Clipboard', path: 'apps/codex-ark/scrapers/clipboard-vault.html' }
+            };
+
+            this.init();
+        }
+
+        init() {
+            this.resize();
+            this.loadData();
+            this.setupEventListeners();
+            this.animate();
+        }
+
+        resize() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+        }
+
+        // ============================================
+        // DATA LOADING
+        // ============================================
+
+        loadData() {
+            this.nodes = [];
+            this.edges = [];
+            this.sources = {};
+
+            // Load from each source
+            this.loadPolyWrite();
+            this.loadPearl();
+            this.loadCapture();
+            this.loadOracle();
+            this.loadNotes();
+            this.loadClipboard();
+
+            // Initialize visible sources
+            this.visibleSources = new Set(Object.keys(this.sources));
+
+            // Generate connections
+            this.generateConnections();
+
+            // Update UI
+            this.updateStats();
+            this.updateLegend();
+
+            // Show empty state if no data
+            const emptyState = document.getElementById('emptyState');
+            if (this.nodes.length === 0) {
+                emptyState.classList.add('visible');
+            } else {
+                emptyState.classList.remove('visible');
             }
         }
-        
-        function generateNodes(count) {
-            nodes = [];
-            const range = 400;
-            
-            for (let i = 0; i < count; i++) {
-                const category = categories[Math.floor(Math.random() * categories.length)];
-                nodes.push(new Node(
-                    (Math.random() - 0.5) * range,
-                    (Math.random() - 0.5) * range,
-                    (Math.random() - 0.5) * range,
-                    category
-                ));
+
+        loadPolyWrite() {
+            try {
+                const data = localStorage.getItem('polywrite_v2');
+                if (!data) return;
+
+                const parsed = JSON.parse(data);
+                const files = parsed.files || {};
+
+                Object.values(files).forEach(file => {
+                    if (!file.content || file.content.trim().length === 0) return;
+
+                    this.addNode({
+                        id: `polywrite_${file.id}`,
+                        source: 'polywrite',
+                        title: file.name || 'Untitled',
+                        content: file.content.substring(0, 500),
+                        timestamp: file.modified || file.created || Date.now(),
+                        data: file
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading PolyWrite:', e);
             }
-            
-            generateConnections();
-            updateMetrics();
         }
-        
-        function generateConnections() {
-            edges = [];
-            const threshold = parseInt(document.getElementById('thresholdSlider').value);
-            
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const distance = Math.sqrt(
-                        Math.pow(nodes[i].x - nodes[j].x, 2) +
-                        Math.pow(nodes[i].y - nodes[j].y, 2) +
-                        Math.pow(nodes[i].z - nodes[j].z, 2)
-                    );
-                    
-                    // Connect based on distance and category similarity
-                    const categoryBonus = nodes[i].category === nodes[j].category ? 20 : 0;
-                    if (distance < threshold + categoryBonus) {
-                        edges.push({ from: i, to: j, distance: distance });
-                        nodes[i].connections.push(j);
-                        nodes[j].connections.push(i);
+
+        loadPearl() {
+            try {
+                const data = localStorage.getItem('pearl_v09_data');
+                if (!data) return;
+
+                const parsed = JSON.parse(data);
+                const pages = parsed.pages || [];
+
+                pages.forEach((page, idx) => {
+                    if (!page || page.trim().length === 0) return;
+
+                    this.addNode({
+                        id: `pearl_page_${idx}`,
+                        source: 'pearl',
+                        title: `Pearl Page ${idx + 1}`,
+                        content: page.substring(0, 500),
+                        timestamp: parsed.lastModified || Date.now(),
+                        data: { pageIndex: idx, content: page }
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Pearl:', e);
+            }
+        }
+
+        loadCapture() {
+            try {
+                const data = localStorage.getItem('codex_capture_items');
+                if (!data) return;
+
+                const captures = JSON.parse(data);
+
+                captures.forEach(capture => {
+                    const isImage = capture.type === 'image';
+                    this.addNode({
+                        id: `capture_${capture.id}`,
+                        source: 'capture',
+                        title: isImage ? 'Image Capture' : 'Text Capture',
+                        content: isImage ? '[Image]' : (capture.data || '').substring(0, 500),
+                        timestamp: new Date(capture.timestamp).getTime(),
+                        data: capture
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Capture:', e);
+            }
+        }
+
+        loadOracle() {
+            try {
+                const data = localStorage.getItem('oracle-history');
+                if (!data) return;
+
+                const history = JSON.parse(data);
+
+                history.forEach((entry, idx) => {
+                    this.addNode({
+                        id: `oracle_${idx}`,
+                        source: 'oracle',
+                        title: entry.question || 'Oracle Query',
+                        content: entry.result || entry.answer || '',
+                        timestamp: new Date(entry.timestamp || Date.now()).getTime(),
+                        data: entry
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Oracle:', e);
+            }
+        }
+
+        loadNotes() {
+            try {
+                const notes = localStorage.getItem('codex-notes');
+                if (!notes || notes.trim().length === 0) return;
+
+                this.addNode({
+                    id: 'notes_main',
+                    source: 'notes',
+                    title: 'CODEX Notes',
+                    content: notes.substring(0, 500),
+                    timestamp: Date.now(),
+                    data: { content: notes }
+                });
+            } catch (e) {
+                console.warn('Error loading Notes:', e);
+            }
+        }
+
+        loadClipboard() {
+            try {
+                const data = localStorage.getItem('clipboard-vault');
+                if (!data) return;
+
+                const clips = JSON.parse(data);
+
+                clips.forEach((clip, idx) => {
+                    if (!clip.text || clip.text.trim().length === 0) return;
+
+                    this.addNode({
+                        id: `clipboard_${idx}`,
+                        source: 'clipboard',
+                        title: 'Clipboard Entry',
+                        content: clip.text.substring(0, 500),
+                        timestamp: new Date(clip.timestamp || Date.now()).getTime(),
+                        data: clip
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Clipboard:', e);
+            }
+        }
+
+        addNode(nodeData) {
+            // Position in 3D space (spread by source)
+            const sourceIndex = Object.keys(this.sourceColors).indexOf(nodeData.source);
+            const angleOffset = (sourceIndex / Object.keys(this.sourceColors).length) * Math.PI * 2;
+            const range = 300;
+
+            const angle = angleOffset + Math.random() * 0.8 - 0.4;
+            const radius = 100 + Math.random() * 200;
+
+            const node = {
+                ...nodeData,
+                x: Math.cos(angle) * radius + (Math.random() - 0.5) * 100,
+                y: (Math.random() - 0.5) * range,
+                z: Math.sin(angle) * radius + (Math.random() - 0.5) * 100,
+                radius: 4 + Math.min(nodeData.content.length / 100, 6),
+                color: this.sourceColors[nodeData.source]?.color || '#ffffff',
+                connections: [],
+                pulsePhase: Math.random() * Math.PI * 2
+            };
+
+            this.nodes.push(node);
+
+            // Track sources
+            if (!this.sources[nodeData.source]) {
+                this.sources[nodeData.source] = [];
+            }
+            this.sources[nodeData.source].push(node);
+        }
+
+        generateConnections() {
+            this.edges = [];
+
+            // Clear existing connections
+            this.nodes.forEach(node => node.connections = []);
+
+            for (let i = 0; i < this.nodes.length; i++) {
+                for (let j = i + 1; j < this.nodes.length; j++) {
+                    const nodeA = this.nodes[i];
+                    const nodeB = this.nodes[j];
+
+                    let strength = 0;
+
+                    // Same source = strong connection
+                    if (nodeA.source === nodeB.source) {
+                        strength += 0.3;
+                    }
+
+                    // Time proximity (within 1 hour = connected)
+                    const timeDiff = Math.abs(nodeA.timestamp - nodeB.timestamp);
+                    if (timeDiff < 3600000) { // 1 hour
+                        strength += 0.4;
+                    } else if (timeDiff < 86400000) { // 1 day
+                        strength += 0.2;
+                    }
+
+                    // Content similarity (shared words)
+                    const wordsA = this.extractKeywords(nodeA.content);
+                    const wordsB = this.extractKeywords(nodeB.content);
+                    const sharedWords = wordsA.filter(w => wordsB.includes(w));
+                    if (sharedWords.length > 2) {
+                        strength += Math.min(sharedWords.length * 0.1, 0.5);
+                    }
+
+                    // Create edge if strong enough
+                    if (strength >= 0.3) {
+                        this.edges.push({
+                            from: i,
+                            to: j,
+                            strength: strength
+                        });
+                        nodeA.connections.push(j);
+                        nodeB.connections.push(i);
                     }
                 }
             }
         }
-        
-        function rotatePoint(point) {
-            // Rotate around X axis
-            let y = point.y * Math.cos(rotationX) - point.z * Math.sin(rotationX);
-            let z = point.y * Math.sin(rotationX) + point.z * Math.cos(rotationX);
-            point.y = y;
-            point.z = z;
-            
-            // Rotate around Y axis
-            let x = point.x * Math.cos(rotationY) + point.z * Math.sin(rotationY);
-            z = -point.x * Math.sin(rotationY) + point.z * Math.cos(rotationY);
-            point.x = x;
-            point.z = z;
-            
-            // Rotate around Z axis
-            x = point.x * Math.cos(rotationZ) - point.y * Math.sin(rotationZ);
-            y = point.x * Math.sin(rotationZ) + point.y * Math.cos(rotationZ);
-            point.x = x;
-            point.y = y;
+
+        extractKeywords(text) {
+            if (!text) return [];
+            return text.toLowerCase()
+                .replace(/[^a-z\s]/g, '')
+                .split(/\s+/)
+                .filter(w => w.length > 4);
         }
-        
-        function animate() {
-            if (!isAnimating) return;
-            
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Update rotation
-            rotationY += rotationSpeed;
-            rotationX += rotationSpeed * 0.3;
-            
-            // Rotate all nodes
-            nodes.forEach(node => {
-                rotatePoint(node);
-            });
-            
-            // Sort nodes by z-depth for proper rendering
-            const sortedNodes = [...nodes].sort((a, b) => a.z - b.z);
-            
+
+        // ============================================
+        // RENDERING
+        // ============================================
+
+        animate() {
+            if (this.isAnimating) {
+                this.rotationY += this.rotationSpeed;
+                this.rotationX += this.rotationSpeed * 0.2;
+
+                // Rotate nodes
+                this.nodes.forEach(node => {
+                    this.rotateNode(node);
+                });
+            }
+
+            this.render();
+            requestAnimationFrame(() => this.animate());
+        }
+
+        rotateNode(node) {
+            // Store original position
+            const x = node.x;
+            const y = node.y;
+            const z = node.z;
+
+            // Rotate around Y axis
+            node.x = x * Math.cos(this.rotationSpeed) + z * Math.sin(this.rotationSpeed);
+            node.z = -x * Math.sin(this.rotationSpeed) + z * Math.cos(this.rotationSpeed);
+
+            // Rotate around X axis (slower)
+            const y2 = node.y;
+            const z2 = node.z;
+            node.y = y2 * Math.cos(this.rotationSpeed * 0.2) - z2 * Math.sin(this.rotationSpeed * 0.2);
+            node.z = y2 * Math.sin(this.rotationSpeed * 0.2) + z2 * Math.cos(this.rotationSpeed * 0.2);
+        }
+
+        project(node) {
+            const perspective = 800;
+            const scale = perspective / (perspective + node.z * this.zoom);
+            return {
+                x: this.canvas.width / 2 + node.x * scale * this.zoom,
+                y: this.canvas.height / 2 + node.y * scale * this.zoom,
+                scale: scale
+            };
+        }
+
+        render() {
+            // Clear with fade effect
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Filter visible nodes
+            const visibleNodes = this.nodes.filter(n => this.visibleSources.has(n.source));
+            const visibleIndices = new Set(visibleNodes.map(n => this.nodes.indexOf(n)));
+
+            // Sort by z-depth
+            const sortedNodes = [...visibleNodes].sort((a, b) => a.z - b.z);
+
             // Draw edges
-            ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
-            ctx.lineWidth = 1;
-            
-            edges.forEach(edge => {
-                const node1 = nodes[edge.from];
-                const node2 = nodes[edge.to];
-                const proj1 = node1.project(canvas.width, canvas.height);
-                const proj2 = node2.project(canvas.width, canvas.height);
-                
-                const gradient = ctx.createLinearGradient(proj1.x, proj1.y, proj2.x, proj2.y);
-                gradient.addColorStop(0, node1.color + '33');
-                gradient.addColorStop(1, node2.color + '33');
-                ctx.strokeStyle = gradient;
-                
-                ctx.beginPath();
-                ctx.moveTo(proj1.x, proj1.y);
-                ctx.lineTo(proj2.x, proj2.y);
-                ctx.stroke();
+            this.edges.forEach(edge => {
+                if (!visibleIndices.has(edge.from) || !visibleIndices.has(edge.to)) return;
+
+                const nodeA = this.nodes[edge.from];
+                const nodeB = this.nodes[edge.to];
+                const projA = this.project(nodeA);
+                const projB = this.project(nodeB);
+
+                const gradient = this.ctx.createLinearGradient(projA.x, projA.y, projB.x, projB.y);
+                gradient.addColorStop(0, nodeA.color + '33');
+                gradient.addColorStop(1, nodeB.color + '33');
+
+                this.ctx.strokeStyle = gradient;
+                this.ctx.lineWidth = edge.strength * 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(projA.x, projA.y);
+                this.ctx.lineTo(projB.x, projB.y);
+                this.ctx.stroke();
             });
-            
+
             // Draw nodes
             sortedNodes.forEach(node => {
-                const proj = node.project(canvas.width, canvas.height);
-                node.pulsePhase += 0.05;
-                
-                const pulse = 1 + Math.sin(node.pulsePhase) * 0.3;
-                const radius = node.radius * proj.scale * pulse;
-                
-                // Node glow
-                const glow = ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, radius * 3);
-                glow.addColorStop(0, node.color + 'ff');
-                glow.addColorStop(0.5, node.color + '44');
+                const proj = this.project(node);
+                node.pulsePhase += 0.03;
+
+                const isHovered = node === this.hoveredNode;
+                const isSelected = node === this.selectedNode;
+                const pulse = 1 + Math.sin(node.pulsePhase) * 0.2;
+                const radius = node.radius * proj.scale * pulse * (isHovered ? 1.5 : 1) * (isSelected ? 1.3 : 1);
+
+                // Glow
+                const glow = this.ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, radius * 4);
+                glow.addColorStop(0, node.color + (isSelected ? 'aa' : '88'));
+                glow.addColorStop(0.5, node.color + '33');
                 glow.addColorStop(1, node.color + '00');
-                
-                ctx.fillStyle = glow;
-                ctx.beginPath();
-                ctx.arc(proj.x, proj.y, radius * 3, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Node core
-                ctx.fillStyle = node.color;
-                ctx.beginPath();
-                ctx.arc(proj.x, proj.y, radius, 0, Math.PI * 2);
-                ctx.fill();
+
+                this.ctx.fillStyle = glow;
+                this.ctx.beginPath();
+                this.ctx.arc(proj.x, proj.y, radius * 4, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Core
+                this.ctx.fillStyle = node.color;
+                this.ctx.beginPath();
+                this.ctx.arc(proj.x, proj.y, radius, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Ring for selected
+                if (isSelected) {
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.beginPath();
+                    this.ctx.arc(proj.x, proj.y, radius + 4, 0, Math.PI * 2);
+                    this.ctx.stroke();
+                }
             });
-            
-            animationId = requestAnimationFrame(animate);
         }
-        
-        function updateMetrics() {
-            document.getElementById('nodeCount').textContent = nodes.length;
-            document.getElementById('edgeCount').textContent = edges.length;
-            
-            // Calculate coherence based on connectivity
-            const avgConnections = nodes.reduce((sum, node) => sum + node.connections.length, 0) / nodes.length;
-            const coherence = Math.min(100, (avgConnections / nodes.length * 100) * 10);
-            document.getElementById('coherence').textContent = coherence.toFixed(1) + '%';
-            
-            // Calculate entropy
-            const entropy = (edges.length / (nodes.length * (nodes.length - 1) / 2)).toFixed(2);
-            document.getElementById('entropy').textContent = entropy;
+
+        // ============================================
+        // UI UPDATES
+        // ============================================
+
+        updateStats() {
+            document.getElementById('statNodes').textContent = this.nodes.length;
+            document.getElementById('statEdges').textContent = this.edges.length;
+
+            const maxEdges = this.nodes.length * (this.nodes.length - 1) / 2;
+            const density = maxEdges > 0 ? ((this.edges.length / maxEdges) * 100).toFixed(1) : 0;
+            document.getElementById('statDensity').textContent = density + '%';
+            document.getElementById('statSources').textContent = Object.keys(this.sources).length;
         }
-        
-        // Control functions
-        function toggleAnimation() {
-            isAnimating = !isAnimating;
-            if (isAnimating) animate();
+
+        updateLegend() {
+            const legend = document.getElementById('legend');
+            const title = legend.querySelector('.legend-title');
+
+            legend.innerHTML = '';
+            legend.appendChild(title);
+
+            Object.entries(this.sources).forEach(([source, nodes]) => {
+                const config = this.sourceColors[source];
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.dataset.source = source;
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${config.color}"></div>
+                    <span class="legend-label">${config.icon} ${config.label}</span>
+                    <span class="legend-count">${nodes.length}</span>
+                `;
+                item.onclick = () => this.toggleSource(source);
+                legend.appendChild(item);
+            });
         }
-        
-        function resetView() {
-            rotationX = 0;
-            rotationY = 0;
-            rotationZ = 0;
-            zoom = 1;
+
+        toggleSource(source) {
+            const item = document.querySelector(`.legend-item[data-source="${source}"]`);
+
+            if (this.visibleSources.has(source)) {
+                this.visibleSources.delete(source);
+                item.classList.add('dimmed');
+            } else {
+                this.visibleSources.add(source);
+                item.classList.remove('dimmed');
+            }
         }
-        
-        function generateNew() {
-            const density = parseInt(document.getElementById('densitySlider').value);
-            generateNodes(density);
+
+        showDetail(node) {
+            this.selectedNode = node;
+            const panel = document.getElementById('detailPanel');
+            const config = this.sourceColors[node.source];
+
+            document.getElementById('detailTitle').innerHTML = `${config.icon} ${node.title}`;
+            document.getElementById('detailMeta').textContent = `${config.label} • ${new Date(node.timestamp).toLocaleString()}`;
+            document.getElementById('detailContent').textContent = node.content || '[No content]';
+            document.getElementById('detailConnections').textContent = `${node.connections.length} connections`;
+
+            panel.classList.add('visible');
         }
-        
-        function toggleMode() {
-            // Switch between different visualization modes
-            ctx.globalCompositeOperation = 
-                ctx.globalCompositeOperation === 'lighter' ? 'source-over' : 'lighter';
+
+        closeDetail() {
+            document.getElementById('detailPanel').classList.remove('visible');
+            this.selectedNode = null;
         }
-        
-        function exportGraph() {
+
+        openSource() {
+            if (!this.selectedNode) return;
+            const config = this.sourceColors[this.selectedNode.source];
+            if (config.path) {
+                window.location.href = config.path;
+            }
+        }
+
+        showTooltip(node, x, y) {
+            const tooltip = document.getElementById('tooltip');
+            const config = this.sourceColors[node.source];
+
+            document.getElementById('tooltipTitle').textContent = node.title;
+            document.getElementById('tooltipType').textContent = `${config.icon} ${config.label}`;
+
+            tooltip.style.left = (x + 15) + 'px';
+            tooltip.style.top = (y + 15) + 'px';
+            tooltip.classList.add('visible');
+        }
+
+        hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        // ============================================
+        // CONTROLS
+        // ============================================
+
+        toggleAnimation() {
+            this.isAnimating = !this.isAnimating;
+            const btn = document.getElementById('playBtn');
+            btn.textContent = this.isAnimating ? '⏸ Pause' : '▶ Play';
+            btn.classList.toggle('active', this.isAnimating);
+        }
+
+        resetView() {
+            this.rotationX = 0;
+            this.rotationY = 0;
+            this.zoom = 1;
+            document.getElementById('zoomSlider').value = 100;
+        }
+
+        refresh() {
+            this.loadData();
+        }
+
+        exportGraph() {
             const data = {
-                nodes: nodes.map(n => ({
-                    label: n.label,
-                    category: n.category,
-                    position: { x: n.x, y: n.y, z: n.z }
+                exported: new Date().toISOString(),
+                nodes: this.nodes.map(n => ({
+                    id: n.id,
+                    source: n.source,
+                    title: n.title,
+                    timestamp: n.timestamp,
+                    connections: n.connections.length
                 })),
-                edges: edges.map(e => ({
-                    source: nodes[e.from].label,
-                    target: nodes[e.to].label
+                edges: this.edges.map(e => ({
+                    from: this.nodes[e.from].id,
+                    to: this.nodes[e.to].id,
+                    strength: e.strength
                 })),
-                metadata: {
-                    timestamp: new Date().toISOString(),
-                    nodeCount: nodes.length,
-                    edgeCount: edges.length
+                stats: {
+                    nodes: this.nodes.length,
+                    edges: this.edges.length,
+                    sources: Object.keys(this.sources)
                 }
             };
-            
+
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `hypergraph_${Date.now()}.json`;
+            a.download = `hypergraph-${Date.now()}.json`;
             a.click();
         }
-        
-        // Event listeners
-        document.getElementById('densitySlider').addEventListener('change', (e) => {
-            generateNew();
-        });
-        
-        document.getElementById('thresholdSlider').addEventListener('change', (e) => {
-            generateConnections();
-            updateMetrics();
-        });
-        
-        document.getElementById('rotationSlider').addEventListener('change', (e) => {
-            rotationSpeed = e.target.value / 10000;
-        });
-        
-        // Mouse interaction
-        canvas.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            
-            // Check for node hover
-            let hoveredNode = null;
-            let minDistance = Infinity;
-            
-            nodes.forEach(node => {
-                const proj = node.project(canvas.width, canvas.height);
-                const distance = Math.sqrt(
-                    Math.pow(mouseX - proj.x, 2) + 
-                    Math.pow(mouseY - proj.y, 2)
-                );
-                
-                if (distance < 20 && distance < minDistance) {
-                    minDistance = distance;
-                    hoveredNode = node;
-                }
-            });
-            
-            const tooltip = document.getElementById('nodeTooltip');
-            if (hoveredNode) {
-                tooltip.classList.add('visible');
-                tooltip.style.left = mouseX + 10 + 'px';
-                tooltip.style.top = mouseY + 10 + 'px';
-                document.getElementById('tooltipTitle').textContent = hoveredNode.label;
-                document.getElementById('tooltipContent').textContent = 
-                    `Category: ${hoveredNode.category}\nConnections: ${hoveredNode.connections.length}`;
-            } else {
-                tooltip.classList.remove('visible');
-            }
-        });
-        
-        // Mouse wheel zoom
-        canvas.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            zoom += e.deltaY * -0.001;
-            zoom = Math.min(Math.max(0.1, zoom), 3);
-        });
-        
-        // Dimension selector
-        document.querySelectorAll('.dimension-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.dimension-item').forEach(d => d.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('dimensionCount').textContent = this.dataset.dim;
-                generateNew();
-            });
-        });
-        
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            
-            nodes.forEach(node => {
-                if (node.label.toLowerCase().includes(query) || 
-                    node.category.toLowerCase().includes(query)) {
-                    node.radius = 10; // Highlight matching nodes
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        setupEventListeners() {
+            window.addEventListener('resize', () => this.resize());
+
+            // Mouse move
+            this.canvas.addEventListener('mousemove', (e) => {
+                this.mouseX = e.clientX;
+                this.mouseY = e.clientY;
+
+                // Find hovered node
+                let closest = null;
+                let minDist = Infinity;
+
+                this.nodes.forEach(node => {
+                    if (!this.visibleSources.has(node.source)) return;
+
+                    const proj = this.project(node);
+                    const dist = Math.hypot(this.mouseX - proj.x, this.mouseY - proj.y);
+
+                    if (dist < 25 && dist < minDist) {
+                        minDist = dist;
+                        closest = node;
+                    }
+                });
+
+                this.hoveredNode = closest;
+
+                if (closest) {
+                    this.showTooltip(closest, this.mouseX, this.mouseY);
+                    this.canvas.style.cursor = 'pointer';
                 } else {
-                    node.radius = 3 + Math.random() * 4;
+                    this.hideTooltip();
+                    this.canvas.style.cursor = 'default';
                 }
             });
-        });
-        
-        // Window resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-        
-        // Initialize
-        generateNodes(50);
-        animate();
+
+            // Click
+            this.canvas.addEventListener('click', () => {
+                if (this.hoveredNode) {
+                    this.showDetail(this.hoveredNode);
+                }
+            });
+
+            // Mouse wheel zoom
+            this.canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                this.zoom += e.deltaY * -0.001;
+                this.zoom = Math.max(0.3, Math.min(2, this.zoom));
+                document.getElementById('zoomSlider').value = this.zoom * 100;
+            });
+
+            // Speed slider
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                this.rotationSpeed = e.target.value / 10000;
+            });
+
+            // Zoom slider
+            document.getElementById('zoomSlider').addEventListener('input', (e) => {
+                this.zoom = e.target.value / 100;
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+
+                this.nodes.forEach(node => {
+                    const matches = node.title.toLowerCase().includes(query) ||
+                                    node.content.toLowerCase().includes(query);
+                    node.radius = matches || !query ? (4 + Math.min(node.content.length / 100, 6)) : 2;
+                });
+            });
+        }
+    }
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+
+    const app = new Hypergraph();
+    window.app = app;
+
+    console.log('🕸️ Hypergraph initialized - Consciousness Map Active');
     </script>
 </body>
 </html>
