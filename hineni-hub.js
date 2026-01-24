@@ -1,16 +1,16 @@
 /**
- * HINENI HUB - Portal Integration v2.4
+ * HINENI HUB - Portal Integration v2.5
  * Renders the hub inventory as categorized cards inside the DIN Portal
  *
- * Mount point: /Volumes/HINENI_HUB (macOS) - Windows shows local apps only
+ * Mount point: /Volumes/HINENI_HUB (macOS) | E:\ (Windows - HINENI_HUB_PC)
  * This script injects into #hineni-hub-section
  *
- * Updated: 2026-01-20 - Cross-platform support (Windows/macOS/Linux)
+ * Updated: 2026-01-24 - Windows E:\ path support with actual directory mapping
  *
  * PLATFORM BEHAVIOR:
- *   macOS:   Full hub access when HINENI_HUB mounted
- *   Windows: Local CODEX-MONAD apps only (hub items show as "Hub Only")
- *   Linux:   Same as Windows (hub items unavailable)
+ *   macOS:   Full hub access when HINENI_HUB mounted at /Volumes/HINENI_HUB
+ *   Windows: Full hub access when HINENI_HUB_PC drive mounted at E:\
+ *   Linux:   Hub items unavailable (no mount point defined)
  *
  * Local apps (isLocal: true) work on ALL platforms.
  */
@@ -21,10 +21,10 @@
      */
     var CODEX_APPS_LOADED = false;
     var CODEX_APPS = [];
-    
+
     async function loadCodexApps() {
         if (CODEX_APPS_LOADED) return CODEX_APPS;
-        
+
         try {
             const response = await fetch('codex-apps.json');
             if (response.ok) {
@@ -38,7 +38,7 @@
         }
         return [];
     }
-    
+
     'use strict';
 
     // ═══════════════════════════════════════════════════════════════════
@@ -57,15 +57,19 @@
 
     // For file:// links that need to open in Finder/Explorer
     // On macOS: /Volumes/HINENI_HUB
-    // On Windows: External hub not typically mounted, so null
-    var HUB_ROOT = IS_MACOS ? '/Volumes/HINENI_HUB' : null;
+    // On Windows: E: (HINENI_HUB_PC drive)
+    var HUB_ROOT = IS_MACOS ? '/Volumes/HINENI_HUB' : (IS_WINDOWS ? 'E:' : null);
 
     // For relative links (portal is at 10-repos-central/CODEX-MONAD/)
     // So ../../ gets us to HINENI_HUB root (only relevant when hub is mounted)
     var RELATIVE_ROOT = '../..';
 
-    // Hub availability - external items only work when hub is mounted
-    var HUB_AVAILABLE = IS_MACOS; // TODO: Could check if actually mounted
+    // Hub availability - external items work when hub is mounted
+    var HUB_AVAILABLE = IS_MACOS || IS_WINDOWS;
+
+    // Windows path prefix for deep archive location
+    var WIN_GITHUB_BASE = '20-archive/cloud-mirrors/OneDrive/New Folder With Items/Documents/GitHub';
+    var WIN_DESKTOP_BASE = '20-archive/cloud-mirrors/OneDrive/New Folder With Items/Desktop/Desktop Cleanup';
 
     // Hub items organized by category - ALL REAL TOOLS
     var HUB_CATEGORIES = [
@@ -258,6 +262,7 @@
                     status: 'active',
                     description: 'Main toolbox command - lists all available tools.',
                     hubPath: '10-repos-central/toolbox-cli/bin/toolbox',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/toolbox',
                     launchType: 'cli',
                     command: 'toolbox'
                 },
@@ -268,6 +273,7 @@
                     status: 'active',
                     description: 'File triage and organization system (35KB of pure power).',
                     hubPath: '10-repos-central/toolbox-cli/src/toolbox/triage.py',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/src/toolbox/triage.py',
                     launchType: 'cli',
                     command: 'triage'
                 },
@@ -278,6 +284,7 @@
                     status: 'active',
                     description: 'System health diagnostics and repair.',
                     hubPath: '10-repos-central/toolbox-cli/bin/doctor',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/doctor',
                     launchType: 'cli',
                     command: 'doctor'
                 },
@@ -288,6 +295,7 @@
                     status: 'active',
                     description: 'Create system/project snapshots for backup.',
                     hubPath: '10-repos-central/toolbox-cli/bin/snapshot',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/snapshot',
                     launchType: 'cli',
                     command: 'snapshot'
                 },
@@ -298,6 +306,7 @@
                     status: 'active',
                     description: 'Project scaffolding and template generator.',
                     hubPath: '10-repos-central/toolbox-cli/bin/scaffold',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/scaffold',
                     launchType: 'cli',
                     command: 'scaffold'
                 },
@@ -308,6 +317,7 @@
                     status: 'active',
                     description: 'Pranayama breathing exercise CLI.',
                     hubPath: '10-repos-central/toolbox-cli/bin/prana',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/prana',
                     launchType: 'cli',
                     command: 'prana'
                 },
@@ -318,6 +328,7 @@
                     status: 'active',
                     description: 'Focus mode manager for deep work sessions.',
                     hubPath: '10-repos-central/toolbox-cli/bin/focus',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/focus',
                     launchType: 'cli',
                     command: 'focus'
                 },
@@ -328,6 +339,7 @@
                     status: 'active',
                     description: 'Quick work-in-progress commits.',
                     hubPath: '10-repos-central/toolbox-cli/bin/git-wip',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/git-wip',
                     launchType: 'cli',
                     command: 'git-wip'
                 },
@@ -338,6 +350,7 @@
                     status: 'active',
                     description: 'Clean up merged/stale git branches.',
                     hubPath: '10-repos-central/toolbox-cli/bin/git-clean-branches',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/git-clean-branches',
                     launchType: 'cli',
                     command: 'git-clean-branches'
                 },
@@ -348,6 +361,7 @@
                     status: 'active',
                     description: 'Tail system logs with filtering.',
                     hubPath: '10-repos-central/toolbox-cli/bin/logs-tail',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/logs-tail',
                     launchType: 'cli',
                     command: 'logs-tail'
                 },
@@ -358,6 +372,7 @@
                     status: 'active',
                     description: 'Quick project opener in your editor.',
                     hubPath: '10-repos-central/toolbox-cli/bin/proj-open',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/proj-open',
                     launchType: 'cli',
                     command: 'proj-open'
                 }
@@ -374,8 +389,10 @@
                     status: 'active',
                     description: 'Force iCloud sync when it gets stuck.',
                     hubPath: '10-repos-central/toolbox-cli/bin/icloud-kick',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/icloud-kick',
                     launchType: 'cli',
-                    command: 'icloud-kick'
+                    command: 'icloud-kick',
+                    macOnly: true
                 },
                 {
                     id: 'icloud-kick-super',
@@ -384,8 +401,10 @@
                     status: 'active',
                     description: 'Nuclear option for stuck iCloud sync.',
                     hubPath: '10-repos-central/toolbox-cli/bin/icloud-kick-super',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/icloud-kick-super',
                     launchType: 'cli',
-                    command: 'icloud-kick-super'
+                    command: 'icloud-kick-super',
+                    macOnly: true
                 },
                 {
                     id: 'icloud-diagnostics',
@@ -394,8 +413,10 @@
                     status: 'active',
                     description: 'Diagnose iCloud sync issues.',
                     hubPath: '10-repos-central/toolbox-cli/bin/icloud-diagnostics',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/icloud-diagnostics',
                     launchType: 'cli',
-                    command: 'icloud-diagnostics'
+                    command: 'icloud-diagnostics',
+                    macOnly: true
                 },
                 {
                     id: 'dns-flush',
@@ -404,6 +425,7 @@
                     status: 'active',
                     description: 'Flush DNS cache.',
                     hubPath: '10-repos-central/toolbox-cli/bin/dns-flush',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/dns-flush',
                     launchType: 'cli',
                     command: 'dns-flush'
                 },
@@ -414,8 +436,10 @@
                     status: 'active',
                     description: 'Restart Finder when it gets wonky.',
                     hubPath: '10-repos-central/toolbox-cli/bin/finder-reload',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/finder-reload',
                     launchType: 'cli',
-                    command: 'finder-reload'
+                    command: 'finder-reload',
+                    macOnly: true
                 },
                 {
                     id: 'wifi-cycle',
@@ -424,6 +448,7 @@
                     status: 'active',
                     description: 'Toggle WiFi off and on.',
                     hubPath: '10-repos-central/toolbox-cli/bin/wifi-cycle',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/bin/wifi-cycle',
                     launchType: 'cli',
                     command: 'wifi-cycle'
                 }
@@ -440,6 +465,7 @@
                     status: 'transcendent',
                     description: 'Main HINENI orchestrator - witness protocol, oracle, gematria.',
                     hubPath: '10-repos-central/hineni/hineni_cli.py',
+                    winPath: '10-repos/HINENI/hineni_cli.py',
                     launchType: 'cli',
                     command: 'python3 hineni_cli.py'
                 },
@@ -450,6 +476,7 @@
                     status: 'active',
                     description: 'Verify witness log integrity.',
                     hubPath: '10-repos-central/hineni/verify_witness.py',
+                    winPath: '10-repos/HINENI/verify_witness.py',
                     launchType: 'cli',
                     command: 'python3 verify_witness.py'
                 },
@@ -460,6 +487,7 @@
                     status: 'active',
                     description: 'Bible oracle and divination system.',
                     hubPath: '10-repos-central/hineni/oracle/',
+                    winPath: '10-repos/HINENI/oracle/',
                     launchType: 'folder'
                 },
                 {
@@ -469,6 +497,7 @@
                     status: 'active',
                     description: 'Hebrew gematria calculation module.',
                     hubPath: '10-repos-central/hineni/davar_lang/gematria.py',
+                    winPath: '10-repos/HINENI/davar_lang/gematria.py',
                     launchType: 'file'
                 },
                 {
@@ -478,6 +507,7 @@
                     status: 'active',
                     description: 'The Good Lich infrastructure module.',
                     hubPath: '10-repos-central/hineni/infra/lich.py',
+                    winPath: '10-repos/HINENI/infra/lich.py',
                     launchType: 'file'
                 },
                 {
@@ -487,6 +517,7 @@
                     status: 'active',
                     description: 'Department of Infinite Noticing module.',
                     hubPath: '10-repos-central/hineni/infra/noticing.py',
+                    winPath: '10-repos/HINENI/infra/noticing.py',
                     launchType: 'file'
                 }
             ]
@@ -502,6 +533,7 @@
                     status: 'active',
                     description: 'Interactive conflict/game theory environment with Bokeh/Panel.',
                     hubPath: '10-repos-central/conflict-lab/',
+                    winPath: WIN_DESKTOP_BASE + '/Conflict Lab/',
                     launchType: 'folder'
                 },
                 {
@@ -511,6 +543,7 @@
                     status: 'active',
                     description: 'Chaos theory module for conflict simulations.',
                     hubPath: '10-repos-central/conflict-lab/conflict_lab_chaos_module.py',
+                    winPath: null,  // Not found on E:\
                     launchType: 'file'
                 }
             ]
@@ -526,6 +559,7 @@
                     status: 'transcendent',
                     description: 'This portal - the DIN interface.',
                     hubPath: '10-repos-central/CODEX-MONAD',
+                    winPath: WIN_GITHUB_BASE + '/CODEX-MONAD',
                     launchType: 'folder'
                 },
                 {
@@ -535,6 +569,7 @@
                     status: 'active',
                     description: 'Primary CODEX git repository.',
                     hubPath: '10-repos-central/CODEX',
+                    winPath: '10-repos/CODEX_NEWEST',
                     launchType: 'folder'
                 },
                 {
@@ -544,6 +579,7 @@
                     status: 'active',
                     description: 'Full toolbox-cli repository with docs.',
                     hubPath: '10-repos-central/toolbox-cli',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli',
                     launchType: 'folder'
                 },
                 {
@@ -553,6 +589,7 @@
                     status: 'active',
                     description: 'Full HINENI system repository.',
                     hubPath: '10-repos-central/hineni',
+                    winPath: '10-repos/HINENI',
                     launchType: 'folder'
                 }
             ]
@@ -568,6 +605,7 @@
                     status: 'active',
                     description: 'Quick reference for all toolbox commands.',
                     hubPath: '10-repos-central/toolbox-cli/docs/TOOLBOX_CHEATSHEET.md',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/docs/TOOLBOX_CHEATSHEET.md',
                     launchType: 'file'
                 },
                 {
@@ -577,6 +615,7 @@
                     status: 'active',
                     description: 'Full toolbox documentation.',
                     hubPath: '10-repos-central/toolbox-cli/docs/TOOLBOX_REFERENCE.md',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/docs/TOOLBOX_REFERENCE.md',
                     launchType: 'file'
                 },
                 {
@@ -586,6 +625,7 @@
                     status: 'active',
                     description: 'Morning operations checklist.',
                     hubPath: '10-repos-central/toolbox-cli/docs/MORNING_OPS.txt',
+                    winPath: WIN_GITHUB_BASE + '/toolbox-cli/docs/MORNING_OPS.txt',
                     launchType: 'file'
                 },
                 {
@@ -595,6 +635,7 @@
                     status: 'active',
                     description: 'The HINENI Witness Protocol specification.',
                     hubPath: '10-repos-central/hineni/docs/WITNESS_PROTOCOL.md',
+                    winPath: '10-repos/HINENI/docs/WITNESS_PROTOCOL.md',
                     launchType: 'file'
                 },
                 {
@@ -604,6 +645,7 @@
                     status: 'active',
                     description: 'The Davar language specification.',
                     hubPath: '10-repos-central/hineni/docs/DAVAR_SPEC.md',
+                    winPath: '10-repos/HINENI/docs/DAVAR_SPEC.md',
                     launchType: 'file'
                 },
                 {
@@ -613,6 +655,7 @@
                     status: 'active',
                     description: 'The HINENI vision and roadmap.',
                     hubPath: '10-repos-central/hineni/docs/VISION.md',
+                    winPath: '10-repos/HINENI/docs/VISION.md',
                     launchType: 'file'
                 }
             ]
@@ -628,6 +671,7 @@
                     status: 'active',
                     description: 'GRIDLESS HARDCORE pack - Conflict Lab, Game of Ur, symbolic testing.',
                     hubPath: '30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE',
+                    winPath: null,  // Not found on E:\
                     launchType: 'folder'
                 },
                 {
@@ -637,6 +681,7 @@
                     status: 'active',
                     description: 'All archived codex packs (.zip bundles).',
                     hubPath: '40-archive/codex-packs',
+                    winPath: '20-archive',  // Best match on E:\
                     launchType: 'folder'
                 },
                 {
@@ -646,6 +691,7 @@
                     status: 'active',
                     description: 'Original DevonThink database archive.',
                     hubPath: '40-archive/DTHOTHSCRBX_ORIGIN',
+                    winPath: null,  // Not found on E:\
                     launchType: 'folder'
                 }
             ]
@@ -661,6 +707,7 @@
                     status: 'active',
                     description: 'Source datasets for AI experiments.',
                     hubPath: '50-ai/datasets-origin',
+                    winPath: null,  // Not found on E:\
                     launchType: 'folder'
                 },
                 {
@@ -670,6 +717,7 @@
                     status: 'active',
                     description: 'Source models/checkpoints for AI experiments.',
                     hubPath: '50-ai/models-origin',
+                    winPath: null,  // Not found on E:\
                     launchType: 'folder'
                 }
             ]
@@ -693,13 +741,21 @@
             return null; // Will show as unavailable
         }
 
-        // HTML apps elsewhere in the hub use relative from portal
-        if (item.launchType === 'html') {
-            return RELATIVE_ROOT + '/' + item.hubPath;
+        // Get the appropriate path for the current platform
+        var itemPath = item.hubPath;
+        if (IS_WINDOWS && item.winPath) {
+            itemPath = item.winPath;
+        } else if (IS_WINDOWS && !item.winPath) {
+            return null; // Windows path not available
         }
 
-        // Everything else (folders, files, CLI) uses file:// for Finder
-        return 'file://' + HUB_ROOT + '/' + item.hubPath;
+        // HTML apps elsewhere in the hub use relative from portal
+        if (item.launchType === 'html') {
+            return RELATIVE_ROOT + '/' + itemPath;
+        }
+
+        // Everything else (folders, files, CLI) uses file:// for Finder/Explorer
+        return 'file://' + HUB_ROOT + '/' + itemPath;
     }
 
     /**
@@ -709,6 +765,14 @@
         // Local HTML apps always available
         if (item.launchType === 'html' && item.isLocal) {
             return true;
+        }
+        // macOS-only items not available on Windows
+        if (IS_WINDOWS && item.macOnly) {
+            return false;
+        }
+        // Windows needs winPath defined
+        if (IS_WINDOWS && !item.winPath) {
+            return false;
         }
         // Everything else requires hub
         return HUB_AVAILABLE;
@@ -776,8 +840,9 @@
                 linkHtml = '<a href="' + href + '" class="' + buttonClass + '" title="Open in ' + openIn + '">' + buttonIcon + ' ' + buttonText + '</a>';
             }
         } else if (!available) {
-            // Show unavailable state
-            linkHtml = '<span class="app-link hub-link unavailable" title="Requires HINENI_HUB mount (macOS)">🔒 Hub Only</span>';
+            // Show unavailable state with reason
+            var reason = item.macOnly ? 'macOS only' : 'Not on this drive';
+            linkHtml = '<span class="app-link hub-link unavailable" title="' + reason + '">🔒 ' + reason + '</span>';
         }
 
         // Add command hint for CLI tools
@@ -845,13 +910,14 @@
         // Header with stats
         var header = document.createElement('div');
         header.className = 'hub-section-header';
-        header.innerHTML = 
+        var mountPoint = IS_MACOS ? '/Volumes/HINENI_HUB' : (IS_WINDOWS ? 'E:\\ (HINENI_HUB_PC)' : 'Not available');
+        header.innerHTML =
             '<h2 class="hub-section-title">HINENI HUB</h2>' +
-            '<div class="hub-section-subtitle">Portable Infrastructure • /Volumes/HINENI_HUB</div>' +
+            '<div class="hub-section-subtitle">Portable Infrastructure • ' + mountPoint + '</div>' +
             '<div class="hub-stats">' + getTotalItemCount() + ' tools • ' + HUB_CATEGORIES.length + ' categories</div>';
         hubSection.appendChild(header);
 
-        
+
         // Load and render CODEX-MONAD apps
         var codexApps = await loadCodexApps();
         if (codexApps.length > 0) {
@@ -871,7 +937,7 @@
         // Insert into container
         container.appendChild(hubSection);
 
-        console.log('🧭 HINENI HUB v2.3: Rendered ' + getTotalItemCount() + ' items in ' + HUB_CATEGORIES.length + ' categories');
+        console.log('🧭 HINENI HUB v2.5: Rendered ' + getTotalItemCount() + ' items in ' + HUB_CATEGORIES.length + ' categories (' + PLATFORM + ')');
     }
 
     /**
@@ -900,7 +966,7 @@
         platform: PLATFORM,
         hubAvailable: HUB_AVAILABLE,
         refresh: renderHubSection,
-        version: '2.4'
+        version: '2.5'
     };
 
 })();
