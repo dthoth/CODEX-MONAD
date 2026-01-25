@@ -1,0 +1,31 @@
+{
+    "id": "help",
+    "name": "CODEX Help",
+    "version": "1.0.0",
+    "kind": "html",
+    "entry": "index.html",
+    "icon": "❓",
+    "status": "active",
+    "description": "Portal guide, app directory, decision oracle, and CODEX philosophy reference.",
+    "features": [
+        "GUIDE: Searchable directory of all portal apps",
+        "ORACLE: Random suggestions when you're stuck",
+        "KEYS: Keyboard shortcuts reference",
+        "PHILOSOPHY: Core CODEX principles"
+    ],
+    "philosophy": [
+        "The Floppy Constraint",
+        "Local-First",
+        "Consciousness as Infrastructure",
+        "Zero Dependencies",
+        "Portable by Default",
+        "HINENI"
+    ],
+    "author": "CODEX System",
+    "created": "2026-01-24",
+    "tags": ["help", "guide", "oracle", "documentation", "philosophy"],
+    "size": "~12KB",
+    "requirements": {
+        "browser": "Any modern browser"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "id": "compress",
+    "name": "CODEX Compress",
+    "version": "1.0.0",
+    "kind": "html",
+    "entry": "index.html",
+    "icon": "💾",
+    "status": "active",
+    "description": "Archival preparation tool for floppy-grade distribution. Text compression, HTML content extraction, manifest generation, and disk allocation.",
+    "features": [
+        "TEXT: Normalize whitespace, collapse blank lines, calculate floppy grade",
+        "URL: Extract essential content from HTML, strip boilerplate",
+        "MANIFEST: Generate manifest.txt with file listing and checksums",
+        "SIZE: Calculate optimal disk distribution (first-fit decreasing)"
+    ],
+    "disk_sizes": {
+        "floppy": "1.44 MB (1,474,560 bytes)",
+        "cd": "700 MB",
+        "dvd": "4.7 GB"
+    },
+    "author": "CODEX System",
+    "created": "2026-01-24",
+    "tags": ["compression", "archival", "floppy", "manifest", "distribution"],
+    "size": "~14KB",
+    "requirements": {
+        "browser": "Any modern browser"
+    }
+}

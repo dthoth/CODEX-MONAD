@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandala Generator - CODEX</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #2a2a3a;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --accent: #9b59b6;
+            --accent-dim: #8e44ad;
+            --gold: #f1c40f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+        h1 span { color: var(--accent); }
+        .subtitle { color: var(--text-dim); font-size: 0.8rem; margin-top: 4px; }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+        }
+        .mandala-container {
+            background: radial-gradient(circle at center, #1a1a2a 0%, var(--bg) 70%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            width: 100%;
+            max-width: 500px;
+        }
+        #mandala {
+            max-width: 100%;
+            max-height: 400px;
+            filter: drop-shadow(0 0 20px rgba(155, 89, 182, 0.3));
+        }
+        .controls {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: monospace;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .control-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .control-item label {
+            margin-bottom: 4px;
+        }
+        select, input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            cursor: pointer;
+        }
+        select:focus { outline: none; border-color: var(--accent); }
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            padding: 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .range-value {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+        .palette-preview {
+            display: flex;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .palette-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--accent-dim); }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: #1a1a2a; }
+        .hash-display {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-align: center;
+            margin-top: 8px;
+            word-break: break-all;
+        }
+        .mode-toggle {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .mode-btn:first-child { border-radius: 6px 0 0 6px; }
+        .mode-btn:last-child { border-radius: 0 6px 6px 0; }
+        .mode-btn.active {
+            background: var(--accent-dim);
+            color: white;
+            border-color: var(--accent);
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+        @media (max-width: 480px) {
+            .mandala-container { min-height: 300px; }
+            #mandala { max-height: 280px; }
+            .control-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MANDALA <span>Generator</span></h1>
+        <div class="subtitle">Deterministic Sacred Geometry • CODEX System</div>
+    </header>
+
+    <main>
+        <div class="mandala-container">
+            <svg id="mandala" viewBox="-200 -200 400 400" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="0" cy="0" r="150" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+                <text x="0" y="0" text-anchor="middle" fill="#555" font-size="14">Enter seed to generate</text>
+            </svg>
+        </div>
+
+        <div class="controls">
+            <div class="mode-toggle">
+                <button class="mode-btn active" data-mode="text">Text/Word</button>
+                <button class="mode-btn" data-mode="hash">Hash Mode</button>
+            </div>
+
+            <div class="input-group">
+                <label id="inputLabel">Seed Text (word, phrase, intention)</label>
+                <input type="text" id="seedInput" placeholder="Enter text or paste hash...">
+            </div>
+
+            <div class="control-row">
+                <div class="control-item">
+                    <label>Symmetry</label>
+                    <select id="symmetry">
+                        <option value="4">4-fold</option>
+                        <option value="6">6-fold</option>
+                        <option value="8" selected>8-fold</option>
+                        <option value="12">12-fold</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label>Complexity</label>
+                    <input type="range" id="complexity" min="1" max="10" value="5">
+                    <div class="range-value" id="complexityVal">5</div>
+                </div>
+                <div class="control-item">
+                    <label>Layers</label>
+                    <input type="range" id="layers" min="2" max="8" value="4">
+                    <div class="range-value" id="layersVal">4</div>
+                </div>
+                <div class="control-item">
+                    <label>Palette</label>
+                    <select id="palette">
+                        <option value="cosmic">Cosmic</option>
+                        <option value="earth">Earth</option>
+                        <option value="fire">Fire</option>
+                        <option value="water">Water</option>
+                        <option value="golden">Golden</option>
+                        <option value="mono">Monochrome</option>
+                    </select>
+                    <div class="palette-preview" id="palettePreview"></div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="generate()">Generate</button>
+                <button class="btn btn-secondary" onclick="exportSVG()">Export SVG</button>
+                <button class="btn btn-secondary" onclick="exportPNG()">Export PNG</button>
+            </div>
+
+            <div class="hash-display" id="hashDisplay"></div>
+        </div>
+    </main>
+
+    <footer>
+        Mandala Generator v1.0 • Same seed = Same pattern • Works offline
+    </footer>
+
+<script>
+// ============================================================
+// SEEDED RANDOM NUMBER GENERATOR (Mulberry32)
+// ============================================================
+function createRNG(seed) {
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) {
+        h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
+    }
+    return function() {
+        h |= 0; h = h + 0x6D2B79F5 | 0;
+        let t = Math.imul(h ^ h >>> 15, 1 | h);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+// ============================================================
+// COLOR PALETTES
+// ============================================================
+const PALETTES = {
+    cosmic: ['#9b59b6', '#3498db', '#1abc9c', '#e74c3c', '#f39c12', '#8e44ad'],
+    earth: ['#8B4513', '#228B22', '#DAA520', '#CD853F', '#6B8E23', '#D2691E'],
+    fire: ['#e74c3c', '#f39c12', '#e67e22', '#c0392b', '#d35400', '#f1c40f'],
+    water: ['#3498db', '#1abc9c', '#2980b9', '#16a085', '#5dade2', '#48c9b0'],
+    golden: ['#f1c40f', '#f39c12', '#e67e22', '#d4ac0d', '#b7950b', '#9a7d0a'],
+    mono: ['#ecf0f1', '#bdc3c7', '#95a5a6', '#7f8c8d', '#636e72', '#2d3436']
+};
+
+// ============================================================
+// HASH FUNCTION (for display)
+// ============================================================
+function hashString(str) {
+    let hash = 0n;
+    for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5n) - hash) + BigInt(str.charCodeAt(i));
+        hash &= 0xFFFFFFFFFFFFFFFFn;
+    }
+    return hash.toString(16).padStart(16, '0').toUpperCase();
+}
+
+// ============================================================
+// MANDALA GENERATOR
+// ============================================================
+function generateMandala(seed, symmetry, complexity, layerCount, paletteName) {
+    const rng = createRNG(seed);
+    const colors = PALETTES[paletteName];
+    const svg = document.getElementById('mandala');
+
+    // Clear previous
+    svg.innerHTML = '';
+
+    // Add background glow
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    defs.innerHTML = `
+        <radialGradient id="bgGlow">
+            <stop offset="0%" stop-color="${colors[0]}" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+    `;
+    svg.appendChild(defs);
+
+    // Background
+    const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    bg.setAttribute('cx', '0');
+    bg.setAttribute('cy', '0');
+    bg.setAttribute('r', '190');
+    bg.setAttribute('fill', 'url(#bgGlow)');
+    svg.appendChild(bg);
+
+    // Generate layers from outside in
+    const maxRadius = 160;
+    const layerStep = maxRadius / (layerCount + 1);
+
+    for (let layer = 0; layer < layerCount; layer++) {
+        const radius = maxRadius - (layer * layerStep);
+        const color = colors[layer % colors.length];
+        const elements = Math.floor(3 + rng() * complexity * 2);
+
+        // Create group for this layer
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('filter', 'url(#glow)');
+
+        // Generate one segment then rotate
+        for (let s = 0; s < symmetry; s++) {
+            const angle = (360 / symmetry) * s;
+            const segGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            segGroup.setAttribute('transform', `rotate(${angle})`);
+
+            // Random elements within segment
+            for (let e = 0; e < elements; e++) {
+                const type = Math.floor(rng() * 5);
+                const el = createElement(rng, type, radius, layerStep, color, symmetry);
+                if (el) segGroup.appendChild(el);
+            }
+
+            group.appendChild(segGroup);
+        }
+
+        svg.appendChild(group);
+    }
+
+    // Center element
+    const centerGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const centerType = Math.floor(rng() * 3);
+    const centerColor = colors[Math.floor(rng() * colors.length)];
+
+    if (centerType === 0) {
+        // Flower of life pattern
+        for (let i = 0; i < symmetry; i++) {
+            const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const angle = (Math.PI * 2 / symmetry) * i;
+            c.setAttribute('cx', Math.cos(angle) * 15);
+            c.setAttribute('cy', Math.sin(angle) * 15);
+            c.setAttribute('r', '15');
+            c.setAttribute('fill', 'none');
+            c.setAttribute('stroke', centerColor);
+            c.setAttribute('stroke-width', '1.5');
+            centerGroup.appendChild(c);
+        }
+    } else if (centerType === 1) {
+        // Star
+        const points = [];
+        for (let i = 0; i < symmetry * 2; i++) {
+            const angle = (Math.PI * 2 / (symmetry * 2)) * i - Math.PI / 2;
+            const r = i % 2 === 0 ? 25 : 12;
+            points.push(`${Math.cos(angle) * r},${Math.sin(angle) * r}`);
+        }
+        const star = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        star.setAttribute('points', points.join(' '));
+        star.setAttribute('fill', centerColor);
+        star.setAttribute('opacity', '0.8');
+        centerGroup.appendChild(star);
+    } else {
+        // Concentric circles
+        for (let i = 3; i > 0; i--) {
+            const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            c.setAttribute('cx', '0');
+            c.setAttribute('cy', '0');
+            c.setAttribute('r', i * 8);
+            c.setAttribute('fill', 'none');
+            c.setAttribute('stroke', centerColor);
+            c.setAttribute('stroke-width', 4 - i);
+            centerGroup.appendChild(c);
+        }
+    }
+
+    // Center dot
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', '0');
+    dot.setAttribute('cy', '0');
+    dot.setAttribute('r', '4');
+    dot.setAttribute('fill', colors[0]);
+    centerGroup.appendChild(dot);
+
+    svg.appendChild(centerGroup);
+
+    // Outer ring
+    const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    ring.setAttribute('cx', '0');
+    ring.setAttribute('cy', '0');
+    ring.setAttribute('r', '175');
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', colors[0]);
+    ring.setAttribute('stroke-width', '2');
+    ring.setAttribute('opacity', '0.5');
+    svg.appendChild(ring);
+}
+
+function createElement(rng, type, radius, layerWidth, color, symmetry) {
+    const angleSpread = Math.PI / symmetry;
+    const baseAngle = (rng() - 0.5) * angleSpread * 0.8;
+    const dist = radius - rng() * layerWidth * 0.8;
+    const x = Math.cos(baseAngle) * dist;
+    const y = Math.sin(baseAngle) * dist;
+
+    let el;
+
+    switch(type) {
+        case 0: // Circle
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            el.setAttribute('cx', x);
+            el.setAttribute('cy', y);
+            el.setAttribute('r', 3 + rng() * 8);
+            el.setAttribute('fill', rng() > 0.5 ? color : 'none');
+            el.setAttribute('stroke', color);
+            el.setAttribute('stroke-width', 1 + rng());
+            break;
+
+        case 1: // Petal/leaf
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const petalLen = 10 + rng() * 15;
+            const petalWidth = 3 + rng() * 6;
+            const angle = Math.atan2(y, x);
+            el.setAttribute('d', `M ${x} ${y}
+                q ${Math.cos(angle + 0.3) * petalLen} ${Math.sin(angle + 0.3) * petalLen}
+                  ${Math.cos(angle) * petalLen * 1.5} ${Math.sin(angle) * petalLen * 1.5}
+                q ${Math.cos(angle - 0.3) * -petalLen * 0.5} ${Math.sin(angle - 0.3) * -petalLen * 0.5}
+                  ${Math.cos(angle) * -petalLen * 1.5} ${Math.sin(angle) * -petalLen * 1.5}`);
+            el.setAttribute('fill', color);
+            el.setAttribute('opacity', 0.3 + rng() * 0.5);
+            break;
+
+        case 2: // Arc
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const arcR = dist;
+            const arcStart = baseAngle - 0.2;
+            const arcEnd = baseAngle + 0.2;
+            el.setAttribute('d', `M ${Math.cos(arcStart) * arcR} ${Math.sin(arcStart) * arcR}
+                A ${arcR} ${arcR} 0 0 1 ${Math.cos(arcEnd) * arcR} ${Math.sin(arcEnd) * arcR}`);
+            el.setAttribute('fill', 'none');
+            el.setAttribute('stroke', color);
+            el.setAttribute('stroke-width', 1 + rng() * 2);
+            break;
+
+        case 3: // Triangle
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            const triSize = 5 + rng() * 10;
+            const triAngle = Math.atan2(y, x);
+            const p1 = `${x + Math.cos(triAngle) * triSize},${y + Math.sin(triAngle) * triSize}`;
+            const p2 = `${x + Math.cos(triAngle + 2.1) * triSize},${y + Math.sin(triAngle + 2.1) * triSize}`;
+            const p3 = `${x + Math.cos(triAngle - 2.1) * triSize},${y + Math.sin(triAngle - 2.1) * triSize}`;
+            el.setAttribute('points', `${p1} ${p2} ${p3}`);
+            el.setAttribute('fill', rng() > 0.5 ? color : 'none');
+            el.setAttribute('stroke', color);
+            el.setAttribute('stroke-width', '1');
+            el.setAttribute('opacity', 0.5 + rng() * 0.5);
+            break;
+
+        case 4: // Diamond
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            const dSize = 4 + rng() * 8;
+            const dAngle = Math.atan2(y, x);
+            const d1 = `${x + Math.cos(dAngle) * dSize * 1.5},${y + Math.sin(dAngle) * dSize * 1.5}`;
+            const d2 = `${x + Math.cos(dAngle + Math.PI/2) * dSize},${y + Math.sin(dAngle + Math.PI/2) * dSize}`;
+            const d3 = `${x + Math.cos(dAngle + Math.PI) * dSize * 1.5},${y + Math.sin(dAngle + Math.PI) * dSize * 1.5}`;
+            const d4 = `${x + Math.cos(dAngle - Math.PI/2) * dSize},${y + Math.sin(dAngle - Math.PI/2) * dSize}`;
+            el.setAttribute('points', `${d1} ${d2} ${d3} ${d4}`);
+            el.setAttribute('fill', color);
+            el.setAttribute('opacity', 0.4 + rng() * 0.4);
+            break;
+    }
+
+    return el;
+}
+
+// ============================================================
+// UI CONTROLS
+// ============================================================
+const seedInput = document.getElementById('seedInput');
+const symmetrySelect = document.getElementById('symmetry');
+const complexitySlider = document.getElementById('complexity');
+const layersSlider = document.getElementById('layers');
+const paletteSelect = document.getElementById('palette');
+const hashDisplay = document.getElementById('hashDisplay');
+const modeBtns = document.querySelectorAll('.mode-btn');
+
+let currentMode = 'text';
+
+// Mode toggle
+modeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        document.getElementById('inputLabel').textContent =
+            currentMode === 'hash' ? 'File Hash (SHA-256, MD5, etc.)' : 'Seed Text (word, phrase, intention)';
+        seedInput.placeholder = currentMode === 'hash' ? 'Paste file hash...' : 'Enter text or phrase...';
+    });
+});
+
+// Range value displays
+complexitySlider.addEventListener('input', () => {
+    document.getElementById('complexityVal').textContent = complexitySlider.value;
+});
+layersSlider.addEventListener('input', () => {
+    document.getElementById('layersVal').textContent = layersSlider.value;
+});
+
+// Palette preview
+function updatePalettePreview() {
+    const preview = document.getElementById('palettePreview');
+    const colors = PALETTES[paletteSelect.value];
+    preview.innerHTML = colors.slice(0, 5).map(c =>
+        `<div class="palette-swatch" style="background:${c}"></div>`
+    ).join('');
+}
+paletteSelect.addEventListener('change', updatePalettePreview);
+updatePalettePreview();
+
+// Auto-generate on input
+let debounceTimer;
+seedInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        if (seedInput.value.trim()) generate();
+    }, 300);
+});
+
+// Generate button
+function generate() {
+    const seed = seedInput.value.trim();
+    if (!seed) {
+        alert('Please enter a seed text or hash');
+        return;
+    }
+
+    const symmetry = parseInt(symmetrySelect.value);
+    const complexity = parseInt(complexitySlider.value);
+    const layers = parseInt(layersSlider.value);
+    const palette = paletteSelect.value;
+
+    generateMandala(seed, symmetry, complexity, layers, palette);
+
+    // Show hash of seed
+    hashDisplay.textContent = 'Seed Hash: ' + hashString(seed);
+}
+
+// Export SVG
+function exportSVG() {
+    const svg = document.getElementById('mandala');
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgData], {type: 'image/svg+xml'});
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.download = 'mandala-' + hashString(seedInput.value).slice(0, 8) + '.svg';
+    link.href = url;
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+// Export PNG
+function exportPNG() {
+    const svg = document.getElementById('mandala');
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = 800;
+    canvas.height = 800;
+
+    // Dark background
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(0, 0, 800, 800);
+
+    const img = new Image();
+    img.onload = () => {
+        ctx.drawImage(img, 0, 0, 800, 800);
+
+        const link = document.createElement('a');
+        link.download = 'mandala-' + hashString(seedInput.value).slice(0, 8) + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    };
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target === seedInput) {
+        generate();
+    }
+});
+</script>
+</body>
+</html>

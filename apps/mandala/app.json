@@ -1,0 +1,32 @@
+{
+    "id": "mandala",
+    "name": "Mandala Generator",
+    "version": "1.0.0",
+    "kind": "html",
+    "entry": "index.html",
+    "icon": "🕉️",
+    "status": "active",
+    "description": "Deterministic sacred geometry generator - same seed always produces same pattern. Visual document verification and meditation focus.",
+    "features": [
+        "Text or hash input to SVG mandala",
+        "Deterministic output (same seed = same pattern)",
+        "Adjustable symmetry (4/6/8/12-fold)",
+        "Complexity and layer controls",
+        "6 color palettes (cosmic, earth, fire, water, golden, mono)",
+        "Export as SVG or PNG",
+        "Hash mode for visual document verification"
+    ],
+    "use_cases": [
+        "Visual document/file verification (hash → unique mandala)",
+        "Meditation focus generation from intention",
+        "Unique visual signatures/identifiers",
+        "Generative art from seed phrases"
+    ],
+    "author": "CODEX System",
+    "created": "2026-01-24",
+    "tags": ["mandala", "sacred-geometry", "generative", "deterministic", "verification", "meditation"],
+    "size": "~18KB",
+    "requirements": {
+        "browser": "Any modern browser with SVG support"
+    }
+}

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serpent - CODEX Encryption</title>
+    <style>
+        :root {
+            --bg: #0a100a;
+            --surface: #0f1a0f;
+            --border: #1a2f1a;
+            --text: #c8e6c8;
+            --text-dim: #5a7a5a;
+            --accent: #2ecc71;
+            --accent-dim: #27ae60;
+            --danger: #c0392b;
+            --warning: #f39c12;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .serpent-icon {
+            font-size: 2rem;
+            animation: slither 3s ease-in-out infinite;
+        }
+        @keyframes slither {
+            0%, 100% { transform: translateX(0) scaleX(1); }
+            25% { transform: translateX(-3px) scaleX(0.95); }
+            50% { transform: translateX(0) scaleX(1.05); }
+            75% { transform: translateX(3px) scaleX(0.95); }
+        }
+        .subtitle { color: var(--text-dim); font-size: 0.8rem; margin-top: 6px; font-style: italic; }
+        .tabs {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 20px;
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: var(--accent-dim);
+            color: white;
+        }
+        .tab:hover:not(.active) { background: rgba(46, 204, 113, 0.1); }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .form-group { margin-bottom: 16px; }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        textarea, input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+        textarea { min-height: 120px; }
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: #1a2a1a; }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .output-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .output-box h3 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .output-box pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(46, 204, 113, 0.05);
+        }
+        .drop-zone p { color: var(--text-dim); }
+        .metadata-list {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        .metadata-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .metadata-item:last-child { border-bottom: none; }
+        .metadata-key { color: var(--text-dim); }
+        .metadata-value { color: var(--warning); font-family: monospace; }
+        .hidden-chars {
+            background: rgba(192, 57, 43, 0.2);
+            border: 1px solid var(--danger);
+            border-radius: 4px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+        .hidden-chars strong { color: var(--danger); }
+        .serpent-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+        }
+        .serpent-animation.active {
+            animation: serpentTransform 1.5s ease-out forwards;
+        }
+        @keyframes serpentTransform {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(180deg); }
+            40% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+            60% { transform: translate(-50%, -50%) scale(1.1) rotate(540deg); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(720deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(720deg); }
+        }
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        .stats span { color: var(--accent); }
+        .error { color: var(--danger); font-size: 0.85rem; margin-top: 8px; }
+        .success { color: var(--accent); font-size: 0.85rem; margin-top: 8px; }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+        @media (max-width: 480px) {
+            .btn-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span class="serpent-icon">🐍</span> SERPENT</h1>
+            <div class="subtitle">"What enters the serpent comes out transformed"</div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="encrypt">🔒 ENCRYPT</button>
+            <button class="tab" data-tab="decrypt">🔓 DECRYPT</button>
+            <button class="tab" data-tab="shed">🐍 SHED</button>
+        </div>
+
+        <!-- ENCRYPT PANEL -->
+        <div id="encrypt" class="panel active">
+            <div class="form-group">
+                <label>Plain Text</label>
+                <textarea id="encryptInput" placeholder="Enter text to encrypt..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Password (encryption key)</label>
+                <input type="password" id="encryptPassword" placeholder="Strong password required">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="encrypt()">
+                    <span>🔒</span> Encrypt
+                </button>
+                <button class="btn btn-secondary" onclick="copyOutput('encryptOutput')">
+                    <span>📋</span> Copy
+                </button>
+                <button class="btn btn-secondary" onclick="clearEncrypt()">Clear</button>
+            </div>
+            <div id="encryptResult" class="output-box" style="display:none;">
+                <h3>🔐 Encrypted Output</h3>
+                <pre id="encryptOutput"></pre>
+                <div class="stats">
+                    Original: <span id="origSize">0</span> chars → Encrypted: <span id="encSize">0</span> chars
+                </div>
+            </div>
+            <div id="encryptError" class="error"></div>
+        </div>
+
+        <!-- DECRYPT PANEL -->
+        <div id="decrypt" class="panel">
+            <div class="form-group">
+                <label>Encrypted Text (base64)</label>
+                <textarea id="decryptInput" placeholder="Paste encrypted text..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="decryptPassword" placeholder="Enter decryption password">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="decrypt()">
+                    <span>🔓</span> Decrypt
+                </button>
+                <button class="btn btn-secondary" onclick="copyOutput('decryptOutput')">
+                    <span>📋</span> Copy
+                </button>
+                <button class="btn btn-secondary" onclick="clearDecrypt()">Clear</button>
+            </div>
+            <div id="decryptResult" class="output-box" style="display:none;">
+                <h3>📄 Decrypted Text</h3>
+                <pre id="decryptOutput"></pre>
+            </div>
+            <div id="decryptError" class="error"></div>
+        </div>
+
+        <!-- SHED PANEL (Metadata Stripper) -->
+        <div id="shed" class="panel">
+            <p style="color: var(--text-dim); margin-bottom: 16px; font-size: 0.9rem;">
+                Shed the old skin. Strip hidden characters, normalize text, reveal what lurks beneath.
+            </p>
+
+            <div class="drop-zone" id="fileDropZone">
+                <p>🗂️ Drop a file to inspect metadata</p>
+                <p style="font-size: 0.8rem;">(Analysis only - file not modified)</p>
+            </div>
+            <input type="file" id="fileInput" style="display:none;">
+
+            <div class="form-group">
+                <label>Text to Cleanse</label>
+                <textarea id="shedInput" placeholder="Paste text to strip hidden characters..."></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="shedText()">
+                    <span>🐍</span> Shed
+                </button>
+                <button class="btn btn-secondary" onclick="copyOutput('shedOutput')">
+                    <span>📋</span> Copy Clean
+                </button>
+                <button class="btn btn-secondary" onclick="clearShed()">Clear</button>
+            </div>
+            <div id="shedResult" style="display:none;">
+                <div class="output-box">
+                    <h3>✨ Cleansed Text</h3>
+                    <pre id="shedOutput"></pre>
+                </div>
+                <div id="hiddenReport" class="hidden-chars" style="display:none;"></div>
+                <div class="stats">
+                    Original: <span id="shedOrigSize">0</span> chars → Clean: <span id="shedCleanSize">0</span> chars
+                    (<span id="shedRemoved">0</span> removed)
+                </div>
+            </div>
+            <div id="fileMetadata" class="metadata-list" style="display:none;"></div>
+        </div>
+
+        <footer>
+            Serpent v1.0 • AES-256-GCM Encryption • Web Crypto API • Works offline
+        </footer>
+    </div>
+
+    <div class="serpent-animation" id="serpentAnim">🐍</div>
+
+<script>
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+
+// ============================================================
+// SERPENT ANIMATION
+// ============================================================
+function playSerpentAnimation() {
+    const anim = document.getElementById('serpentAnim');
+    anim.classList.remove('active');
+    void anim.offsetWidth; // Trigger reflow
+    anim.classList.add('active');
+}
+
+// ============================================================
+// WEB CRYPTO HELPERS
+// ============================================================
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 100000,
+            hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+    );
+}
+
+// ============================================================
+// ENCRYPT
+// ============================================================
+async function encrypt() {
+    const text = document.getElementById('encryptInput').value;
+    const password = document.getElementById('encryptPassword').value;
+    const errorEl = document.getElementById('encryptError');
+    const resultEl = document.getElementById('encryptResult');
+
+    errorEl.textContent = '';
+    resultEl.style.display = 'none';
+
+    if (!text.trim()) {
+        errorEl.textContent = 'Please enter text to encrypt';
+        return;
+    }
+    if (password.length < 4) {
+        errorEl.textContent = 'Password must be at least 4 characters';
+        return;
+    }
+
+    try {
+        playSerpentAnimation();
+
+        const enc = new TextEncoder();
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await deriveKey(password, salt);
+
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            enc.encode(text)
+        );
+
+        // Combine salt + iv + ciphertext
+        const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+        combined.set(salt, 0);
+        combined.set(iv, salt.length);
+        combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+
+        const base64 = btoa(String.fromCharCode(...combined));
+
+        document.getElementById('encryptOutput').textContent = base64;
+        document.getElementById('origSize').textContent = text.length;
+        document.getElementById('encSize').textContent = base64.length;
+        resultEl.style.display = 'block';
+
+    } catch (e) {
+        errorEl.textContent = 'Encryption failed: ' + e.message;
+    }
+}
+
+// ============================================================
+// DECRYPT
+// ============================================================
+async function decrypt() {
+    const encrypted = document.getElementById('decryptInput').value.trim();
+    const password = document.getElementById('decryptPassword').value;
+    const errorEl = document.getElementById('decryptError');
+    const resultEl = document.getElementById('decryptResult');
+
+    errorEl.textContent = '';
+    resultEl.style.display = 'none';
+
+    if (!encrypted) {
+        errorEl.textContent = 'Please enter encrypted text';
+        return;
+    }
+    if (!password) {
+        errorEl.textContent = 'Please enter the password';
+        return;
+    }
+
+    try {
+        playSerpentAnimation();
+
+        const combined = Uint8Array.from(atob(encrypted), c => c.charCodeAt(0));
+
+        const salt = combined.slice(0, 16);
+        const iv = combined.slice(16, 28);
+        const ciphertext = combined.slice(28);
+
+        const key = await deriveKey(password, salt);
+
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            ciphertext
+        );
+
+        const dec = new TextDecoder();
+        const text = dec.decode(decrypted);
+
+        document.getElementById('decryptOutput').textContent = text;
+        resultEl.style.display = 'block';
+
+    } catch (e) {
+        errorEl.textContent = 'Decryption failed. Wrong password or corrupted data.';
+    }
+}
+
+// ============================================================
+// SHED (TEXT CLEANSER)
+// ============================================================
+const HIDDEN_CHARS = {
+    '\u200B': 'Zero-width space',
+    '\u200C': 'Zero-width non-joiner',
+    '\u200D': 'Zero-width joiner',
+    '\uFEFF': 'Byte order mark',
+    '\u00A0': 'Non-breaking space',
+    '\u2028': 'Line separator',
+    '\u2029': 'Paragraph separator',
+    '\u202A': 'Left-to-right embedding',
+    '\u202B': 'Right-to-left embedding',
+    '\u202C': 'Pop directional formatting',
+    '\u202D': 'Left-to-right override',
+    '\u202E': 'Right-to-left override',
+    '\u2060': 'Word joiner',
+    '\u2061': 'Function application',
+    '\u2062': 'Invisible times',
+    '\u2063': 'Invisible separator',
+    '\u2064': 'Invisible plus',
+    '\u180E': 'Mongolian vowel separator',
+    '\t': 'Tab',
+    '\r': 'Carriage return'
+};
+
+function shedText() {
+    const input = document.getElementById('shedInput').value;
+    const resultEl = document.getElementById('shedResult');
+    const reportEl = document.getElementById('hiddenReport');
+
+    if (!input) {
+        alert('Please enter text to cleanse');
+        return;
+    }
+
+    playSerpentAnimation();
+
+    // Find hidden characters
+    const found = {};
+    let clean = input;
+
+    for (const [char, name] of Object.entries(HIDDEN_CHARS)) {
+        const regex = new RegExp(char, 'g');
+        const matches = (input.match(regex) || []).length;
+        if (matches > 0) {
+            found[name] = matches;
+            clean = clean.replace(regex, char === '\t' ? '    ' : (char === '\r' ? '' : ''));
+        }
+    }
+
+    // Normalize whitespace
+    clean = clean
+        .replace(/\u00A0/g, ' ')  // NBSP to space
+        .replace(/[ ]+/g, ' ')    // Multiple spaces to single
+        .replace(/\n{3,}/g, '\n\n') // Max 2 newlines
+        .trim();
+
+    document.getElementById('shedOutput').textContent = clean;
+    document.getElementById('shedOrigSize').textContent = input.length;
+    document.getElementById('shedCleanSize').textContent = clean.length;
+    document.getElementById('shedRemoved').textContent = input.length - clean.length;
+
+    // Report hidden chars
+    if (Object.keys(found).length > 0) {
+        reportEl.innerHTML = '<strong>🔍 Hidden characters found:</strong><br>' +
+            Object.entries(found).map(([name, count]) => `• ${name}: ${count}`).join('<br>');
+        reportEl.style.display = 'block';
+    } else {
+        reportEl.style.display = 'none';
+    }
+
+    resultEl.style.display = 'block';
+}
+
+// ============================================================
+// FILE METADATA INSPECTION
+// ============================================================
+const dropZone = document.getElementById('fileDropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+});
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) inspectFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) inspectFile(e.target.files[0]);
+});
+
+function inspectFile(file) {
+    playSerpentAnimation();
+
+    const metaEl = document.getElementById('fileMetadata');
+    const metadata = [
+        ['Name', file.name],
+        ['Type', file.type || 'Unknown'],
+        ['Size', formatBytes(file.size)],
+        ['Last Modified', new Date(file.lastModified).toLocaleString()]
+    ];
+
+    // Check for common metadata-heavy types
+    const warnings = [];
+    if (file.type.includes('image')) {
+        warnings.push('Images may contain EXIF data (location, camera, date)');
+    }
+    if (file.type.includes('pdf')) {
+        warnings.push('PDFs may contain author, software, creation dates');
+    }
+    if (file.type.includes('word') || file.type.includes('document')) {
+        warnings.push('Documents may contain author, revisions, comments');
+    }
+
+    let html = '<h3 style="color:var(--accent);margin-bottom:12px;">📁 File Metadata</h3>';
+    html += metadata.map(([key, val]) =>
+        `<div class="metadata-item"><span class="metadata-key">${key}</span><span class="metadata-value">${val}</span></div>`
+    ).join('');
+
+    if (warnings.length > 0) {
+        html += '<div style="margin-top:12px;padding:8px;background:rgba(243,156,18,0.1);border-radius:4px;">';
+        html += '<strong style="color:var(--warning);">⚠️ Potential Hidden Data:</strong><br>';
+        html += warnings.map(w => `<span style="font-size:0.85rem;color:var(--text-dim);">• ${w}</span>`).join('<br>');
+        html += '</div>';
+    }
+
+    metaEl.innerHTML = html;
+    metaEl.style.display = 'block';
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function copyOutput(id) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard');
+}
+
+function clearEncrypt() {
+    document.getElementById('encryptInput').value = '';
+    document.getElementById('encryptPassword').value = '';
+    document.getElementById('encryptResult').style.display = 'none';
+    document.getElementById('encryptError').textContent = '';
+}
+
+function clearDecrypt() {
+    document.getElementById('decryptInput').value = '';
+    document.getElementById('decryptPassword').value = '';
+    document.getElementById('decryptResult').style.display = 'none';
+    document.getElementById('decryptError').textContent = '';
+}
+
+function clearShed() {
+    document.getElementById('shedInput').value = '';
+    document.getElementById('shedResult').style.display = 'none';
+    document.getElementById('fileMetadata').style.display = 'none';
+}
+</script>
+</body>
+</html>

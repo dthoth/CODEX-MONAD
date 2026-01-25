@@ -1,0 +1,32 @@
+{
+    "id": "serpent",
+    "name": "Serpent",
+    "version": "1.0.0",
+    "kind": "html",
+    "entry": "index.html",
+    "icon": "🐍",
+    "status": "active",
+    "description": "Local encryption and text cleansing tool. AES-256-GCM encryption via Web Crypto API. Strip hidden characters and inspect file metadata.",
+    "philosophy": "What enters the serpent comes out transformed",
+    "features": [
+        "AES-256-GCM encryption with PBKDF2 key derivation",
+        "Password-based encrypt/decrypt",
+        "SHED mode: strip hidden Unicode characters",
+        "File metadata inspection (EXIF, author, dates)",
+        "Normalize whitespace and remove invisible chars",
+        "Serpent animation on transformation",
+        "100% client-side - nothing leaves your machine"
+    ],
+    "tabs": {
+        "encrypt": "Text + password → encrypted base64",
+        "decrypt": "Encrypted text + password → original",
+        "shed": "Strip hidden chars, inspect file metadata"
+    },
+    "author": "CODEX System",
+    "created": "2026-01-24",
+    "tags": ["encryption", "aes", "privacy", "metadata", "cleansing", "security"],
+    "size": "~16KB",
+    "requirements": {
+        "browser": "Any modern browser with Web Crypto API"
+    }
+}

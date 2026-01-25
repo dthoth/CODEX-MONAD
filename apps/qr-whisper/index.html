@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Whisper - CODEX</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #2a2a3a;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --accent: #7b68ee;
+            --accent-dim: #5a4fcf;
+            --danger: #ff6b6b;
+            --success: #4ecdc4;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        h1 span { color: var(--accent); }
+        .subtitle { color: var(--text-dim); font-size: 0.8rem; margin-top: 4px; }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .tab:first-child { border-radius: 6px 0 0 6px; }
+        .tab:last-child { border-radius: 0 6px 6px 0; }
+        .tab.active {
+            background: var(--accent-dim);
+            color: white;
+            border-color: var(--accent);
+        }
+        .tab:hover:not(.active) { background: #1a1a2a; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        .form-group { margin-bottom: 16px; }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        textarea, input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+        textarea { min-height: 100px; font-family: monospace; }
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .checkbox-group input { width: auto; }
+        .checkbox-group label { margin: 0; color: var(--text); }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--accent-dim); }
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: #1a1a2a; }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .qr-output {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #qrCanvas { max-width: 100%; }
+        .whisper-note {
+            background: #1a1520;
+            border: 1px solid var(--danger);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--danger);
+        }
+        .whisper-note code {
+            display: block;
+            margin-top: 8px;
+            padding: 8px;
+            background: var(--bg);
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .decode-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+        .decode-area:hover, .decode-area.dragover {
+            border-color: var(--accent);
+            background: rgba(123, 104, 238, 0.1);
+        }
+        .decode-area p { color: var(--text-dim); margin-bottom: 8px; }
+        #cameraPreview {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            display: none;
+            margin: 16px auto;
+        }
+        .result-box {
+            background: var(--surface);
+            border: 1px solid var(--success);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .result-box h3 {
+            color: var(--success);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .result-box pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .hidden { display: none !important; }
+        .error { color: var(--danger); font-size: 0.85rem; margin-top: 8px; }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .btn-group { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QR <span>Whisper</span></h1>
+            <div class="subtitle">Offline QR Tool • CODEX System</div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="encode">ENCODE</button>
+            <button class="tab" data-tab="decode">DECODE</button>
+        </div>
+
+        <!-- ENCODE PANEL -->
+        <div id="encode" class="panel active">
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="Enter text to encode..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password (optional - XOR encryption)</label>
+                <input type="password" id="password" placeholder="Leave empty for no encryption">
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="whisperMode">
+                <label for="whisperMode">Whisper Mode (burn after reading)</label>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="generateQR()">Generate QR</button>
+                <button class="btn btn-secondary" onclick="clearEncode()">Clear</button>
+            </div>
+
+            <div id="qrResult" class="hidden">
+                <div class="qr-output">
+                    <canvas id="qrCanvas"></canvas>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="copyQR()">Copy Image</button>
+                    <button class="btn btn-secondary" onclick="downloadQR()">Download PNG</button>
+                </div>
+                <div id="whisperNote" class="whisper-note hidden">
+                    <strong>WHISPER MODE ACTIVE</strong>
+                    <p>Share this QR. Once scanned, instruct recipient to destroy.</p>
+                    <code id="whisperHash"></code>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECODE PANEL -->
+        <div id="decode" class="panel">
+            <div class="decode-area" id="dropZone" onclick="triggerFileInput()">
+                <p>Drop QR image here or click to upload</p>
+                <p style="font-size: 0.8rem;">Supports: PNG, JPG, GIF, clipboard paste</p>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFile(event)">
+
+            <div class="btn-group" style="justify-content: center;">
+                <button class="btn btn-secondary" onclick="startCamera()">Use Camera</button>
+                <button class="btn btn-secondary hidden" id="stopCameraBtn" onclick="stopCamera()">Stop Camera</button>
+            </div>
+
+            <video id="cameraPreview" autoplay playsinline></video>
+
+            <div class="form-group" style="margin-top: 16px;">
+                <label for="decryptPassword">Password (if encrypted)</label>
+                <input type="password" id="decryptPassword" placeholder="Enter password to decrypt">
+            </div>
+
+            <div id="decodeResult" class="hidden">
+                <div class="result-box">
+                    <h3>Decoded Message</h3>
+                    <pre id="decodedText"></pre>
+                </div>
+                <div class="btn-group" style="margin-top: 12px;">
+                    <button class="btn btn-secondary" onclick="copyDecoded()">Copy Text</button>
+                    <button class="btn btn-danger hidden" id="burnBtn" onclick="burnMessage()">Burn Message</button>
+                </div>
+            </div>
+
+            <div id="decodeError" class="error hidden"></div>
+        </div>
+
+        <footer>
+            QR Whisper v1.0 • No external dependencies • Works offline<br>
+            Part of the CODEX-MONAD ecosystem
+        </footer>
+    </div>
+
+<script>
+// ============================================================
+// MINIMAL QR CODE GENERATOR (Based on qr.js, MIT License)
+// Optimized and minified for size
+// ============================================================
+const QR=(function(){const EC={L:1,M:0,Q:3,H:2};const MODE={Numeric:1,AlphaNum:2,Byte:4};
+function getMode(s){if(/^\d+$/.test(s))return MODE.Numeric;if(/^[0-9A-Z $%*+\-./:]+$/.test(s))return MODE.AlphaNum;return MODE.Byte;}
+const ALPHANUM="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+const CAP=[[41,25,17,10],[77,47,32,20],[127,77,53,26],[187,114,78,36],[255,154,106,46],[322,195,134,60],[370,224,154,66],[461,279,192,86],[552,335,230,100],[652,395,271,122],[772,468,321,140],[883,535,367,158],[1022,619,425,180],[1101,667,458,197],[1250,758,520,223],[1408,854,586,253],[1548,938,644,283],[1725,1046,718,313],[1903,1153,792,341],[2061,1249,858,385],[2232,1352,929,406],[2409,1460,1003,442],[2620,1588,1091,464],[2812,1704,1171,514],[3057,1853,1273,538],[3283,1990,1367,596],[3517,2132,1465,628],[3669,2223,1528,661],[3909,2369,1628,701],[4158,2520,1732,745],[4417,2677,1840,793],[4686,2840,1952,845],[4965,3009,2068,901],[5253,3183,2188,961],[5529,3351,2303,986],[5836,3537,2431,1054],[6153,3729,2563,1096],[6479,3927,2699,1142],[6743,4087,2809,1222],[7089,4296,2953,1276]];
+function getVersion(len,mode,ecl){const e=EC[ecl];for(let v=1;v<=40;v++){let cap=CAP[v-1][e];if(mode===MODE.Numeric)cap=Math.floor(cap*10/3);else if(mode===MODE.AlphaNum)cap=Math.floor(cap*11/6);if(len<=cap)return v;}return 40;}
+const GF={exp:new Uint8Array(512),log:new Uint8Array(256)};
+(function(){let x=1;for(let i=0;i<255;i++){GF.exp[i]=x;GF.log[x]=i;x<<=1;if(x&256)x^=285;}for(let i=255;i<512;i++)GF.exp[i]=GF.exp[i-255];})();
+function gfMul(a,b){return a&&b?GF.exp[GF.log[a]+GF.log[b]]:0;}
+function gfPoly(n){let p=[1];for(let i=0;i<n;i++){let q=[0,1];q[0]=GF.exp[i];let r=new Uint8Array(p.length+1);for(let j=0;j<q.length;j++)for(let k=0;k<p.length;k++)r[j+k]^=gfMul(q[j],p[k]);p=r;}return p;}
+function ecEncode(data,ecLen){let gen=gfPoly(ecLen);let pad=new Uint8Array(data.length+ecLen);pad.set(data);for(let i=0;i<data.length;i++){let c=pad[i];if(c)for(let j=0;j<gen.length;j++)pad[i+j]^=gfMul(gen[j],c);}return pad.slice(data.length);}
+const EC_CODEWORDS=[[7,10,13,17],[10,16,22,28],[15,26,36,44],[20,36,52,64],[26,48,72,88],[36,64,96,112],[40,72,108,130],[48,88,132,156],[60,110,160,192],[72,130,192,224],[80,150,224,264],[96,176,260,308],[104,198,288,352],[120,216,320,384],[132,240,360,432],[144,280,408,480],[168,308,448,532],[180,338,504,588],[196,364,546,650],[224,416,600,700],[224,442,644,750],[252,476,690,816],[270,504,750,900],[300,560,810,960],[312,588,870,1050],[336,644,952,1110],[360,700,1020,1200],[390,728,1050,1260],[420,784,1140,1350],[450,812,1200,1440],[480,868,1290,1530],[510,924,1350,1620],[540,980,1440,1710],[570,1036,1530,1800],[570,1064,1590,1890],[600,1120,1680,1980],[630,1204,1770,2100],[660,1260,1860,2220],[720,1316,1950,2310],[750,1372,2040,2430]];
+const ALIGN=[null,null,[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166]];
+function createMatrix(v){const s=v*4+17;const m=[];for(let i=0;i<s;i++)m.push(new Int8Array(s).fill(-1));return m;}
+function setFinder(m,x,y){for(let dy=-1;dy<=7;dy++)for(let dx=-1;dx<=7;dx++){if(x+dx<0||y+dy<0||x+dx>=m.length||y+dy>=m.length)continue;let v=(dx>=0&&dx<=6&&(dy===0||dy===6))||(dy>=0&&dy<=6&&(dx===0||dx===6))||(dx>=2&&dx<=4&&dy>=2&&dy<=4)?1:0;m[y+dy][x+dx]=v;}}
+function setAlign(m,x,y){for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){let v=(dx===-2||dx===2||dy===-2||dy===2||(!dx&&!dy))?1:0;m[y+dy][x+dx]=v;}}
+function setTiming(m){const s=m.length;for(let i=8;i<s-8;i++){m[6][i]=m[i][6]=i&1?0:1;}}
+function setFormat(m,mask,ecl){const s=m.length;const bits=(ecl<<3|mask)^0b101010000010010;for(let i=0;i<6;i++)m[8][i]=m[i][8]=(bits>>i)&1;m[8][7]=(bits>>6)&1;m[8][8]=(bits>>7)&1;m[7][8]=(bits>>8)&1;for(let i=0;i<6;i++)m[5-i][8]=(bits>>9+i)&1;for(let i=0;i<8;i++)m[8][s-1-i]=(bits>>i)&1;for(let i=0;i<7;i++)m[s-7+i][8]=(bits>>8+i)&1;m[s-8][8]=1;}
+function setVersion(m,v){if(v<7)return;let rem=v;for(let i=0;i<12;i++)rem=(rem<<1)^((rem>>11)*0x1f25);const bits=(v<<12)|rem;const s=m.length;for(let i=0;i<18;i++){const b=(bits>>i)&1;m[Math.floor(i/3)][s-11+i%3]=b;m[s-11+i%3][Math.floor(i/3)]=b;}}
+function encodeData(str,mode,v){let bits=[];const addBits=(val,len)=>{for(let i=len-1;i>=0;i--)bits.push((val>>i)&1);};addBits(mode,4);const ccLen=mode===MODE.Byte?(v<10?8:16):mode===MODE.AlphaNum?(v<10?9:v<27?11:13):(v<10?10:v<27?12:14);addBits(str.length,ccLen);if(mode===MODE.Numeric){for(let i=0;i<str.length;i+=3){const g=str.substr(i,3);addBits(parseInt(g),g.length===3?10:g.length===2?7:4);}}else if(mode===MODE.AlphaNum){for(let i=0;i<str.length;i+=2){if(i+1<str.length)addBits(ALPHANUM.indexOf(str[i])*45+ALPHANUM.indexOf(str[i+1]),11);else addBits(ALPHANUM.indexOf(str[i]),6);}}else{for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);if(c<128)addBits(c,8);else{const u=new TextEncoder().encode(str[i]);for(const b of u)addBits(b,8);}}}addBits(0,4);while(bits.length%8)bits.push(0);const ecl=EC.L;const totalWords=CAP[v-1][ecl];const ecWords=EC_CODEWORDS[v-1][ecl];const dataWords=totalWords-ecWords;const pad=[0xec,0x11];while(bits.length<dataWords*8)bits.push(...pad[(bits.length/8)%2].toString(2).padStart(8,'0').split('').map(Number));const data=new Uint8Array(dataWords);for(let i=0;i<dataWords;i++){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i*8+j];data[i]=b;}const ec=ecEncode(data,ecWords);return new Uint8Array([...data,...ec]);}
+function placeBits(m,bits){const s=m.length;let idx=0;for(let x=s-1;x>=1;x-=2){if(x===6)x--;for(let i=0;i<s;i++){const y=((x+1)&2)?i:s-1-i;for(const dx of[0,-1]){if(m[y][x+dx]===-1){m[y][x+dx]=idx<bits.length?bits[idx++]:0;}}}}}
+function applyMask(m,mask){const s=m.length;const fn=[
+(x,y)=>(x+y)%2===0,
+(x,y)=>y%2===0,
+(x,y)=>x%3===0,
+(x,y)=>(x+y)%3===0,
+(x,y)=>(Math.floor(y/2)+Math.floor(x/3))%2===0,
+(x,y)=>(x*y)%2+(x*y)%3===0,
+(x,y)=>((x*y)%2+(x*y)%3)%2===0,
+(x,y)=>((x+y)%2+(x*y)%3)%2===0
+][mask];for(let y=0;y<s;y++)for(let x=0;x<s;x++){if(m[y][x]!==-1)continue;if(fn(x,y))m[y][x]^=1;}}
+function generate(str,ecLevel='L'){const mode=getMode(str);const v=getVersion(str.length,mode,ecLevel);const m=createMatrix(v);setFinder(m,0,0);setFinder(m,v*4+10,0);setFinder(m,0,v*4+10);if(ALIGN[v])for(const ay of ALIGN[v])for(const ax of ALIGN[v]){if((ax<9&&ay<9)||(ax<9&&ay>v*4+8)||(ax>v*4+8&&ay<9))continue;setAlign(m,ax,ay);}setTiming(m);setFormat(m,0,EC[ecLevel]);setVersion(m,v);const bits=encodeData(str,mode,v);const bitsArr=[];for(const b of bits)for(let i=7;i>=0;i--)bitsArr.push((b>>i)&1);placeBits(m,bitsArr);applyMask(m,0);return m;}
+function render(canvas,str,cellSize=8,margin=4){const m=generate(str);const s=m.length;canvas.width=canvas.height=(s+margin*2)*cellSize;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#000';for(let y=0;y<s;y++)for(let x=0;x<s;x++){if(m[y][x]===1)ctx.fillRect((x+margin)*cellSize,(y+margin)*cellSize,cellSize,cellSize);}return canvas;}
+return{generate,render};})();
+
+// ============================================================
+// XOR ENCRYPTION (simple, no deps)
+// ============================================================
+function xorEncrypt(text, key) {
+    if (!key) return text;
+    const enc = new TextEncoder();
+    const textBytes = enc.encode(text);
+    const keyBytes = enc.encode(key);
+    const result = new Uint8Array(textBytes.length);
+    for (let i = 0; i < textBytes.length; i++) {
+        result[i] = textBytes[i] ^ keyBytes[i % keyBytes.length];
+    }
+    return btoa(String.fromCharCode(...result));
+}
+
+function xorDecrypt(encoded, key) {
+    if (!key) return encoded;
+    try {
+        const bytes = Uint8Array.from(atob(encoded), c => c.charCodeAt(0));
+        const keyBytes = new TextEncoder().encode(key);
+        const result = new Uint8Array(bytes.length);
+        for (let i = 0; i < bytes.length; i++) {
+            result[i] = bytes[i] ^ keyBytes[i % keyBytes.length];
+        }
+        return new TextDecoder().decode(result);
+    } catch {
+        return null;
+    }
+}
+
+function simpleHash(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+        h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+    }
+    return Math.abs(h).toString(16).padStart(8, '0').toUpperCase();
+}
+
+// ============================================================
+// UI LOGIC
+// ============================================================
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+
+// ENCODE
+function generateQR() {
+    const msg = document.getElementById('message').value.trim();
+    const pwd = document.getElementById('password').value;
+    const whisper = document.getElementById('whisperMode').checked;
+
+    if (!msg) {
+        alert('Please enter a message');
+        return;
+    }
+
+    let payload = pwd ? xorEncrypt(msg, pwd) : msg;
+    if (whisper) {
+        payload = 'WHISPER:' + payload;
+    }
+
+    const canvas = document.getElementById('qrCanvas');
+    try {
+        QR.render(canvas, payload, 6, 2);
+        document.getElementById('qrResult').classList.remove('hidden');
+
+        if (whisper) {
+            document.getElementById('whisperNote').classList.remove('hidden');
+            document.getElementById('whisperHash').textContent =
+                'ID: ' + simpleHash(msg + Date.now()) + ' | Destroy after reading';
+        } else {
+            document.getElementById('whisperNote').classList.add('hidden');
+        }
+    } catch (e) {
+        alert('Error generating QR: Message may be too long');
+    }
+}
+
+function clearEncode() {
+    document.getElementById('message').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('whisperMode').checked = false;
+    document.getElementById('qrResult').classList.add('hidden');
+}
+
+function copyQR() {
+    const canvas = document.getElementById('qrCanvas');
+    canvas.toBlob(blob => {
+        navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+        alert('QR copied to clipboard');
+    });
+}
+
+function downloadQR() {
+    const canvas = document.getElementById('qrCanvas');
+    const link = document.createElement('a');
+    link.download = 'qr-whisper-' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+// DECODE
+let currentStream = null;
+let isWhisperMessage = false;
+
+function triggerFileInput() {
+    document.getElementById('fileInput').click();
+}
+
+function handleFile(e) {
+    const file = e.target.files[0];
+    if (file) decodeFromFile(file);
+}
+
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+});
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) decodeFromFile(file);
+});
+
+document.addEventListener('paste', e => {
+    const items = e.clipboardData.items;
+    for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+            decodeFromFile(item.getAsFile());
+            break;
+        }
+    }
+});
+
+async function decodeFromFile(file) {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    await img.decode();
+    decodeImage(img);
+}
+
+async function decodeImage(img) {
+    const errEl = document.getElementById('decodeError');
+    errEl.classList.add('hidden');
+
+    if (!('BarcodeDetector' in window)) {
+        errEl.textContent = 'BarcodeDetector not supported. Try Chrome/Edge.';
+        errEl.classList.remove('hidden');
+        return;
+    }
+
+    try {
+        const detector = new BarcodeDetector({formats: ['qr_code']});
+        const results = await detector.detect(img);
+
+        if (results.length === 0) {
+            errEl.textContent = 'No QR code found in image';
+            errEl.classList.remove('hidden');
+            return;
+        }
+
+        processDecoded(results[0].rawValue);
+    } catch (e) {
+        errEl.textContent = 'Decode error: ' + e.message;
+        errEl.classList.remove('hidden');
+    }
+}
+
+function processDecoded(raw) {
+    let text = raw;
+    isWhisperMessage = false;
+
+    if (raw.startsWith('WHISPER:')) {
+        text = raw.slice(8);
+        isWhisperMessage = true;
+    }
+
+    const pwd = document.getElementById('decryptPassword').value;
+    if (pwd) {
+        const dec = xorDecrypt(text, pwd);
+        if (dec) text = dec;
+    }
+
+    document.getElementById('decodedText').textContent = text;
+    document.getElementById('decodeResult').classList.remove('hidden');
+    document.getElementById('burnBtn').classList.toggle('hidden', !isWhisperMessage);
+}
+
+async function startCamera() {
+    try {
+        currentStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' }
+        });
+        const video = document.getElementById('cameraPreview');
+        video.srcObject = currentStream;
+        video.style.display = 'block';
+        document.getElementById('stopCameraBtn').classList.remove('hidden');
+        scanCamera();
+    } catch (e) {
+        alert('Camera access denied: ' + e.message);
+    }
+}
+
+function stopCamera() {
+    if (currentStream) {
+        currentStream.getTracks().forEach(t => t.stop());
+        currentStream = null;
+    }
+    document.getElementById('cameraPreview').style.display = 'none';
+    document.getElementById('stopCameraBtn').classList.add('hidden');
+}
+
+async function scanCamera() {
+    if (!currentStream) return;
+
+    const video = document.getElementById('cameraPreview');
+    if (!('BarcodeDetector' in window)) return;
+
+    const detector = new BarcodeDetector({formats: ['qr_code']});
+
+    const scan = async () => {
+        if (!currentStream) return;
+        try {
+            const results = await detector.detect(video);
+            if (results.length > 0) {
+                processDecoded(results[0].rawValue);
+                stopCamera();
+                return;
+            }
+        } catch {}
+        requestAnimationFrame(scan);
+    };
+    scan();
+}
+
+function copyDecoded() {
+    const text = document.getElementById('decodedText').textContent;
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard');
+}
+
+function burnMessage() {
+    if (confirm('Burn this message? It will be cleared from display.')) {
+        document.getElementById('decodedText').textContent = '[BURNED]';
+        document.getElementById('decryptPassword').value = '';
+        document.getElementById('burnBtn').classList.add('hidden');
+    }
+}
+</script>
+</body>
+</html>

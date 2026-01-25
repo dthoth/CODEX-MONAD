@@ -1,0 +1,26 @@
+{
+    "id": "qr-whisper",
+    "name": "QR Whisper",
+    "version": "1.0.0",
+    "kind": "html",
+    "entry": "index.html",
+    "icon": "📱",
+    "status": "active",
+    "description": "Offline QR code encoder/decoder with optional XOR encryption and whisper mode for ephemeral messages",
+    "features": [
+        "Encode text to QR code",
+        "Decode QR from image, clipboard, or camera",
+        "Optional password-based XOR encryption",
+        "Whisper mode for burn-after-reading messages",
+        "Copy/download QR as PNG",
+        "Fully offline - no external dependencies"
+    ],
+    "author": "CODEX System",
+    "created": "2026-01-24",
+    "tags": ["qr", "encryption", "offline", "whisper", "privacy"],
+    "size": "~22KB",
+    "requirements": {
+        "browser": "Chrome/Edge recommended (BarcodeDetector API)",
+        "camera": "Optional - for live QR scanning"
+    }
+}
