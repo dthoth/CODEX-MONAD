@@ -248,6 +248,56 @@
                     hubPath: 'grok-integration-demo.html',
                     launchType: 'html',
                     isLocal: true
+                },
+                {
+                    id: 'qr-whisper',
+                    label: 'QR Whisper',
+                    icon: '🔮',
+                    status: 'active',
+                    description: 'Offline QR encoder/decoder with encryption',
+                    hubPath: 'apps/qr-whisper/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'mandala',
+                    label: 'Mandala',
+                    icon: '🌀',
+                    status: 'active',
+                    description: 'Deterministic sacred geometry generator',
+                    hubPath: 'apps/mandala/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'serpent',
+                    label: 'Serpent',
+                    icon: '🐍',
+                    status: 'active',
+                    description: 'AES-256 encryption and metadata cleansing',
+                    hubPath: 'apps/serpent/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'compress',
+                    label: 'Compress',
+                    icon: '📀',
+                    status: 'active',
+                    description: 'Archival prep and floppy distribution',
+                    hubPath: 'apps/compress/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'help',
+                    label: 'Help',
+                    icon: '❓',
+                    status: 'active',
+                    description: 'Portal guide and oracle',
+                    hubPath: 'apps/help/index.html',
+                    launchType: 'html',
+                    isLocal: true
                 }
             ]
         },
