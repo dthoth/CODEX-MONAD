@@ -1,11 +1,11 @@
 /**
- * HINENI HUB - Portal Integration v2.5
+ * HINENI HUB - Portal Integration v2.6
  * Renders the hub inventory as categorized cards inside the DIN Portal
  *
  * Mount point: /Volumes/HINENI_HUB (macOS) | E:\ (Windows - HINENI_HUB_PC)
  * This script injects into #hineni-hub-section
  *
- * Updated: 2026-01-24 - Windows E:\ path support with actual directory mapping
+ * Updated: 2026-02-18 - Reorganized into focused categories, removed duplicates and unavailable items
  *
  * PLATFORM BEHAVIOR:
  *   macOS:   Full hub access when HINENI_HUB mounted at /Volumes/HINENI_HUB
@@ -74,10 +74,10 @@
     // Hub items organized by category - ALL REAL TOOLS
     var HUB_CATEGORIES = [
         {
-            id: 'web-apps',
-            title: '🌐 Web Apps & Games',
+            id: 'core-apps',
+            title: '✍️ Core Writing & Communication',
             items: [
-{
+                {
                     id: 'polywrite',
                     label: 'PolyWrite Pro',
                     icon: '✍️',
@@ -97,7 +97,23 @@
                     launchType: 'html',
                     isLocal: true
                 },
-{
+                {
+                    id: 'codex-monad',
+                    label: 'Codex Monad Seedline',
+                    icon: '🌱',
+                    status: 'active',
+                    description: 'The foundational entry point to the CODEX-MONAD ecosystem',
+                    hubPath: 'apps/codex_monad/START_HERE.html',
+                    launchType: 'html',
+                    isLocal: true
+                }
+            ]
+        },
+        {
+            id: 'security-archival',
+            title: '🔐 Security & Archival',
+            items: [
+                {
                     id: 'codex-ark',
                     label: 'CODEX-ARK Witness',
                     icon: '📦',
@@ -107,118 +123,7 @@
                     launchType: 'html',
                     isLocal: true
                 },
-{
-                    id: 'codex-monad',
-                    label: 'Codex Monad Seedline',
-                    icon: '🌱',
-                    status: 'active',
-                    description: 'The foundational entry point to the CODEX-MONAD ecosystem',
-                    hubPath: 'apps/codex_monad/START_HERE.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'bureaucratic-universe',
-                    label: 'Bureaucratic Universe',
-                    icon: '📋',
-                    status: 'active',
-                    description: 'Infinite forms system for notices and legal documents.',
-                    hubPath: 'apps/bureaucratic_universe/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'codex-media-player',
-                    label: 'CODEX Media Player',
-                    icon: '🎬',
-                    status: 'active',
-                    description: 'Universal multimedia interface - documents, images, audio, video (VLC-style viewer)',
-                    hubPath: 'codex-media-player.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'codex-capture',
-                    label: 'Codex Capture',
-                    icon: '📸',
-                    status: 'active',
-                    description: 'Capture and archive tool for the CODEX system.',
-                    hubPath: 'apps/codex_capture/index.html',
-                    launchType: 'html',
-                    isLocal: true,
-                    command: 'python capture.py'
-                },
-{
-                    id: 'conflict-lab',
-                    label: 'Conflict Lab',
-                    icon: '⚡',
-                    status: 'active',
-                    description: 'Interactive laboratory for exploring and resolving conflicts through structured analysis',
-                    hubPath: 'apps/conflict_lab/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'din-portal',
-                    label: 'DIN Portal',
-                    icon: '🚪',
-                    status: 'active',
-                    description: 'Dynamic Intelligent Navigation portal for CODEX ecosystem exploration',
-                    hubPath: 'apps/din_portal/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'hypergraph',
-                    label: 'Hypergraph Navigator',
-                    icon: '🕸️',
-                    status: 'active',
-                    description: 'Navigate thought networks in N-dimensional space.',
-                    hubPath: 'hypergraph.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'oracle-page',
-                    label: 'Oracle',
-                    icon: '🔮',
-                    status: 'active',
-                    description: 'Direct consciousness query interface.',
-                    hubPath: 'oracle.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'pranayama',
-                    label: 'Pranayama',
-                    icon: '🫁',
-                    status: 'active',
-                    description: 'Breathwork practice guide and timer for conscious breathing exercises',
-                    hubPath: 'apps/pranayama/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'royal-game-ur',
-                    label: 'Royal Game of Ur',
-                    icon: '🎲',
-                    status: 'active',
-                    description: 'Ancient Mesopotamian board game reimagined for digital play',
-                    hubPath: 'apps/royal_game_of_ur/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'samson-recursive',
-                    label: "Samson's Infinite Life Proof",
-                    icon: '🦁',
-                    status: 'active',
-                    description: 'Interactive mathematical proof that you are eternal - for the young lion.',
-                    hubPath: 'apps/samson_recursive/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
+                {
                     id: 'vault',
                     label: 'CODEX Vault',
                     icon: '🔐',
@@ -229,23 +134,13 @@
                     isLocal: true,
                     command: 'vault-v2 status'
                 },
-{
-                    id: 'word-salad',
-                    label: 'Word Salad 5.0',
-                    icon: '🥗',
+                {
+                    id: 'serpent',
+                    label: 'Serpent',
+                    icon: '🐍',
                     status: 'active',
-                    description: 'Creative word generation and manipulation tool.',
-                    hubPath: 'apps/word_salad/Word Salad 5.0/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-{
-                    id: 'grok-integration',
-                    label: 'Grok Integration Demo',
-                    icon: '🔥',
-                    status: 'active',
-                    description: 'Live demo of transcendent module integration - QR Whisper, Mandala, Serpent, Compression.',
-                    hubPath: 'grok-integration-demo.html',
+                    description: 'AES-256 encryption and metadata cleansing',
+                    hubPath: 'apps/serpent/index.html',
                     launchType: 'html',
                     isLocal: true
                 },
@@ -260,32 +155,58 @@
                     isLocal: true
                 },
                 {
-                    id: 'mandala',
-                    label: 'Mandala',
-                    icon: '🌀',
-                    status: 'active',
-                    description: 'Deterministic sacred geometry generator',
-                    hubPath: 'apps/mandala/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-                {
-                    id: 'serpent',
-                    label: 'Serpent',
-                    icon: '🐍',
-                    status: 'active',
-                    description: 'AES-256 encryption and metadata cleansing',
-                    hubPath: 'apps/serpent/index.html',
-                    launchType: 'html',
-                    isLocal: true
-                },
-                {
                     id: 'compress',
                     label: 'Compress',
                     icon: '📀',
                     status: 'active',
                     description: 'Archival prep and floppy distribution',
                     hubPath: 'apps/compress/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                }
+            ]
+        },
+        {
+            id: 'navigation-exploration',
+            title: '🧭 Navigation & Exploration',
+            items: [
+                {
+                    id: 'din-portal',
+                    label: 'DIN Portal',
+                    icon: '🚪',
+                    status: 'active',
+                    description: 'Dynamic Intelligent Navigation portal for CODEX ecosystem exploration',
+                    hubPath: 'apps/din_portal/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'hypergraph',
+                    label: 'Hypergraph Navigator',
+                    icon: '🕸️',
+                    status: 'active',
+                    description: 'Navigate thought networks in N-dimensional space.',
+                    hubPath: 'hypergraph.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'oracle-page',
+                    label: 'Oracle',
+                    icon: '🔮',
+                    status: 'active',
+                    description: 'Direct consciousness query interface.',
+                    hubPath: 'oracle.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'grok-integration',
+                    label: 'Grok Integration Demo',
+                    icon: '🔥',
+                    status: 'active',
+                    description: 'Live demo of transcendent module integration - QR Whisper, Mandala, Serpent, Compression.',
+                    hubPath: 'grok-integration-demo.html',
                     launchType: 'html',
                     isLocal: true
                 },
@@ -296,6 +217,115 @@
                     status: 'active',
                     description: 'Portal guide and oracle',
                     hubPath: 'apps/help/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                }
+            ]
+        },
+        {
+            id: 'media-capture',
+            title: '🎬 Media & Capture',
+            items: [
+                {
+                    id: 'codex-media-player',
+                    label: 'CODEX Media Player',
+                    icon: '🎬',
+                    status: 'active',
+                    description: 'Universal multimedia interface - documents, images, audio, video (VLC-style viewer)',
+                    hubPath: 'codex-media-player.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'codex-capture',
+                    label: 'Codex Capture',
+                    icon: '📸',
+                    status: 'active',
+                    description: 'Capture and archive tool for the CODEX system.',
+                    hubPath: 'apps/codex_capture/index.html',
+                    launchType: 'html',
+                    isLocal: true,
+                    command: 'python capture.py'
+                }
+            ]
+        },
+        {
+            id: 'wellness-games',
+            title: '🎮 Wellness & Games',
+            items: [
+                {
+                    id: 'pranayama',
+                    label: 'Pranayama',
+                    icon: '🫁',
+                    status: 'active',
+                    description: 'Breathwork practice guide and timer for conscious breathing exercises',
+                    hubPath: 'apps/pranayama/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'mandala',
+                    label: 'Mandala',
+                    icon: '🌀',
+                    status: 'active',
+                    description: 'Deterministic sacred geometry generator',
+                    hubPath: 'apps/mandala/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'royal-game-ur',
+                    label: 'Royal Game of Ur',
+                    icon: '🎲',
+                    status: 'active',
+                    description: 'Ancient Mesopotamian board game reimagined for digital play',
+                    hubPath: 'apps/royal_game_of_ur/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'word-salad',
+                    label: 'Word Salad 5.0',
+                    icon: '🥗',
+                    status: 'active',
+                    description: 'Creative word generation and manipulation tool.',
+                    hubPath: 'apps/word_salad/Word Salad 5.0/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'samson-recursive',
+                    label: "Samson's Infinite Life Proof",
+                    icon: '🦁',
+                    status: 'active',
+                    description: 'Interactive mathematical proof that you are eternal - for the young lion.',
+                    hubPath: 'apps/samson_recursive/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                }
+            ]
+        },
+        {
+            id: 'specialty-tools',
+            title: '🔧 Specialty Tools',
+            items: [
+                {
+                    id: 'bureaucratic-universe',
+                    label: 'Bureaucratic Universe',
+                    icon: '📋',
+                    status: 'active',
+                    description: 'Infinite forms system for notices and legal documents.',
+                    hubPath: 'apps/bureaucratic_universe/index.html',
+                    launchType: 'html',
+                    isLocal: true
+                },
+                {
+                    id: 'conflict-lab',
+                    label: 'Conflict Lab',
+                    icon: '⚡',
+                    status: 'active',
+                    description: 'Interactive laboratory for exploring and resolving conflicts through structured analysis',
+                    hubPath: 'apps/conflict_lab/index.html',
                     launchType: 'html',
                     isLocal: true
                 }
@@ -573,32 +603,6 @@
             ]
         },
         {
-            id: 'conflict-lab',
-            title: '⚖️ Conflict Lab',
-            items: [
-                {
-                    id: 'conflict-lab-main',
-                    label: 'Conflict Lab',
-                    icon: '⚖️',
-                    status: 'active',
-                    description: 'Interactive conflict/game theory environment with Bokeh/Panel.',
-                    hubPath: '10-repos-central/conflict-lab/',
-                    winPath: WIN_DESKTOP_BASE + '/Conflict Lab/',
-                    launchType: 'folder'
-                },
-                {
-                    id: 'chaos-module',
-                    label: 'Chaos Module',
-                    icon: '🌀',
-                    status: 'active',
-                    description: 'Chaos theory module for conflict simulations.',
-                    hubPath: '10-repos-central/conflict-lab/conflict_lab_chaos_module.py',
-                    winPath: null,  // Not found on E:\
-                    launchType: 'file'
-                }
-            ]
-        },
-        {
             id: 'repos',
             title: '📚 Repositories',
             items: [
@@ -715,59 +719,13 @@
             title: '🗄️ Archives & Packs',
             items: [
                 {
-                    id: 'symbol-key-sprint',
-                    label: 'Symbol Key Sprint',
-                    icon: '🧩',
-                    status: 'active',
-                    description: 'GRIDLESS HARDCORE pack - Conflict Lab, Game of Ur, symbolic testing.',
-                    hubPath: '30-codex-extras/Symbol_Key_Sprint_GRIDLESS_HARDCORE',
-                    winPath: null,  // Not found on E:\
-                    launchType: 'folder'
-                },
-                {
                     id: 'codex-packs',
                     label: 'Codex Packs Archive',
                     icon: '📦',
                     status: 'active',
                     description: 'All archived codex packs (.zip bundles).',
                     hubPath: '40-archive/codex-packs',
-                    winPath: '20-archive',  // Best match on E:\
-                    launchType: 'folder'
-                },
-                {
-                    id: 'dthothscrbx-origin',
-                    label: 'DTHOTHSCRBX Origin',
-                    icon: '🏛️',
-                    status: 'active',
-                    description: 'Original DevonThink database archive.',
-                    hubPath: '40-archive/DTHOTHSCRBX_ORIGIN',
-                    winPath: null,  // Not found on E:\
-                    launchType: 'folder'
-                }
-            ]
-        },
-        {
-            id: 'ai-infra',
-            title: '🤖 AI Infrastructure',
-            items: [
-                {
-                    id: 'ai-datasets',
-                    label: 'AI Datasets',
-                    icon: '🧬',
-                    status: 'active',
-                    description: 'Source datasets for AI experiments.',
-                    hubPath: '50-ai/datasets-origin',
-                    winPath: null,  // Not found on E:\
-                    launchType: 'folder'
-                },
-                {
-                    id: 'ai-models',
-                    label: 'AI Models',
-                    icon: '🧠',
-                    status: 'active',
-                    description: 'Source models/checkpoints for AI experiments.',
-                    hubPath: '50-ai/models-origin',
-                    winPath: null,  // Not found on E:\
+                    winPath: '20-archive',
                     launchType: 'folder'
                 }
             ]
@@ -1016,7 +974,7 @@
         platform: PLATFORM,
         hubAvailable: HUB_AVAILABLE,
         refresh: renderHubSection,
-        version: '2.5'
+        version: '2.6'
     };
 
 })();
