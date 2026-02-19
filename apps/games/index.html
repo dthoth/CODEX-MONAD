@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHASE SHIFT v3 — CODEX GAMES</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #06060f;
+    color: #e0dcea;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: #0f0f1a;
+    border-bottom: 1px solid rgba(160,140,200,0.2);
+    flex-shrink: 0;
+  }
+
+  #topbar a {
+    color: rgba(160,140,200,0.6);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    transition: color 0.15s;
+  }
+  #topbar a:hover { color: #a08cd4; }
+
+  #topbar .sep { color: rgba(160,140,200,0.25); }
+
+  #topbar .game-title {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: #a08cd4;
+    font-weight: bold;
+  }
+
+  #topbar .version-tag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border: 1px solid rgba(160,140,200,0.25);
+    border-radius: 3px;
+    color: rgba(160,140,200,0.5);
+    letter-spacing: 0.06em;
+  }
+
+  #topbar .controls-hint {
+    margin-left: auto;
+    font-size: 10px;
+    color: rgba(160,140,200,0.4);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── GAME MOUNT ── */
+  #game-root {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── LOADING / ERROR STATES ── */
+  #load-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 16px;
+    font-family: 'Courier New', monospace;
+  }
+
+  #load-screen .logo {
+    font-size: 22px;
+    letter-spacing: 0.2em;
+    color: #a08cd4;
+  }
+
+  #load-screen .sub {
+    font-size: 11px;
+    color: rgba(160,140,200,0.4);
+    letter-spacing: 0.12em;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  #load-screen .err {
+    color: #ef9a9a;
+    font-size: 12px;
+    max-width: 500px;
+    text-align: center;
+    line-height: 1.8;
+    padding: 16px;
+    border: 1px solid rgba(239,154,154,0.3);
+    border-radius: 6px;
+    background: rgba(239,154,154,0.05);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div id="topbar">
+  <a href="../../index.html">◈ CODEX</a>
+  <span class="sep">/</span>
+  <a href="../index.html">GAMES</a>
+  <span class="sep">/</span>
+  <span class="game-title">PHASE SHIFT</span>
+  <span class="version-tag">v3</span>
+  <span class="controls-hint">↑↓←→ / WASD &nbsp;|&nbsp; SHIFT = hover &nbsp;|&nbsp; SPACE = start</span>
+</div>
+
+<!-- LOADING STATE -->
+<div id="load-screen">
+  <div class="logo">◈ PHASE SHIFT</div>
+  <div class="sub" id="load-status">LOADING GAME MODULE...</div>
+</div>
+
+<!-- GAME MOUNTS HERE -->
+<div id="game-root" style="display:none;"></div>
+
+<script>
+// Load and transform the JSX file via Babel standalone
+async function loadGame() {
+  const statusEl = document.getElementById('load-status');
+  const loadScreen = document.getElementById('load-screen');
+  const gameRoot = document.getElementById('game-root');
+
+  try {
+    statusEl.textContent = 'FETCHING GAME MODULE...';
+    const res = await fetch('./phase-shift-v3.jsx');
+    if (!res.ok) throw new Error(`Could not load phase-shift-v3.jsx (HTTP ${res.status})`);
+
+    statusEl.textContent = 'COMPILING...';
+    let src = await res.text();
+
+    // Strip ES module imports/exports for browser compat
+    // React hooks come from the global React object
+    src = src.replace(/^import\s+.*?from\s+['"][^'"]+['"]\s*;?\s*$/gm, '');
+    src = src.replace(/^export\s+default\s+/m, 'window.__PhaseShiftComponent = ');
+
+    // Inject React hook aliases at the top (Babel handles JSX, but hooks need to be in scope)
+    const preamble = `
+const { useState, useRef, useEffect, useCallback, useMemo } = React;
+`;
+    src = preamble + src;
+
+    // Transform JSX with Babel standalone
+    const transformed = Babel.transform(src, {
+      presets: ['react'],
+      filename: 'phase-shift-v3.jsx',
+    }).code;
+
+    // Execute
+    const script = document.createElement('script');
+    script.textContent = transformed;
+    document.head.appendChild(script);
+
+    // Mount the component
+    if (window.__PhaseShiftComponent) {
+      loadScreen.style.display = 'none';
+      gameRoot.style.display = 'flex';
+
+      const root = ReactDOM.createRoot(gameRoot);
+      root.render(React.createElement(window.__PhaseShiftComponent));
+      statusEl.textContent = 'READY';
+    } else {
+      throw new Error('Component did not register. Check that phase-shift-v3.jsx exports default function PhaseShiftV3.');
+    }
+
+  } catch (err) {
+    statusEl.style.display = 'none';
+    const errDiv = document.createElement('div');
+    errDiv.className = 'err';
+    errDiv.textContent = `⚠ ${err.message}`;
+    loadScreen.appendChild(errDiv);
+    console.error('Phase Shift load error:', err);
+  }
+}
+
+loadGame();
+</script>
+</body>
+</html>
