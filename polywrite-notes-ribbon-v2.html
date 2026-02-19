@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PolyWrite Notes Ribbon v2</title>
+<!--
+  ══════════════════════════════════════════════════════════════════
+  POLYWRITE NOTES RIBBON v2
+  ══════════════════════════════════════════════════════════════════
+  DROP-IN replacement/addition for the notes section in polywrite.html
+  
+  FEATURES:
+  - Tabbed notes with custom names (click to rename)
+  - Drag-to-reorder tabs
+  - Pin notes to keep them visible
+  - Collapse/expand the entire ribbon
+  - Per-note color coding
+  - Quick-insert: click any note → insert its text at cursor in main editor
+  - Persists to localStorage under 'polywrite_notes_v2'
+  - Detach button: pops notes into a floating window
+  ══════════════════════════════════════════════════════════════════
+-->
+<style>
+:root {
+  --pw-bg: #0d0d14;
+  --pw-surface: #14141f;
+  --pw-border: rgba(160, 140, 200, 0.2);
+  --pw-accent: #a08cd4;
+  --pw-glow: rgba(160, 140, 200, 0.1);
+  --pw-text: #e0dcea;
+  --pw-muted: #7a7292;
+  --pw-tab-active: rgba(160, 140, 200, 0.18);
+  --font-mono: 'Courier New', monospace;
+  --font-ui: 'Georgia', serif;
+  
+  /* Note color options */
+  --note-default: rgba(160, 140, 200, 0.2);
+  --note-gold: rgba(255, 213, 79, 0.2);
+  --note-coral: rgba(255, 138, 101, 0.2);
+  --note-jade: rgba(77, 182, 172, 0.2);
+  --note-sky: rgba(79, 195, 247, 0.2);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #06060c;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ══ RIBBON CONTAINER ══════════════════════════════════════════ */
+#pw-notes-ribbon {
+  width: 100%;
+  max-width: 900px;
+  background: var(--pw-bg);
+  border: 1px solid var(--pw-border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--pw-text);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.5);
+}
+
+/* ══ RIBBON HEADER ═════════════════════════════════════════════ */
+#pw-ribbon-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--pw-surface);
+  border-bottom: 1px solid var(--pw-border);
+  user-select: none;
+}
+
+#pw-ribbon-title {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  color: var(--pw-accent);
+  text-transform: uppercase;
+}
+
+.ribbon-icon-btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--pw-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--pw-muted);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.ribbon-icon-btn:hover {
+  border-color: var(--pw-accent);
+  color: var(--pw-accent);
+}
+
+#pw-add-note-btn {
+  margin-left: 4px;
+}
+
+#pw-collapse-btn {
+  margin-left: auto;
+}
+
+/* Collapsed state */
+#pw-notes-ribbon.collapsed #pw-ribbon-body { display: none; }
+#pw-notes-ribbon.collapsed #pw-collapse-btn { transform: rotate(180deg); }
+
+/* ══ TAB BAR ═══════════════════════════════════════════════════ */
+#pw-tab-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--pw-surface);
+  border-bottom: 1px solid var(--pw-border);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pw-border) transparent;
+  min-height: 34px;
+}
+
+#pw-tab-bar::-webkit-scrollbar { height: 3px; }
+#pw-tab-bar::-webkit-scrollbar-thumb { background: var(--pw-border); }
+
+.pw-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--pw-muted);
+  cursor: pointer;
+  border-right: 1px solid var(--pw-border);
+  white-space: nowrap;
+  position: relative;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  user-select: none;
+  min-width: 80px;
+}
+
+.pw-tab:hover { 
+  background: var(--pw-glow);
+  color: var(--pw-text);
+}
+
+.pw-tab.active { 
+  background: var(--pw-tab-active);
+  color: var(--pw-accent);
+  border-bottom: 2px solid var(--pw-accent);
+}
+
+.pw-tab.pinned::before {
+  content: '📌';
+  font-size: 10px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.pw-tab .tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pw-tab .tab-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pw-tab .tab-close {
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  line-height: 1;
+  padding: 0 1px;
+}
+
+.pw-tab:hover .tab-close { opacity: 0.6; }
+.pw-tab .tab-close:hover { opacity: 1; color: #ef9a9a; }
+
+/* Drag states */
+.pw-tab.dragging { opacity: 0.4; }
+.pw-tab.drag-over { border-left: 2px solid var(--pw-accent); }
+
+/* ══ NOTE BODY ═════════════════════════════════════════════════ */
+#pw-ribbon-body {
+  position: relative;
+}
+
+#pw-note-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--pw-surface);
+  border-bottom: 1px solid var(--pw-border);
+}
+
+#pw-note-toolbar input.note-name-input {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--pw-accent);
+  outline: none;
+  letter-spacing: 0.06em;
+  min-width: 80px;
+  max-width: 200px;
+}
+
+#pw-note-toolbar input.note-name-input:focus {
+  border-bottom: 1px solid var(--pw-accent);
+}
+
+.color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.color-swatch:hover { transform: scale(1.3); }
+.color-swatch.active { border: 2px solid white; }
+
+#pw-toolbar-right {
+  margin-left: auto;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+#pw-pin-btn.pinned {
+  color: var(--pw-accent);
+  border-color: var(--pw-accent);
+}
+
+#pw-char-count {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--pw-muted);
+  padding: 0 4px;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--pw-border);
+  margin: 0 2px;
+}
+
+/* ══ EDITOR ════════════════════════════════════════════════════ */
+.pw-note-area {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-family: var(--font-ui);
+  color: var(--pw-text);
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+  min-height: 140px;
+  display: block;
+  transition: background 0.2s;
+}
+
+.pw-note-area::placeholder { color: var(--pw-muted); opacity: 0.5; }
+
+/* ══ INJECT ZONE ═══════════════════════════════════════════════ */
+#pw-inject-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-top: 1px solid var(--pw-border);
+  background: var(--pw-surface);
+}
+
+#pw-inject-bar span {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--pw-muted);
+  letter-spacing: 0.06em;
+}
+
+#pw-inject-btn {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  border: 1px solid var(--pw-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--pw-accent);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+
+#pw-inject-btn:hover {
+  background: var(--pw-glow);
+  border-color: var(--pw-accent);
+}
+
+#pw-word-count {
+  margin-left: auto;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--pw-muted);
+}
+
+/* ══ FLOATING WINDOW ═══════════════════════════════════════════ */
+#pw-float-window {
+  display: none;
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  width: 380px;
+  min-height: 300px;
+  max-height: 80vh;
+  background: var(--pw-bg);
+  border: 1px solid var(--pw-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 60px rgba(0,0,0,0.7);
+  z-index: 9999;
+  overflow: hidden;
+  resize: both;
+  flex-direction: column;
+}
+
+#pw-float-window.visible { display: flex; }
+
+#pw-float-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--pw-surface);
+  border-bottom: 1px solid var(--pw-border);
+  cursor: move;
+  user-select: none;
+  gap: 8px;
+}
+
+#pw-float-title {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--pw-accent);
+  letter-spacing: 0.1em;
+  flex: 1;
+}
+
+#pw-float-close {
+  background: none;
+  border: none;
+  color: var(--pw-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+}
+
+#pw-float-close:hover { color: #ef9a9a; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     MAIN RIBBON — embed this in polywrite.html
+     ══════════════════════════════════════════════════════════ -->
+<div id="pw-notes-ribbon">
+  
+  <!-- Header -->
+  <div id="pw-ribbon-header">
+    <span id="pw-ribbon-title">◈ Notes Ribbon</span>
+    <button class="ribbon-icon-btn" id="pw-add-note-btn" onclick="PW_Notes.addNote()" title="New note tab">+</button>
+    <button class="ribbon-icon-btn" onclick="PW_Notes.toggleFloat()" title="Detach to floating window">⧉</button>
+    <button class="ribbon-icon-btn" id="pw-collapse-btn" onclick="PW_Notes.toggleCollapse()" title="Collapse ribbon">▾</button>
+  </div>
+
+  <!-- Body (collapses) -->
+  <div id="pw-ribbon-body">
+    
+    <!-- Tab bar -->
+    <div id="pw-tab-bar">
+      <!-- Tabs rendered by JS -->
+    </div>
+
+    <!-- Per-note toolbar -->
+    <div id="pw-note-toolbar">
+      <input type="text" class="note-name-input" id="pw-active-name" 
+             value="Note 1" onchange="PW_Notes.renameActive(this.value)">
+      <div class="toolbar-sep"></div>
+      <!-- Color swatches -->
+      <div class="color-swatch active" data-color="default" 
+           style="background: rgba(160,140,200,0.4)" 
+           onclick="PW_Notes.setColor('default', this)" title="Default"></div>
+      <div class="color-swatch" data-color="gold" 
+           style="background: rgba(255,213,79,0.5)" 
+           onclick="PW_Notes.setColor('gold', this)" title="Gold"></div>
+      <div class="color-swatch" data-color="coral" 
+           style="background: rgba(255,138,101,0.5)" 
+           onclick="PW_Notes.setColor('coral', this)" title="Coral"></div>
+      <div class="color-swatch" data-color="jade" 
+           style="background: rgba(77,182,172,0.5)" 
+           onclick="PW_Notes.setColor('jade', this)" title="Jade"></div>
+      <div class="color-swatch" data-color="sky" 
+           style="background: rgba(79,195,247,0.5)" 
+           onclick="PW_Notes.setColor('sky', this)" title="Sky"></div>
+      <div class="toolbar-sep"></div>
+      <div id="pw-toolbar-right">
+        <span id="pw-char-count">0 chars</span>
+        <button class="ribbon-icon-btn" id="pw-pin-btn" onclick="PW_Notes.togglePin()" title="Pin tab">📌</button>
+        <button class="ribbon-icon-btn" onclick="PW_Notes.duplicateActive()" title="Duplicate note">⿻</button>
+        <button class="ribbon-icon-btn" onclick="PW_Notes.exportActive()" title="Export note as .txt">↓</button>
+      </div>
+    </div>
+
+    <!-- Text area -->
+    <textarea class="pw-note-area" id="pw-active-textarea"
+              placeholder="Type your note here...&#10;&#10;Tip: Use this area for research fragments, quotes, quick thoughts, outline branches — anything that doesn't belong in the main document yet."
+              oninput="PW_Notes.onInput()"></textarea>
+
+    <!-- Inject bar -->
+    <div id="pw-inject-bar">
+      <span>INSERT INTO EDITOR →</span>
+      <button id="pw-inject-btn" onclick="PW_Notes.injectToEditor()">◈ Insert at cursor</button>
+      <button id="pw-inject-btn" style="color:var(--pw-muted)" onclick="PW_Notes.copyActive()">⎘ Copy</button>
+      <span id="pw-word-count">0 words</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ FLOATING WINDOW ══════════════════════════════════════════ -->
+<div id="pw-float-window">
+  <div id="pw-float-header" onmousedown="PW_Notes.startDrag(event)">
+    <span id="pw-float-title">◈ Notes — Floating</span>
+    <button id="pw-float-close" onclick="PW_Notes.toggleFloat()">✕</button>
+  </div>
+  <!-- Float body injected by JS -->
+</div>
+
+<script>
+const PW_Notes = (() => {
+  // ── DATA STRUCTURE ─────────────────────────────────────────────
+  const STORAGE_KEY = 'polywrite_notes_v2';
+  const COLOR_MAP = {
+    default: 'rgba(160,140,200,0.25)',
+    gold:    'rgba(255,213,79,0.18)',
+    coral:   'rgba(255,138,101,0.18)',
+    jade:    'rgba(77,182,172,0.18)',
+    sky:     'rgba(79,195,247,0.18)',
+  };
+  const DOT_COLOR = {
+    default: '#a08cd4',
+    gold:    '#ffd54f',
+    coral:   '#ff8a65',
+    jade:    '#4db6ac',
+    sky:     '#4fc3f7',
+  };
+
+  let notes = [];
+  let activeIdx = 0;
+  let collapsed = false;
+  let floating = false;
+  let dragSrcIdx = null;
+
+  // ── PERSISTENCE ────────────────────────────────────────────────
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ notes, activeIdx, collapsed }));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        notes = data.notes || [];
+        activeIdx = data.activeIdx || 0;
+        collapsed = data.collapsed || false;
+      }
+    } catch(e) {}
+
+    if (!notes.length) {
+      notes = [
+        { name: 'Research', content: '', color: 'default', pinned: false },
+        { name: 'Quotes', content: '', color: 'gold', pinned: false },
+        { name: 'Ideas', content: '', color: 'jade', pinned: false },
+      ];
+    }
+
+    if (activeIdx >= notes.length) activeIdx = 0;
+  }
+
+  // ── RENDER ─────────────────────────────────────────────────────
+  function render() {
+    renderTabs();
+    renderActiveNote();
+    if (collapsed) {
+      document.getElementById('pw-notes-ribbon').classList.add('collapsed');
+    }
+  }
+
+  function renderTabs() {
+    const bar = document.getElementById('pw-tab-bar');
+    bar.innerHTML = '';
+
+    notes.forEach((note, i) => {
+      const tab = document.createElement('div');
+      tab.className = 'pw-tab' + (i === activeIdx ? ' active' : '') + (note.pinned ? ' pinned' : '');
+      tab.draggable = true;
+      tab.dataset.idx = i;
+      tab.innerHTML = `
+        <span class="tab-dot" style="background:${DOT_COLOR[note.color || 'default']}"></span>
+        <span class="tab-label">${escHtml(note.name)}</span>
+        ${note.pinned ? '' : `<span class="tab-close" onclick="event.stopPropagation();PW_Notes.closeNote(${i})">✕</span>`}
+      `;
+      tab.onclick = () => switchTo(i);
+      tab.addEventListener('dragstart', e => { dragSrcIdx = i; tab.classList.add('dragging'); });
+      tab.addEventListener('dragend', () => { tab.classList.remove('dragging'); renderTabs(); });
+      tab.addEventListener('dragover', e => { e.preventDefault(); tab.classList.add('drag-over'); });
+      tab.addEventListener('dragleave', () => tab.classList.remove('drag-over'));
+      tab.addEventListener('drop', e => {
+        e.preventDefault();
+        tab.classList.remove('drag-over');
+        if (dragSrcIdx !== null && dragSrcIdx !== i) {
+          const moved = notes.splice(dragSrcIdx, 1)[0];
+          notes.splice(i, 0, moved);
+          activeIdx = i;
+          dragSrcIdx = null;
+          render(); save();
+        }
+      });
+      bar.appendChild(tab);
+    });
+  }
+
+  function renderActiveNote() {
+    const note = notes[activeIdx];
+    if (!note) return;
+
+    // Name input
+    document.getElementById('pw-active-name').value = note.name;
+
+    // Textarea content + background color
+    const ta = document.getElementById('pw-active-textarea');
+    ta.value = note.content;
+    ta.style.background = COLOR_MAP[note.color || 'default'];
+
+    // Pin button state
+    const pin = document.getElementById('pw-pin-btn');
+    pin.classList.toggle('pinned', !!note.pinned);
+
+    // Color swatches
+    document.querySelectorAll('.color-swatch').forEach(s => {
+      s.classList.toggle('active', s.dataset.color === (note.color || 'default'));
+    });
+
+    updateCounts();
+  }
+
+  function updateCounts() {
+    const ta = document.getElementById('pw-active-textarea');
+    const text = ta.value;
+    document.getElementById('pw-char-count').textContent = `${text.length} chars`;
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    document.getElementById('pw-word-count').textContent = `${words} words`;
+  }
+
+  // ── ACTIONS ────────────────────────────────────────────────────
+  function switchTo(i) {
+    saveActiveContent();
+    activeIdx = i;
+    renderTabs();
+    renderActiveNote();
+    save();
+  }
+
+  function saveActiveContent() {
+    if (notes[activeIdx]) {
+      notes[activeIdx].content = document.getElementById('pw-active-textarea').value;
+    }
+  }
+
+  function addNote() {
+    saveActiveContent();
+    const colors = ['default', 'gold', 'coral', 'jade', 'sky'];
+    notes.push({
+      name: `Note ${notes.length + 1}`,
+      content: '',
+      color: colors[notes.length % colors.length],
+      pinned: false,
+    });
+    activeIdx = notes.length - 1;
+    render(); save();
+    // Focus name input for immediate rename
+    document.getElementById('pw-active-name').focus();
+    document.getElementById('pw-active-name').select();
+  }
+
+  function closeNote(i) {
+    if (notes[i].pinned) return;
+    if (notes.length === 1) {
+      notes[0].content = '';
+      notes[0].name = 'Note 1';
+      activeIdx = 0;
+      render(); save();
+      return;
+    }
+    notes.splice(i, 1);
+    if (activeIdx >= notes.length) activeIdx = notes.length - 1;
+    render(); save();
+  }
+
+  function renameActive(name) {
+    if (notes[activeIdx]) {
+      notes[activeIdx].name = name || `Note ${activeIdx + 1}`;
+      renderTabs(); save();
+    }
+  }
+
+  function setColor(colorKey, el) {
+    if (notes[activeIdx]) {
+      notes[activeIdx].color = colorKey;
+      renderActiveNote(); renderTabs(); save();
+    }
+  }
+
+  function togglePin() {
+    if (notes[activeIdx]) {
+      notes[activeIdx].pinned = !notes[activeIdx].pinned;
+      renderTabs();
+      document.getElementById('pw-pin-btn').classList.toggle('pinned', notes[activeIdx].pinned);
+      save();
+    }
+  }
+
+  function duplicateActive() {
+    saveActiveContent();
+    const src = notes[activeIdx];
+    notes.splice(activeIdx + 1, 0, {
+      name: `${src.name} copy`,
+      content: src.content,
+      color: src.color,
+      pinned: false,
+    });
+    activeIdx = activeIdx + 1;
+    render(); save();
+  }
+
+  function onInput() {
+    if (notes[activeIdx]) {
+      notes[activeIdx].content = document.getElementById('pw-active-textarea').value;
+    }
+    updateCounts();
+    save();
+  }
+
+  // ── INJECT TO MAIN EDITOR ──────────────────────────────────────
+  function injectToEditor() {
+    const text = document.getElementById('pw-active-textarea').value.trim();
+    if (!text) return;
+
+    // Try common selectors for the main editor in polywrite.html
+    // Adjust these to match your actual editor element IDs
+    const editorSelectors = [
+      '#main-editor', '#editor', '.editor-main textarea',
+      'textarea.document-editor', '#doc-editor', '#polywrite-main',
+      '[data-role="main-editor"]'
+    ];
+
+    let injected = false;
+    for (const sel of editorSelectors) {
+      const el = document.querySelector(sel);
+      if (el && el.tagName === 'TEXTAREA') {
+        const start = el.selectionStart;
+        const end = el.selectionEnd;
+        const before = el.value.substring(0, start);
+        const after = el.value.substring(end);
+        el.value = before + '\n' + text + '\n' + after;
+        el.selectionStart = el.selectionEnd = start + text.length + 2;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.focus();
+        injected = true;
+        break;
+      }
+    }
+
+    if (!injected) {
+      // Fallback: copy to clipboard
+      copyActive();
+      alert('Note copied to clipboard. Paste into your editor. (Selector for main editor not found — check PW_Notes.injectToEditor() selectors)');
+    }
+  }
+
+  function copyActive() {
+    const text = document.getElementById('pw-active-textarea').value;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('pw-inject-btn');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    }).catch(() => {});
+  }
+
+  function exportActive() {
+    saveActiveContent();
+    const note = notes[activeIdx];
+    const blob = new Blob([note.content], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${note.name.replace(/[^a-z0-9]/gi, '_')}.txt`;
+    a.click();
+  }
+
+  // ── COLLAPSE ──────────────────────────────────────────────────
+  function toggleCollapse() {
+    collapsed = !collapsed;
+    document.getElementById('pw-notes-ribbon').classList.toggle('collapsed', collapsed);
+    save();
+  }
+
+  // ── FLOATING WINDOW ──────────────────────────────────────────
+  function toggleFloat() {
+    floating = !floating;
+    const win = document.getElementById('pw-float-window');
+    win.classList.toggle('visible', floating);
+
+    if (floating) {
+      // Clone content into float window
+      const body = document.getElementById('pw-ribbon-body').cloneNode(true);
+      body.style.flex = '1';
+      body.style.overflow = 'auto';
+      win.innerHTML = '';
+      win.appendChild(document.getElementById('pw-float-header'));
+      win.appendChild(body);
+    }
+  }
+
+  // Drag floating window
+  let dragOffX = 0, dragOffY = 0;
+  function startDrag(e) {
+    const win = document.getElementById('pw-float-window');
+    dragOffX = e.clientX - win.getBoundingClientRect().left;
+    dragOffY = e.clientY - win.getBoundingClientRect().top;
+    document.onmousemove = moveWin;
+    document.onmouseup = () => { document.onmousemove = null; };
+  }
+  function moveWin(e) {
+    const win = document.getElementById('pw-float-window');
+    win.style.left = (e.clientX - dragOffX) + 'px';
+    win.style.top = (e.clientY - dragOffY) + 'px';
+    win.style.right = 'auto';
+  }
+
+  // ── UTILITY ──────────────────────────────────────────────────
+  function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── INIT ──────────────────────────────────────────────────────
+  function init() {
+    load();
+    render();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  return {
+    addNote, closeNote, renameActive, setColor, togglePin,
+    duplicateActive, onInput, switchTo,
+    injectToEditor, copyActive, exportActive,
+    toggleCollapse, toggleFloat, startDrag,
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pearl AI Panel</title>
+<style>
+  /*
+   * PEARL AI PANEL
+   * Drop this into pearl.html - add <div id="pearl-ai-root"></div> 
+   * wherever you want the panel, then <script src="pearl-ai-panel.js"></script>
+   * OR paste the full CSS+HTML+JS block below directly into pearl.html
+   *
+   * MODES:
+   *   Cloud: Anthropic API (claude-sonnet-4-6) via https://api.anthropic.com/v1/messages
+   *   Local: Ollama at http://localhost:11434/api/chat
+   */
+
+  :root {
+    --pearl-bg: #0a0a0f;
+    --pearl-surface: #12121a;
+    --pearl-border: rgba(180, 160, 220, 0.2);
+    --pearl-accent: #b8a4d4;
+    --pearl-glow: rgba(184, 164, 212, 0.15);
+    --pearl-cloud: #4fc3f7;
+    --pearl-local: #81c784;
+    --pearl-text: #e8e4f0;
+    --pearl-muted: #8880a0;
+    --pearl-error: #ef9a9a;
+    --pearl-user-bg: rgba(184, 164, 212, 0.12);
+    --pearl-ai-bg: rgba(18, 18, 26, 0.9);
+    --font-mono: 'Courier New', monospace;
+    --font-ui: 'Georgia', serif;
+  }
+
+  #pearl-ai-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: var(--pearl-bg);
+    border: 1px solid var(--pearl-border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: var(--font-ui);
+    color: var(--pearl-text);
+    box-shadow: 0 0 40px rgba(184, 164, 212, 0.08);
+  }
+
+  /* ── HEADER BAR ── */
+  #pearl-ai-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--pearl-surface);
+    border-bottom: 1px solid var(--pearl-border);
+    flex-shrink: 0;
+  }
+
+  #pearl-ai-title {
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    color: var(--pearl-accent);
+    text-transform: uppercase;
+  }
+
+  #pearl-ai-title span {
+    opacity: 0.5;
+    font-weight: normal;
+  }
+
+  /* Mode toggle */
+  #pearl-mode-toggle {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+    border: 1px solid var(--pearl-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mode-btn {
+    padding: 4px 12px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+    border: none;
+    background: transparent;
+    color: var(--pearl-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn.active[data-mode="cloud"] {
+    background: rgba(79, 195, 247, 0.15);
+    color: var(--pearl-cloud);
+  }
+
+  .mode-btn.active[data-mode="local"] {
+    background: rgba(129, 199, 132, 0.15);
+    color: var(--pearl-local);
+  }
+
+  .mode-btn:hover:not(.active) {
+    background: var(--pearl-glow);
+    color: var(--pearl-text);
+  }
+
+  /* Settings gear */
+  #pearl-settings-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--pearl-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--pearl-muted);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  #pearl-settings-btn:hover {
+    border-color: var(--pearl-accent);
+    color: var(--pearl-accent);
+  }
+
+  /* Status dot */
+  #pearl-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--pearl-muted);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+
+  #pearl-status-dot.connected { background: var(--pearl-local); }
+  #pearl-status-dot.error { background: var(--pearl-error); }
+  #pearl-status-dot.thinking { 
+    background: var(--pearl-accent);
+    animation: pulse-dot 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── SETTINGS PANEL ── */
+  #pearl-settings-panel {
+    display: none;
+    padding: 12px 16px;
+    background: var(--pearl-surface);
+    border-bottom: 1px solid var(--pearl-border);
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  #pearl-settings-panel.open {
+    display: flex;
+  }
+
+  .settings-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .settings-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--pearl-muted);
+    letter-spacing: 0.08em;
+    width: 90px;
+    flex-shrink: 0;
+  }
+
+  .settings-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--pearl-border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--pearl-text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .settings-input:focus {
+    border-color: var(--pearl-accent);
+  }
+
+  .settings-input::placeholder {
+    color: var(--pearl-muted);
+    opacity: 0.6;
+  }
+
+  select.settings-input option {
+    background: #1a1a2e;
+  }
+
+  #pearl-test-btn {
+    padding: 5px 14px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    border: 1px solid var(--pearl-border);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--pearl-accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+  }
+
+  #pearl-test-btn:hover {
+    background: var(--pearl-glow);
+    border-color: var(--pearl-accent);
+  }
+
+  #pearl-settings-status {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--pearl-muted);
+    padding: 2px 0;
+  }
+
+  #pearl-settings-status.ok { color: var(--pearl-local); }
+  #pearl-settings-status.err { color: var(--pearl-error); }
+
+  /* ── SYSTEM PROMPT ── */
+  #pearl-system-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #pearl-system-prompt {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--pearl-border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--pearl-text);
+    outline: none;
+    resize: vertical;
+    min-height: 40px;
+    max-height: 100px;
+    transition: border-color 0.2s;
+  }
+
+  #pearl-system-prompt:focus {
+    border-color: var(--pearl-accent);
+  }
+
+  /* ── MESSAGES AREA ── */
+  #pearl-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+
+  #pearl-messages::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  #pearl-messages::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #pearl-messages::-webkit-scrollbar-thumb {
+    background: var(--pearl-border);
+    border-radius: 2px;
+  }
+
+  .pearl-message {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 92%;
+    animation: msg-in 0.2s ease-out;
+  }
+
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pearl-message.user {
+    align-self: flex-end;
+  }
+
+  .pearl-message.assistant {
+    align-self: flex-start;
+  }
+
+  .msg-role {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+    color: var(--pearl-muted);
+    padding: 0 4px;
+  }
+
+  .pearl-message.user .msg-role { text-align: right; }
+
+  .msg-body {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .pearl-message.user .msg-body {
+    background: var(--pearl-user-bg);
+    border: 1px solid rgba(184, 164, 212, 0.2);
+    color: var(--pearl-text);
+  }
+
+  .pearl-message.assistant .msg-body {
+    background: var(--pearl-ai-bg);
+    border: 1px solid var(--pearl-border);
+    color: var(--pearl-text);
+  }
+
+  .pearl-message.system-msg .msg-body {
+    background: transparent;
+    border: 1px dashed rgba(184, 164, 212, 0.15);
+    color: var(--pearl-muted);
+    font-size: 11px;
+    font-family: var(--font-mono);
+    font-style: italic;
+  }
+
+  /* thinking indicator */
+  .thinking-dots span {
+    display: inline-block;
+    animation: dot-bounce 1.2s ease-in-out infinite;
+    color: var(--pearl-accent);
+  }
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dot-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* ── INPUT BAR ── */
+  #pearl-input-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--pearl-surface);
+    border-top: 1px solid var(--pearl-border);
+    flex-shrink: 0;
+    align-items: flex-end;
+  }
+
+  #pearl-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--pearl-border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font-ui);
+    color: var(--pearl-text);
+    outline: none;
+    resize: none;
+    min-height: 36px;
+    max-height: 120px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    overflow-y: auto;
+  }
+
+  #pearl-input:focus {
+    border-color: rgba(184, 164, 212, 0.5);
+  }
+
+  #pearl-input::placeholder {
+    color: var(--pearl-muted);
+    opacity: 0.5;
+  }
+
+  #pearl-send-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--pearl-border);
+    border-radius: 4px;
+    background: var(--pearl-glow);
+    color: var(--pearl-accent);
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  #pearl-send-btn:hover:not(:disabled) {
+    background: rgba(184, 164, 212, 0.25);
+    border-color: var(--pearl-accent);
+    transform: scale(1.05);
+  }
+
+  #pearl-send-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  #pearl-clear-btn {
+    width: 28px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--pearl-muted);
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  #pearl-clear-btn:hover { color: var(--pearl-error); opacity: 1; }
+
+  /* Mode indicator in input bar */
+  #pearl-mode-indicator {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    padding: 3px 7px;
+    border-radius: 3px;
+    border: 1px solid;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  #pearl-mode-indicator.cloud {
+    color: var(--pearl-cloud);
+    border-color: rgba(79, 195, 247, 0.3);
+    background: rgba(79, 195, 247, 0.08);
+  }
+
+  #pearl-mode-indicator.local {
+    color: var(--pearl-local);
+    border-color: rgba(129, 199, 132, 0.3);
+    background: rgba(129, 199, 132, 0.08);
+  }
+
+  /* Context inject button */
+  #pearl-inject-btn {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--pearl-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--pearl-muted);
+    cursor: pointer;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    transition: all 0.2s;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  #pearl-inject-btn:hover {
+    border-color: var(--pearl-accent);
+    color: var(--pearl-accent);
+    background: var(--pearl-glow);
+  }
+
+  /* Ollama model list */
+  #pearl-model-select {
+    max-width: 160px;
+  }
+</style>
+</head>
+<body style="margin:0;padding:16px;background:#06060c;min-height:100vh;display:flex;align-items:stretch;">
+
+<!-- 
+  ═══════════════════════════════════════════════════════════════════
+  PEARL AI PANEL
+  ═══════════════════════════════════════════════════════════════════
+  INTEGRATION: Copy the #pearl-ai-container div into pearl.html
+  Add this CSS block to pearl.html's <style> section
+  Paste the <script> block before </body>
+  
+  The panel auto-saves settings to localStorage under 'pearl_ai_*' keys
+  System prompt defaults to Pearl's writing-focused context
+  ═══════════════════════════════════════════════════════════════════
+-->
+
+<div id="pearl-ai-container" style="flex:1;max-width:700px;margin:0 auto;">
+
+  <!-- HEADER -->
+  <div id="pearl-ai-header">
+    <div id="pearl-status-dot"></div>
+    <div id="pearl-ai-title">Pearl <span>// AI Console</span></div>
+    
+    <div id="pearl-mode-toggle">
+      <button class="mode-btn active" data-mode="cloud" onclick="PearlAI.setMode('cloud')">☁ CLOUD</button>
+      <button class="mode-btn" data-mode="local" onclick="PearlAI.setMode('local')">⬡ LOCAL</button>
+    </div>
+    
+    <button id="pearl-settings-btn" onclick="PearlAI.toggleSettings()" title="Settings">⚙</button>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div id="pearl-settings-panel">
+    
+    <!-- Cloud settings -->
+    <div id="cloud-settings">
+      <div class="settings-row">
+        <span class="settings-label">API KEY</span>
+        <input type="password" class="settings-input" id="pearl-api-key" 
+               placeholder="sk-ant-api03-..." 
+               oninput="PearlAI.saveSettings()">
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">MODEL</span>
+        <select class="settings-input" id="pearl-cloud-model" onchange="PearlAI.saveSettings()">
+          <option value="claude-sonnet-4-6">claude-sonnet-4-6 (recommended)</option>
+          <option value="claude-opus-4-6">claude-opus-4-6 (max)</option>
+          <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (fast)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Local settings -->
+    <div id="local-settings" style="display:none;">
+      <div class="settings-row">
+        <span class="settings-label">OLLAMA URL</span>
+        <input type="text" class="settings-input" id="pearl-ollama-url" 
+               value="http://localhost:11434"
+               oninput="PearlAI.saveSettings()">
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">MODEL</span>
+        <select class="settings-input settings-input" id="pearl-ollama-model" onchange="PearlAI.saveSettings()">
+          <option value="">-- fetch models --</option>
+        </select>
+        <button id="pearl-test-btn" onclick="PearlAI.fetchOllamaModels()">↻ MODELS</button>
+      </div>
+    </div>
+
+    <!-- System prompt (both modes) -->
+    <div class="settings-row" id="pearl-system-row">
+      <span class="settings-label">SYSTEM</span>
+      <textarea class="settings-input" id="pearl-system-prompt" 
+                rows="2" 
+                placeholder="You are Pearl, an AI writing companion embedded in a consciousness infrastructure system called CODEX-MONAD. You assist with writing, research, theology, ancient languages, and creative work..."
+                oninput="PearlAI.saveSettings()"></textarea>
+    </div>
+
+    <div class="settings-row">
+      <div id="pearl-settings-status">— ready</div>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div id="pearl-messages">
+    <div class="pearl-message system-msg">
+      <div class="msg-body">Pearl AI Console initialized. Select mode (Cloud/Local) and configure settings above. Use ◈ to inject current editor context into your message.</div>
+    </div>
+  </div>
+
+  <!-- INPUT BAR -->
+  <div id="pearl-input-bar">
+    <div id="pearl-mode-indicator" class="cloud">CLOUD</div>
+    <textarea id="pearl-input" 
+              placeholder="Ask Pearl anything... (Shift+Enter for newline, Enter to send)"
+              rows="1"
+              onkeydown="PearlAI.handleKey(event)"
+              oninput="PearlAI.autoResize(this)"></textarea>
+    <button id="pearl-inject-btn" onclick="PearlAI.injectContext()" title="Inject editor content as context">◈ CTX</button>
+    <button id="pearl-clear-btn" onclick="PearlAI.clearHistory()" title="Clear conversation">✕</button>
+    <button id="pearl-send-btn" onclick="PearlAI.send()">↑</button>
+  </div>
+
+</div>
+
+<script>
+const PearlAI = (() => {
+  // ── STATE ──────────────────────────────────────────────────────
+  let mode = 'cloud'; // 'cloud' | 'local'
+  let history = []; // [{role, content}]
+  let isThinking = false;
+  let settingsOpen = false;
+
+  // ── SETTINGS PERSISTENCE ──────────────────────────────────────
+  const KEYS = {
+    apiKey: 'pearl_ai_api_key',
+    cloudModel: 'pearl_ai_cloud_model',
+    ollamaUrl: 'pearl_ai_ollama_url',
+    ollamaModel: 'pearl_ai_ollama_model',
+    systemPrompt: 'pearl_ai_system_prompt',
+    mode: 'pearl_ai_mode',
+  };
+
+  function loadSettings() {
+    const get = (k, def) => localStorage.getItem(k) || def;
+    
+    document.getElementById('pearl-api-key').value = get(KEYS.apiKey, '');
+    document.getElementById('pearl-cloud-model').value = get(KEYS.cloudModel, 'claude-sonnet-4-6');
+    document.getElementById('pearl-ollama-url').value = get(KEYS.ollamaUrl, 'http://localhost:11434');
+    document.getElementById('pearl-ollama-model').value = get(KEYS.ollamaModel, '');
+    document.getElementById('pearl-system-prompt').value = get(KEYS.systemPrompt, 
+      'You are Pearl, an AI writing companion embedded in CODEX-MONAD — a portable consciousness infrastructure system. You assist with writing, research, theology, ancient languages (Hebrew, Aramaic, Greek), creative work, and consciousness architecture. Be precise, insightful, and collaborative. The user is Rev. Dan-i-El Thomas, a polymath working on the HINENI novel, sermons, and various consciousness technology projects.');
+    
+    const savedMode = get(KEYS.mode, 'cloud');
+    setMode(savedMode, true);
+  }
+
+  function saveSettings() {
+    localStorage.setItem(KEYS.apiKey, document.getElementById('pearl-api-key').value);
+    localStorage.setItem(KEYS.cloudModel, document.getElementById('pearl-cloud-model').value);
+    localStorage.setItem(KEYS.ollamaUrl, document.getElementById('pearl-ollama-url').value);
+    localStorage.setItem(KEYS.ollamaModel, document.getElementById('pearl-ollama-model').value);
+    localStorage.setItem(KEYS.systemPrompt, document.getElementById('pearl-system-prompt').value);
+    localStorage.setItem(KEYS.mode, mode);
+  }
+
+  // ── MODE SWITCHING ─────────────────────────────────────────────
+  function setMode(newMode, silent = false) {
+    mode = newMode;
+    
+    // Toggle buttons
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    // Show/hide settings sections
+    document.getElementById('cloud-settings').style.display = mode === 'cloud' ? '' : 'none';
+    document.getElementById('local-settings').style.display = mode === 'local' ? '' : 'none';
+
+    // Update mode indicator
+    const ind = document.getElementById('pearl-mode-indicator');
+    ind.textContent = mode === 'cloud' ? '☁ CLOUD' : '⬡ LOCAL';
+    ind.className = mode === 'cloud' ? 'cloud' : 'local';
+
+    // Update input placeholder
+    document.getElementById('pearl-input').placeholder = mode === 'cloud'
+      ? 'Ask Pearl (Anthropic API)...'
+      : 'Ask Pearl (Ollama local)...';
+
+    if (!silent) saveSettings();
+    updateDot('connected');
+  }
+
+  // ── SETTINGS PANEL ─────────────────────────────────────────────
+  function toggleSettings() {
+    settingsOpen = !settingsOpen;
+    document.getElementById('pearl-settings-panel').classList.toggle('open', settingsOpen);
+    document.getElementById('pearl-settings-btn').style.color = settingsOpen ? 'var(--pearl-accent)' : '';
+  }
+
+  // ── OLLAMA MODEL FETCH ─────────────────────────────────────────
+  async function fetchOllamaModels() {
+    const url = document.getElementById('pearl-ollama-url').value.trim();
+    const status = document.getElementById('pearl-settings-status');
+    status.className = '';
+    status.textContent = '↻ fetching models...';
+    
+    try {
+      const res = await fetch(`${url}/api/tags`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const models = data.models || [];
+      
+      const sel = document.getElementById('pearl-ollama-model');
+      const current = sel.value;
+      sel.innerHTML = models.length
+        ? models.map(m => `<option value="${m.name}">${m.name}</option>`).join('')
+        : '<option value="">no models found</option>';
+      
+      // Restore selection if still valid
+      if (models.find(m => m.name === current)) sel.value = current;
+      
+      status.className = 'ok';
+      status.textContent = `✓ ${models.length} model(s) found`;
+      updateDot('connected');
+      saveSettings();
+    } catch (e) {
+      status.className = 'err';
+      status.textContent = `✗ ${e.message} — is Ollama running?`;
+      updateDot('error');
+    }
+  }
+
+  // ── STATUS DOT ─────────────────────────────────────────────────
+  function updateDot(state) {
+    const dot = document.getElementById('pearl-status-dot');
+    dot.className = state;
+  }
+
+  // ── MESSAGE RENDERING ──────────────────────────────────────────
+  function addMessage(role, content, isThinkingIndicator = false) {
+    const container = document.getElementById('pearl-messages');
+    const div = document.createElement('div');
+    div.className = `pearl-message ${role}`;
+    if (role === 'system-msg') {
+      div.innerHTML = `<div class="msg-body">${content}</div>`;
+    } else {
+      const roleLabel = role === 'user' ? '◎ YOU' : '◈ PEARL';
+      div.innerHTML = `
+        <div class="msg-role">${roleLabel}</div>
+        <div class="msg-body">${isThinkingIndicator 
+          ? '<span class="thinking-dots"><span>●</span><span>●</span><span>●</span></span>'
+          : escapeHtml(content)}</div>
+      `;
+    }
+    div.dataset.role = role;
+    if (isThinkingIndicator) div.id = 'pearl-thinking';
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    return div;
+  }
+
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '<br>');
+  }
+
+  function removeThinking() {
+    const t = document.getElementById('pearl-thinking');
+    if (t) t.remove();
+  }
+
+  // ── CONTEXT INJECTION ──────────────────────────────────────────
+  function injectContext() {
+    // Attempt to grab text from Pearl's main editor
+    // Adjust selector to match pearl.html's actual editor element
+    const editorSelectors = [
+      '#pearl-editor', '#editor', '.editor-content', 
+      '[contenteditable="true"]', '#polywrite-editor',
+      '#main-editor', 'textarea.editor'
+    ];
+    
+    let editorText = null;
+    for (const sel of editorSelectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        editorText = el.value || el.innerText || el.textContent;
+        if (editorText && editorText.trim()) break;
+      }
+    }
+
+    const input = document.getElementById('pearl-input');
+    if (editorText && editorText.trim()) {
+      const excerpt = editorText.trim().slice(0, 2000);
+      const prefix = input.value ? input.value + '\n\n' : '';
+      input.value = `${prefix}[EDITOR CONTEXT]\n${excerpt}\n\n[/EDITOR CONTEXT]\n\n`;
+    } else {
+      input.value = (input.value || '') + '\n[Note: editor context not detected - paste text manually]\n';
+    }
+    
+    autoResize(input);
+    input.focus();
+  }
+
+  // ── SEND ───────────────────────────────────────────────────────
+  async function send() {
+    if (isThinking) return;
+    
+    const input = document.getElementById('pearl-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    autoResize(input);
+    
+    addMessage('user', text);
+    history.push({ role: 'user', content: text });
+
+    isThinking = true;
+    updateDot('thinking');
+    document.getElementById('pearl-send-btn').disabled = true;
+    addMessage('assistant', '', true); // thinking indicator
+
+    try {
+      let reply;
+      if (mode === 'cloud') {
+        reply = await sendCloud(text);
+      } else {
+        reply = await sendLocal(text);
+      }
+      
+      removeThinking();
+      addMessage('assistant', reply);
+      history.push({ role: 'assistant', content: reply });
+      updateDot('connected');
+    } catch (e) {
+      removeThinking();
+      addMessage('system-msg', `⚠ Error: ${e.message}`);
+      updateDot('error');
+    } finally {
+      isThinking = false;
+      document.getElementById('pearl-send-btn').disabled = false;
+    }
+  }
+
+  // ── CLOUD API CALL (Anthropic) ─────────────────────────────────
+  async function sendCloud(userMessage) {
+    const apiKey = document.getElementById('pearl-api-key').value.trim();
+    if (!apiKey) throw new Error('No API key set. Open ⚙ settings and enter your Anthropic API key.');
+    
+    const model = document.getElementById('pearl-cloud-model').value;
+    const systemPrompt = document.getElementById('pearl-system-prompt').value.trim();
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model,
+        max_tokens: 2048,
+        system: systemPrompt || undefined,
+        messages: history.slice(-20).map(m => ({ role: m.role, content: m.content })),
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.content?.[0]?.text || '[empty response]';
+  }
+
+  // ── LOCAL API CALL (Ollama) ────────────────────────────────────
+  async function sendLocal(userMessage) {
+    const url = document.getElementById('pearl-ollama-url').value.trim();
+    const model = document.getElementById('pearl-ollama-model').value;
+    if (!model) throw new Error('No Ollama model selected. Open ⚙ settings → ↻ MODELS → select one.');
+
+    const systemPrompt = document.getElementById('pearl-system-prompt').value.trim();
+    
+    const messages = [];
+    if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+    
+    // Include recent history
+    history.slice(-20).forEach(m => messages.push({ role: m.role, content: m.content }));
+
+    const res = await fetch(`${url}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status} — is Ollama running at ${url}?`);
+    }
+
+    const data = await res.json();
+    return data.message?.content || '[empty response]';
+  }
+
+  // ── UTILITY ────────────────────────────────────────────────────
+  function clearHistory() {
+    if (!confirm('Clear conversation history?')) return;
+    history = [];
+    const msgs = document.getElementById('pearl-messages');
+    msgs.innerHTML = '';
+    addMessage('system-msg', 'Conversation cleared. History reset.');
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  // ── INIT ───────────────────────────────────────────────────────
+  function init() {
+    loadSettings();
+    document.getElementById('pearl-input').focus();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  // Public API
+  return { setMode, toggleSettings, fetchOllamaModels, send, clearHistory, 
+           handleKey, autoResize, injectContext, saveSettings };
+})();
+</script>
+</body>
+</html>

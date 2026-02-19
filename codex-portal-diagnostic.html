@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CODEX Portal Diagnostic</title>
+<style>
+  :root {
+    --bg: #06060c;
+    --surface: #0f0f1a;
+    --border: rgba(160,140,200,0.2);
+    --accent: #a08cd4;
+    --ok: #81c784;
+    --warn: #ffb74d;
+    --err: #ef9a9a;
+    --text: #e0dcea;
+    --muted: #7a7292;
+    --font: 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    padding: 24px;
+    line-height: 1.6;
+  }
+  h1 {
+    color: var(--accent);
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+  }
+  .section {
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--surface);
+    padding: 8px 14px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(160,140,200,0.08);
+    font-size: 12px;
+  }
+  .check-row:last-child { border-bottom: none; }
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+    min-width: 60px;
+    text-align: center;
+  }
+  .badge-ok   { background: rgba(129,199,132,0.15); color: var(--ok); border: 1px solid rgba(129,199,132,0.3); }
+  .badge-warn { background: rgba(255,183,77,0.15);  color: var(--warn); border: 1px solid rgba(255,183,77,0.3); }
+  .badge-err  { background: rgba(239,154,154,0.15); color: var(--err); border: 1px solid rgba(239,154,154,0.3); }
+  .badge-pend { background: rgba(160,140,200,0.1);  color: var(--muted); border: 1px solid var(--border); }
+  .check-name { flex: 1; }
+  .check-note { color: var(--muted); font-size: 11px; }
+  .check-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 11px;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+  .check-link:hover { background: rgba(160,140,200,0.1); }
+  button.run-all {
+    margin-bottom: 20px;
+    padding: 8px 20px;
+    font-family: var(--font);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    background: rgba(160,140,200,0.1);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  button.run-all:hover { background: rgba(160,140,200,0.2); }
+  #summary-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .sum-item { display: flex; align-items: center; gap: 6px; }
+  .sum-dot { width: 8px; height: 8px; border-radius: 50%; }
+  #log-output {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  .log-ok   { color: var(--ok); }
+  .log-warn { color: var(--warn); }
+  .log-err  { color: var(--err); }
+</style>
+</head>
+<body>
+
+<h1>◈ CODEX Portal Diagnostic</h1>
+<div class="subtitle">commit: a842391 — "Reorganize hub interface and sync notes" | run from CODEX-MONAD root</div>
+
+<button class="run-all" onclick="Diag.runAll()">▶ RUN ALL CHECKS</button>
+
+<div id="summary-bar">
+  <div class="sum-item"><div class="sum-dot" style="background:var(--ok)"></div><span id="sum-ok">0</span> OK</div>
+  <div class="sum-item"><div class="sum-dot" style="background:var(--warn)"></div><span id="sum-warn">0</span> WARN</div>
+  <div class="sum-item"><div class="sum-dot" style="background:var(--err)"></div><span id="sum-err">0</span> ERR</div>
+  <div class="sum-item"><div class="sum-dot" style="background:var(--muted)"></div><span id="sum-pend">—</span> PENDING</div>
+</div>
+
+<!-- ── EXISTING CORE TOOLS ──────────────────────────── -->
+<div class="section">
+  <div class="section-header">Core Tools (established)</div>
+  
+  <div class="check-row" data-check="fetch" data-target="polywrite.html">
+    <span class="status-badge badge-pend" id="b-polywrite">PEND</span>
+    <span class="check-name">polywrite.html</span>
+    <span class="check-note">PolyWrite — main writing system</span>
+    <a class="check-link" href="polywrite.html" target="_blank">open</a>
+  </div>
+  
+  <div class="check-row" data-check="fetch" data-target="polywrite-advanced.html">
+    <span class="status-badge badge-pend" id="b-polywrite-advanced">PEND</span>
+    <span class="check-name">polywrite-advanced.html</span>
+    <span class="check-note">PolyWrite Advanced</span>
+    <a class="check-link" href="polywrite-advanced.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="pearl.html">
+    <span class="status-badge badge-pend" id="b-pearl">PEND</span>
+    <span class="check-name">pearl.html</span>
+    <span class="check-note">Pearl academic editor</span>
+    <a class="check-link" href="pearl.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="pranayama.html">
+    <span class="status-badge badge-pend" id="b-pranayama">PEND</span>
+    <span class="check-name">pranayama.html</span>
+    <span class="check-note">Pranayama breathing system</span>
+    <a class="check-link" href="pranayama.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="oracle.html">
+    <span class="status-badge badge-pend" id="b-oracle">PEND</span>
+    <span class="check-name">oracle.html</span>
+    <span class="check-note">Oracle query system</span>
+    <a class="check-link" href="oracle.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="hypergraph.html">
+    <span class="status-badge badge-pend" id="b-hypergraph">PEND</span>
+    <span class="check-name">hypergraph.html</span>
+    <span class="check-note">Hypergraph visualization</span>
+    <a class="check-link" href="hypergraph.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="din-files.html">
+    <span class="status-badge badge-pend" id="b-din-files">PEND</span>
+    <span class="check-name">din-files.html</span>
+    <span class="check-note">DIN Files system</span>
+    <a class="check-link" href="din-files.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="bureaucratic-universe.html">
+    <span class="status-badge badge-pend" id="b-bureaucratic-universe">PEND</span>
+    <span class="check-name">bureaucratic-universe.html</span>
+    <span class="check-note">Bureaucratic Universe</span>
+    <a class="check-link" href="bureaucratic-universe.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="samson-recursive.html">
+    <span class="status-badge badge-pend" id="b-samson-recursive">PEND</span>
+    <span class="check-name">samson-recursive.html</span>
+    <span class="check-note">Samson's portal</span>
+    <a class="check-link" href="samson-recursive.html" target="_blank">open</a>
+  </div>
+</div>
+
+<!-- ── NEW TOOLS (commit 98cfd29) ──────────────────── -->
+<div class="section">
+  <div class="section-header">New Tools — commit 98cfd29 "feat: add 5 new portal tools"</div>
+
+  <div class="check-row" data-check="fetch" data-target="apps/qr-whisper/index.html">
+    <span class="status-badge badge-pend" id="b-qr-whisper">PEND</span>
+    <span class="check-name">QR Whisper</span>
+    <span class="check-note">apps/qr-whisper/ — QR code consciousness tool</span>
+    <a class="check-link" href="apps/qr-whisper/index.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="apps/mandala/index.html">
+    <span class="status-badge badge-pend" id="b-mandala">PEND</span>
+    <span class="check-name">Chakra Mandala</span>
+    <span class="check-note">apps/mandala/ — mandala generator</span>
+    <a class="check-link" href="apps/mandala/index.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="apps/serpent/index.html">
+    <span class="status-badge badge-pend" id="b-serpent">PEND</span>
+    <span class="check-name">Self-Watching Serpent</span>
+    <span class="check-note">apps/serpent/ — recursive consciousness module</span>
+    <a class="check-link" href="apps/serpent/index.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="apps/compress/index.html">
+    <span class="status-badge badge-pend" id="b-compress">PEND</span>
+    <span class="check-name">Sacred Compression</span>
+    <span class="check-note">apps/compress/ — compression utility</span>
+    <a class="check-link" href="apps/compress/index.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="apps/help/index.html">
+    <span class="status-badge badge-pend" id="b-help">PEND</span>
+    <span class="check-name">Help System</span>
+    <span class="check-note">apps/help/ — portal help/docs</span>
+    <a class="check-link" href="apps/help/index.html" target="_blank">open</a>
+  </div>
+
+  <!-- Also check root-level variants in case they're not in /apps/ -->
+  <div class="check-row" data-check="fetch" data-target="qr-whisper.html">
+    <span class="status-badge badge-pend" id="b-qr-whisper-root">PEND</span>
+    <span class="check-name">qr-whisper.html</span>
+    <span class="check-note">root-level variant check</span>
+    <a class="check-link" href="qr-whisper.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="mandala.html">
+    <span class="status-badge badge-pend" id="b-mandala-root">PEND</span>
+    <span class="check-name">mandala.html</span>
+    <span class="check-note">root-level variant check</span>
+    <a class="check-link" href="mandala.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="serpent.html">
+    <span class="status-badge badge-pend" id="b-serpent-root">PEND</span>
+    <span class="check-name">serpent.html</span>
+    <span class="check-note">root-level variant check</span>
+    <a class="check-link" href="serpent.html" target="_blank">open</a>
+  </div>
+</div>
+
+<!-- ── HUB INTERFACE ────────────────────────────────── -->
+<div class="section">
+  <div class="section-header">Hub Interface — commit a842391 "Reorganize hub interface"</div>
+
+  <div class="check-row" data-check="fetch" data-target="index.html">
+    <span class="status-badge badge-pend" id="b-index">PEND</span>
+    <span class="check-name">index.html</span>
+    <span class="check-note">Main portal — DIN Portal v2.0</span>
+    <a class="check-link" href="index.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="data/apps.json">
+    <span class="status-badge badge-pend" id="b-apps-json">PEND</span>
+    <span class="check-name">data/apps.json</span>
+    <span class="check-note">App registry (if using manifest system)</span>
+    <a class="check-link" href="data/apps.json" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="hineni-hub.js">
+    <span class="status-badge badge-pend" id="b-hineni-hub-js">PEND</span>
+    <span class="check-name">hineni-hub.js</span>
+    <span class="check-note">Hub integration logic</span>
+    <a class="check-link" href="hineni-hub.js" target="_blank">open</a>
+  </div>
+</div>
+
+<!-- ── AI INTEGRATION ─────────────────────────────── -->
+<div class="section">
+  <div class="section-header">AI Integration Status</div>
+
+  <div class="check-row" data-check="ollama">
+    <span class="status-badge badge-pend" id="b-ollama">PEND</span>
+    <span class="check-name">Ollama local</span>
+    <span class="check-note">http://localhost:11434 — local LLM server</span>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="grok-integration-demo.html">
+    <span class="status-badge badge-pend" id="b-grok">PEND</span>
+    <span class="check-name">grok-integration-demo.html</span>
+    <span class="check-note">Grok/xAI integration demo</span>
+    <a class="check-link" href="grok-integration-demo.html" target="_blank">open</a>
+  </div>
+
+  <div class="check-row" data-check="fetch" data-target="pearl.html">
+    <span class="status-badge badge-warn" id="b-pearl-ai">TODO</span>
+    <span class="check-name">Pearl AI panel</span>
+    <span class="check-note">AI chat integration — pearl-ai-panel.html to add</span>
+  </div>
+</div>
+
+<!-- ── LOG ───────────────────────────────────────────── -->
+<div class="section" style="margin-top:20px;">
+  <div class="section-header">Diagnostic Log</div>
+  <div id="log-output">Run checks to see results...</div>
+</div>
+
+<script>
+const Diag = (() => {
+  let counts = { ok: 0, warn: 0, err: 0 };
+
+  function log(msg, type = '') {
+    const el = document.getElementById('log-output');
+    const line = document.createElement('span');
+    line.className = type ? `log-${type}` : '';
+    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function setBadge(id, state) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const labels = { ok: 'OK', warn: 'WARN', err: 'ERR', pend: 'PEND' };
+    el.textContent = labels[state] || state;
+    el.className = `status-badge badge-${state}`;
+    if (state !== 'pend') {
+      counts[state] = (counts[state] || 0) + 1;
+      updateSummary();
+    }
+  }
+
+  function updateSummary() {
+    document.getElementById('sum-ok').textContent = counts.ok || 0;
+    document.getElementById('sum-warn').textContent = counts.warn || 0;
+    document.getElementById('sum-err').textContent = counts.err || 0;
+  }
+
+  async function checkFile(target) {
+    const id = 'b-' + target.replace(/[^a-z0-9]/gi, '-').replace(/-+$/,'').replace(/^-+/,'');
+    try {
+      const res = await fetch(target, { method: 'HEAD' });
+      if (res.ok) {
+        setBadge(id, 'ok');
+        log(`✓ ${target} — ${res.status}`, 'ok');
+      } else if (res.status === 404) {
+        setBadge(id, 'err');
+        log(`✗ ${target} — 404 NOT FOUND`, 'err');
+      } else {
+        setBadge(id, 'warn');
+        log(`⚠ ${target} — HTTP ${res.status}`, 'warn');
+      }
+    } catch(e) {
+      setBadge(id, 'err');
+      log(`✗ ${target} — fetch failed (${e.message})`, 'err');
+    }
+  }
+
+  async function checkOllama() {
+    try {
+      const res = await fetch('http://localhost:11434/api/tags');
+      if (res.ok) {
+        const data = await res.json();
+        const models = (data.models || []).map(m => m.name).join(', ') || 'none loaded';
+        setBadge('b-ollama', 'ok');
+        log(`✓ Ollama running — models: ${models}`, 'ok');
+      } else {
+        setBadge('b-ollama', 'warn');
+        log(`⚠ Ollama responded HTTP ${res.status}`, 'warn');
+      }
+    } catch(e) {
+      setBadge('b-ollama', 'err');
+      log(`✗ Ollama not reachable at localhost:11434 — start with: ollama serve`, 'err');
+    }
+  }
+
+  async function runAll() {
+    counts = { ok: 0, warn: 0, err: 0 };
+    document.getElementById('log-output').innerHTML = '';
+    log('Starting CODEX Portal Diagnostic...');
+    log(`Running from: ${window.location.href}`);
+    log('---');
+
+    const rows = document.querySelectorAll('.check-row[data-check]');
+    for (const row of rows) {
+      const type = row.dataset.check;
+      const target = row.dataset.target;
+
+      if (type === 'fetch' && target) {
+        await checkFile(target);
+      } else if (type === 'ollama') {
+        await checkOllama();
+      }
+    }
+
+    log('---');
+    log(`Complete: ${counts.ok} OK, ${counts.warn} WARN, ${counts.err} ERR`);
+    document.getElementById('sum-pend').textContent = '—';
+  }
+
+  return { runAll };
+})();
+</script>
+</body>
+</html>
