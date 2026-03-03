@@ -160,6 +160,13 @@
         /* Run Button */
         .run-btn { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%); border: none; border-radius: 6px; color: white; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; }
         .run-btn:hover { opacity: 0.9; }
+
+        /* Mini buttons (Combined tab sync) */
+        .mini-btn { padding: 0.35rem 0.6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); cursor: pointer; font-size: 0.75rem; }
+        .mini-btn:hover { border-color: var(--muted); }
+        .mini-btn.primary { border-color: var(--orange); color: var(--orange); }
+        .mini-btn.secondary { border-color: var(--cyan); color: var(--cyan); }
+
         
         /* Results */
         .results-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
@@ -626,6 +633,43 @@
                         </div>
                     </div>
                     
+                    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:0.75rem;margin:0.75rem 0 1rem 0;">
+                        <div class="param-group-title">🔁 Actor Mapping + Sync</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                            <div style="background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.35);border-radius:6px;padding:0.6rem;">
+                                <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;">Military sides (Conventional tab)</div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                                    <div><span id="combFlagsA2" style="font-size:1rem;"></span> <span id="combNamesA2" style="font-size:0.75rem;font-weight:600;"></span></div>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <div><span id="combFlagsB2" style="font-size:1rem;"></span> <span id="combNamesB2" style="font-size:0.75rem;font-weight:600;"></span></div>
+                                </div>
+                            </div>
+                            <div style="background:rgba(255,170,74,0.08);border:1px solid rgba(255,170,74,0.35);border-radius:6px;padding:0.6rem;">
+                                <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;">Sanctions actors (Economic tab)</div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                                    <div><span id="combFlagsCoal" style="font-size:1rem;"></span> <span id="combNamesCoal" style="font-size:0.75rem;font-weight:600;"></span></div>
+                                    <div style="font-size:0.7rem;color:var(--muted);" id="combGDPCoal"></div>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <div><span id="combFlagsTarget" style="font-size:1rem;"></span> <span id="combNamesTarget" style="font-size:0.75rem;font-weight:600;"></span></div>
+                                    <div style="font-size:0.7rem;color:var(--muted);" id="combGDPTarget"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.75rem;">
+                            <button class="mini-btn primary" onclick="syncEconToConv()">Sync Econ ← Military</button>
+                            <button class="mini-btn secondary" onclick="syncConvToEcon()">Sync Military ← Econ</button>
+                            <label style="margin-left:auto;font-size:0.75rem;color:var(--muted);display:flex;align-items:center;gap:0.35rem;">
+                                <input type="checkbox" id="combAutoSync" checked>
+                                Auto-sync on run
+                            </label>
+                        </div>
+                        <div style="font-size:0.62rem;color:var(--muted);margin-top:0.4rem;">
+                            Recommended: keep sanctions actors aligned with the belligerents unless you’re modeling third-party economic pressure.
+                        </div>
+                    </div>
+
                     <div class="param-group">
                         <div class="param-group-title">Conflict Timeline</div>
                         <div class="param-row">
@@ -1594,138 +1638,299 @@ function renderEconResults(gdpLoss, stress, success, blowback, regimeProb, month
 // COMBINED WARFARE ENGINE
 // ============================================================================
 function updateCombinedDisplay() {
-    // Update combined tab with current coalition info
+    // Update combined tab with current coalition info (both military and sanctions mappings)
     const flagsA = selA.map(k => C[k]?.f || '').join('');
     const flagsB = selB.map(k => C[k]?.f || '').join('');
     const namesA = selA.length > 2 ? selA.length + ' nations' : selA.map(k => C[k]?.n || k).join('+');
     const namesB = selB.length > 2 ? selB.length + ' nations' : selB.map(k => C[k]?.n || k).join('+');
-    
+
     U('combFlagsA', flagsA);
     U('combFlagsB', flagsB);
     U('combNamesA', namesA);
     U('combNamesB', namesB);
+
+    // Mapping panel mirrors
+    U('combFlagsA2', flagsA);
+    U('combFlagsB2', flagsB);
+    U('combNamesA2', namesA);
+    U('combNamesB2', namesB);
+
+    const coalFlags = selCoal.map(k => C[k]?.f || '').join('');
+    const coalNames = selCoal.length > 2 ? selCoal.length + ' nations' : selCoal.map(k => C[k]?.n || k).join('+');
+    const targetFlags = selTarget.map(k => C[k]?.f || '').join('');
+    const targetNames = selTarget.length > 2 ? selTarget.length + ' nations' : selTarget.map(k => C[k]?.n || k).join('+');
+
+    const coalGDP = selCoal.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+    const targetGDP = selTarget.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+
+    U('combFlagsCoal', coalFlags);
+    U('combNamesCoal', coalNames);
+    U('combGDPCoal', coalGDP ? ('$' + coalGDP.toFixed(1) + 'T') : '');
+
+    U('combFlagsTarget', targetFlags);
+    U('combNamesTarget', targetNames);
+    U('combGDPTarget', targetGDP ? ('$' + targetGDP.toFixed(1) + 'T') : '');
+}
+
+// Sync helpers (Combined tab)
+function syncEconToConv() {
+    // Align Econ tab actors with Military sides (recommended default)
+    selCoal = [...selA];
+    selTarget = [...selB];
+    buildGrid('gridCoal', selCoal, 'sel-a');
+    buildGrid('gridTarget', selTarget, 'sel-b');
+    updateEconInfo();
+    updateCombinedDisplay();
+}
+
+function syncConvToEcon() {
+    // Align Military sides with Econ tab actors (useful when you built econ coalition first)
+    if (selCoal.length > 0) selA = [...selCoal];
+    if (selTarget.length > 0) selB = [...selTarget];
+    buildGrid('gridA', selA, 'sel-a');
+    buildGrid('gridB', selB, 'sel-b');
+    updateInfo();
+    buildTheaterLists();
+    updateCombinedDisplay();
+}
+
+
+
+// Combined debug: power breakdown (approx but consistent with calcPowerCombined stack)
+function getPowerBreakdownCombined(countries, params, isDefender, day, isSideA) {
+    const z = getTheaterMix();
+    const engageBonus = getEngagementBonus(isSideA);
+    const fortified = isOn('togFortified');
+
+    const qualMult = 0.4 + 1.2 * (params.qual / 100);
+    const isrMult  = 0.5 + 0.7 * (params.isr / 100);
+    const baseLogMult = 0.5 + 0.7 * (params.log / 100);
+    const alliMult = 0.7 + 0.4 * (params.alli / 100);
+    const roeMult  = 0.7 + 0.4 * (params.roe / 100);
+
+    let rawDomain = 0;           // Σ(domainPower * troopScale)
+    let preAirPower = 0;         // exact pre-air/sys/eng/def power (includes qual/isr/log/alli/roe)
+    let sysSum = 0;
+    let cnt = 0;
+
+    // Weighted effective log (so results explain decay)
+    let w = 0, logWeighted = 0;
+
+    countries.forEach(k => {
+        const c = C[k];
+        if (!c) return;
+        const troop = (c.M||100000) / 1e6;
+
+        const domainPower = z.G * (c.G||50) + z.A * (c.A||50) + z.N * (c.N||50) +
+                            z.Fi * (c.Fi||50) + z.AD * (c.AD||50);
+
+        rawDomain += domainPower * troop;
+
+        const indValue = c.ind || 50;
+        const logDecay = Math.max(0.4, 1.0 - (day / 800) * (1 - indValue / 100));
+        const logMult = baseLogMult * logDecay;
+
+        const weight = domainPower * troop;
+        w += weight;
+        logWeighted += logMult * weight;
+
+        preAirPower += domainPower * qualMult * isrMult * logMult * alliMult * roeMult * troop;
+
+        sysSum += (c.sys || 70);
+        cnt++;
+    });
+
+    const avgSys = cnt > 0 ? (sysSum / cnt + params.sys) / 2 : params.sys;
+    const sysMult = 0.5 + 0.7 * (avgSys / 100);
+    const airMult = params.air;
+
+    let defBonus = 1.0;
+    if (isDefender) {
+        const bTurfPct = V('engageB') / 100;
+        defBonus = 1.0 + z.defMod * 0.25 * (0.5 + bTurfPct * 0.5);
+        if (fortified) defBonus += Math.min(0.4, day * 0.0015);
+    }
+
+    const logEff = w > 0 ? (logWeighted / w) : baseLogMult;
+    const tacticalComposite = rawDomain > 0 ? (preAirPower / rawDomain) : 0;
+
+    const total = preAirPower * airMult * sysMult * engageBonus * defBonus;
+
+    return {
+        rawDomain,
+        qualMult, isrMult, baseLogMult, logEff, alliMult, roeMult,
+        airMult, sysMult, engageBonus, defBonus,
+        tacticalComposite,
+        total
+    };
 }
 
 function runCombinedWar() {
     try {
-        // Get combined parameters
+        // Optional: auto-sync econ actors to military sides (recommended default)
+        const autoSync = document.getElementById('combAutoSync')?.checked;
+        if (autoSync) syncEconToConv();
+
+        // Combined timeline / coupling
         const sancStartMonths = V('combSancStart');
         const warCapDays = V('combWarCap');
         const sancMilDegradation = V('combSancMil') / 100;
         const warEconMultiplier = V('combWarEcon') / 100;
-        
+
+        // Econ knobs (from Econ tab)
+        const lev = (V('eLev') || 70) / 100;
+        const enf = (V('eEnf') || 75) / 100;
+        const fin = (V('eFin') || 80) / 100;
+        const res = (V('eRes') || 60) / 100;
+        const alt = (V('eAlt') || 50) / 100;
+
+        // Actors (from Econ tab; likely aligned via autoSync)
+        const coalGDP = selCoal.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+        const targetGDP = selTarget.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
+
+        if (selA.length === 0 || selB.length === 0 || coalGDP === 0 || targetGDP === 0) {
+            document.getElementById('resultsContent').innerHTML =
+                '<div style="text-align:center;color:var(--red);padding:2rem;">Error: Select valid military sides and sanctions actors</div>';
+            return;
+        }
+
         // PHASE 1: Pre-war sanctions (if any)
-        let preWarSancImpact = 0;
+        let econPhase = {
+            months: sancStartMonths,
+            coalGDP, targetGDP,
+            effLev: 0, effRes: 0,
+            gdpLossTarget: 0,
+            stress: 0,
+            success: 0,
+            blowbackCoal: 0,
+            regimeProb: 0
+        };
+
         if (sancStartMonths > 0) {
-            // Calculate sanctions effect on target (Side B)
-            const lev = V('eLev')/100 || 0.7;
-            const enf = V('eEnf')/100 || 0.75;
-            const fin = V('eFin')/100 || 0.8;
-            const res = V('eRes')/100 || 0.6;
-            const alt = V('eAlt')/100 || 0.5;
-            
-            const coalGDP = selA.reduce((s,k) => s + (C[k]?.GDP || 0), 0); // Use Side A as sanctioners
-            const targetGDP = selB.reduce((s,k) => s + (C[k]?.GDP || 0), 0);
-            // Use FIXED WORLD_GDP constant
-            
+            // Effective leverage based on fixed world GDP
             const effLev = Math.min(1, (coalGDP / WORLD_GDP) * lev * (0.6 + 0.4 * enf));
             const effRes = res * 0.5 + alt * 0.35 + 0.15;
-            preWarSancImpact = Math.min(40, effLev * enf * fin * Math.pow(sancStartMonths/12, 0.7) * 22 * (1 - effRes * 0.65));
+
+            const gdpLoss = Math.min(60, effLev * enf * fin * Math.pow(sancStartMonths/12, 0.7) * 22 * (1 - effRes * 0.65));
+            const stress = Math.min(95, gdpLoss * 1.1 + sancStartMonths * 0.15);
+            const success = Math.min(85, effLev * 35 + gdpLoss * 0.5 - effRes * 20 + (sancStartMonths > 60 ? 10 : 0));
+            const blowback = Math.min(25, (1 - effLev) * 15 + (targetGDP / coalGDP) * 10);
+
+            // Regime change probability (target side)
+            let regimeProb = 0;
+            selTarget.forEach(k => {
+                if (C[k]?.rev) regimeProb = Math.max(regimeProb, C[k].rev * 100 * (stress/100) * (sancStartMonths > 60 ? 1.2 : 0.8));
+            });
+
+            econPhase = { ...econPhase, effLev, effRes, gdpLossTarget: gdpLoss, stress, success, blowbackCoal: blowback, regimeProb };
         }
-        
+
+        const preWarSancImpact = econPhase.gdpLossTarget;
+
         // PHASE 2: Modified conventional war (Side B degraded by sanctions)
         const pA = {
             mob: V('aMob'), tol: V('aTol'), will: V('aWill'),
             qual: V('aQual'), isr: V('aISR'), log: V('aLog'),
-            alli: V('aAlli'), roe: V('aROE'), 
+            alli: V('aAlli'), roe: V('aROE'),
             air: parseFloat(document.getElementById('aAir')?.value || 0.8),
             sys: V('aSys')
         };
-        
-        // Side B parameters DEGRADED by pre-war sanctions
-        // NON-UNIFORM degradation: logistics/air hit hardest (precision munitions, aviation fuel, spare parts)
-        const baseDegradeFactor = 1 - (preWarSancImpact / 100) * sancMilDegradation;
-        const logDegradeFactor = 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.5; // 50% harder hit
-        const airDegradeFactor = 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.3; // 30% harder hit
-        
+
+        // Degradation factors (non-uniform: log + air readiness hit hardest)
+        const baseDegradeFactor = Math.max(0.25, 1 - (preWarSancImpact / 100) * sancMilDegradation);
+        const logDegradeFactor  = Math.max(0.25, 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.5);
+        const isrDegradeFactor  = Math.max(0.25, 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.2);
+        const airDegradeFactor  = Math.max(0.25, 1 - (preWarSancImpact / 100) * sancMilDegradation * 1.3);
+        const sysDegradeFactor  = Math.max(0.25, 1 - (preWarSancImpact / 100) * sancMilDegradation);
+
+        const bAirBase = parseFloat(document.getElementById('bAir')?.value || 0.8);
+        const bAirEff  = Math.max(0.25, bAirBase * airDegradeFactor);
+
         const pB = {
-            mob: V('bMob') * baseDegradeFactor,
-            tol: V('bTol'),
-            will: V('bWill') * (0.85 + 0.15 * baseDegradeFactor), // Will slightly degraded
+            mob:  V('bMob')  * baseDegradeFactor,
+            tol:  V('bTol'),
+            will: V('bWill') * (0.85 + 0.15 * baseDegradeFactor),
             qual: V('bQual') * baseDegradeFactor,
-            isr: V('bISR') * Math.max(0.3, baseDegradeFactor * 0.9), // ISR affected by tech sanctions
-            log: V('bLog') * Math.max(0.3, logDegradeFactor), // Logistics hit HARDEST
+            isr:  V('bISR')  * isrDegradeFactor,
+            log:  V('bLog')  * logDegradeFactor,
             alli: V('bAlli'),
-            roe: V('bROE'),
-            air: parseFloat(document.getElementById('bAir')?.value || 0.8),
-            sys: V('bSys') * baseDegradeFactor
+            roe:  V('bROE'),
+            air:  bAirEff,
+            sys:  V('bSys')  * sysDegradeFactor
         };
-        
+
+        const degrade = {
+            base: baseDegradeFactor,
+            log: logDegradeFactor,
+            isr: isrDegradeFactor,
+            air: airDegradeFactor,
+            sys: sysDegradeFactor,
+            bAirBase, bAirEff
+        };
+
         const bDefends = isOn('togDefense');
         const aSurprise = isOn('togSurprise');
-        const fortified = isOn('togFortified');
-        
-        // Run war simulation with degraded B
+
+        // Initial deployed strengths (K)
         const initA = selA.reduce((s,k) => s + (C[k]?.M || 100000) * pA.mob/100, 0) / 1000;
         const initB = selB.reduce((s,k) => s + (C[k]?.M || 100000) * pB.mob/100, 0) / 1000;
-        
+
         let strA = initA, strB = initB;
         let casA = 0, casB = 0;
         let t = 0;
         let winner = null;
         let history = { t: [], a: [], b: [] };
+
         const killCoef = 0.025;
         const surpriseWindow = 7;
-        
-        // Simplified war loop (reuses calcPower logic)
+
         while (t < warCapDays && strA > initA * 0.02 && strB > initB * 0.02) {
             let powerA = calcPowerCombined(selA, pA, false, t, true);
             let powerB = calcPowerCombined(selB, pB, bDefends, t, false);
-            
+
             if (aSurprise && t < surpriseWindow) {
                 powerA *= 1.5;
                 powerB *= 0.6;
             }
-            
+
             const lossA = killCoef * powerB * (strB / initB);
             const lossB = killCoef * powerA * (strA / initA);
-            
+
             strA = Math.max(0, strA - lossA);
             strB = Math.max(0, strB - lossB);
             casA += lossA;
             casB += lossB;
-            
+
             if (t % 5 === 0) {
                 history.t.push(t);
                 history.a.push(strA);
                 history.b.push(strB);
             }
-            
+
             t++;
-            
+
             const threshA = (pA.tol/100) * (pA.will/100) * 0.95;
             let threshB = (pB.tol/100) * (pB.will/100) * 0.95;
             if (bDefends) threshB *= 1.5;
-            
+
             if (casA/initA > threshA) { winner = "B"; break; }
             if (casB/initB > threshB) { winner = "A"; break; }
         }
-        
+
         if (!winner) {
             if (strA > strB * 1.3) winner = "A";
             else if (strB > strA * 1.3) winner = "B";
             else winner = "Stalemate";
         }
-        
-        // PHASE 3: Combined economic impact
-        const baseEconDmgA = (casA/initA) * 30 + t * 0.01;
-        const baseEconDmgB = (casB/initB) * 35 + t * 0.015 + preWarSancImpact;
-        
-        // War amplifies economic damage
-        const totalEconDmgA = Math.min(60, baseEconDmgA * warEconMultiplier);
-        const totalEconDmgB = Math.min(80, baseEconDmgB * warEconMultiplier);
-        
-        // Regime risk
+
+        // PHASE 3: Combined economic impact (both sides)
+        const warEconA = (casA/initA) * 30 + t * 0.01;
+        const warEconB = (casB/initB) * 35 + t * 0.015;
+
+        const totalEconDmgA = Math.min(60, (warEconA * warEconMultiplier) + (econPhase.blowbackCoal || 0));
+        const totalEconDmgB = Math.min(80, (warEconB * warEconMultiplier) + (econPhase.gdpLossTarget || 0));
+
+        // Regime risk (target side)
         let revRisk = 0;
         selB.forEach(k => {
             if (C[k]?.rev) {
@@ -1733,7 +1938,7 @@ function runCombinedWar() {
                 revRisk = Math.max(revRisk, C[k].rev * 100 * defeatMult * (totalEconDmgB / 50));
             }
         });
-        
+
         // Nuclear risk
         const nuclearA = selA.some(k => (C[k]?.N || 0) > 70);
         const nuclearB = selB.some(k => (C[k]?.N || 0) > 70);
@@ -1741,13 +1946,29 @@ function runCombinedWar() {
         if (nuclearA && nuclearB) {
             nukeRisk = Math.min(80, (casA/initA + casB/initB) * 50 + (winner === "A" ? 20 : winner === "B" ? 20 : 5));
         }
-        
-        renderCombinedResults(winner, sancStartMonths, t, preWarSancImpact, casA, casB, initA, initB, 
-                              totalEconDmgA, totalEconDmgB, revRisk, nukeRisk, baseDegradeFactor, history);
-                              
+
+        // Breakdowns (day 0 and day 180 or end-of-war)
+        const d0A = getPowerBreakdownCombined(selA, pA, false, 0, true);
+        const d0B = getPowerBreakdownCombined(selB, pB, bDefends, 0, false);
+        const dT = Math.min(180, Math.max(0, t));
+        const dTA = getPowerBreakdownCombined(selA, pA, false, dT, true);
+        const dTB = getPowerBreakdownCombined(selB, pB, bDefends, dT, false);
+
+        renderCombinedResults({
+            winner, sancMonths: sancStartMonths, warDays: t,
+            econPhase,
+            degrade,
+            casA, casB, initA, initB,
+            totalEconDmgA, totalEconDmgB,
+            revRisk, nukeRisk,
+            breakdown: { d0A, d0B, dTA, dTB, dayT: dT },
+            history
+        });
+
     } catch (e) {
         console.error('Combined war simulation error:', e);
-        document.getElementById('resultsContent').innerHTML = '<div style="text-align:center;color:var(--red);padding:2rem;">Simulation error: ' + e.message + '</div>';
+        document.getElementById('resultsContent').innerHTML =
+            '<div style="text-align:center;color:var(--red);padding:2rem;">Simulation error: ' + e.message + '</div>';
     }
 }
 
@@ -1805,59 +2026,145 @@ function calcPowerCombined(countries, params, isDefender, day, isSideA) {
     return basePower;
 }
 
-function renderCombinedResults(winner, sancMonths, warDays, sancImpact, casA, casB, initA, initB, 
-                                econA, econB, revRisk, nukeRisk, sancDegrade, history) {
+function renderCombinedResults(r) {
+    const winner = r.winner;
+    const sancMonths = r.sancMonths;
+    const warDays = r.warDays;
+    const econ = r.econPhase || {};
+    const degrade = r.degrade || {};
+    const casA = r.casA, casB = r.casB, initA = r.initA, initB = r.initB;
+    const econA = r.totalEconDmgA, econB = r.totalEconDmgB;
+    const revRisk = r.revRisk || 0, nukeRisk = r.nukeRisk || 0;
+    const bd = r.breakdown || {};
+    const history = r.history || {t:[],a:[],b:[]};
+
     const winClass = winner === "A" ? "winner-a" : winner === "B" ? "winner-b" : "stalemate";
     const winText = winner === "A" ? "SIDE A VICTORY" : winner === "B" ? "SIDE B VICTORY" : "STALEMATE";
-    
+
     const flagsA = selA.map(k => C[k]?.f || '').join('');
     const flagsB = selB.map(k => C[k]?.f || '').join('');
-    
-    let html = `
+
+    const fmtPct = (x) => (x === undefined || x === null || isNaN(x)) ? '—' : (x.toFixed(1) + '%');
+    const fmtX = (x) => (x === undefined || x === null || isNaN(x)) ? '—' : ('×' + x.toFixed(2));
+
+    const d0A = bd.d0A || {};
+    const d0B = bd.d0B || {};
+    const dTA = bd.dTA || {};
+    const dTB = bd.dTB || {};
+    const dayT = bd.dayT || 0;
+
+    const html = `
         <div class="result-header">
             <span class="result-winner ${winClass}">⚡ ${winText}</span>
             <span style="font-size:0.8rem;color:var(--muted);">${sancMonths}mo sanctions + ${warDays}d war</span>
         </div>
-        
+
         <div style="background:var(--bg);padding:0.5rem;border-radius:4px;margin-bottom:0.75rem;text-align:center;">
             <span style="font-size:1.2rem;">${flagsA}</span>
             <span style="color:var(--orange);font-weight:600;margin:0 0.5rem;">⚔️</span>
             <span style="font-size:1.2rem;">${flagsB}</span>
         </div>
-        
-        <div style="font-size:0.7rem;font-weight:600;color:var(--cyan);margin-bottom:0.25rem;">💰 ECONOMIC PHASE</div>
-        <div class="result-grid" style="margin-bottom:0.75rem;">
-            <div class="result-stat"><div class="val" style="color:var(--orange)">${sancMonths}</div><div class="lbl">Sanction Months</div></div>
-            <div class="result-stat"><div class="val" style="color:var(--red)">-${sancImpact.toFixed(1)}%</div><div class="lbl">Pre-War GDP Hit</div></div>
-            <div class="result-stat"><div class="val">${((1-sancDegrade)*100).toFixed(0)}%</div><div class="lbl">B Military Degraded</div></div>
+
+        <!-- ECON PHASE (both sides) -->
+        <div style="font-size:0.72rem;font-weight:700;color:var(--cyan);margin:0.25rem 0;">💰 ECONOMIC PHASE (Pre-war)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+            <div class="result-stat" style="text-align:left;">
+                <div class="lbl" style="margin-bottom:0.25rem;">Coalition (sanctioners)</div>
+                <div style="font-size:0.8rem;font-weight:700;">${selCoal.map(k => C[k]?.f||'').join('')} ${selCoal.length>2? selCoal.length+' nations' : selCoal.map(k => C[k]?.n||k).join('+')}</div>
+                <div style="font-size:0.7rem;color:var(--muted);margin-top:0.15rem;">GDP: $${(econ.coalGDP||0).toFixed(1)}T • Blowback: ${fmtPct(econ.blowbackCoal||0)}</div>
+            </div>
+            <div class="result-stat" style="text-align:left;">
+                <div class="lbl" style="margin-bottom:0.25rem;">Target (sanctioned)</div>
+                <div style="font-size:0.8rem;font-weight:700;">${selTarget.map(k => C[k]?.f||'').join('')} ${selTarget.length>2? selTarget.length+' nations' : selTarget.map(k => C[k]?.n||k).join('+')}</div>
+                <div style="font-size:0.7rem;color:var(--muted);margin-top:0.15rem;">GDP: $${(econ.targetGDP||0).toFixed(1)}T • Pre-war hit: ${fmtPct(econ.gdpLossTarget||0)}</div>
+            </div>
         </div>
-        
-        <div style="font-size:0.7rem;font-weight:600;color:var(--cyan);margin-bottom:0.25rem;">🎖️ MILITARY PHASE</div>
+
+        <div class="result-grid" style="margin-bottom:0.75rem;">
+            <div class="result-stat"><div class="val">${(econ.effLev!==undefined ? econ.effLev.toFixed(2) : '—')}</div><div class="lbl">Eff. Leverage</div></div>
+            <div class="result-stat"><div class="val">${(econ.effRes!==undefined ? econ.effRes.toFixed(2) : '—')}</div><div class="lbl">Eff. Resilience</div></div>
+            <div class="result-stat"><div class="val">${(econ.stress!==undefined ? econ.stress.toFixed(0)+'%' : '—')}</div><div class="lbl">Regime Stress</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--green)">${(econ.success!==undefined ? econ.success.toFixed(0)+'%' : '—')}</div><div class="lbl">Policy Success</div></div>
+        </div>
+
+        <!-- SANCTIONS → MIL DEGRADATION BREAKDOWN -->
+        <div style="font-size:0.72rem;font-weight:700;color:var(--cyan);margin:0.25rem 0;">🧪 SANCTIONS → MILITARY DEGRADATION (Side B)</div>
+        <div style="background:var(--bg3);padding:0.6rem;border-radius:6px;margin-bottom:0.75rem;font-size:0.7rem;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+                <div>
+                    <div style="color:var(--muted);margin-bottom:0.2rem;">Factors (multiplicative)</div>
+                    <div>Base: ${fmtX(degrade.base||1)}</div>
+                    <div>ISR: ${fmtX(degrade.isr||1)}</div>
+                    <div>Log: ${fmtX(degrade.log||1)}</div>
+                    <div>Air readiness: ${fmtX(degrade.air||1)}</div>
+                    <div>Sys: ${fmtX(degrade.sys||1)}</div>
+                </div>
+                <div>
+                    <div style="color:var(--muted);margin-bottom:0.2rem;">Air posture (before → after)</div>
+                    <div>${fmtX(degrade.bAirBase||0)} → ${fmtX(degrade.bAirEff||0)}</div>
+                    <div style="color:var(--muted);margin-top:0.35rem;">(Air posture is treated as “ability to exploit air,” so sanctions reduce it directly.)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MIL PHASE -->
+        <div style="font-size:0.72rem;font-weight:700;color:var(--cyan);margin:0.25rem 0;">🎖️ MILITARY PHASE</div>
         <div class="result-grid" style="margin-bottom:0.75rem;">
             <div class="result-stat"><div class="val" style="color:var(--blue)">${Math.round(casA*1000).toLocaleString()}</div><div class="lbl">Side A Casualties</div></div>
             <div class="result-stat"><div class="val" style="color:var(--red)">${Math.round(casB*1000).toLocaleString()}</div><div class="lbl">Side B Casualties</div></div>
             <div class="result-stat"><div class="val">${(casA/initA*100).toFixed(1)}%</div><div class="lbl">A Loss Rate</div></div>
             <div class="result-stat"><div class="val">${(casB/initB*100).toFixed(1)}%</div><div class="lbl">B Loss Rate</div></div>
+            <div class="result-stat"><div class="val">${(casB/Math.max(1,casA)).toFixed(1)}:1</div><div class="lbl">Casualty Ratio</div></div>
+            <div class="result-stat"><div class="val">${warDays}</div><div class="lbl">War Days</div></div>
         </div>
-        
-        <div style="font-size:0.7rem;font-weight:600;color:var(--cyan);margin-bottom:0.25rem;">📊 COMBINED IMPACT</div>
+
+        <!-- POWER BREAKDOWN -->
+        <div style="background:var(--bg3);padding:0.6rem;border-radius:6px;margin-bottom:0.75rem;font-size:0.65rem;">
+            <div style="font-weight:700;color:var(--cyan);margin-bottom:0.35rem;">🔧 POWER BREAKDOWN (Day 0 vs Day ${dayT})</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+                <div style="border:1px solid rgba(74,158,255,0.25);border-radius:6px;padding:0.5rem;">
+                    <div style="color:var(--blue);font-weight:700;margin-bottom:0.25rem;">Side A</div>
+                    <div>Domain (w/ troops): ${d0A.rawDomain?.toFixed(1) ?? '—'} → ${dTA.rawDomain?.toFixed(1) ?? '—'}</div>
+                    <div>Qual / ISR / LogEff: ${fmtX(d0A.qualMult)} / ${fmtX(d0A.isrMult)} / ${fmtX(d0A.logEff)} → ${fmtX(dTA.logEff)}</div>
+                    <div>Alli / ROE: ${fmtX(d0A.alliMult)} / ${fmtX(d0A.roeMult)}</div>
+                    <div>Air / Sys: ${fmtX(d0A.airMult)} / ${fmtX(d0A.sysMult)}</div>
+                    <div>Engage / Def: ${fmtX(d0A.engageBonus)} / ${fmtX(d0A.defBonus)}</div>
+                    <div style="margin-top:0.25rem;font-weight:700;">Total Power: ${d0A.total?.toFixed(1) ?? '—'} → ${dTA.total?.toFixed(1) ?? '—'}</div>
+                </div>
+                <div style="border:1px solid rgba(255,74,106,0.25);border-radius:6px;padding:0.5rem;">
+                    <div style="color:var(--red);font-weight:700;margin-bottom:0.25rem;">Side B</div>
+                    <div>Domain (w/ troops): ${d0B.rawDomain?.toFixed(1) ?? '—'} → ${dTB.rawDomain?.toFixed(1) ?? '—'}</div>
+                    <div>Qual / ISR / LogEff: ${fmtX(d0B.qualMult)} / ${fmtX(d0B.isrMult)} / ${fmtX(d0B.logEff)} → ${fmtX(dTB.logEff)}</div>
+                    <div>Alli / ROE: ${fmtX(d0B.alliMult)} / ${fmtX(d0B.roeMult)}</div>
+                    <div>Air / Sys: ${fmtX(d0B.airMult)} / ${fmtX(d0B.sysMult)}</div>
+                    <div>Engage / Def: ${fmtX(d0B.engageBonus)} / ${fmtX(d0B.defBonus)}</div>
+                    <div style="margin-top:0.25rem;font-weight:700;">Total Power: ${d0B.total?.toFixed(1) ?? '—'} → ${dTB.total?.toFixed(1) ?? '—'}</div>
+                </div>
+            </div>
+            <div style="color:var(--muted);margin-top:0.35rem;">
+                Note: LogEff decays over time via ind (industrial depth) + time-in-theater; defender bonus stacks with engagement % + theater defMod.
+            </div>
+        </div>
+
+        <!-- COMBINED IMPACT -->
+        <div style="font-size:0.72rem;font-weight:700;color:var(--cyan);margin:0.25rem 0;">📊 COMBINED IMPACT</div>
         <div class="result-grid">
-            <div class="result-stat"><div class="val" style="color:var(--blue)">-${econA.toFixed(1)}%</div><div class="lbl">A Total Econ Dmg</div></div>
-            <div class="result-stat"><div class="val" style="color:var(--red)">-${econB.toFixed(1)}%</div><div class="lbl">B Total Econ Dmg</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--blue)">-${econA.toFixed(1)}%</div><div class="lbl">A Total Econ Damage</div></div>
+            <div class="result-stat"><div class="val" style="color:var(--red)">-${econB.toFixed(1)}%</div><div class="lbl">B Total Econ Damage</div></div>
         </div>
-        
+
         <div class="intel-section">
-            ${revRisk > 0 ? `<div class="intel-item"><span class="label">Regime Collapse Risk</span><span class="value ${revRisk > 50 ? 'high' : revRisk > 25 ? 'med' : 'low'}">${revRisk.toFixed(0)}%</span></div>` : ''}
+            ${revRisk > 0 ? `<div class="intel-item"><span class="label">Regime Collapse Risk (B)</span><span class="value ${revRisk > 50 ? 'high' : revRisk > 25 ? 'med' : 'low'}">${revRisk.toFixed(0)}%</span></div>` : ''}
             ${nukeRisk > 0 ? `<div class="intel-item"><span class="label">Nuclear Escalation</span><span class="value ${nukeRisk > 40 ? 'high' : nukeRisk > 20 ? 'med' : 'low'}">${nukeRisk.toFixed(0)}%</span></div>` : ''}
-            <div class="intel-item"><span class="label">Casualty Ratio</span><span class="value">${(casB/Math.max(1,casA)).toFixed(1)}:1</span></div>
+            ${econ.regimeProb > 0 ? `<div class="intel-item"><span class="label">Pre-war Regime Change Prob</span><span class="value ${econ.regimeProb > 40 ? 'high' : econ.regimeProb > 20 ? 'med' : 'low'}">${econ.regimeProb.toFixed(0)}%</span></div>` : ''}
         </div>
-        
+
         <div class="chart-container" id="chart"></div>
     `;
-    
+
     document.getElementById('resultsContent').innerHTML = html;
-    
-    // Render chart with Plotly check
+
+    // Chart
     if (history.t.length > 0 && typeof Plotly !== 'undefined') {
         Plotly.newPlot('chart', [
             { x: history.t, y: history.a, name: 'Side A', line: { color: '#4a9eff' } },
@@ -1873,7 +2180,6 @@ function renderCombinedResults(winner, sancMonths, warDays, sancImpact, casA, ca
             showlegend: true
         }, { responsive: true, displayModeBar: false });
     } else if (history.t.length > 0) {
-        // Canvas fallback when Plotly unavailable
         drawSimpleChart('chart', history.a, history.b, history.t);
     }
 }
