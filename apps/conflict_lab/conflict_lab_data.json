@@ -1,0 +1,183 @@
+{
+  "meta": {
+    "version": "6.1",
+    "updated": "2026-03-03",
+    "source": "conflict_lab_extended",
+    "notes": "Drop this file as conflict_lab_data.json next to index.html to auto-load"
+  },
+  "countries": {
+    "_TEMPLATE": {
+      "_comment": "Copy this template to add a new country. All fields except f, n, GDP, M are 0-100 scale (USA=100 reference)",
+      "f": "🏳️",
+      "n": "Country Name",
+      "GDP": 0.0,
+      "M": 0,
+      "G": 50,
+      "A": 50,
+      "N": 50,
+      "Fi": 50,
+      "AD": 50,
+      "sys": 50,
+      "ind": 50,
+      "rev": 0.0,
+      "fear": false,
+      "def": 0,
+      "pop": 0,
+      "medAge": 30,
+      "urbanPct": 50,
+      "ethFrac": 0.5,
+      "gini": 35,
+      "debtGDP": 50,
+      "infoControl": 0,
+      "pressIndex": 50,
+      "milSpend": 2.0,
+      "conscription": false,
+      "nukes": 0,
+      "cyber": 50,
+      "space": 50,
+      "alliances": []
+    },
+    "Egypt": {
+      "f": "🇪🇬", "n": "Egypt", "GDP": 0.40, "M": 440000,
+      "G": 58, "A": 52, "N": 38, "Fi": 55, "AD": 52, "sys": 45, "ind": 35,
+      "rev": 0.35, "pop": 104, "medAge": 24, "urbanPct": 43, "ethFrac": 0.18,
+      "gini": 32, "debtGDP": 88, "milSpend": 1.2, "conscription": true
+    },
+    "Pakistan": {
+      "f": "🇵🇰", "n": "Pakistan", "GDP": 0.34, "M": 654000,
+      "G": 60, "A": 55, "N": 32, "Fi": 68, "AD": 55, "sys": 48, "ind": 40,
+      "rev": 0.42, "nukes": 170, "pop": 230, "medAge": 21, "conscription": false
+    },
+    "Brazil": {
+      "f": "🇧🇷", "n": "Brazil", "GDP": 2.1, "M": 367000,
+      "G": 55, "A": 52, "N": 48, "Fi": 45, "AD": 42, "sys": 45, "ind": 52,
+      "rev": 0.18, "pop": 215, "medAge": 34
+    },
+    "Indonesia": {
+      "f": "🇮🇩", "n": "Indonesia", "GDP": 1.4, "M": 400000,
+      "G": 48, "A": 42, "N": 42, "Fi": 40, "AD": 38, "sys": 40, "ind": 35,
+      "rev": 0.20, "pop": 278, "medAge": 30
+    },
+    "Vietnam": {
+      "f": "🇻🇳", "n": "Vietnam", "GDP": 0.43, "M": 482000,
+      "G": 55, "A": 48, "N": 35, "Fi": 52, "AD": 55, "sys": 45, "ind": 40,
+      "rev": 0.12, "pop": 99, "medAge": 32, "def": 0.8
+    },
+    "Thailand": {
+      "f": "🇹🇭", "n": "Thailand", "GDP": 0.51, "M": 361000,
+      "G": 48, "A": 45, "N": 35, "Fi": 42, "AD": 40, "sys": 42, "ind": 38,
+      "rev": 0.28, "pop": 72, "medAge": 40
+    },
+    "Nigeria": {
+      "f": "🇳🇬", "n": "Nigeria", "GDP": 0.47, "M": 223000,
+      "G": 42, "A": 35, "N": 28, "Fi": 35, "AD": 30, "sys": 30, "ind": 25,
+      "rev": 0.55, "pop": 224, "medAge": 18, "ethFrac": 0.85
+    },
+    "SouthAfrica": {
+      "f": "🇿🇦", "n": "S.Africa", "GDP": 0.40, "M": 73000,
+      "G": 45, "A": 42, "N": 35, "Fi": 38, "AD": 35, "sys": 42, "ind": 40,
+      "rev": 0.30, "pop": 60, "gini": 63
+    },
+    "Mexico": {
+      "f": "🇲🇽", "n": "Mexico", "GDP": 1.8, "M": 277000,
+      "G": 42, "A": 38, "N": 32, "Fi": 35, "AD": 30, "sys": 35, "ind": 45,
+      "rev": 0.22, "pop": 130, "medAge": 29
+    },
+    "Spain": {
+      "f": "🇪🇸", "n": "Spain", "GDP": 1.6, "M": 120000,
+      "G": 60, "A": 62, "N": 45, "Fi": 55, "AD": 50, "sys": 68, "ind": 58,
+      "pop": 47, "medAge": 45
+    },
+    "Netherlands": {
+      "f": "🇳🇱", "n": "Netherlands", "GDP": 1.1, "M": 42000,
+      "G": 58, "A": 60, "N": 38, "Fi": 50, "AD": 48, "sys": 72, "ind": 55,
+      "pop": 18, "medAge": 43
+    },
+    "Sweden": {
+      "f": "🇸🇪", "n": "Sweden", "GDP": 0.59, "M": 25000,
+      "G": 55, "A": 58, "N": 35, "Fi": 48, "AD": 45, "sys": 72, "ind": 58,
+      "pop": 10, "medAge": 41, "conscription": true
+    },
+    "Greece": {
+      "f": "🇬🇷", "n": "Greece", "GDP": 0.24, "M": 107000,
+      "G": 58, "A": 60, "N": 42, "Fi": 52, "AD": 55, "sys": 58, "ind": 42,
+      "pop": 10, "debtGDP": 172
+    },
+    "Romania": {
+      "f": "🇷🇴", "n": "Romania", "GDP": 0.35, "M": 70000,
+      "G": 50, "A": 48, "N": 18, "Fi": 42, "AD": 40, "sys": 52, "ind": 42,
+      "pop": 19, "rev": 0.15
+    },
+    "Philippines": {
+      "f": "🇵🇭", "n": "Philippines", "GDP": 0.44, "M": 143000,
+      "G": 42, "A": 38, "N": 32, "Fi": 35, "AD": 30, "sys": 35, "ind": 30,
+      "rev": 0.28, "pop": 115, "medAge": 25
+    },
+    "Singapore": {
+      "f": "🇸🇬", "n": "Singapore", "GDP": 0.52, "M": 72000,
+      "G": 62, "A": 65, "N": 48, "Fi": 58, "AD": 68, "sys": 78, "ind": 55,
+      "pop": 6, "medAge": 42, "conscription": true, "cyber": 78
+    },
+    "UAE": {
+      "f": "🇦🇪", "n": "UAE", "GDP": 0.50, "M": 63000,
+      "G": 52, "A": 58, "N": 38, "Fi": 55, "AD": 58, "sys": 52, "ind": 30,
+      "pop": 10, "milSpend": 5.6
+    },
+    "Norway": {
+      "f": "🇳🇴", "n": "Norway", "GDP": 0.48, "M": 25000,
+      "G": 55, "A": 58, "N": 42, "Fi": 48, "AD": 52, "sys": 72, "ind": 48,
+      "pop": 5, "conscription": true
+    },
+    "Colombia": {
+      "f": "🇨🇴", "n": "Colombia", "GDP": 0.34, "M": 295000,
+      "G": 48, "A": 42, "N": 28, "Fi": 38, "AD": 32, "sys": 42, "ind": 32,
+      "rev": 0.25, "pop": 52
+    }
+  },
+  "alliances": {
+    "NATO": ["USA", "UK", "France", "Germany", "Italy", "Canada", "Poland", "Turkey", "Spain", "Netherlands", "Greece", "Norway", "Romania", "Sweden"],
+    "Five_Eyes": ["USA", "UK", "Australia", "Canada"],
+    "Quad": ["USA", "Japan", "India", "Australia"],
+    "AUKUS": ["USA", "UK", "Australia"],
+    "SCO": ["China", "Russia", "India", "Pakistan", "Iran"],
+    "CSTO": ["Russia"],
+    "ASEAN_defense": ["Indonesia", "Vietnam", "Thailand", "Philippines", "Singapore"]
+  },
+  "scenarios": [
+    {
+      "name": "Taiwan Strait",
+      "sideA": ["USA", "Japan", "Australia"],
+      "sideB": ["China"],
+      "theater": "Littoral",
+      "notes": "US forward deployment + Japanese ASDF + Australian naval contribution vs PLA amphibious"
+    },
+    {
+      "name": "Baltic Defense",
+      "sideA": ["Poland", "Germany", "UK", "France"],
+      "sideB": ["Russia"],
+      "theater": "Forest",
+      "notes": "NATO Article 5 defense of Baltic states"
+    },
+    {
+      "name": "Persian Gulf",
+      "sideA": ["USA", "Saudi", "UAE", "Israel"],
+      "sideB": ["Iran"],
+      "theater": "Desert",
+      "notes": "Coalition vs Iran asymmetric + missile threat"
+    },
+    {
+      "name": "Korean Peninsula",
+      "sideA": ["USA", "SKorea", "Japan"],
+      "sideB": ["NKorea"],
+      "theater": "Mountain",
+      "notes": "Combined forces vs entrenched DPRK with nuclear wildcard"
+    },
+    {
+      "name": "South China Sea",
+      "sideA": ["Vietnam", "Philippines", "USA"],
+      "sideB": ["China"],
+      "theater": "Littoral",
+      "notes": "Freedom of navigation enforcement"
+    }
+  ]
+}

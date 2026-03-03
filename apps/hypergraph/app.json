@@ -1,0 +1,10 @@
+{
+  "id": "hypergraph",
+  "name": "Hypergraph Navigator",
+  "kind": "html",
+  "entry": "index.html",
+  "description": "Navigate thought networks in N-dimensional space. Visualizes connections across all CODEX data sources.",
+  "version": "2.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "🕸️"
+}

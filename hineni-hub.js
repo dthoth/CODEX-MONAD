@@ -58,14 +58,19 @@
     // For file:// links that need to open in Finder/Explorer
     // On macOS: /Volumes/HINENI_HUB
     // On Windows: E: (HINENI_HUB_PC drive)
-    var HUB_ROOT = IS_MACOS ? '/Volumes/HINENI_HUB' : (IS_WINDOWS ? 'E:' : null);
+    var HUB_ROOT = localStorage.getItem('CODEX_HUB_ROOT') || (IS_MACOS ? '/Volumes/HINENI_HUB' : (IS_WINDOWS ? 'E:' : null));
 
     // For relative links (portal is at 10-repos-central/CODEX-MONAD/)
     // So ../../ gets us to HINENI_HUB root (only relevant when hub is mounted)
-    var RELATIVE_ROOT = '../..';
+    var RELATIVE_ROOT = localStorage.getItem('CODEX_RELATIVE_ROOT') || '../..';
 
     // Hub availability - external items work when hub is mounted
-    var HUB_AVAILABLE = IS_MACOS || IS_WINDOWS;
+    var HUB_AVAILABLE = (function() {
+        // Always available if explicitly set
+        if (localStorage.getItem('CODEX_HUB_ROOT')) return true;
+        // Default platform check
+        return IS_MACOS || IS_WINDOWS;
+    })();
 
     // Windows path prefix for deep archive location
     var WIN_GITHUB_BASE = '20-archive/cloud-mirrors/OneDrive/New Folder With Items/Documents/GitHub';
@@ -778,9 +783,21 @@
         if (IS_WINDOWS && item.macOnly) {
             return false;
         }
-        // Windows needs winPath defined
-        if (IS_WINDOWS && !item.winPath) {
+        // Non-local items: check if hub is actually reachable
+        // On Windows, CLI/file items need explicit winPath
+        if (IS_WINDOWS && !item.winPath && !item.isLocal) {
             return false;
+        }
+        // Items with hub-relative paths (10-repos-central/, 40-archive/)
+        // only work when running FROM the hub or with hub mounted
+        if (item.hubPath && (item.hubPath.indexOf('10-repos') === 0 || 
+            item.hubPath.indexOf('40-archive') === 0 || 
+            item.hubPath.indexOf('20-archive') === 0)) {
+            // These need the hub - show as unavailable with helpful message
+            // unless user has explicitly set HUB_ROOT
+            if (!localStorage.getItem('CODEX_HUB_ROOT') && !HUB_AVAILABLE) {
+                return false;
+            }
         }
         // Everything else requires hub
         return HUB_AVAILABLE;
@@ -849,8 +866,8 @@
             }
         } else if (!available) {
             // Show unavailable state with reason
-            var reason = item.macOnly ? 'macOS only' : 'Not on this drive';
-            linkHtml = '<span class="app-link hub-link unavailable" title="' + reason + '">🔒 ' + reason + '</span>';
+            var reason = item.macOnly ? 'macOS only' : (HUB_AVAILABLE ? 'Hub path' : 'Mount HINENI hub');
+            linkHtml = '<span class="app-link hub-link unavailable" title="' + reason + ' | ' + (item.hubPath || '') + '">🔒 ' + reason + '</span>';
         }
 
         // Add command hint for CLI tools
