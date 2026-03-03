@@ -485,11 +485,11 @@
 <body>
     <!-- TRANSCENDENT MODULE BAR -->
     <div class="transcendent-bar">
-        <button class="trans-btn btn-qr" onclick="window.location.href='apps/qr-whisper/index.html'" title="QR encoder/decoder with encryption">🔮 QR Whisper</button>
-        <button class="trans-btn btn-mandala" onclick="window.location.href='apps/mandala/index.html'" title="Sacred geometry generator">🌀 Mandala</button>
-        <button class="trans-btn btn-serpent" onclick="window.location.href='apps/serpent/index.html'" title="AES-256 encryption tool">🐍 Serpent</button>
-        <button class="trans-btn btn-compress" onclick="window.location.href='apps/compress/index.html'" title="Archival prep and floppy distribution">📀 Compress</button>
-        <button class="trans-btn btn-help" onclick="window.location.href='apps/help/index.html'" title="Portal guide and oracle">❓ Help</button>
+        <button class="trans-btn btn-qr" onclick="openTool('apps/qr-whisper/index.html','QR Whisper')" title="QR encoder/decoder with encryption">🔮 QR Whisper</button>
+        <button class="trans-btn btn-mandala" onclick="openTool('apps/mandala/index.html','Mandala')" title="Sacred geometry generator">🌀 Mandala</button>
+        <button class="trans-btn btn-serpent" onclick="openTool('apps/serpent/index.html','Serpent')" title="AES-256 encryption tool">🐍 Serpent</button>
+        <button class="trans-btn btn-compress" onclick="openTool('apps/compress/index.html','Compress')" title="Archival prep and floppy distribution">📀 Compress</button>
+        <button class="trans-btn btn-help" onclick="openTool('apps/help/index.html','Help')" title="Portal guide and oracle">❓ Help</button>
     </div>
     
     <div class="container">
@@ -577,6 +577,17 @@ And teaches enlightenment at 60fps.
         
         setTimeout(typeWriter, 500);
         
+        // TOOL LAUNCHER - new tab with fallback
+        function openTool(path, name) {
+            try {
+                var w = window.open(path, '_blank');
+                if (!w) throw new Error('blocked');
+            } catch(e) {
+                alert(name + ' - open from CODEX-MONAD folder:
+' + path);
+            }
+        }
+
         // TERMINAL COMMAND HANDLER
         const termInput = document.getElementById('terminal-input');
         const termOutput = document.getElementById('terminal-output');
@@ -647,7 +658,7 @@ And teaches enlightenment at 60fps.
                     }
                     if (match) {
                         termPrint('Opening ' + arg + '...');
-                        setTimeout(function() { window.location.href = match; }, 300);
+                        setTimeout(function() { openTool(match, arg); }, 200);
                     } else {
                         termPrint('Unknown app: ' + arg + '. Try "apps" for list.');
                     }
