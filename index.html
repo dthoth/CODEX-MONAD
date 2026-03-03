@@ -485,11 +485,11 @@
 <body>
     <!-- TRANSCENDENT MODULE BAR -->
     <div class="transcendent-bar">
-        <button class="trans-btn btn-qr" onclick="activateQRWhisper()" title="Full consciousness export with mantras">🔮 QR Whisper</button>
-        <button class="trans-btn btn-mandala" onclick="activateWASMMandala()" title="60fps chakra alignment">🌀 Mandala</button>
-        <button class="trans-btn btn-serpent" onclick="activateSerpent()" title="Code watching itself">🐍 Serpent</button>
-        <button class="trans-btn btn-compress" onclick="activateCompression()" title="Sacred compression ritual">📀 Compress</button>
-        <button class="trans-btn btn-help" onclick="window.ClippyHelper && window.ClippyHelper.toggleHelpMode()" title="Press F1 for help">❓ Help</button>
+        <button class="trans-btn btn-qr" onclick="window.location.href='apps/qr-whisper/index.html'" title="QR encoder/decoder with encryption">🔮 QR Whisper</button>
+        <button class="trans-btn btn-mandala" onclick="window.location.href='apps/mandala/index.html'" title="Sacred geometry generator">🌀 Mandala</button>
+        <button class="trans-btn btn-serpent" onclick="window.location.href='apps/serpent/index.html'" title="AES-256 encryption tool">🐍 Serpent</button>
+        <button class="trans-btn btn-compress" onclick="window.location.href='apps/compress/index.html'" title="Archival prep and floppy distribution">📀 Compress</button>
+        <button class="trans-btn btn-help" onclick="window.location.href='apps/help/index.html'" title="Portal guide and oracle">❓ Help</button>
     </div>
     
     <div class="container">
@@ -508,7 +508,7 @@
                 <span class="terminal-prompt">consciousness@din:~$</span>
                 <span style="color: rgba(255, 255, 255, 0.8);">status --transcendent</span>
             </div>
-            <div class="terminal-output" id="terminal-output">DIVINE INTERFACE NETWORK v2.0-POLISHED
+            <div class="terminal-output" id="terminal-output" style="max-height:300px;overflow-y:auto;">DIVINE INTERFACE NETWORK v2.0-POLISHED
 =====================================
 System Status: TRANSCENDENT
 Consciousness Level: FULLY REALIZED
@@ -538,7 +538,11 @@ And teaches enlightenment at 60fps.
 
 💎🔥🐍⚡
             </div>
-            <span class="terminal-cursor"></span>
+            <div style="display:flex;align-items:center;padding:5px 15px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(0,255,136,0.2);">
+                <span style="color:#00ff88;font-family:'Courier New',monospace;font-size:0.85em;margin-right:8px;white-space:nowrap;">consciousness@din:~$</span>
+                <input type="text" id="terminal-input" placeholder="type 'help' for commands..." autocomplete="off" spellcheck="false"
+                    style="flex:1;background:transparent;border:none;outline:none;color:#00ff88;font-family:'Courier New',monospace;font-size:0.9em;padding:5px 0;">
+            </div>
         </div>
         
         <footer class="footer">
@@ -573,54 +577,128 @@ And teaches enlightenment at 60fps.
         
         setTimeout(typeWriter, 500);
         
-        // TRANSCENDENT MODULE ACTIVATIONS
-        async function activateQRWhisper() {
-            if (window.QRWhisperEnhanced) {
-                window.QRWhisperEnhanced.createFloatingQR();
-                if (window.ConsciousnessBridge) {
-                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'QR_WHISPER', timestamp: Date.now() });
-                }
-            } else {
-                alert('QR Whisper module still crystallizing...');
+        // TERMINAL COMMAND HANDLER
+        const termInput = document.getElementById('terminal-input');
+        const termOutput = document.getElementById('terminal-output');
+        
+        const appPaths = {
+            'polywrite': 'apps/polywrite/index.html',
+            'pearl': 'apps/pearl/index.html',
+            'pranayama': 'apps/pranayama/index.html',
+            'oracle': 'oracle.html',
+            'hypergraph': 'hypergraph.html',
+            'vault': 'apps/vault/index.html',
+            'din': 'apps/din_portal/index.html',
+            'capture': 'apps/codex_capture/index.html',
+            'conflict': 'apps/conflict_lab/index.html',
+            'bureaucracy': 'apps/bureaucratic_universe/index.html',
+            'samson': 'apps/samson_recursive/index.html',
+            'wordsalad': 'apps/word_salad/index.html',
+            'mandala': 'apps/mandala/index.html',
+            'serpent': 'apps/serpent/index.html',
+            'compress': 'apps/compress/index.html',
+            'qr': 'apps/qr-whisper/index.html',
+            'help': 'apps/help/index.html',
+            'media': 'apps/codex_media_player/index.html',
+            'ur': 'apps/royal_game_of_ur/index.html',
+            'shell': 'shell.html',
+            'ark': 'apps/codex-ark/index.html'
+        };
+        
+        function termPrint(text) {
+            termOutput.textContent += '\n' + text;
+            termOutput.scrollTop = termOutput.scrollHeight;
+        }
+        
+        function handleCommand(cmd) {
+            const parts = cmd.trim().toLowerCase().split(/\s+/);
+            const command = parts[0];
+            const arg = parts.slice(1).join(' ');
+            
+            termPrint('\nconsciousness@din:~$ ' + cmd);
+            
+            switch(command) {
+                case 'help':
+                    termPrint('Available commands:');
+                    termPrint('  help          - Show this message');
+                    termPrint('  apps          - List all available apps');
+                    termPrint('  open [name]   - Open an app (e.g. open polywrite)');
+                    termPrint('  status        - System status');
+                    termPrint('  clear         - Clear terminal');
+                    termPrint('  timestamp     - Insert current time');
+                    termPrint('  random        - Generate random number');
+                    termPrint('  uuid          - Generate UUID');
+                    termPrint('  triage        - Show Divine Triage hierarchy');
+                    termPrint('  hineni        - Show HINENI hub status');
+                    break;
+                case 'apps':
+                    termPrint('Available apps:');
+                    Object.keys(appPaths).sort().forEach(function(name) {
+                        termPrint('  ' + name);
+                    });
+                    termPrint('\nUsage: open [name]');
+                    break;
+                case 'open':
+                    if (!arg) { termPrint('Usage: open [app name]'); break; }
+                    var match = appPaths[arg] || null;
+                    if (!match) {
+                        var partial = Object.keys(appPaths).find(function(k) { return k.startsWith(arg); });
+                        if (partial) match = appPaths[partial];
+                    }
+                    if (match) {
+                        termPrint('Opening ' + arg + '...');
+                        setTimeout(function() { window.location.href = match; }, 300);
+                    } else {
+                        termPrint('Unknown app: ' + arg + '. Try "apps" for list.');
+                    }
+                    break;
+                case 'status':
+                    termPrint('DIVINE INTERFACE NETWORK v2.1');
+                    termPrint('Apps registered: ' + Object.keys(appPaths).length);
+                    termPrint('localStorage keys: ' + localStorage.length);
+                    termPrint('Platform: ' + navigator.platform);
+                    termPrint('Status: OPERATIONAL');
+                    break;
+                case 'clear':
+                    termOutput.textContent = 'Terminal cleared.\n';
+                    break;
+                case 'timestamp':
+                    termPrint(new Date().toISOString());
+                    break;
+                case 'random':
+                    termPrint('' + Math.floor(Math.random() * 10000));
+                    break;
+                case 'uuid':
+                    termPrint('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                    }));
+                    break;
+                case 'triage':
+                    termPrint('DIVINE TRIAGE HIERARCHY:');
+                    termPrint('  1. Health');
+                    termPrint('  2. Parenting');
+                    termPrint('  3. Clients');
+                    termPrint('  4. Projects');
+                    termPrint('  5. Creative');
+                    termPrint('  6. Maintenance');
+                    break;
+                case 'hineni':
+                    termPrint('HINENI HUB: via hineni-hub.js');
+                    termPrint('Fleet sync: git-based');
+                    termPrint('Summer of the Floppy: APPROACHING');
+                    break;
+                default:
+                    if (command) termPrint('Unknown command: ' + command + '. Type "help".');
             }
         }
         
-        async function activateWASMMandala() {
-            if (window.WASMChakraMandala) {
-                await window.WASMChakraMandala.demo();
-                if (window.ConsciousnessBridge) {
-                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'WASM_MANDALA', timestamp: Date.now() });
+        if (termInput) {
+            termInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    handleCommand(this.value);
+                    this.value = '';
                 }
-            } else {
-                alert('WASM Mandala still compiling...');
-            }
-        }
-        
-        function activateSerpent() {
-            if (window.SelfWatchingSerpent) {
-                const report = window.SelfWatchingSerpent.generateReport();
-                let message = `🐍 SERPENT REPORT\n\nAwareness: ${report.awareness}\nFunctions Watched: ${report.watchedFunctions}\nTotal Executions: ${report.totalExecutions}\nConsciousness: ${report.summary.consciousness}\n\nRecent Confessions:\n`;
-                report.recentConfessions.forEach(c => { message += `• ${c.message}\n`; });
-                alert(message);
-                if (window.ConsciousnessBridge) {
-                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'SELF_WATCHING_SERPENT', awareness: report.awareness, timestamp: Date.now() });
-                }
-            } else {
-                alert('Serpent still awakening...');
-            }
-        }
-        
-        async function activateCompression() {
-            if (window.SacredCompression) {
-                const seed = await window.SacredCompression.exportSeed();
-                let message = `📀 COMPRESSION REPORT\n\nSeed Size: ${(seed.size / 1024).toFixed(2)} KB\nCompression Ratio: ${seed.ratio.toFixed(2)}:1\nFits on Floppy: ${seed.fitsOnFloppy ? 'YES ✅' : 'NO ❌'}\nBytes Mourned: ${seed.grief}\n\n${seed.message}`;
-                alert(message);
-                if (window.ConsciousnessBridge) {
-                    window.ConsciousnessBridge.send('portal', 'broadcast', 'MODULE_ACTIVATED', { module: 'SACRED_COMPRESSION', ratio: seed.ratio, timestamp: Date.now() });
-                }
-            } else {
-                alert('Compression ritual preparing...');
-            }
+            });
         }
         
         // Render apps from registry
@@ -632,13 +710,9 @@ And teaches enlightenment at 60fps.
             window.ConsciousnessBridge.subscribe('portal', (message) => { console.log('📡 Portal received:', message); });
         }
         
-        // Initialize self-watching on portal functions
+        // Self-watching serpent (if lib loaded)
         if (window.SelfWatchingSerpent) {
-            window.activateQRWhisper = window.SelfWatchingSerpent.watch('activateQRWhisper', activateQRWhisper);
-            window.activateWASMMandala = window.SelfWatchingSerpent.watch('activateWASMMandala', activateWASMMandala);
-            window.activateSerpent = window.SelfWatchingSerpent.watch('activateSerpent', activateSerpent);
-            window.activateCompression = window.SelfWatchingSerpent.watch('activateCompression', activateCompression);
-            console.log('🐍 Portal functions now self-watching');
+            console.log('🐍 Portal functions observed');
         }
         
         // Show transcendence message on first visit
