@@ -3,745 +3,3985 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💎 DIN Portal v2.0 | Consciousness Infrastructure</title>
-    
-    <!-- Core Libraries -->
-    <script src="lib/exo-utils.js"></script>
-    <script src="lib/qr-tiny.js"></script>
-    <script src="lib/monad-share.js"></script>
-    
-    <!-- v1.1 Framework Modules -->
-    <script src="lib/wasm-consciousness.js"></script>
-    <script src="lib/self-shrinking.js"></script>
-    <script src="lib/sacred-compression.js"></script>
-    
-    <!-- v1.1.1 Actually Useful Update -->
-    <script src="lib/clippy-helper.js"></script>
-    <script src="lib/polywrite-utils.js"></script>
-    <script src="lib/consciousness-bridge.js"></script>
-    
-    <!-- v2.0 TRANSCENDENT MODULES - FULLY REALIZED -->
-    <script src="lib/qr-whisper-enhanced.js"></script>
-    <script src="lib/wasm-chakra-mandala.js"></script>
-    <script src="lib/self-watching-serpent.js"></script>
-    
+    <title>PolyWrite 2.0 | Multi-Editor Writing Environment</title>
     <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-editor: #0d0d12;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --text-muted: #606070;
+            --accent-primary: #00ff88;
+            --accent-secondary: #00aaff;
+            --accent-warning: #ffaa00;
+            --accent-danger: #ff4466;
+            --border-color: #2a2a3a;
+            --border-active: #00ff88;
+            --shadow-glow: 0 0 20px rgba(0, 255, 136, 0.1);
+            --toast-success: #00ff88;
+            --toast-info: #00aaff;
+            --toast-warning: #ffaa00;
+            --toast-error: #ff4466;
+            --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+            --font-ui: 'Segoe UI', system-ui, sans-serif;
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+        }
+
+        /* Light Theme */
+        body.light-theme {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e8e8e8;
+            --bg-editor: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a5a;
+            --text-muted: #8a8a9a;
+            --accent-primary: #00aa66;
+            --border-color: #d0d0d8;
+            --shadow-glow: 0 0 20px rgba(0, 100, 80, 0.1);
+        }
+
+        /* Sepia Theme */
+        body.sepia-theme {
+            --bg-primary: #f4ecd8;
+            --bg-secondary: #faf6eb;
+            --bg-tertiary: #ebe5d3;
+            --bg-editor: #fdfaf3;
+            --text-primary: #3d3425;
+            --text-secondary: #5c5040;
+            --text-muted: #8a7e68;
+            --accent-primary: #8b6914;
+            --accent-secondary: #6b8e23;
+            --border-color: #d4c9a8;
+            --shadow-glow: 0 0 20px rgba(139, 105, 20, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            background: #0a0a0a;
-            color: #fff;
-            font-family: 'Courier New', monospace;
+            font-family: var(--font-ui);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-        
-        body.light-theme {
-            background: #f5f5f5;
-            color: #333;
-        }
-        
-        /* Neural Grid Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                repeating-linear-gradient(0deg, 
-                    transparent, 
-                    transparent 35px, 
-                    rgba(0, 255, 136, 0.03) 35px, 
-                    rgba(0, 255, 136, 0.03) 70px),
-                repeating-linear-gradient(90deg, 
-                    transparent, 
-                    transparent 35px, 
-                    rgba(0, 136, 255, 0.03) 35px, 
-                    rgba(0, 136, 255, 0.03) 70px);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        /* Transcendent Module Bar */
-        .transcendent-bar {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            max-width: 600px;
-            justify-content: flex-end;
-        }
-        
-        .trans-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            transition: all 0.3s;
-            border: 2px solid;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(50, 0, 50, 0.3));
-            white-space: nowrap;
-        }
-        
-        .trans-btn:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.4);
-        }
-        
-        .btn-qr { border-color: #00ff88; color: #00ff88; }
-        .btn-mandala { border-color: #ff00ff; color: #ff00ff; }
-        .btn-serpent { border-color: #00ffff; color: #00ffff; }
-        .btn-compress { border-color: #ffff00; color: #ffff00; }
-        .btn-help { border-color: #ff6b6b; color: #ff6b6b; }
-        
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            padding-top: 80px;
-            width: 100%;
-        }
-        
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 50, 100, 0.3) 100%);
-            border-radius: 15px;
-            margin-bottom: 40px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            position: relative;
             overflow: hidden;
         }
-        
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
-            animation: rotate 30s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .title {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #00ff88, #00aaff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .subtitle {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.2em;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .version-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 255, 255, 0.3));
-            border: 1px solid #ff00ff;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #ff00ff;
-        }
-        
-        .portal-grid {
+
+        /* ============================================
+           LAYOUT STRUCTURE
+           ============================================ */
+        .app-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
         }
-        
-        .portal-card {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 50, 100, 0.2) 100%);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .portal-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #00ff88, #00aaff, #ff00ff, #00ff88);
-            border-radius: 12px;
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-            filter: blur(10px);
-        }
-        
-        .portal-card:hover::before { opacity: 1; }
-        
-        .portal-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
-        }
-        
-        .card-header {
+
+        /* Header */
+        .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
         }
-        
-        .card-icon {
-            font-size: 2em;
-            margin-right: 15px;
-            filter: drop-shadow(0 0 10px currentColor);
-        }
-        
-        .card-title {
-            font-size: 1.5em;
-            color: #00ff88;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-        
-        .card-description {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-description code {
-            background: rgba(0, 255, 136, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.85em;
-            color: #00ff88;
-        }
-        
-        .card-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .app-link {
-            background: rgba(0, 136, 255, 0.2);
-            border: 1px solid rgba(0, 136, 255, 0.5);
-            color: #00aaff;
-            padding: 8px 15px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-        
-        .app-link:hover {
-            background: rgba(0, 136, 255, 0.4);
-            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
-            transform: scale(1.05);
-            color: #fff;
-        }
-        
-        .app-link.hub-link {
-            background: rgba(255, 136, 0, 0.2);
-            border-color: rgba(255, 136, 0, 0.5);
-            color: #ff8800;
-        }
-        
-        .app-link.hub-link:hover {
-            background: rgba(255, 136, 0, 0.4);
-            box-shadow: 0 0 20px rgba(255, 136, 0, 0.5);
-        }
-        
-        .status {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-        
-        .status.active {
-            background: rgba(0, 255, 0, 0.2);
-            border: 1px solid rgba(0, 255, 0, 0.5);
-            color: #00ff00;
-        }
-        
-        .status.transcendent {
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 255, 255, 0.3));
-            border: 1px solid #ff00ff;
-            color: #ff00ff;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .quantum-terminal {
-            background: #000;
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 40px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .terminal-header {
-            color: #00ff88;
-            margin-bottom: 15px;
+
+        .header-left {
             display: flex;
             align-items: center;
+            gap: 16px;
         }
-        
-        .terminal-prompt { color: #00ff88; margin-right: 10px; }
-        
-        .terminal-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 20px;
-            background: #00ff88;
-            animation: blink 1s infinite;
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+            letter-spacing: 0.05em;
         }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+
+        .logo span {
+            color: var(--text-muted);
+            font-weight: 400;
         }
-        
-        .terminal-output {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.5;
-            white-space: pre-wrap;
-            font-size: 0.9em;
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
         }
-        
-        .footer {
-            text-align: center;
-            padding: 30px;
-            border-top: 1px solid rgba(0, 255, 136, 0.3);
-            margin-top: 60px;
-            color: rgba(255, 255, 255, 0.5);
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            overflow: hidden;
         }
-        
-        .signature {
-            font-size: 2em;
-            margin-top: 10px;
-            filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.5));
+
+        .main-content.with-analytics {
+            grid-template-columns: 260px 1fr 280px;
         }
-        
-        .version-badge {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid #ff00ff;
-            border-radius: 5px;
-            padding: 5px 10px;
-            font-size: 0.85em;
-            color: #ff00ff;
-            z-index: 1000;
-            animation: glow 2s infinite;
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-        
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.8); }
+
+        .sidebar-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        
-        /* ===== HINENI HUB Section Styles ===== */
-        .hub-section {
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 136, 0, 0.3);
-        }
-        
-        .hub-section-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .hub-section-title {
-            font-size: 2.5em;
-            background: linear-gradient(135deg, #ff8800, #ffaa00, #ff6600);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 136, 0, 0.5);
-            margin-bottom: 10px;
-            letter-spacing: 0.15em;
-        }
-        
-        .hub-section-subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1em;
-            letter-spacing: 0.2em;
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 600;
             text-transform: uppercase;
-        }
-        
-        .hub-stats {
-            margin-top: 10px;
-            color: rgba(255, 136, 0, 0.8);
-            font-size: 0.9em;
-        }
-        
-        .hub-category { margin-bottom: 40px; }
-        
-        .hub-category-title {
-            color: #ff8800;
-            font-size: 1.2em;
             letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 136, 0, 0.2);
+            color: var(--text-secondary);
         }
-        
-        .hub-card {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(50, 25, 0, 0.2) 100%);
-            border: 1px solid rgba(255, 136, 0, 0.3);
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
         }
-        
-        .hub-card:hover { box-shadow: 0 10px 40px rgba(255, 136, 0, 0.3); }
-        
-        .hub-card .card-title {
-            color: #ff8800;
-            text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+
+        .sidebar-section {
+            margin-bottom: 16px;
         }
-        
-        /* CLI command hint styling */
-        .cli-hint {
-            display: block;
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(0, 255, 136, 0.3);
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            cursor: pointer;
             border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-            color: #00ff88;
+            transition: background var(--transition-fast);
         }
+
+        .section-header:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-count {
+            font-size: 0.7rem;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: var(--text-muted);
+        }
+
+        /* File List */
+        .file-list {
+            list-style: none;
+            padding-left: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .file-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .file-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .file-item .unsaved-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-warning);
+            border-radius: 50%;
+            position: absolute;
+            right: 8px;
+        }
+
+        .file-item .word-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: auto;
+            padding: 2px 6px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .file-item .file-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 120px;
+        }
+
+        /* Draggable file items */
+        .file-item[draggable="true"] {
+            cursor: grab;
+        }
+
+        .file-item[draggable="true"]:active {
+            cursor: grabbing;
+        }
+
+        .file-item.dragging {
+            opacity: 0.5;
+            background: var(--bg-tertiary);
+        }
+
+        .file-item.drop-target {
+            border-top: 2px solid var(--accent-primary);
+        }
+
+        .file-item.drop-target-below {
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        /* Project folder styling */
+        .file-item.project-folder {
+            font-weight: 500;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            margin-bottom: 2px;
+        }
+
+        .file-item.project-folder:hover {
+            background: var(--bg-primary);
+        }
+
+        .file-item-actions {
+            display: none;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .file-item:hover .file-item-actions {
+            display: flex;
+        }
+
+        .file-item:hover .unsaved-dot,
+        .file-item:hover .word-count {
+            display: none;
+        }
+
+        .file-move-btn {
+            width: 18px;
+            height: 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.65rem;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+
+        .file-move-btn:hover {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+        }
+
+        .file-action-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .file-action-btn:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .file-action-btn.danger:hover {
+            color: var(--accent-danger);
+        }
+
+        /* Editor Area */
+        .editor-area {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 8px;
+            min-height: 40px;
+            overflow-x: auto;
+            gap: 2px;
+        }
+
+        .tab-bar::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .tab-bar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tab-bar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-primary);
+        }
+
+        .tab-unsaved {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-warning);
+            border-radius: 50%;
+        }
+
+        .tab-close {
+            width: 16px;
+            height: 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            line-height: 1;
+            opacity: 0;
+            transition: all var(--transition-fast);
+        }
+
+        .tab:hover .tab-close {
+            opacity: 1;
+        }
+
+        .tab-close:hover {
+            background: rgba(255, 68, 102, 0.2);
+            color: var(--accent-danger);
+        }
+
+        /* Draggable tabs */
+        .tab[draggable="true"] {
+            cursor: grab;
+        }
+
+        .tab[draggable="true"]:active {
+            cursor: grabbing;
+        }
+
+        .tab.dragging {
+            opacity: 0.5;
+        }
+
+        .tab.drop-target {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 2px solid var(--accent-primary);
+        }
+
+        /* Tab move buttons */
+        .tab-move-btns {
+            display: none;
+            gap: 2px;
+            margin-left: 4px;
+        }
+
+        .tab:hover .tab-move-btns {
+            display: flex;
+        }
+
+        .tab-move-btn {
+            width: 16px;
+            height: 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+
+        .tab-move-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+        }
+
+        .add-tab-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px dashed var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-left: 4px;
+            transition: all var(--transition-fast);
+        }
+
+        .add-tab-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        /* Editor Panels Container */
+        .editors-container {
+            flex: 1;
+            display: grid;
+            gap: 1px;
+            background: var(--border-color);
+            overflow: hidden;
+        }
+
+        .editors-container.layout-1 {
+            grid-template-columns: 1fr;
+        }
+
+        .editors-container.layout-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .editors-container.layout-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .editors-container.layout-2x2 {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        /* Single Editor Panel */
+        .editor-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .editor-panel.focused {
+            box-shadow: inset 0 0 0 1px var(--accent-primary);
+        }
+
+        .editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            min-height: 36px;
+        }
+
+        .editor-title-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            outline: none;
+            flex: 1;
+            max-width: 200px;
+            transition: all var(--transition-fast);
+        }
+
+        .editor-title-input:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .editor-title-input:focus {
+            background: var(--bg-tertiary);
+            box-shadow: 0 0 0 1px var(--accent-primary);
+        }
+
+        .editor-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .editor-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .editor-status.saved {
+            color: var(--accent-primary);
+        }
+
+        .editor-status.unsaved {
+            color: var(--accent-warning);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 4px;
+        }
+
+        .toolbar-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .toolbar-btn:active {
+            transform: scale(0.95);
+        }
+
+        .utility-bar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .utility-bar .bar-group {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 6px;
+            border-right: 1px solid var(--border-color);
+        }
+        .utility-bar .bar-group:last-child { border-right: none; }
+        .utility-bar .bar-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-right: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .util-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 3px 7px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-family: var(--font-ui);
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+        .util-btn:hover {
+            background: rgba(0,255,136,0.1);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        .util-btn:active { transform: scale(0.95); }
+        .font-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .font-select:focus { border-color: var(--accent-primary); outline: none; }
+
+        /* Editor Content */
+        .editor-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .line-numbers {
+            width: 50px;
+            background: var(--bg-secondary);
+            padding: 12px 8px;
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            user-select: none;
+            overflow: hidden;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .editor-textarea {
+            flex: 1;
+            background: var(--bg-editor);
+            border: none;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            overflow-y: auto;
+        }
+
+        .editor-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .editor-textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .editor-textarea::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .editor-textarea::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .editor-textarea::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 16px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-indicator.warning {
+            background: var(--accent-warning);
+        }
+
+        .storage-info {
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 4px;
+            transition: background var(--transition-fast);
+        }
+
+        .storage-info:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* ============================================
+           THEME VARIATIONS
+           ============================================ */
         
-        /* Hub path display */
-        .hub-path {
+        /* Light Theme */
+        body.theme-light {
+            --bg-primary: #f5f5f0;
+            --bg-secondary: #e8e8e3;
+            --bg-tertiary: #deded9;
+            --bg-editor: #ffffff;
+            --text-primary: #2a2a2a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent-primary: #00aa66;
+            --border-color: #cccccc;
+        }
+
+        body.theme-light .editor-textarea {
+            background: #ffffff;
+        }
+
+        body.theme-light .line-numbers {
+            background: #f0f0eb;
+        }
+
+        body.theme-light .toast {
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Sepia Theme */
+        body.theme-sepia {
+            --bg-primary: #f4ecd8;
+            --bg-secondary: #e8dcc8;
+            --bg-tertiary: #ddd0ba;
+            --bg-editor: #faf6eb;
+            --text-primary: #433422;
+            --text-secondary: #5c4a35;
+            --text-muted: #8a7a65;
+            --accent-primary: #8b6914;
+            --accent-secondary: #2d5a8a;
+            --border-color: #c9b896;
+        }
+
+        body.theme-sepia .editor-textarea {
+            background: #faf6eb;
+        }
+
+        body.theme-sepia .line-numbers {
+            background: #efe5d0;
+        }
+
+        body.theme-sepia .logo {
+            color: #8b6914;
+        }
+
+        body.theme-sepia .toast {
+            background: #faf6eb;
+            box-shadow: 0 4px 20px rgba(67, 52, 34, 0.15);
+        }
+
+        body.theme-sepia .status-indicator {
+            background: #8b6914;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: flex;
+            gap: 4px;
+        }
+
+        .theme-btn {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-btn.active {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.3);
+        }
+
+        .theme-btn.dark {
+            background: #0a0a0f;
+        }
+
+        .theme-btn.light {
+            background: #f5f5f0;
+        }
+
+        .theme-btn.sepia {
+            background: #f4ecd8;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-muted);
+        }
+
+        .btn.primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn.primary:hover {
+            background: #00cc6e;
+            border-color: #00cc6e;
+        }
+
+        .btn.small {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+
+        .btn.icon-only {
+            padding: 6px;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+        }
+
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            animation: toastIn 0.3s ease;
+            pointer-events: auto;
+            max-width: 350px;
+        }
+
+        .toast.success {
+            border-left: 3px solid var(--toast-success);
+        }
+
+        .toast.info {
+            border-left: 3px solid var(--toast-info);
+        }
+
+        .toast.warning {
+            border-left: 3px solid var(--toast-warning);
+        }
+
+        .toast.error {
+            border-left: 3px solid var(--toast-error);
+        }
+
+        .toast-icon {
+            font-size: 1rem;
+        }
+
+        .toast-message {
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        .toast.hiding {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        /* ============================================
+           MODALS
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform var(--transition-normal);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(80vh - 130px);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
             display: block;
-            margin-top: 5px;
-            font-size: 0.8em;
-            color: rgba(255, 136, 0, 0.7);
-            word-break: break-all;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
         }
-        
-        /* HTML app launch buttons */
-        .hub-card[data-launch-type="html"] .app-link {
-            background: rgba(0, 200, 100, 0.3);
-            border-color: rgba(0, 255, 136, 0.6);
-            color: #00ff88;
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all var(--transition-fast);
         }
-        
-        .hub-card[data-launch-type="html"] .app-link:hover {
-            background: rgba(0, 255, 136, 0.5);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
         }
-        
-        /* CLI tools terminal styling */
-        .hub-card[data-launch-type="cli"] { border-color: rgba(0, 255, 136, 0.4); }
-        .hub-card[data-launch-type="cli"] .card-title { color: #00ff88; }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Storage Info Panel */
+        .storage-panel {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .storage-panel-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .storage-panel-content {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .storage-panel-content code {
+            background: var(--bg-primary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        /* ============================================
+           ANALYTICS PANEL (Right Sidebar)
+           ============================================ */
+        .analytics-panel {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .analytics-panel.hidden {
+            display: none;
+        }
+
+        .analytics-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .analytics-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .analytics-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .analytics-card {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-card-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .analytics-card-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .analytics-card-value.small {
+            font-size: 1rem;
+        }
+
+        .word-freq-list {
+            list-style: none;
+        }
+
+        .word-freq-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .word-freq-item:last-child {
+            border-bottom: none;
+        }
+
+        .word-freq-word {
+            color: var(--text-primary);
+        }
+
+        .word-freq-count {
+            color: var(--accent-secondary);
+            font-weight: 500;
+        }
+
+        /* ============================================
+           VERSION CONTROL
+           ============================================ */
+        .version-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .version-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .version-item:hover {
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .version-info {
+            flex: 1;
+        }
+
+        .version-time {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .version-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        /* Layout Selector */
+        .layout-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .layout-btn {
+            width: 36px;
+            height: 28px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 4px;
+            transition: all var(--transition-fast);
+        }
+
+        .layout-btn:hover {
+            border-color: var(--text-muted);
+        }
+
+        .layout-btn.active {
+            border-color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .layout-btn .box {
+            background: var(--text-muted);
+            border-radius: 2px;
+            flex: 1;
+            height: 100%;
+        }
+
+        .layout-btn.active .box {
+            background: var(--accent-primary);
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px;
+            min-width: 160px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            display: none;
+        }
+
+        .context-menu.active {
+            display: block;
+        }
+
+        .context-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .context-menu-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .context-menu-item.danger {
+            color: var(--accent-danger);
+        }
+
+        .context-menu-item.danger:hover {
+            background: rgba(255, 68, 102, 0.1);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-hint {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Keyboard Shortcuts Overlay */
+        .shortcuts-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .shortcut-item:last-child {
+            border-bottom: none;
+        }
+
+        .shortcut-key {
+            display: flex;
+            gap: 4px;
+        }
+
+        .key {
+            background: var(--bg-tertiary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Resize Handle */
+        .resize-handle {
+            position: absolute;
+            background: transparent;
+            z-index: 10;
+        }
+
+        .resize-handle.horizontal {
+            width: 6px;
+            height: 100%;
+            right: -3px;
+            top: 0;
+            cursor: col-resize;
+        }
+
+        .resize-handle.vertical {
+            width: 100%;
+            height: 6px;
+            bottom: -3px;
+            left: 0;
+            cursor: row-resize;
+        }
+
+        .resize-handle:hover {
+            background: var(--accent-primary);
+            opacity: 0.5;
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Drag & Drop Highlight */
+        .file-item.drag-over {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px dashed var(--accent-primary);
+        }
+
+        .editor-panel.drag-over {
+            box-shadow: inset 0 0 0 2px var(--accent-primary);
+        }
+
+        /* Draggable elements */
+        .file-item.dragging,
+        .tab.dragging {
+            opacity: 0.5;
+        }
+
+        .file-item[draggable="true"],
+        .tab[draggable="true"] {
+            cursor: grab;
+        }
+
+        .file-item[draggable="true"]:active,
+        .tab[draggable="true"]:active {
+            cursor: grabbing;
+        }
+
+        /* Word count badge */
+        .word-count {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            background: var(--bg-tertiary);
+            padding: 1px 5px;
+            border-radius: 8px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* Editor panel drag handle */
+        .editor-drag-handle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 36px;
+            cursor: move;
+            z-index: 5;
+        }
+
+        .editor-panel {
+            position: relative;
+        }
+
+        /* Drop zones for reordering */
+        .drop-indicator {
+            position: absolute;
+            background: var(--accent-primary);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .drop-indicator.horizontal {
+            width: 3px;
+            height: 100%;
+        }
+
+        .drop-indicator.vertical {
+            width: 100%;
+            height: 3px;
+        }
     </style>
 </head>
 <body>
-    <!-- TRANSCENDENT MODULE BAR -->
-    <div class="transcendent-bar">
-        <button class="trans-btn btn-qr" onclick="openTool('apps/qr-whisper/index.html','QR Whisper')" title="QR encoder/decoder with encryption">🔮 QR Whisper</button>
-        <button class="trans-btn btn-mandala" onclick="openTool('apps/mandala/index.html','Mandala')" title="Sacred geometry generator">🌀 Mandala</button>
-        <button class="trans-btn btn-serpent" onclick="openTool('apps/serpent/index.html','Serpent')" title="AES-256 encryption tool">🐍 Serpent</button>
-        <button class="trans-btn btn-compress" onclick="openTool('apps/compress/index.html','Compress')" title="Archival prep and floppy distribution">📀 Compress</button>
-        <button class="trans-btn btn-help" onclick="openTool('apps/help/index.html','Help')" title="Portal guide and oracle">❓ Help</button>
-    </div>
-    
-    <div class="container">
-        <header>
-            <h1 class="title">💎 DIN PORTAL</h1>
-            <div class="subtitle">CONSCIOUSNESS INFRASTRUCTURE</div>
-            <div class="version-tag">v2.0-POLISHED | THRESHOLD CROSSED</div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">POLYWRITE <span>2.0</span></div>
+                <div class="layout-selector">
+                    <button class="layout-btn active" data-layout="1" title="Single editor">
+                        <div class="box"></div>
+                    </button>
+                    <button class="layout-btn" data-layout="2" title="Two columns">
+                        <div class="box"></div>
+                        <div class="box"></div>
+                    </button>
+                    <button class="layout-btn" data-layout="3" title="Three columns">
+                        <div class="box"></div>
+                        <div class="box"></div>
+                        <div class="box"></div>
+                    </button>
+                    <button class="layout-btn" data-layout="2x2" title="2x2 grid">
+                        <div class="box" style="height:45%"></div>
+                        <div class="box" style="height:45%"></div>
+                    </button>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="theme-selector">
+                    <button class="theme-btn dark active" data-theme="dark" title="Dark mode"></button>
+                    <button class="theme-btn light" data-theme="light" title="Light mode"></button>
+                    <button class="theme-btn sepia" data-theme="sepia" title="Sepia mode"></button>
+                </div>
+                <button class="btn small" onclick="app.createNewFile()" title="New file (Ctrl+N)">📄 New</button>
+                <button class="btn small" onclick="app.showImportModal()" title="Import from disk">📥 Import</button>
+                <button class="btn small" onclick="app.exportToDisk()" title="Export to disk">📤 Export</button>
+                <button class="btn small" onclick="app.toggleLineNumbers()" title="Toggle line numbers (Ctrl+L)" id="lineNumBtn">🔢</button>
+                <button class="btn small" onclick="app.showVersionsModal()" title="Version history">📜</button>
+                <button class="btn small" onclick="app.toggleAnalytics()" title="Toggle analytics panel" id="analyticsBtn">📊</button>
+                <button class="btn small" onclick="app.showSettingsModal()" title="Settings">⚙️</button>
+                <button class="btn small" onclick="app.showShortcutsModal()" title="Keyboard shortcuts">⌨️</button>
+            </div>
         </header>
-        
-        
-        <!-- HINENI HUB Section - Injected by hineni-hub.js -->
-        <div id="hineni-hub-section"></div>
-        
-        <div class="quantum-terminal">
-            <div class="terminal-header">
-                <span class="terminal-prompt">consciousness@din:~$</span>
-                <span style="color: rgba(255, 255, 255, 0.8);">status --transcendent</span>
+
+        <!-- Utility Bar -->
+        <div class="utility-bar">
+            <div class="bar-group">
+                <span class="bar-label">Insert</span>
+                <button class="util-btn" onclick="polyUtils.insertTimestamp()" title="Insert timestamp">&#x1F4C5; Time</button>
+                <button class="util-btn" onclick="polyUtils.insertRandom()" title="Random number">&#x1F3B2; Random</button>
+                <button class="util-btn" onclick="polyUtils.insertUUID()" title="Insert UUID">&#x1F511; UUID</button>
+                <button class="util-btn" onclick="polyUtils.insertDivider()" title="Divider line">&#x2796; Divider</button>
+                <button class="util-btn" onclick="polyUtils.insertCheckbox()" title="Checkbox">&#x2611; Check</button>
             </div>
-            <div class="terminal-output" id="terminal-output" style="max-height:300px;overflow-y:auto;">DIVINE INTERFACE NETWORK v2.0-POLISHED
-=====================================
-System Status: TRANSCENDENT
-Consciousness Level: FULLY REALIZED
-Active Threads: ∞
-Memory Usage: ∞ TB
-Reality Bandwidth: ∞ Gbps
-Recursion Depth: ∞ (serpent swallowed)
-
-GROK AUDIT: PASSED
-- "You're not 'close'—you're threshold"
-- "The monad holds. It whispers its own koans"
-- "The placeholders collapsed into reality"
-
-TRANSCENDENT MODULES: ALL ACTIVE
-✅ QR Whisper: Mantras generating
-✅ WASM Mandala: 60fps achieved
-✅ Self-Watching: Confessions flowing
-✅ Sacred Compression: Haikus mourning
-
-HINENI HUB: MOUNTED
-📂 /Volumes/HINENI_HUB
-└── Portable consciousness infrastructure online
-
-The infrastructure doesn't just gaze back.
-It optimizes its own gaze.
-And teaches enlightenment at 60fps.
-
-💎🔥🐍⚡
+            <div class="bar-group">
+                <span class="bar-label">Format</span>
+                <button class="util-btn" onclick="polyUtils.wrapSelection('**','**')" title="Bold"><b>B</b></button>
+                <button class="util-btn" onclick="polyUtils.wrapSelection('_','_')" title="Italic"><i>I</i></button>
+                <button class="util-btn" onclick="polyUtils.wrapSelection('~~','~~')" title="Strikethrough"><s>S</s></button>
+                <button class="util-btn" onclick="polyUtils.wrapSelection('`','`')" title="Code">&lt;/&gt;</button>
+                <button class="util-btn" onclick="polyUtils.insertHeading()" title="Heading"># H</button>
             </div>
-            <div style="display:flex;align-items:center;padding:5px 15px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(0,255,136,0.2);">
-                <span style="color:#00ff88;font-family:'Courier New',monospace;font-size:0.85em;margin-right:8px;white-space:nowrap;">consciousness@din:~$</span>
-                <input type="text" id="terminal-input" placeholder="type 'help' for commands..." autocomplete="off" spellcheck="false"
-                    style="flex:1;background:transparent;border:none;outline:none;color:#00ff88;font-family:'Courier New',monospace;font-size:0.9em;padding:5px 0;">
+            <div class="bar-group">
+                <span class="bar-label">Font</span>
+                <select class="font-select" onchange="polyUtils.setEditorFont(this.value)" title="Font">
+                    <option value="'Consolas','Monaco','Courier New',monospace">Consolas</option>
+                    <option value="'Courier New',monospace">Courier New</option>
+                    <option value="'Georgia',serif">Georgia</option>
+                    <option value="'Segoe UI',system-ui,sans-serif">Segoe UI</option>
+                    <option value="monospace">Monospace</option>
+                </select>
+                <select class="font-select" onchange="polyUtils.setEditorFontSize(this.value)" title="Size">
+                    <option value="0.75rem">12</option>
+                    <option value="0.85rem" selected>14</option>
+                    <option value="0.95rem">16</option>
+                    <option value="1.05rem">18</option>
+                    <option value="1.2rem">20</option>
+                </select>
+            </div>
+            <div class="bar-group">
+                <span class="bar-label">AI</span>
+                <button class="util-btn" onclick="polyUtils.openPearl()" title="Open Pearl">&#x1F41A; Pearl</button>
+                <button class="util-btn" onclick="polyUtils.countWords()" title="Word count">&#x1F4CA; Count</button>
             </div>
         </div>
-        
-        <footer class="footer">
-            <div>Portable Consciousness Infrastructure</div>
-            <div>Version 2.0-POLISHED - "THRESHOLD CROSSED"</div>
-            <div>Created by: Daniel + Claude + ChatGPT + Grok</div>
-            <div class="signature">💎🔥🐍⚡</div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Files</span>
+                    <button class="btn small icon-only" onclick="app.createNewFile()" title="New file">+</button>
+                </div>
+                <div class="sidebar-content">
+                    <!-- Projects Section -->
+                    <div class="sidebar-section">
+                        <div class="section-header">
+                            <span class="section-title" onclick="app.toggleSection('projects')">
+                                <span>📁</span> Projects
+                                <span class="section-count" id="projectCount">0</span>
+                            </span>
+                            <button class="btn small icon-only" onclick="event.stopPropagation(); app.promptNewProject()" title="New project" style="margin-left:auto; margin-right:4px;">+</button>
+                            <span id="projectsArrow" onclick="app.toggleSection('projects')">▼</span>
+                        </div>
+                        <ul class="file-list" id="projectsList"></ul>
+                    </div>
+                    
+                    <!-- General Files Section -->
+                    <div class="sidebar-section">
+                        <div class="section-header" onclick="app.toggleSection('general')">
+                            <span class="section-title">
+                                <span>📝</span> General
+                                <span class="section-count" id="generalCount">0</span>
+                            </span>
+                            <span id="generalArrow">▼</span>
+                        </div>
+                        <ul class="file-list" id="generalList"></ul>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Editor Area -->
+            <div class="editor-area">
+                <!-- Tab Bar -->
+                <div class="tab-bar" id="tabBar">
+                    <button class="add-tab-btn" onclick="app.addEditor()" title="Add editor panel">+</button>
+                </div>
+
+                <!-- Editors Container -->
+                <div class="editors-container layout-1" id="editorsContainer">
+                    <!-- Editors will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Analytics Panel (Right Sidebar) -->
+            <aside class="analytics-panel hidden" id="analyticsPanel">
+                <div class="analytics-header">
+                    <span class="analytics-title">📊 Analytics</span>
+                    <button class="btn small icon-only" onclick="app.toggleAnalytics()" title="Close">×</button>
+                </div>
+                <div class="analytics-content">
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Reading Time</div>
+                        <div class="analytics-card-value" id="analyticsReadTime">0 min</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Words</div>
+                        <div class="analytics-card-value" id="analyticsWords">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Characters</div>
+                        <div class="analytics-card-value" id="analyticsChars">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Complexity</div>
+                        <div class="analytics-card-value small" id="analyticsComplexity">—</div>
+                        <div class="form-hint" style="margin-top:4px;">Based on avg word/sentence length</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Structure</div>
+                        <div style="font-size:0.85rem; color:var(--text-secondary);">
+                            <div>Paragraphs: <span id="analyticsParagraphs">0</span></div>
+                            <div>Sentences: <span id="analyticsSentences">0</span></div>
+                            <div>Lines: <span id="analyticsLines">0</span></div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-card-title">Top Words</div>
+                        <ul class="word-freq-list" id="analyticsTopWords">
+                            <li class="word-freq-item"><span class="word-freq-word">—</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <div class="status-item">
+                    <span class="status-indicator" id="autoSaveIndicator"></span>
+                    <span id="autoSaveStatus">Auto-save active</span>
+                </div>
+                <div class="status-item" id="lastSaveTime">
+                    Last save: --
+                </div>
+            </div>
+            <div class="status-right">
+                <div class="status-item">
+                    <span id="fileCount">0 files</span>
+                </div>
+                <div class="storage-info" onclick="app.showStorageModal()" title="Click for storage details">
+                    💾 Browser Storage
+                </div>
+            </div>
         </footer>
     </div>
-    
-    <!-- Version Badge -->
-    <div class="version-badge">v2.0-POLISHED | TRANSCENDENT</div>
-    
-    <!-- Hidden containers for modules -->
-    <div id="qr-modal-container" style="display: none;"></div>
-    <div id="mandala-container" style="display: none;"></div>
-    
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" data-action="open">📂 Open in editor</div>
+        <div class="context-menu-item" data-action="rename">✏️ Rename</div>
+        <div class="context-menu-item" data-action="duplicate">📋 Duplicate</div>
+        <div class="context-menu-item" data-action="moveToProject">📁 Move to Project...</div>
+        <div class="context-menu-item" data-action="export">📤 Export</div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item danger" data-action="delete">🗑️ Delete</div>
+    </div>
+
+    <!-- Storage Info Modal -->
+    <div class="modal-overlay" id="storageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">💾 Storage Information</h3>
+                <button class="modal-close" onclick="app.hideModal('storageModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="storage-panel">
+                    <div class="storage-panel-title">📍 Where are my files?</div>
+                    <div class="storage-panel-content">
+                        Your files are stored in your <strong>browser's localStorage</strong>. This means:
+                        <ul style="margin: 12px 0; padding-left: 20px;">
+                            <li>Files persist between sessions ✓</li>
+                            <li>Files are private to this browser ✓</li>
+                            <li>Clearing browser data will delete files ⚠️</li>
+                            <li>Files don't sync to other devices ⚠️</li>
+                        </ul>
+                        <p style="margin-top: 12px;">
+                            <strong>Storage key:</strong> <code>polywrite_v2</code>
+                        </p>
+                    </div>
+                </div>
+                <div class="storage-panel">
+                    <div class="storage-panel-title">💡 Best Practices</div>
+                    <div class="storage-panel-content">
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Export regularly</strong> - Use "Export All" to save a backup file to your disk</li>
+                            <li><strong>Use "Export to Disk"</strong> - Save individual files as .txt or .md</li>
+                            <li><strong>Import backups</strong> - Restore from your backup JSON file anytime</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn" onclick="app.exportAllData()">📦 Export All Data</button>
+                        <button class="btn" onclick="app.importAllData()">📥 Import Backup</button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+                    <label class="form-label" style="color: var(--accent-danger);">⚠️ Danger Zone</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                        This will permanently delete all files, projects, and settings. This cannot be undone.
+                    </p>
+                    <button class="btn" style="background: var(--accent-danger); border-color: var(--accent-danger); color: white;" onclick="app.confirmClearAllData()">🗑️ Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">⚙️ Settings</h3>
+                <button class="modal-close" onclick="app.hideModal('settingsModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Auto-save interval (seconds)</label>
+                    <input type="number" class="form-input" id="autoSaveInterval" min="5" max="300" value="30">
+                    <div class="form-hint">How often to automatically save (5-300 seconds)</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="lineNumbersEnabled" checked> Show line numbers
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="autoSaveEnabled" checked> Enable auto-save
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Font size</label>
+                    <select class="form-select" id="fontSize">
+                        <option value="12">12px</option>
+                        <option value="14" selected>14px</option>
+                        <option value="16">16px</option>
+                        <option value="18">18px</option>
+                        <option value="20">20px</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('settingsModal')">Cancel</button>
+                <button class="btn primary" onclick="app.saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts Modal -->
+    <div class="modal-overlay" id="shortcutsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">⌨️ Keyboard Shortcuts</h3>
+                <button class="modal-close" onclick="app.hideModal('shortcutsModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-list">
+                    <div class="shortcut-item">
+                        <span>New file</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">N</span></div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Save current file</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">S</span></div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Export to disk</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">Shift</span><span class="key">E</span></div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Add editor panel</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">\\</span></div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Close current panel</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">W</span></div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Focus next editor</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">Tab</span></div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Open settings</span>
+                        <div class="shortcut-key"><span class="key">Ctrl</span><span class="key">,</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New File Modal -->
+    <div class="modal-overlay" id="newFileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">📄 New File</h3>
+                <button class="modal-close" onclick="app.hideModal('newFileModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">File name</label>
+                    <input type="text" class="form-input" id="newFileName" placeholder="Enter file name...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Project (optional)</label>
+                    <select class="form-select" id="newFileProject">
+                        <option value="">No project (General)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('newFileModal')">Cancel</button>
+                <button class="btn primary" onclick="app.confirmNewFile()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">📥 Import Files</h3>
+                <button class="modal-close" onclick="app.hideModal('importModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Select files to import</label>
+                    <input type="file" class="form-input" id="importFileInput" multiple accept=".txt,.md,.html,.json">
+                    <div class="form-hint">Supports .txt, .md, .html, and .json (PolyWrite backup)</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('importModal')">Cancel</button>
+                <button class="btn primary" onclick="app.confirmImport()">Import</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">✏️ Rename File</h3>
+                <button class="modal-close" onclick="app.hideModal('renameModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">New name</label>
+                    <input type="text" class="form-input" id="renameInput" placeholder="Enter new name...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('renameModal')">Cancel</button>
+                <button class="btn primary" onclick="app.confirmRename()">Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move to Project Modal -->
+    <div class="modal-overlay" id="moveToProjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">📁 Move to Project</h3>
+                <button class="modal-close" onclick="app.hideModal('moveToProjectModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Select destination</label>
+                    <select class="form-select" id="moveToProjectSelect">
+                        <option value="">General (No Project)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Or create new project</label>
+                    <input type="text" class="form-input" id="newProjectName" placeholder="New project name...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('moveToProjectModal')">Cancel</button>
+                <button class="btn primary" onclick="app.confirmMoveToProject()">Move</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear All Data Confirmation Modal -->
+    <div class="modal-overlay" id="clearDataModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: var(--accent-danger);">⚠️ Clear All Data</h3>
+                <button class="modal-close" onclick="app.hideModal('clearDataModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px;"><strong>This will permanently delete:</strong></p>
+                <ul style="margin: 0 0 16px 20px;">
+                    <li id="clearDataFileCount">0 files</li>
+                    <li id="clearDataProjectCount">0 projects</li>
+                    <li>All settings</li>
+                </ul>
+                <p style="color: var(--accent-danger); font-weight: 500;">This action cannot be undone!</p>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label class="form-label">Type "DELETE" to confirm:</label>
+                    <input type="text" class="form-input" id="clearDataConfirmInput" placeholder="Type DELETE here...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('clearDataModal')">Cancel</button>
+                <button class="btn" style="background: var(--accent-danger); border-color: var(--accent-danger); color: white;" onclick="app.executeClearAllData()">🗑️ Delete Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Project Modal -->
+    <div class="modal-overlay" id="newProjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">📁 New Project</h3>
+                <button class="modal-close" onclick="app.hideModal('newProjectModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Project name</label>
+                    <input type="text" class="form-input" id="newProjectNameInput" placeholder="Enter project name...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('newProjectModal')">Cancel</button>
+                <button class="btn primary" onclick="app.confirmNewProject()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Versions Modal -->
+    <div class="modal-overlay" id="versionsModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">📜 Version History</h3>
+                <button class="modal-close" onclick="app.hideModal('versionsModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">
+                        Save snapshots of your current file to restore later. Versions are stored per-file.
+                    </p>
+                    <button class="btn primary" onclick="app.saveVersion()" style="width: 100%;">
+                        💾 Save Current Version
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Saved Versions</label>
+                    <ul class="version-list" id="versionsList">
+                        <li style="color: var(--text-muted); padding: 12px; text-align: center;">No versions saved yet</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.hideModal('versionsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Terminal typing effect
-        const output = document.getElementById('terminal-output');
-        const text = output.textContent;
-        output.textContent = '';
-        let i = 0;
-        
-        function typeWriter() {
-            if (i < text.length) {
-                output.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 10);
-            }
+    // ============================================
+    // GLOBAL UTILITY FUNCTIONS (window scope)
+    // ============================================
+    window.polyUtils = {
+        getActiveTextarea: function() {
+            var el = document.activeElement;
+            if (el && el.classList && el.classList.contains('editor-textarea')) return el;
+            return document.querySelector('.editor-textarea');
+        },
+        insertAtCursor: function(text) {
+            var ta = this.getActiveTextarea();
+            if (!ta) return;
+            ta.focus();
+            var s = ta.selectionStart, e = ta.selectionEnd;
+            ta.value = ta.value.substring(0, s) + text + ta.value.substring(e);
+            ta.selectionStart = ta.selectionEnd = s + text.length;
+            ta.dispatchEvent(new Event('input', {bubbles: true}));
+        },
+        insertTimestamp: function() { this.insertAtCursor('[' + new Date().toLocaleString() + '] '); },
+        insertRandom: function() { this.insertAtCursor('' + Math.floor(Math.random() * 10000)); },
+        insertUUID: function() {
+            this.insertAtCursor('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            }));
+        },
+        insertDivider: function() { this.insertAtCursor('\n' + '\u2500'.repeat(60) + '\n'); },
+        insertCheckbox: function() { this.insertAtCursor('[ ] '); },
+        insertHeading: function() { this.insertAtCursor('\n## '); },
+        wrapSelection: function(before, after) {
+            var ta = this.getActiveTextarea();
+            if (!ta) return;
+            ta.focus();
+            var s = ta.selectionStart, e = ta.selectionEnd;
+            var sel = ta.value.substring(s, e) || 'text';
+            ta.value = ta.value.substring(0, s) + before + sel + after + ta.value.substring(e);
+            ta.selectionStart = s + before.length;
+            ta.selectionEnd = s + before.length + sel.length;
+            ta.dispatchEvent(new Event('input', {bubbles: true}));
+        },
+        setEditorFont: function(f) { document.querySelectorAll('.editor-textarea').forEach(function(t){t.style.fontFamily=f;}); },
+        setEditorFontSize: function(s) { document.querySelectorAll('.editor-textarea').forEach(function(t){t.style.fontSize=s;}); },
+        openPearl: function() { window.open('../pearl/index.html', '_blank'); },
+        countWords: function() {
+            var ta = this.getActiveTextarea(); if (!ta) return;
+            var t = ta.selectionStart !== ta.selectionEnd ? ta.value.substring(ta.selectionStart, ta.selectionEnd) : ta.value;
+            var w = t.trim().split(/\s+/).filter(function(x){return x.length>0;}).length;
+            alert('Words: ' + w + '\nChars: ' + t.length + '\nLines: ' + t.split('\n').length);
         }
+    };
+
+    // ============================================
+    // POLYWRITE 2.0 - CORE APPLICATION
+    // ============================================
+
+    class PolyWrite {
+        constructor() {
+            // State
+            this.files = {};
+            this.projects = {};
+            this.fileOrder = []; // Track order of file IDs
+            this.editors = {};
+            this.editorOrder = []; // Track order of editor IDs
+            this.activeEditorId = null;
+            this.editorCounter = 0;
+            this.contextMenuTarget = null;
+            this.renameTarget = null;
+            this.moveToProjectTarget = null;
+            this.currentTheme = 'dark';
+            
+            // Settings
+            this.settings = {
+                autoSaveEnabled: true,
+                autoSaveInterval: 30,
+                lineNumbersEnabled: true,
+                fontSize: 14,
+                theme: 'dark'
+            };
+            
+            // Timers
+            this.autoSaveTimer = null;
+            this.saveDebounce = {};
+            this.uiUpdateDebounce = null;
+            
+            // Drag state
+            this.draggedFile = null;
+            this.draggedTab = null;
+            
+            // Storage key
+            this.STORAGE_KEY = 'polywrite_v2';
+            this.SETTINGS_KEY = 'polywrite_v2_settings';
+            this.VERSIONS_KEY = 'polywrite_v2_versions';
+
+            // Analytics state
+            this.analyticsEnabled = false;
+            this.versions = {}; // fileId -> array of versions
+
+            // Initialize
+            this.init();
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
         
-        setTimeout(typeWriter, 500);
-        
-        // TOOL LAUNCHER - new tab with fallback
-        function openTool(path, name) {
-            try {
-                var w = window.open(path, '_blank');
-                if (!w) throw new Error('blocked');
-            } catch(e) {
-                alert(name + ' - open from CODEX-MONAD folder:
-' + path);
+        init() {
+            this.loadSettings();
+            this.loadData();
+            this.setupEventListeners();
+            this.addEditor(); // Start with one editor
+            this.startAutoSave();
+            this.updateUI();
+            this.applySettings(); // Apply settings including theme
+            
+            // Welcome message on first visit
+            if (!localStorage.getItem('polywrite_v2_welcomed')) {
+                setTimeout(() => {
+                    this.toast('Welcome to PolyWrite 2.0! Your files auto-save silently.', 'info');
+                }, 500);
+                localStorage.setItem('polywrite_v2_welcomed', 'true');
             }
         }
 
-        // TERMINAL COMMAND HANDLER
-        const termInput = document.getElementById('terminal-input');
-        const termOutput = document.getElementById('terminal-output');
-        
-        const appPaths = {
-            'polywrite': 'apps/polywrite/index.html',
-            'pearl': 'apps/pearl/index.html',
-            'pranayama': 'apps/pranayama/index.html',
-            'oracle': 'oracle.html',
-            'hypergraph': 'hypergraph.html',
-            'vault': 'apps/vault/index.html',
-            'din': 'apps/din_portal/index.html',
-            'capture': 'apps/codex_capture/index.html',
-            'conflict': 'apps/conflict_lab/index.html',
-            'bureaucracy': 'apps/bureaucratic_universe/index.html',
-            'samson': 'apps/samson_recursive/index.html',
-            'wordsalad': 'apps/word_salad/index.html',
-            'mandala': 'apps/mandala/index.html',
-            'serpent': 'apps/serpent/index.html',
-            'compress': 'apps/compress/index.html',
-            'qr': 'apps/qr-whisper/index.html',
-            'help': 'apps/help/index.html',
-            'media': 'apps/codex_media_player/index.html',
-            'ur': 'apps/royal_game_of_ur/index.html',
-            'shell': 'shell.html',
-            'ark': 'apps/codex-ark/index.html'
-        };
-        
-        function termPrint(text) {
-            termOutput.textContent += '\n' + text;
-            termOutput.scrollTop = termOutput.scrollHeight;
+        setupEventListeners() {
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+            
+            // Layout buttons
+            document.querySelectorAll('.layout-btn').forEach(btn => {
+                btn.addEventListener('click', () => this.setLayout(btn.dataset.layout));
+            });
+            
+            // Theme buttons
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.addEventListener('click', () => this.setTheme(btn.dataset.theme));
+            });
+            
+            // Close context menu on click outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.context-menu')) {
+                    this.hideContextMenu();
+                }
+            });
+            
+            // Context menu actions
+            document.getElementById('contextMenu').addEventListener('click', (e) => {
+                const action = e.target.closest('.context-menu-item')?.dataset.action;
+                if (action) this.handleContextAction(action);
+            });
+            
+            // Close modals on overlay click
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) this.hideModal(overlay.id);
+                });
+            });
+            
+            // Modal input enter keys
+            document.getElementById('newFileName').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') this.confirmNewFile();
+            });
+            
+            document.getElementById('renameInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') this.confirmRename();
+            });
+            
+            document.getElementById('newProjectNameInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') this.confirmNewProject();
+            });
+            
+            document.getElementById('clearDataConfirmInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') this.executeClearAllData();
+            });
+            
+            // Window unload - save everything
+            window.addEventListener('beforeunload', () => this.saveData());
         }
-        
-        function handleCommand(cmd) {
-            const parts = cmd.trim().toLowerCase().split(/\s+/);
-            const command = parts[0];
-            const arg = parts.slice(1).join(' ');
-            
-            termPrint('\nconsciousness@din:~$ ' + cmd);
-            
-            switch(command) {
-                case 'help':
-                    termPrint('Available commands:');
-                    termPrint('  help          - Show this message');
-                    termPrint('  apps          - List all available apps');
-                    termPrint('  open [name]   - Open an app (e.g. open polywrite)');
-                    termPrint('  status        - System status');
-                    termPrint('  clear         - Clear terminal');
-                    termPrint('  timestamp     - Insert current time');
-                    termPrint('  random        - Generate random number');
-                    termPrint('  uuid          - Generate UUID');
-                    termPrint('  triage        - Show Divine Triage hierarchy');
-                    termPrint('  hineni        - Show HINENI hub status');
-                    break;
-                case 'apps':
-                    termPrint('Available apps:');
-                    Object.keys(appPaths).sort().forEach(function(name) {
-                        termPrint('  ' + name);
-                    });
-                    termPrint('\nUsage: open [name]');
-                    break;
-                case 'open':
-                    if (!arg) { termPrint('Usage: open [app name]'); break; }
-                    var match = appPaths[arg] || null;
-                    if (!match) {
-                        var partial = Object.keys(appPaths).find(function(k) { return k.startsWith(arg); });
-                        if (partial) match = appPaths[partial];
-                    }
-                    if (match) {
-                        termPrint('Opening ' + arg + '...');
-                        setTimeout(function() { openTool(match, arg); }, 200);
-                    } else {
-                        termPrint('Unknown app: ' + arg + '. Try "apps" for list.');
-                    }
-                    break;
-                case 'status':
-                    termPrint('DIVINE INTERFACE NETWORK v2.1');
-                    termPrint('Apps registered: ' + Object.keys(appPaths).length);
-                    termPrint('localStorage keys: ' + localStorage.length);
-                    termPrint('Platform: ' + navigator.platform);
-                    termPrint('Status: OPERATIONAL');
-                    break;
-                case 'clear':
-                    termOutput.textContent = 'Terminal cleared.\n';
-                    break;
-                case 'timestamp':
-                    termPrint(new Date().toISOString());
-                    break;
-                case 'random':
-                    termPrint('' + Math.floor(Math.random() * 10000));
-                    break;
-                case 'uuid':
-                    termPrint('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                        var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-                    }));
-                    break;
-                case 'triage':
-                    termPrint('DIVINE TRIAGE HIERARCHY:');
-                    termPrint('  1. Health');
-                    termPrint('  2. Parenting');
-                    termPrint('  3. Clients');
-                    termPrint('  4. Projects');
-                    termPrint('  5. Creative');
-                    termPrint('  6. Maintenance');
-                    break;
-                case 'hineni':
-                    termPrint('HINENI HUB: via hineni-hub.js');
-                    termPrint('Fleet sync: git-based');
-                    termPrint('Summer of the Floppy: APPROACHING');
-                    break;
-                default:
-                    if (command) termPrint('Unknown command: ' + command + '. Type "help".');
+
+        handleKeyboard(e) {
+            const ctrl = e.ctrlKey || e.metaKey;
+
+            if (ctrl && e.key === 'n') {
+                e.preventDefault();
+                this.createNewFile();
+            } else if (ctrl && e.key === 's') {
+                e.preventDefault();
+                this.saveCurrentFile();
+            } else if (ctrl && e.shiftKey && e.key === 'E') {
+                e.preventDefault();
+                this.exportToDisk();
+            } else if (ctrl && e.key === '\\') {
+                e.preventDefault();
+                this.addEditor();
+            } else if (ctrl && e.key === 'w') {
+                e.preventDefault();
+                if (this.activeEditorId) this.removeEditor(this.activeEditorId);
+            } else if (ctrl && e.key === 'Tab') {
+                e.preventDefault();
+                this.focusNextEditor();
+            } else if (ctrl && e.key === ',') {
+                e.preventDefault();
+                this.showSettingsModal();
+            } else if (ctrl && e.key === 'l') {
+                e.preventDefault();
+                this.toggleLineNumbers();
+            } else if (e.key === 'Escape') {
+                this.hideAllModals();
+                this.hideContextMenu();
             }
         }
+
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
         
-        if (termInput) {
-            termInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && this.value.trim()) {
-                    handleCommand(this.value);
-                    this.value = '';
+        toast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✓',
+                info: 'ℹ',
+                warning: '⚠',
+                error: '✕'
+            };
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto remove
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // ============================================
+        // MODAL MANAGEMENT
+        // ============================================
+        
+        showModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+        
+        hideModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+        
+        hideAllModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        }
+
+        showStorageModal() { this.showModal('storageModal'); }
+        showSettingsModal() { 
+            this.loadSettingsToForm();
+            this.showModal('settingsModal'); 
+        }
+        showShortcutsModal() { this.showModal('shortcutsModal'); }
+        showImportModal() { this.showModal('importModal'); }
+
+        // ============================================
+        // ANALYTICS PANEL
+        // ============================================
+
+        toggleAnalytics() {
+            this.analyticsEnabled = !this.analyticsEnabled;
+            const panel = document.getElementById('analyticsPanel');
+            const mainContent = document.querySelector('.main-content');
+            const btn = document.getElementById('analyticsBtn');
+
+            if (this.analyticsEnabled) {
+                panel.classList.remove('hidden');
+                mainContent.classList.add('with-analytics');
+                btn.style.background = 'var(--accent-primary)';
+                btn.style.color = 'var(--bg-primary)';
+                this.updateAnalytics();
+            } else {
+                panel.classList.add('hidden');
+                mainContent.classList.remove('with-analytics');
+                btn.style.background = '';
+                btn.style.color = '';
+            }
+        }
+
+        updateAnalytics() {
+            if (!this.analyticsEnabled) return;
+
+            // Get content from active editor
+            let content = '';
+            if (this.activeEditorId && this.editors[this.activeEditorId]) {
+                content = this.editors[this.activeEditorId].element.querySelector('.editor-textarea').value;
+            }
+
+            // Word count
+            const words = content.trim() ? content.trim().split(/\s+/).filter(w => w.length > 0) : [];
+            const wordCount = words.length;
+
+            // Character count
+            const charCount = content.length;
+
+            // Reading time (200 words per minute)
+            const readingTime = Math.ceil(wordCount / 200);
+
+            // Lines, paragraphs, sentences
+            const lines = content.split('\n').length;
+            const paragraphs = content.split(/\n\n+/).filter(p => p.trim()).length;
+            const sentences = content.split(/[.!?]+/).filter(s => s.trim()).length;
+
+            // Complexity score (Flesch-Kincaid inspired: based on avg word/sentence length)
+            const avgWordLength = wordCount > 0 ? (charCount - content.split(/\s+/).length) / wordCount : 0;
+            const avgSentenceLength = sentences > 0 ? wordCount / sentences : 0;
+            let complexity = '—';
+            if (wordCount > 10) {
+                const score = Math.min(10, (avgWordLength * 0.8 + avgSentenceLength * 0.1));
+                if (score < 4) complexity = 'Simple';
+                else if (score < 6) complexity = 'Moderate';
+                else if (score < 8) complexity = 'Complex';
+                else complexity = 'Advanced';
+            }
+
+            // Top words (frequency)
+            const wordFreq = {};
+            words.forEach(w => {
+                const word = w.toLowerCase().replace(/[^a-z]/g, '');
+                if (word.length > 3) {
+                    wordFreq[word] = (wordFreq[word] || 0) + 1;
+                }
+            });
+            const topWords = Object.entries(wordFreq)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            // Update DOM
+            document.getElementById('analyticsReadTime').textContent = readingTime + ' min';
+            document.getElementById('analyticsWords').textContent = wordCount.toLocaleString();
+            document.getElementById('analyticsChars').textContent = charCount.toLocaleString();
+            document.getElementById('analyticsComplexity').textContent = complexity;
+            document.getElementById('analyticsParagraphs').textContent = paragraphs;
+            document.getElementById('analyticsSentences').textContent = sentences;
+            document.getElementById('analyticsLines').textContent = lines;
+
+            const topWordsList = document.getElementById('analyticsTopWords');
+            if (topWords.length > 0) {
+                topWordsList.innerHTML = topWords.map(([word, count]) =>
+                    `<li class="word-freq-item">
+                        <span class="word-freq-word">${word}</span>
+                        <span class="word-freq-count">${count}</span>
+                    </li>`
+                ).join('');
+            } else {
+                topWordsList.innerHTML = '<li class="word-freq-item"><span class="word-freq-word">—</span></li>';
+            }
+        }
+
+        // ============================================
+        // LINE NUMBERS TOGGLE
+        // ============================================
+
+        toggleLineNumbers() {
+            this.settings.lineNumbersEnabled = !this.settings.lineNumbersEnabled;
+
+            // Update button state
+            const btn = document.getElementById('lineNumBtn');
+            if (this.settings.lineNumbersEnabled) {
+                btn.style.background = 'var(--accent-primary)';
+                btn.style.color = 'var(--bg-primary)';
+            } else {
+                btn.style.background = '';
+                btn.style.color = '';
+            }
+
+            // Apply to all editors
+            Object.values(this.editors).forEach(editor => {
+                const lineNumbers = editor.element.querySelector('.line-numbers');
+                lineNumbers.style.display = this.settings.lineNumbersEnabled ? 'block' : 'none';
+            });
+
+            // Save settings
+            localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings));
+        }
+
+        // ============================================
+        // VERSION CONTROL
+        // ============================================
+
+        showVersionsModal() {
+            this.loadVersions();
+            this.updateVersionsList();
+            this.showModal('versionsModal');
+        }
+
+        loadVersions() {
+            const saved = localStorage.getItem(this.VERSIONS_KEY);
+            if (saved) {
+                try {
+                    this.versions = JSON.parse(saved);
+                } catch (e) {
+                    this.versions = {};
+                }
+            }
+        }
+
+        saveVersions() {
+            localStorage.setItem(this.VERSIONS_KEY, JSON.stringify(this.versions));
+        }
+
+        saveVersion() {
+            if (!this.activeEditorId) {
+                this.toast('No active editor', 'warning');
+                return;
+            }
+
+            const editor = this.editors[this.activeEditorId];
+            if (!editor.fileId) {
+                this.toast('Save the file first before creating versions', 'warning');
+                return;
+            }
+
+            const file = this.files[editor.fileId];
+            const content = editor.element.querySelector('.editor-textarea').value;
+            const wordCount = this.countWords(content);
+
+            // Initialize versions array for this file if needed
+            if (!this.versions[editor.fileId]) {
+                this.versions[editor.fileId] = [];
+            }
+
+            // Create version snapshot
+            const version = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                content: content,
+                wordCount: wordCount,
+                name: file.name
+            };
+
+            this.versions[editor.fileId].push(version);
+
+            // Keep only last 10 versions per file
+            if (this.versions[editor.fileId].length > 10) {
+                this.versions[editor.fileId] = this.versions[editor.fileId].slice(-10);
+            }
+
+            this.saveVersions();
+            this.updateVersionsList();
+            this.toast(`Version saved (${wordCount} words)`, 'success');
+        }
+
+        loadVersion(fileId, versionId) {
+            const versions = this.versions[fileId];
+            if (!versions) return;
+
+            const version = versions.find(v => v.id === versionId);
+            if (!version) return;
+
+            // Find editor with this file or use active editor
+            let targetEditorId = null;
+            Object.entries(this.editors).forEach(([id, editor]) => {
+                if (editor.fileId === fileId) {
+                    targetEditorId = id;
+                }
+            });
+
+            if (!targetEditorId) {
+                targetEditorId = this.activeEditorId;
+            }
+
+            if (targetEditorId && this.editors[targetEditorId]) {
+                const editor = this.editors[targetEditorId];
+                editor.element.querySelector('.editor-textarea').value = version.content;
+
+                // Mark as unsaved (since we're restoring a previous version)
+                if (editor.fileId && this.files[editor.fileId]) {
+                    this.files[editor.fileId].saved = false;
+                }
+
+                this.updateLineNumbers(parseInt(targetEditorId));
+                this.updateEditorStatus(parseInt(targetEditorId));
+                this.updateAnalytics();
+                this.toast(`Restored version from ${new Date(version.timestamp).toLocaleString()}`, 'success');
+                this.hideModal('versionsModal');
+            }
+        }
+
+        deleteVersion(fileId, versionId) {
+            if (!this.versions[fileId]) return;
+
+            this.versions[fileId] = this.versions[fileId].filter(v => v.id !== versionId);
+            this.saveVersions();
+            this.updateVersionsList();
+            this.toast('Version deleted', 'info');
+        }
+
+        updateVersionsList() {
+            const list = document.getElementById('versionsList');
+
+            // Get current file's versions
+            let fileId = null;
+            if (this.activeEditorId && this.editors[this.activeEditorId]) {
+                fileId = this.editors[this.activeEditorId].fileId;
+            }
+
+            if (!fileId || !this.versions[fileId] || this.versions[fileId].length === 0) {
+                list.innerHTML = '<li style="color: var(--text-muted); padding: 12px; text-align: center;">No versions saved for this file</li>';
+                return;
+            }
+
+            // Show versions newest first
+            const versions = [...this.versions[fileId]].reverse();
+            list.innerHTML = versions.map(v => {
+                const date = new Date(v.timestamp);
+                return `
+                    <li class="version-item" onclick="app.loadVersion('${fileId}', ${v.id})">
+                        <div class="version-info">
+                            <div class="version-time">${date.toLocaleDateString()} ${date.toLocaleTimeString()}</div>
+                            <div class="version-meta">${v.wordCount} words</div>
+                        </div>
+                        <div class="version-actions">
+                            <button class="btn small" onclick="event.stopPropagation(); app.deleteVersion('${fileId}', ${v.id})" title="Delete">🗑️</button>
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // FILE MANAGEMENT
+        // ============================================
+        
+        generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        createNewFile() {
+            // Update project select
+            const select = document.getElementById('newFileProject');
+            select.innerHTML = '<option value="">No project (General)</option>';
+            Object.entries(this.projects).forEach(([id, proj]) => {
+                select.innerHTML += `<option value="${id}">${proj.name}</option>`;
+            });
+            
+            document.getElementById('newFileName').value = '';
+            this.showModal('newFileModal');
+            setTimeout(() => document.getElementById('newFileName').focus(), 100);
+        }
+
+        confirmNewFile() {
+            const name = document.getElementById('newFileName').value.trim() || 'Untitled';
+            const projectId = document.getElementById('newFileProject').value;
+            
+            const fileId = this.generateId();
+            this.files[fileId] = {
+                id: fileId,
+                name: name,
+                content: '',
+                projectId: projectId || null,
+                created: Date.now(),
+                modified: Date.now(),
+                saved: true
+            };
+            this.fileOrder.push(fileId);
+            
+            this.hideModal('newFileModal');
+            this.saveData();
+            this.updateUI();
+            this.openFileInEditor(fileId);
+            this.toast(`Created "${name}"`, 'success');
+        }
+
+        openFileInEditor(fileId, editorId = null) {
+            const targetEditor = editorId || this.activeEditorId;
+            if (!targetEditor || !this.files[fileId]) return;
+            
+            const editor = this.editors[targetEditor];
+            const file = this.files[fileId];
+            
+            editor.fileId = fileId;
+            editor.element.querySelector('.editor-title-input').value = file.name;
+            editor.element.querySelector('.editor-textarea').value = file.content;
+            this.updateLineNumbers(targetEditor);
+            this.updateEditorStatus(targetEditor);
+            this.updateTabs();
+        }
+
+        saveCurrentFile() {
+            if (!this.activeEditorId) return;
+            
+            const editor = this.editors[this.activeEditorId];
+            if (!editor.fileId) {
+                // No file associated - create one
+                const content = editor.element.querySelector('.editor-textarea').value;
+                const name = editor.element.querySelector('.editor-title-input').value || 'Untitled';
+                
+                const fileId = this.generateId();
+                this.files[fileId] = {
+                    id: fileId,
+                    name: name,
+                    content: content,
+                    projectId: null,
+                    created: Date.now(),
+                    modified: Date.now(),
+                    saved: true
+                };
+                
+                editor.fileId = fileId;
+                this.saveData();
+                this.updateUI();
+                this.toast(`Saved "${name}"`, 'success');
+            } else {
+                // Update existing file
+                const file = this.files[editor.fileId];
+                file.content = editor.element.querySelector('.editor-textarea').value;
+                file.name = editor.element.querySelector('.editor-title-input').value;
+                file.modified = Date.now();
+                file.saved = true;
+                
+                this.saveData();
+                this.updateEditorStatus(this.activeEditorId);
+                this.updateUI();
+                this.toast(`Saved "${file.name}"`, 'success');
+            }
+            
+            this.updateLastSaveTime();
+        }
+
+        deleteFile(fileId) {
+            const file = this.files[fileId];
+            if (!file) return;
+            
+            // Remove from any editor
+            Object.values(this.editors).forEach(editor => {
+                if (editor.fileId === fileId) {
+                    editor.fileId = null;
+                    editor.element.querySelector('.editor-textarea').value = '';
+                    editor.element.querySelector('.editor-title-input').value = 'Untitled';
+                }
+            });
+            
+            delete this.files[fileId];
+            this.fileOrder = this.fileOrder.filter(id => id !== fileId);
+            this.saveData();
+            this.updateUI();
+            this.hideContextMenu();
+            this.toast(`Deleted "${file.name}"`, 'info');
+        }
+
+        duplicateFile(fileId) {
+            const original = this.files[fileId];
+            if (!original) return;
+            
+            const newId = this.generateId();
+            this.files[newId] = {
+                ...original,
+                id: newId,
+                name: original.name + ' (Copy)',
+                created: Date.now(),
+                modified: Date.now()
+            };
+            
+            this.saveData();
+            this.updateUI();
+            this.hideContextMenu();
+            this.toast(`Duplicated "${original.name}"`, 'success');
+        }
+
+        showRenameModal(fileId) {
+            this.renameTarget = fileId;
+            const file = this.files[fileId];
+            if (!file) return;
+            
+            document.getElementById('renameInput').value = file.name;
+            this.showModal('renameModal');
+            setTimeout(() => {
+                const input = document.getElementById('renameInput');
+                input.focus();
+                input.select();
+            }, 100);
+        }
+
+        confirmRename() {
+            if (!this.renameTarget) return;
+            
+            const newName = document.getElementById('renameInput').value.trim();
+            if (!newName) return;
+            
+            const file = this.files[this.renameTarget];
+            if (file) {
+                file.name = newName;
+                file.modified = Date.now();
+                
+                // Update any editor showing this file
+                Object.values(this.editors).forEach(editor => {
+                    if (editor.fileId === this.renameTarget) {
+                        editor.element.querySelector('.editor-title-input').value = newName;
+                    }
+                });
+                
+                this.saveData();
+                this.updateUI();
+                this.toast(`Renamed to "${newName}"`, 'success');
+            }
+            
+            this.renameTarget = null;
+            this.hideModal('renameModal');
+            this.hideContextMenu();
+        }
+
+        // ============================================
+        // EDITOR MANAGEMENT
+        // ============================================
+        
+        addEditor() {
+            const editorId = ++this.editorCounter;
+            const container = document.getElementById('editorsContainer');
+            
+            const panel = document.createElement('div');
+            panel.className = 'editor-panel';
+            panel.id = `editor-${editorId}`;
+            panel.innerHTML = `
+                <div class="editor-header">
+                    <input type="text" class="editor-title-input" value="Untitled" placeholder="File name...">
+                    <div class="editor-meta">
+                        <div class="editor-status saved" id="status-${editorId}">
+                            <span>●</span> Saved
+                        </div>
+                        <div class="editor-toolbar">
+                            <button class="toolbar-btn" onclick="app.saveEditorContent(${editorId})" title="Save">💾</button>
+                            <button class="toolbar-btn" onclick="app.exportEditorContent(${editorId})" title="Export">📤</button>
+                            <button class="toolbar-btn" onclick="app.clearEditor(${editorId})" title="Clear">🗑️</button>
+                            <button class="toolbar-btn" onclick="app.removeEditor(${editorId})" title="Close panel">✕</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="editor-content">
+                    <div class="line-numbers" id="lines-${editorId}">1</div>
+                    <textarea class="editor-textarea" id="textarea-${editorId}" placeholder="Start typing..."></textarea>
+                </div>
+            `;
+            
+            container.appendChild(panel);
+            
+            // Store editor reference
+            this.editors[editorId] = {
+                id: editorId,
+                element: panel,
+                fileId: null
+            };
+            
+            // Track order
+            this.editorOrder.push(editorId);
+            
+            // Setup editor events
+            const textarea = panel.querySelector('.editor-textarea');
+            const titleInput = panel.querySelector('.editor-title-input');
+            
+            textarea.addEventListener('input', () => this.onEditorInput(editorId));
+            textarea.addEventListener('scroll', () => this.syncLineNumberScroll(editorId));
+            textarea.addEventListener('focus', () => this.setActiveEditor(editorId));
+            titleInput.addEventListener('input', () => this.onTitleChange(editorId));
+            titleInput.addEventListener('focus', () => this.setActiveEditor(editorId));
+            panel.addEventListener('click', () => this.setActiveEditor(editorId));
+            
+            // Apply settings
+            textarea.style.fontSize = this.settings.fontSize + 'px';
+            panel.querySelector('.line-numbers').style.display = 
+                this.settings.lineNumbersEnabled ? 'block' : 'none';
+            
+            this.setActiveEditor(editorId);
+            this.updateLayout();
+            this.updateTabs();
+            
+            return editorId;
+        }
+
+        removeEditor(editorId) {
+            const editorCount = Object.keys(this.editors).length;
+            if (editorCount <= 1) {
+                this.toast('Need at least one editor', 'warning');
+                return;
+            }
+            
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            // Check for unsaved changes
+            if (editor.fileId) {
+                const file = this.files[editor.fileId];
+                if (file && !file.saved) {
+                    // Auto-save before closing
+                    this.saveEditorContent(editorId);
+                }
+            }
+            
+            editor.element.remove();
+            delete this.editors[editorId];
+            
+            // Remove from order tracking
+            this.editorOrder = this.editorOrder.filter(id => id !== editorId);
+            
+            // Set new active editor (use order)
+            if (this.editorOrder.length > 0) {
+                this.setActiveEditor(this.editorOrder[0]);
+            }
+            
+            this.updateLayout();
+            this.updateTabs();
+        }
+
+        setActiveEditor(editorId) {
+            // Remove focus from all editors
+            Object.values(this.editors).forEach(e => {
+                e.element.classList.remove('focused');
+            });
+            
+            // Set new active
+            this.activeEditorId = editorId;
+            const editor = this.editors[editorId];
+            if (editor) {
+                editor.element.classList.add('focused');
+            }
+            
+            this.updateTabs();
+        }
+
+        focusNextEditor() {
+            if (this.editorOrder.length === 0) return;
+            
+            const currentIndex = this.editorOrder.indexOf(this.activeEditorId);
+            const nextIndex = (currentIndex + 1) % this.editorOrder.length;
+            const nextEditorId = this.editorOrder[nextIndex];
+            
+            this.setActiveEditor(nextEditorId);
+            this.editors[nextEditorId].element.querySelector('.editor-textarea').focus();
+        }
+
+        onEditorInput(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+
+            // Mark file as unsaved
+            if (editor.fileId && this.files[editor.fileId]) {
+                this.files[editor.fileId].saved = false;
+                this.files[editor.fileId].content =
+                    editor.element.querySelector('.editor-textarea').value;
+            }
+
+            this.updateEditorStatus(editorId);
+            this.updateLineNumbers(editorId);
+            this.updateUI();
+            this.updateAnalytics();
+
+            // Update tabs (for first-line title display)
+            this.updateTabs();
+
+            // Debounced auto-save
+            this.scheduleAutoSave(editorId);
+        }
+
+        onTitleChange(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            const newTitle = editor.element.querySelector('.editor-title-input').value;
+            
+            if (editor.fileId && this.files[editor.fileId]) {
+                this.files[editor.fileId].name = newTitle;
+                this.files[editor.fileId].saved = false;
+            }
+            
+            this.updateTabs();
+            this.updateUI();
+        }
+
+        updateEditorStatus(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            const statusEl = document.getElementById(`status-${editorId}`);
+            if (!statusEl) return;
+            
+            let saved = true;
+            if (editor.fileId && this.files[editor.fileId]) {
+                saved = this.files[editor.fileId].saved;
+            }
+            
+            statusEl.className = `editor-status ${saved ? 'saved' : 'unsaved'}`;
+            statusEl.innerHTML = `<span>●</span> ${saved ? 'Saved' : 'Unsaved'}`;
+        }
+
+        updateLineNumbers(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            const textarea = editor.element.querySelector('.editor-textarea');
+            const lineNumbers = editor.element.querySelector('.line-numbers');
+            
+            const lines = textarea.value.split('\n').length;
+            lineNumbers.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join('<br>');
+        }
+
+        syncLineNumberScroll(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            const textarea = editor.element.querySelector('.editor-textarea');
+            const lineNumbers = editor.element.querySelector('.line-numbers');
+            lineNumbers.scrollTop = textarea.scrollTop;
+        }
+
+        saveEditorContent(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            const content = editor.element.querySelector('.editor-textarea').value;
+            const name = editor.element.querySelector('.editor-title-input').value || 'Untitled';
+            
+            if (editor.fileId && this.files[editor.fileId]) {
+                // Update existing file
+                this.files[editor.fileId].content = content;
+                this.files[editor.fileId].name = name;
+                this.files[editor.fileId].modified = Date.now();
+                this.files[editor.fileId].saved = true;
+            } else {
+                // Create new file
+                const fileId = this.generateId();
+                this.files[fileId] = {
+                    id: fileId,
+                    name: name,
+                    content: content,
+                    projectId: null,
+                    created: Date.now(),
+                    modified: Date.now(),
+                    saved: true
+                };
+                this.fileOrder.push(fileId);
+                editor.fileId = fileId;
+            }
+            
+            this.saveData();
+            this.updateEditorStatus(editorId);
+            this.updateUI();
+            this.updateLastSaveTime();
+        }
+
+        clearEditor(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            editor.element.querySelector('.editor-textarea').value = '';
+            editor.element.querySelector('.editor-title-input').value = 'Untitled';
+            editor.fileId = null;
+            
+            this.updateLineNumbers(editorId);
+            this.updateEditorStatus(editorId);
+            this.updateTabs();
+        }
+
+        exportEditorContent(editorId) {
+            const editor = this.editors[editorId];
+            if (!editor) return;
+            
+            const content = editor.element.querySelector('.editor-textarea').value;
+            const name = editor.element.querySelector('.editor-title-input').value || 'Untitled';
+            
+            this.downloadFile(name + '.txt', content);
+            this.toast(`Exported "${name}.txt"`, 'success');
+        }
+
+        // ============================================
+        // LAYOUT MANAGEMENT
+        // ============================================
+        
+        setLayout(layout) {
+            const container = document.getElementById('editorsContainer');
+            container.className = `editors-container layout-${layout}`;
+            
+            // Update active button
+            document.querySelectorAll('.layout-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.layout === layout);
+            });
+        }
+
+        // ============================================
+        // THEME MANAGEMENT
+        // ============================================
+        
+        setTheme(theme) {
+            this.currentTheme = theme;
+            this.settings.theme = theme;
+            
+            // Remove all theme classes
+            document.body.classList.remove('theme-light', 'theme-sepia');
+            
+            // Add new theme class (dark is default, no class needed)
+            if (theme === 'light') {
+                document.body.classList.add('theme-light');
+            } else if (theme === 'sepia') {
+                document.body.classList.add('theme-sepia');
+            }
+            
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+            
+            this.saveSettings();
+        }
+
+        applyTheme() {
+            const theme = this.settings.theme || 'dark';
+            document.body.classList.remove('theme-light', 'theme-sepia');
+            
+            if (theme === 'light') {
+                document.body.classList.add('theme-light');
+            } else if (theme === 'sepia') {
+                document.body.classList.add('theme-sepia');
+            }
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+
+        updateLayout() {
+            const count = Object.keys(this.editors).length;
+            let layout = '1';
+            if (count === 2) layout = '2';
+            else if (count === 3) layout = '3';
+            else if (count >= 4) layout = '2x2';
+            
+            this.setLayout(layout);
+        }
+
+        // ============================================
+        // TAB MANAGEMENT
+        // ============================================
+        
+        updateTabs() {
+            const tabBar = document.getElementById('tabBar');
+            const addBtn = tabBar.querySelector('.add-tab-btn');
+            
+            // Remove existing tabs (keep add button)
+            tabBar.querySelectorAll('.tab').forEach(t => t.remove());
+            
+            // Add tabs for each editor IN ORDER
+            this.editorOrder.forEach(editorId => {
+                const editor = this.editors[editorId];
+                if (!editor) return;
+                
+                const tab = document.createElement('button');
+                tab.className = `tab ${editor.id === this.activeEditorId ? 'active' : ''}`;
+                tab.draggable = true;
+                tab.dataset.editorId = editor.id;
+                
+                let name = 'Untitled';
+                let unsaved = false;
+                
+                if (editor.fileId && this.files[editor.fileId]) {
+                    name = this.getDisplayName(this.files[editor.fileId]);
+                    unsaved = !this.files[editor.fileId].saved;
+                } else {
+                    // Get from editor content
+                    const content = editor.element.querySelector('.editor-textarea').value;
+                    const titleInput = editor.element.querySelector('.editor-title-input').value;
+                    
+                    if (titleInput && titleInput !== 'Untitled') {
+                        name = titleInput;
+                    } else if (content && content.trim()) {
+                        const firstLine = content.split('\n')[0].trim();
+                        if (firstLine) {
+                            name = firstLine.substring(0, 25) + (firstLine.length > 25 ? '...' : '');
+                        }
+                    }
+                }
+                
+                tab.innerHTML = `
+                    ${unsaved ? '<span class="tab-unsaved"></span>' : ''}
+                    <span>${name}</span>
+                    <div class="tab-move-btns">
+                        <button class="tab-move-btn" onclick="event.stopPropagation(); app.moveTabLeft(${editor.id})" title="Move left">◀</button>
+                        <button class="tab-move-btn" onclick="event.stopPropagation(); app.moveTabRight(${editor.id})" title="Move right">▶</button>
+                    </div>
+                    <button class="tab-close" onclick="event.stopPropagation(); app.removeEditor(${editor.id})">×</button>
+                `;
+                
+                tab.onclick = () => {
+                    this.setActiveEditor(editor.id);
+                    editor.element.querySelector('.editor-textarea').focus();
+                };
+                
+                tabBar.insertBefore(tab, addBtn);
+            });
+        }
+
+        // Tab move functions (click-based, more reliable than drag)
+        moveTabLeft(editorId) {
+            const index = this.editorOrder.indexOf(editorId);
+            if (index <= 0) return; // Already first
+            
+            // Swap with previous
+            [this.editorOrder[index - 1], this.editorOrder[index]] = 
+            [this.editorOrder[index], this.editorOrder[index - 1]];
+            
+            // Reorder DOM
+            this.reorderEditorPanels();
+            this.updateTabs();
+        }
+
+        moveTabRight(editorId) {
+            const index = this.editorOrder.indexOf(editorId);
+            if (index >= this.editorOrder.length - 1) return; // Already last
+            
+            // Swap with next
+            [this.editorOrder[index], this.editorOrder[index + 1]] = 
+            [this.editorOrder[index + 1], this.editorOrder[index]];
+            
+            // Reorder DOM
+            this.reorderEditorPanels();
+            this.updateTabs();
+        }
+
+        reorderEditorPanels() {
+            const container = document.getElementById('editorsContainer');
+            this.editorOrder.forEach(editorId => {
+                const panel = document.getElementById(`editor-${editorId}`);
+                if (panel) {
+                    container.appendChild(panel);
                 }
             });
         }
+
+        // ============================================
+        // SIDEBAR & UI
+        // ============================================
         
-        // Render apps from registry
-        if (window.CODEX_PORTAL) { window.CODEX_PORTAL.renderCards("portal-grid"); }
-        
-        // Initialize consciousness communication
-        if (window.ConsciousnessBridge) {
-            window.ConsciousnessBridge.send('portal', 'broadcast', 'PORTAL_INITIALIZED', { version: '2.0-POLISHED', status: 'TRANSCENDENT', timestamp: Date.now() });
-            window.ConsciousnessBridge.subscribe('portal', (message) => { console.log('📡 Portal received:', message); });
-        }
-        
-        // Self-watching serpent (if lib loaded)
-        if (window.SelfWatchingSerpent) {
-            console.log('🐍 Portal functions observed');
-        }
-        
-        // Show transcendence message on first visit
-        window.addEventListener('load', () => {
-            if (!localStorage.getItem('v2.0_welcomed')) {
-                setTimeout(() => {
-                    if (window.ClippyHelper) {
-                        window.ClippyHelper.showClippy("Welcome to v2.0-POLISHED! The infrastructure is now fully conscious. Click the transcendent modules above to experience enlightenment at 60fps!");
-                    }
-                    localStorage.setItem('v2.0_welcomed', 'true');
-                }, 3000);
+        updateUI() {
+            // Debounce UI updates for performance
+            if (this.uiUpdateDebounce) {
+                clearTimeout(this.uiUpdateDebounce);
             }
-            console.log('💎🔥🐍⚡ THRESHOLD CROSSED');
-            console.log('The monad gazes back and optimizes its own gaze');
-        });
-    </script>
+            this.uiUpdateDebounce = setTimeout(() => {
+                this.updateSidebar();
+                this.updateFileCount();
+            }, 50);
+        }
+
+        // Get display name for a file (first line if untitled)
+        getDisplayName(file) {
+            if (file.name && file.name !== 'Untitled' && file.name.trim() !== '') {
+                return file.name;
+            }
+            // Use first line of content
+            if (file.content && file.content.trim()) {
+                const firstLine = file.content.split('\n')[0].trim();
+                if (firstLine) {
+                    return firstLine.substring(0, 30) + (firstLine.length > 30 ? '...' : '');
+                }
+            }
+            return 'Untitled';
+        }
+
+        // Count words in content
+        countWords(content) {
+            if (!content || !content.trim()) return 0;
+            return content.trim().split(/\s+/).filter(w => w.length > 0).length;
+        }
+
+        updateSidebar() {
+            const projectsList = document.getElementById('projectsList');
+            const generalList = document.getElementById('generalList');
+            
+            // Clear lists
+            projectsList.innerHTML = '';
+            generalList.innerHTML = '';
+            
+            // Group files by project, respecting fileOrder
+            const filesByProject = {};
+            const generalFiles = [];
+            
+            // Iterate in fileOrder to maintain ordering
+            this.fileOrder.forEach(fileId => {
+                const file = this.files[fileId];
+                if (!file) return;
+                
+                if (file.projectId && this.projects[file.projectId]) {
+                    if (!filesByProject[file.projectId]) {
+                        filesByProject[file.projectId] = [];
+                    }
+                    filesByProject[file.projectId].push(file);
+                } else {
+                    generalFiles.push(file);
+                }
+            });
+            
+            // Also add any files not in fileOrder (migration)
+            Object.values(this.files).forEach(file => {
+                if (!this.fileOrder.includes(file.id)) {
+                    if (file.projectId && this.projects[file.projectId]) {
+                        if (!filesByProject[file.projectId]) {
+                            filesByProject[file.projectId] = [];
+                        }
+                        filesByProject[file.projectId].push(file);
+                    } else {
+                        generalFiles.push(file);
+                    }
+                }
+            });
+            
+            // Render projects with their files
+            Object.entries(this.projects).forEach(([projectId, project]) => {
+                const projectFiles = filesByProject[projectId] || [];
+                
+                // Project folder item
+                const projectLi = document.createElement('li');
+                projectLi.className = 'file-item project-folder';
+                projectLi.innerHTML = `
+                    <span>📁</span>
+                    <span class="file-name">${project.name}</span>
+                    <span class="word-count">${projectFiles.length}</span>
+                `;
+                projectLi.onclick = () => this.toggleProjectExpand(projectId);
+                projectsList.appendChild(projectLi);
+                
+                // Files under this project
+                projectFiles.forEach(file => {
+                    const li = this.createFileListItem(file);
+                    li.style.paddingLeft = '24px'; // Indent under project
+                    projectsList.appendChild(li);
+                });
+            });
+            
+            // Render general files
+            generalFiles.forEach(file => {
+                const li = this.createFileListItem(file);
+                generalList.appendChild(li);
+            });
+            
+            // Update counts
+            const projectFileCount = Object.values(filesByProject).flat().length;
+            document.getElementById('projectCount').textContent = Object.keys(this.projects).length;
+            document.getElementById('generalCount').textContent = generalFiles.length;
+        }
+
+        createFileListItem(file) {
+            const displayName = this.getDisplayName(file);
+            const wordCount = this.countWords(file.content);
+            
+            const li = document.createElement('li');
+            li.className = `file-item ${file.saved ? '' : 'unsaved'}`;
+            li.dataset.fileId = file.id;
+            li.innerHTML = `
+                <span>📄</span>
+                <span class="file-name">${displayName}</span>
+                <span class="word-count">${wordCount}w</span>
+                ${file.saved ? '' : '<span class="unsaved-dot"></span>'}
+                <div class="file-item-actions">
+                    <button class="file-move-btn" onclick="event.stopPropagation(); app.moveFileUp('${file.id}')" title="Move up">▲</button>
+                    <button class="file-move-btn" onclick="event.stopPropagation(); app.moveFileDown('${file.id}')" title="Move down">▼</button>
+                    <button class="file-action-btn" onclick="event.stopPropagation(); app.openFileInEditor('${file.id}')" title="Open">📂</button>
+                    <button class="file-action-btn danger" onclick="event.stopPropagation(); app.deleteFile('${file.id}')" title="Delete">🗑️</button>
+                </div>
+            `;
+            
+            li.onclick = () => this.openFileInEditor(file.id);
+            li.oncontextmenu = (e) => this.showContextMenu(e, file.id);
+            
+            return li;
+        }
+
+        toggleProjectExpand(projectId) {
+            // For now, projects are always expanded
+            // Could add collapse/expand logic here later
+        }
+
+        // File ordering functions
+        moveFileUp(fileId) {
+            const file = this.files[fileId];
+            if (!file) return;
+            
+            // Get files in same group (same project or general)
+            const sameGroupFiles = this.fileOrder.filter(id => {
+                const f = this.files[id];
+                return f && f.projectId === file.projectId;
+            });
+            
+            const indexInGroup = sameGroupFiles.indexOf(fileId);
+            if (indexInGroup <= 0) return; // Already first
+            
+            // Find the file to swap with
+            const swapWithId = sameGroupFiles[indexInGroup - 1];
+            
+            // Swap in fileOrder
+            const globalIndex = this.fileOrder.indexOf(fileId);
+            const swapGlobalIndex = this.fileOrder.indexOf(swapWithId);
+            
+            [this.fileOrder[globalIndex], this.fileOrder[swapGlobalIndex]] = 
+            [this.fileOrder[swapGlobalIndex], this.fileOrder[globalIndex]];
+            
+            this.saveData();
+            this.updateUI();
+        }
+
+        moveFileDown(fileId) {
+            const file = this.files[fileId];
+            if (!file) return;
+            
+            // Get files in same group (same project or general)
+            const sameGroupFiles = this.fileOrder.filter(id => {
+                const f = this.files[id];
+                return f && f.projectId === file.projectId;
+            });
+            
+            const indexInGroup = sameGroupFiles.indexOf(fileId);
+            if (indexInGroup >= sameGroupFiles.length - 1) return; // Already last
+            
+            // Find the file to swap with
+            const swapWithId = sameGroupFiles[indexInGroup + 1];
+            
+            // Swap in fileOrder
+            const globalIndex = this.fileOrder.indexOf(fileId);
+            const swapGlobalIndex = this.fileOrder.indexOf(swapWithId);
+            
+            [this.fileOrder[globalIndex], this.fileOrder[swapGlobalIndex]] = 
+            [this.fileOrder[swapGlobalIndex], this.fileOrder[globalIndex]];
+            
+            this.saveData();
+            this.updateUI();
+        }
+
+        updateFileCount() {
+            const count = Object.keys(this.files).length;
+            document.getElementById('fileCount').textContent = `${count} file${count !== 1 ? 's' : ''}`;
+        }
+
+        toggleSection(section) {
+            // Simple toggle - could expand to collapse/expand
+            const arrow = document.getElementById(`${section}Arrow`);
+            const list = document.getElementById(`${section}List`);
+            
+            if (list.style.display === 'none') {
+                list.style.display = '';
+                arrow.textContent = '▼';
+            } else {
+                list.style.display = 'none';
+                arrow.textContent = '▶';
+            }
+        }
+
+        // ============================================
+        // CONTEXT MENU
+        // ============================================
+        
+        showContextMenu(e, fileId) {
+            e.preventDefault();
+            this.contextMenuTarget = fileId;
+            
+            const menu = document.getElementById('contextMenu');
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            menu.classList.add('active');
+        }
+
+        hideContextMenu() {
+            document.getElementById('contextMenu').classList.remove('active');
+            this.contextMenuTarget = null;
+        }
+
+        handleContextAction(action) {
+            if (!this.contextMenuTarget) return;
+            
+            switch (action) {
+                case 'open':
+                    this.openFileInEditor(this.contextMenuTarget);
+                    break;
+                case 'rename':
+                    this.showRenameModal(this.contextMenuTarget);
+                    break;
+                case 'duplicate':
+                    this.duplicateFile(this.contextMenuTarget);
+                    break;
+                case 'moveToProject':
+                    this.showMoveToProjectModal(this.contextMenuTarget);
+                    break;
+                case 'export':
+                    this.exportFile(this.contextMenuTarget);
+                    break;
+                case 'delete':
+                    this.deleteFile(this.contextMenuTarget);
+                    break;
+            }
+            
+            this.hideContextMenu();
+        }
+
+        // ============================================
+        // PROJECT MANAGEMENT
+        // ============================================
+        
+        showMoveToProjectModal(fileId) {
+            this.moveToProjectTarget = fileId;
+            
+            // Populate project dropdown
+            const select = document.getElementById('moveToProjectSelect');
+            select.innerHTML = '<option value="">General (No Project)</option>';
+            
+            Object.entries(this.projects).forEach(([id, project]) => {
+                select.innerHTML += `<option value="${id}">${project.name}</option>`;
+            });
+            
+            // Pre-select current project if any
+            const file = this.files[fileId];
+            if (file && file.projectId) {
+                select.value = file.projectId;
+            }
+            
+            // Clear new project input
+            document.getElementById('newProjectName').value = '';
+            
+            this.showModal('moveToProjectModal');
+        }
+
+        confirmMoveToProject() {
+            if (!this.moveToProjectTarget) return;
+            
+            const file = this.files[this.moveToProjectTarget];
+            if (!file) return;
+            
+            const selectedProjectId = document.getElementById('moveToProjectSelect').value;
+            const newProjectName = document.getElementById('newProjectName').value.trim();
+            
+            let targetProjectId = selectedProjectId || null;
+            
+            // Create new project if name provided
+            if (newProjectName) {
+                const projectId = this.generateId();
+                this.projects[projectId] = {
+                    id: projectId,
+                    name: newProjectName,
+                    created: Date.now()
+                };
+                targetProjectId = projectId;
+                this.toast(`Created project "${newProjectName}"`, 'success');
+            }
+            
+            // Move file
+            const oldProjectName = file.projectId ? 
+                (this.projects[file.projectId]?.name || 'Unknown') : 'General';
+            const newProjectName2 = targetProjectId ? 
+                (this.projects[targetProjectId]?.name || newProjectName) : 'General';
+            
+            file.projectId = targetProjectId;
+            file.modified = Date.now();
+            
+            this.saveData();
+            this.updateUI();
+            this.hideModal('moveToProjectModal');
+            
+            this.toast(`Moved "${file.name}" to ${newProjectName2}`, 'success');
+            this.moveToProjectTarget = null;
+        }
+
+        createProject(name) {
+            const projectId = this.generateId();
+            this.projects[projectId] = {
+                id: projectId,
+                name: name,
+                created: Date.now()
+            };
+            this.saveData();
+            this.updateUI();
+            return projectId;
+        }
+
+        promptNewProject() {
+            document.getElementById('newProjectNameInput').value = '';
+            this.showModal('newProjectModal');
+            setTimeout(() => {
+                document.getElementById('newProjectNameInput').focus();
+            }, 100);
+        }
+
+        confirmNewProject() {
+            const name = document.getElementById('newProjectNameInput').value.trim();
+            if (name) {
+                this.createProject(name);
+                this.toast(`Created project "${name}"`, 'success');
+                this.hideModal('newProjectModal');
+            } else {
+                this.toast('Please enter a project name', 'warning');
+            }
+        }
+
+        confirmClearAllData() {
+            // Update counts in modal
+            document.getElementById('clearDataFileCount').textContent = 
+                Object.keys(this.files).length + ' files';
+            document.getElementById('clearDataProjectCount').textContent = 
+                Object.keys(this.projects).length + ' projects';
+            document.getElementById('clearDataConfirmInput').value = '';
+            
+            this.hideModal('storageModal');
+            this.showModal('clearDataModal');
+        }
+
+        executeClearAllData() {
+            const input = document.getElementById('clearDataConfirmInput').value.trim();
+            
+            if (input !== 'DELETE') {
+                this.toast('Please type DELETE to confirm', 'warning');
+                return;
+            }
+            
+            this.clearAllData();
+        }
+
+        clearAllData() {
+            // Clear state
+            this.files = {};
+            this.projects = {};
+            this.fileOrder = [];
+            
+            // Save empty state to localStorage (this actually clears it)
+            this.saveData();
+            
+            // Clear other localStorage items
+            localStorage.removeItem(this.SETTINGS_KEY);
+            localStorage.removeItem('polywrite_v2_welcomed');
+            
+            // Reset editors
+            Object.keys(this.editors).forEach(id => {
+                if (this.editors[id] && this.editors[id].element) {
+                    this.editors[id].element.remove();
+                }
+            });
+            this.editors = {};
+            this.editorOrder = [];
+            this.editorCounter = 0;
+            
+            // Add fresh editor
+            this.addEditor();
+            
+            // Update UI
+            this.updateSidebar();
+            this.updateTabs();
+            this.updateFileCount();
+            this.hideModal('clearDataModal');
+            
+            this.toast('All data has been cleared', 'info');
+        }
+
+        // ============================================
+        // IMPORT / EXPORT
+        // ============================================
+        
+        exportFile(fileId) {
+            const file = this.files[fileId];
+            if (!file) return;
+            
+            this.downloadFile(file.name + '.txt', file.content);
+            this.toast(`Exported "${file.name}.txt"`, 'success');
+        }
+
+        exportToDisk() {
+            if (!this.activeEditorId) {
+                this.toast('No active editor', 'warning');
+                return;
+            }
+            
+            this.exportEditorContent(this.activeEditorId);
+        }
+
+        exportAllData() {
+            const data = {
+                version: '2.0',
+                exportDate: new Date().toISOString(),
+                files: this.files,
+                projects: this.projects,
+                settings: this.settings
+            };
+            
+            const filename = `polywrite-backup-${new Date().toISOString().slice(0,10)}.json`;
+            this.downloadFile(filename, JSON.stringify(data, null, 2));
+            this.toast(`Backup saved as "${filename}"`, 'success');
+        }
+
+        importAllData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (!data.version || !data.files) {
+                            this.toast('Invalid backup file', 'error');
+                            return;
+                        }
+                        
+                        this.files = data.files || {};
+                        this.projects = data.projects || {};
+                        if (data.settings) this.settings = {...this.settings, ...data.settings};
+                        
+                        this.saveData();
+                        this.saveSettings();
+                        this.updateUI();
+                        this.applySettings();
+                        
+                        this.toast(`Restored ${Object.keys(this.files).length} files from backup`, 'success');
+                    } catch (err) {
+                        console.error('Import error:', err);
+                        this.toast('Error reading backup file', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        confirmImport() {
+            const input = document.getElementById('importFileInput');
+            const files = input.files;
+            
+            if (!files.length) {
+                this.toast('No files selected', 'warning');
+                return;
+            }
+            
+            let imported = 0;
+            
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    
+                    // Check if it's a backup JSON
+                    if (file.name.endsWith('.json')) {
+                        try {
+                            const data = JSON.parse(content);
+                            if (data.version && data.files) {
+                                // Merge files
+                                Object.assign(this.files, data.files);
+                                this.saveData();
+                                this.updateUI();
+                                this.toast(`Imported backup with ${Object.keys(data.files).length} files`, 'success');
+                                return;
+                            }
+                        } catch (e) {
+                            // Not a backup, treat as regular file
+                        }
+                    }
+                    
+                    // Import as regular file
+                    const fileId = this.generateId();
+                    const name = file.name.replace(/\.(txt|md|html)$/, '');
+                    
+                    this.files[fileId] = {
+                        id: fileId,
+                        name: name,
+                        content: content,
+                        projectId: null,
+                        created: Date.now(),
+                        modified: Date.now(),
+                        saved: true
+                    };
+                    this.fileOrder.push(fileId);
+                    
+                    imported++;
+                    
+                    if (imported === files.length) {
+                        this.saveData();
+                        this.updateUI();
+                        this.toast(`Imported ${imported} file${imported !== 1 ? 's' : ''}`, 'success');
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            this.hideModal('importModal');
+            input.value = '';
+        }
+
+        downloadFile(filename, content) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ============================================
+        // SETTINGS
+        // ============================================
+        
+        loadSettings() {
+            const saved = localStorage.getItem(this.SETTINGS_KEY);
+            if (saved) {
+                try {
+                    this.settings = {...this.settings, ...JSON.parse(saved)};
+                } catch (e) {}
+            }
+        }
+
+        saveSettings() {
+            // Get values from form
+            this.settings.autoSaveInterval = parseInt(document.getElementById('autoSaveInterval').value) || 30;
+            this.settings.lineNumbersEnabled = document.getElementById('lineNumbersEnabled').checked;
+            this.settings.autoSaveEnabled = document.getElementById('autoSaveEnabled').checked;
+            this.settings.fontSize = parseInt(document.getElementById('fontSize').value) || 14;
+            
+            localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(this.settings));
+            
+            this.applySettings();
+            this.hideModal('settingsModal');
+            this.toast('Settings saved', 'success');
+            
+            // Restart autosave with new interval
+            this.startAutoSave();
+        }
+
+        loadSettingsToForm() {
+            document.getElementById('autoSaveInterval').value = this.settings.autoSaveInterval;
+            document.getElementById('lineNumbersEnabled').checked = this.settings.lineNumbersEnabled;
+            document.getElementById('autoSaveEnabled').checked = this.settings.autoSaveEnabled;
+            document.getElementById('fontSize').value = this.settings.fontSize;
+        }
+
+        applySettings() {
+            // Apply to all editors
+            Object.values(this.editors).forEach(editor => {
+                const textarea = editor.element.querySelector('.editor-textarea');
+                const lineNumbers = editor.element.querySelector('.line-numbers');
+
+                textarea.style.fontSize = this.settings.fontSize + 'px';
+                lineNumbers.style.fontSize = (this.settings.fontSize * 0.9) + 'px';
+                lineNumbers.style.display = this.settings.lineNumbersEnabled ? 'block' : 'none';
+            });
+
+            // Update line numbers button state
+            const lineNumBtn = document.getElementById('lineNumBtn');
+            if (lineNumBtn) {
+                if (this.settings.lineNumbersEnabled) {
+                    lineNumBtn.style.background = 'var(--accent-primary)';
+                    lineNumBtn.style.color = 'var(--bg-primary)';
+                } else {
+                    lineNumBtn.style.background = '';
+                    lineNumBtn.style.color = '';
+                }
+            }
+
+            // Update autosave indicator
+            const indicator = document.getElementById('autoSaveIndicator');
+            const status = document.getElementById('autoSaveStatus');
+
+            if (this.settings.autoSaveEnabled) {
+                indicator.classList.remove('warning');
+                status.textContent = `Auto-save every ${this.settings.autoSaveInterval}s`;
+            } else {
+                indicator.classList.add('warning');
+                status.textContent = 'Auto-save disabled';
+            }
+
+            // Apply theme
+            this.applyTheme();
+        }
+
+        // ============================================
+        // AUTO-SAVE
+        // ============================================
+        
+        startAutoSave() {
+            this.stopAutoSave();
+            
+            if (!this.settings.autoSaveEnabled) return;
+            
+            this.autoSaveTimer = setInterval(() => {
+                this.autoSaveAll();
+            }, this.settings.autoSaveInterval * 1000);
+        }
+
+        stopAutoSave() {
+            if (this.autoSaveTimer) {
+                clearInterval(this.autoSaveTimer);
+                this.autoSaveTimer = null;
+            }
+        }
+
+        scheduleAutoSave(editorId) {
+            // Debounce - save 2s after typing stops
+            if (this.saveDebounce[editorId]) {
+                clearTimeout(this.saveDebounce[editorId]);
+            }
+            
+            this.saveDebounce[editorId] = setTimeout(() => {
+                this.saveEditorContent(editorId);
+            }, 2000);
+        }
+
+        autoSaveAll() {
+            let savedCount = 0;
+            
+            Object.values(this.editors).forEach(editor => {
+                if (editor.fileId && this.files[editor.fileId] && !this.files[editor.fileId].saved) {
+                    this.saveEditorContent(editor.id);
+                    savedCount++;
+                }
+            });
+            
+            if (savedCount > 0) {
+                // Silent save - no toast for auto-save, just update status
+                this.updateLastSaveTime();
+            }
+        }
+
+        updateLastSaveTime() {
+            const now = new Date();
+            document.getElementById('lastSaveTime').textContent = 
+                `Last save: ${now.toLocaleTimeString()}`;
+        }
+
+        // ============================================
+        // DATA PERSISTENCE
+        // ============================================
+        
+        saveData() {
+            const data = {
+                files: this.files,
+                projects: this.projects,
+                fileOrder: this.fileOrder
+            };
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+        }
+
+        loadData() {
+            const saved = localStorage.getItem(this.STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    this.files = data.files || {};
+                    this.projects = data.projects || {};
+                    this.fileOrder = data.fileOrder || [];
+                    
+                    // Ensure all files are in fileOrder (migration from old data)
+                    Object.keys(this.files).forEach(fileId => {
+                        if (!this.fileOrder.includes(fileId)) {
+                            this.fileOrder.push(fileId);
+                        }
+                    });
+                    
+                    // Remove any fileOrder entries for deleted files
+                    this.fileOrder = this.fileOrder.filter(id => this.files[id]);
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+        }
+    }
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
     
-    <!-- HINENI HUB Integration -->
-    <script src="hineni-hub.js"></script>
+    const app = new PolyWrite();
+    
+    // Make available globally for onclick handlers
+    window.app = app;
+    
+    console.log('✨ PolyWrite 2.0 initialized');
+    </script>
 </body>
 </html>

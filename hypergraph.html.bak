@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypergraph | CODEX Consciousness Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Header Bar */
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-link {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            color: #00aaff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .home-link:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 350px;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+            min-width: 200px;
+        }
+
+        .stats-title {
+            color: #00ff88;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat-value {
+            color: #00aaff;
+            font-weight: 500;
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+        }
+
+        .legend-title {
+            color: #00ff88;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .legend-item.dimmed {
+            opacity: 0.3;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .legend-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .legend-count {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 50;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-btn {
+            background: rgba(0, 136, 255, 0.15);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            color: #00aaff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 136, 255, 0.25);
+            border-color: #00aaff;
+        }
+
+        .control-btn.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .control-slider-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-slider-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            min-width: 60px;
+        }
+
+        .control-slider {
+            width: 100px;
+            -webkit-appearance: none;
+            height: 4px;
+            background: rgba(0, 136, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Node Detail Panel */
+        .detail-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 50;
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .detail-panel.visible {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .detail-title {
+            color: #00ff88;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .detail-close:hover {
+            color: #fff;
+        }
+
+        .detail-meta {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .detail-content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .detail-connections {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .detail-btn {
+            width: 100%;
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .detail-btn:hover {
+            background: rgba(0, 255, 136, 0.25);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            border-radius: 8px;
+            padding: 10px 14px;
+            z-index: 200;
+            pointer-events: none;
+            display: none;
+            max-width: 250px;
+        }
+
+        .tooltip.visible {
+            display: block;
+        }
+
+        .tooltip-title {
+            color: #00ff88;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .tooltip-type {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 50;
+            display: none;
+        }
+
+        .empty-state.visible {
+            display: block;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .empty-text {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .empty-btn {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .empty-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="header-bar">
+        <div class="header-left">
+            <div class="logo">🕸️ Hypergraph</div>
+            <a href="index.html" class="home-link">← Portal</a>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" class="search-input" placeholder="Search your consciousness map..." id="searchInput">
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="control-btn" onclick="app.refresh()">🔄 Refresh</button>
+        </div>
+    </div>
+
+    <div class="stats-panel">
+        <div class="stats-title">📊 Network Stats</div>
+        <div class="stat-item">
+            <span class="stat-label">Total Nodes</span>
+            <span class="stat-value" id="statNodes">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Connections</span>
+            <span class="stat-value" id="statEdges">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Density</span>
+            <span class="stat-value" id="statDensity">0%</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Data Sources</span>
+            <span class="stat-value" id="statSources">0</span>
+        </div>
+    </div>
+
+    <div class="legend" id="legend">
+        <div class="legend-title">🎨 Data Sources</div>
+        <!-- Dynamic legend items -->
+    </div>
+
+    <div class="controls">
+        <div class="control-row">
+            <button class="control-btn active" onclick="app.toggleAnimation()" id="playBtn">⏸ Pause</button>
+            <button class="control-btn" onclick="app.resetView()">🎯 Reset</button>
+            <button class="control-btn" onclick="app.exportGraph()">📤 Export</button>
+        </div>
+        <div class="control-row">
+            <div class="control-slider-group">
+                <span class="control-slider-label">Speed</span>
+                <input type="range" class="control-slider" id="speedSlider" min="0" max="100" value="30">
+            </div>
+            <div class="control-slider-group">
+                <span class="control-slider-label">Zoom</span>
+                <input type="range" class="control-slider" id="zoomSlider" min="20" max="200" value="100">
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <div class="detail-title" id="detailTitle">Node Details</div>
+            <button class="detail-close" onclick="app.closeDetail()">&times;</button>
+        </div>
+        <div class="detail-meta" id="detailMeta"></div>
+        <div class="detail-content" id="detailContent"></div>
+        <div class="detail-connections" id="detailConnections"></div>
+        <button class="detail-btn" id="detailBtn" onclick="app.openSource()">Open in Source App</button>
+    </div>
+
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-title" id="tooltipTitle"></div>
+        <div class="tooltip-type" id="tooltipType"></div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🌌</div>
+        <div class="empty-title">Your Consciousness Map is Empty</div>
+        <div class="empty-text">
+            Start using CODEX apps to populate your hypergraph.
+            Create files in PolyWrite, capture content, or write in Pearl.
+        </div>
+        <a href="index.html" class="empty-btn">Go to Portal</a>
+    </div>
+
+    <script>
+    // ============================================
+    // HYPERGRAPH - CODEX CONSCIOUSNESS MAP
+    // ============================================
+
+    class Hypergraph {
+        constructor() {
+            this.canvas = document.getElementById('canvas');
+            this.ctx = this.canvas.getContext('2d');
+
+            // Data
+            this.nodes = [];
+            this.edges = [];
+            this.sources = {};
+
+            // View state
+            this.isAnimating = true;
+            this.rotationX = 0;
+            this.rotationY = 0;
+            this.rotationSpeed = 0.003;
+            this.zoom = 1;
+            this.selectedNode = null;
+            this.hoveredNode = null;
+            this.mouseX = 0;
+            this.mouseY = 0;
+
+            // Filter state
+            this.visibleSources = new Set();
+
+            // Source colors
+            this.sourceColors = {
+                'polywrite': { color: '#00ff88', icon: '✍️', label: 'PolyWrite', path: 'apps/polywrite/index.html' },
+                'pearl': { color: '#ff00ff', icon: '💎', label: 'Pearl', path: 'apps/pearl/index.html' },
+                'capture': { color: '#ffaa00', icon: '📸', label: 'Capture', path: 'apps/codex_capture/index.html' },
+                'oracle': { color: '#8800ff', icon: '🔮', label: 'Oracle', path: 'apps/codex-ark/oracle.html' },
+                'notes': { color: '#00aaff', icon: '📝', label: 'Notes', path: 'apps/codex-ark/gui-portal.html' },
+                'clipboard': { color: '#ff0088', icon: '📋', label: 'Clipboard', path: 'apps/codex-ark/scrapers/clipboard-vault.html' }
+            };
+
+            this.init();
+        }
+
+        init() {
+            this.resize();
+            this.loadData();
+            this.setupEventListeners();
+            this.animate();
+        }
+
+        resize() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+        }
+
+        // ============================================
+        // DATA LOADING
+        // ============================================
+
+        loadData() {
+            this.nodes = [];
+            this.edges = [];
+            this.sources = {};
+
+            // Load from each source
+            this.loadPolyWrite();
+            this.loadPearl();
+            this.loadCapture();
+            this.loadOracle();
+            this.loadNotes();
+            this.loadClipboard();
+
+            // Initialize visible sources
+            this.visibleSources = new Set(Object.keys(this.sources));
+
+            // Generate connections
+            this.generateConnections();
+
+            // Update UI
+            this.updateStats();
+            this.updateLegend();
+
+            // Show empty state if no data
+            const emptyState = document.getElementById('emptyState');
+            if (this.nodes.length === 0) {
+                emptyState.classList.add('visible');
+            } else {
+                emptyState.classList.remove('visible');
+            }
+        }
+
+        loadPolyWrite() {
+            try {
+                const data = localStorage.getItem('polywrite_v2');
+                if (!data) return;
+
+                const parsed = JSON.parse(data);
+                const files = parsed.files || {};
+
+                Object.values(files).forEach(file => {
+                    if (!file.content || file.content.trim().length === 0) return;
+
+                    this.addNode({
+                        id: `polywrite_${file.id}`,
+                        source: 'polywrite',
+                        title: file.name || 'Untitled',
+                        content: file.content.substring(0, 500),
+                        timestamp: file.modified || file.created || Date.now(),
+                        data: file
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading PolyWrite:', e);
+            }
+        }
+
+        loadPearl() {
+            try {
+                const data = localStorage.getItem('pearl_v09_data');
+                if (!data) return;
+
+                const parsed = JSON.parse(data);
+                const pages = parsed.pages || [];
+
+                pages.forEach((page, idx) => {
+                    if (!page || page.trim().length === 0) return;
+
+                    this.addNode({
+                        id: `pearl_page_${idx}`,
+                        source: 'pearl',
+                        title: `Pearl Page ${idx + 1}`,
+                        content: page.substring(0, 500),
+                        timestamp: parsed.lastModified || Date.now(),
+                        data: { pageIndex: idx, content: page }
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Pearl:', e);
+            }
+        }
+
+        loadCapture() {
+            try {
+                const data = localStorage.getItem('codex_capture_items');
+                if (!data) return;
+
+                const captures = JSON.parse(data);
+
+                captures.forEach(capture => {
+                    const isImage = capture.type === 'image';
+                    this.addNode({
+                        id: `capture_${capture.id}`,
+                        source: 'capture',
+                        title: isImage ? 'Image Capture' : 'Text Capture',
+                        content: isImage ? '[Image]' : (capture.data || '').substring(0, 500),
+                        timestamp: new Date(capture.timestamp).getTime(),
+                        data: capture
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Capture:', e);
+            }
+        }
+
+        loadOracle() {
+            try {
+                const data = localStorage.getItem('oracle-history');
+                if (!data) return;
+
+                const history = JSON.parse(data);
+
+                history.forEach((entry, idx) => {
+                    this.addNode({
+                        id: `oracle_${idx}`,
+                        source: 'oracle',
+                        title: entry.question || 'Oracle Query',
+                        content: entry.result || entry.answer || '',
+                        timestamp: new Date(entry.timestamp || Date.now()).getTime(),
+                        data: entry
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Oracle:', e);
+            }
+        }
+
+        loadNotes() {
+            try {
+                const notes = localStorage.getItem('codex-notes');
+                if (!notes || notes.trim().length === 0) return;
+
+                this.addNode({
+                    id: 'notes_main',
+                    source: 'notes',
+                    title: 'CODEX Notes',
+                    content: notes.substring(0, 500),
+                    timestamp: Date.now(),
+                    data: { content: notes }
+                });
+            } catch (e) {
+                console.warn('Error loading Notes:', e);
+            }
+        }
+
+        loadClipboard() {
+            try {
+                const data = localStorage.getItem('clipboard-vault');
+                if (!data) return;
+
+                const clips = JSON.parse(data);
+
+                clips.forEach((clip, idx) => {
+                    if (!clip.text || clip.text.trim().length === 0) return;
+
+                    this.addNode({
+                        id: `clipboard_${idx}`,
+                        source: 'clipboard',
+                        title: 'Clipboard Entry',
+                        content: clip.text.substring(0, 500),
+                        timestamp: new Date(clip.timestamp || Date.now()).getTime(),
+                        data: clip
+                    });
+                });
+            } catch (e) {
+                console.warn('Error loading Clipboard:', e);
+            }
+        }
+
+        addNode(nodeData) {
+            // Position in 3D space (spread by source)
+            const sourceIndex = Object.keys(this.sourceColors).indexOf(nodeData.source);
+            const angleOffset = (sourceIndex / Object.keys(this.sourceColors).length) * Math.PI * 2;
+            const range = 300;
+
+            const angle = angleOffset + Math.random() * 0.8 - 0.4;
+            const radius = 100 + Math.random() * 200;
+
+            const node = {
+                ...nodeData,
+                x: Math.cos(angle) * radius + (Math.random() - 0.5) * 100,
+                y: (Math.random() - 0.5) * range,
+                z: Math.sin(angle) * radius + (Math.random() - 0.5) * 100,
+                radius: 4 + Math.min(nodeData.content.length / 100, 6),
+                color: this.sourceColors[nodeData.source]?.color || '#ffffff',
+                connections: [],
+                pulsePhase: Math.random() * Math.PI * 2
+            };
+
+            this.nodes.push(node);
+
+            // Track sources
+            if (!this.sources[nodeData.source]) {
+                this.sources[nodeData.source] = [];
+            }
+            this.sources[nodeData.source].push(node);
+        }
+
+        generateConnections() {
+            this.edges = [];
+
+            // Clear existing connections
+            this.nodes.forEach(node => node.connections = []);
+
+            for (let i = 0; i < this.nodes.length; i++) {
+                for (let j = i + 1; j < this.nodes.length; j++) {
+                    const nodeA = this.nodes[i];
+                    const nodeB = this.nodes[j];
+
+                    let strength = 0;
+
+                    // Same source = strong connection
+                    if (nodeA.source === nodeB.source) {
+                        strength += 0.3;
+                    }
+
+                    // Time proximity (within 1 hour = connected)
+                    const timeDiff = Math.abs(nodeA.timestamp - nodeB.timestamp);
+                    if (timeDiff < 3600000) { // 1 hour
+                        strength += 0.4;
+                    } else if (timeDiff < 86400000) { // 1 day
+                        strength += 0.2;
+                    }
+
+                    // Content similarity (shared words)
+                    const wordsA = this.extractKeywords(nodeA.content);
+                    const wordsB = this.extractKeywords(nodeB.content);
+                    const sharedWords = wordsA.filter(w => wordsB.includes(w));
+                    if (sharedWords.length > 2) {
+                        strength += Math.min(sharedWords.length * 0.1, 0.5);
+                    }
+
+                    // Create edge if strong enough
+                    if (strength >= 0.3) {
+                        this.edges.push({
+                            from: i,
+                            to: j,
+                            strength: strength
+                        });
+                        nodeA.connections.push(j);
+                        nodeB.connections.push(i);
+                    }
+                }
+            }
+        }
+
+        extractKeywords(text) {
+            if (!text) return [];
+            return text.toLowerCase()
+                .replace(/[^a-z\s]/g, '')
+                .split(/\s+/)
+                .filter(w => w.length > 4);
+        }
+
+        // ============================================
+        // RENDERING
+        // ============================================
+
+        animate() {
+            if (this.isAnimating) {
+                this.rotationY += this.rotationSpeed;
+                this.rotationX += this.rotationSpeed * 0.2;
+
+                // Rotate nodes
+                this.nodes.forEach(node => {
+                    this.rotateNode(node);
+                });
+            }
+
+            this.render();
+            requestAnimationFrame(() => this.animate());
+        }
+
+        rotateNode(node) {
+            // Store original position
+            const x = node.x;
+            const y = node.y;
+            const z = node.z;
+
+            // Rotate around Y axis
+            node.x = x * Math.cos(this.rotationSpeed) + z * Math.sin(this.rotationSpeed);
+            node.z = -x * Math.sin(this.rotationSpeed) + z * Math.cos(this.rotationSpeed);
+
+            // Rotate around X axis (slower)
+            const y2 = node.y;
+            const z2 = node.z;
+            node.y = y2 * Math.cos(this.rotationSpeed * 0.2) - z2 * Math.sin(this.rotationSpeed * 0.2);
+            node.z = y2 * Math.sin(this.rotationSpeed * 0.2) + z2 * Math.cos(this.rotationSpeed * 0.2);
+        }
+
+        project(node) {
+            const perspective = 800;
+            const scale = perspective / (perspective + node.z * this.zoom);
+            return {
+                x: this.canvas.width / 2 + node.x * scale * this.zoom,
+                y: this.canvas.height / 2 + node.y * scale * this.zoom,
+                scale: scale
+            };
+        }
+
+        render() {
+            // Clear with fade effect
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Filter visible nodes
+            const visibleNodes = this.nodes.filter(n => this.visibleSources.has(n.source));
+            const visibleIndices = new Set(visibleNodes.map(n => this.nodes.indexOf(n)));
+
+            // Sort by z-depth
+            const sortedNodes = [...visibleNodes].sort((a, b) => a.z - b.z);
+
+            // Draw edges
+            this.edges.forEach(edge => {
+                if (!visibleIndices.has(edge.from) || !visibleIndices.has(edge.to)) return;
+
+                const nodeA = this.nodes[edge.from];
+                const nodeB = this.nodes[edge.to];
+                const projA = this.project(nodeA);
+                const projB = this.project(nodeB);
+
+                const gradient = this.ctx.createLinearGradient(projA.x, projA.y, projB.x, projB.y);
+                gradient.addColorStop(0, nodeA.color + '33');
+                gradient.addColorStop(1, nodeB.color + '33');
+
+                this.ctx.strokeStyle = gradient;
+                this.ctx.lineWidth = edge.strength * 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(projA.x, projA.y);
+                this.ctx.lineTo(projB.x, projB.y);
+                this.ctx.stroke();
+            });
+
+            // Draw nodes
+            sortedNodes.forEach(node => {
+                const proj = this.project(node);
+                node.pulsePhase += 0.03;
+
+                const isHovered = node === this.hoveredNode;
+                const isSelected = node === this.selectedNode;
+                const pulse = 1 + Math.sin(node.pulsePhase) * 0.2;
+                const radius = node.radius * proj.scale * pulse * (isHovered ? 1.5 : 1) * (isSelected ? 1.3 : 1);
+
+                // Glow
+                const glow = this.ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, radius * 4);
+                glow.addColorStop(0, node.color + (isSelected ? 'aa' : '88'));
+                glow.addColorStop(0.5, node.color + '33');
+                glow.addColorStop(1, node.color + '00');
+
+                this.ctx.fillStyle = glow;
+                this.ctx.beginPath();
+                this.ctx.arc(proj.x, proj.y, radius * 4, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Core
+                this.ctx.fillStyle = node.color;
+                this.ctx.beginPath();
+                this.ctx.arc(proj.x, proj.y, radius, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Ring for selected
+                if (isSelected) {
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.beginPath();
+                    this.ctx.arc(proj.x, proj.y, radius + 4, 0, Math.PI * 2);
+                    this.ctx.stroke();
+                }
+            });
+        }
+
+        // ============================================
+        // UI UPDATES
+        // ============================================
+
+        updateStats() {
+            document.getElementById('statNodes').textContent = this.nodes.length;
+            document.getElementById('statEdges').textContent = this.edges.length;
+
+            const maxEdges = this.nodes.length * (this.nodes.length - 1) / 2;
+            const density = maxEdges > 0 ? ((this.edges.length / maxEdges) * 100).toFixed(1) : 0;
+            document.getElementById('statDensity').textContent = density + '%';
+            document.getElementById('statSources').textContent = Object.keys(this.sources).length;
+        }
+
+        updateLegend() {
+            const legend = document.getElementById('legend');
+            const title = legend.querySelector('.legend-title');
+
+            legend.innerHTML = '';
+            legend.appendChild(title);
+
+            Object.entries(this.sources).forEach(([source, nodes]) => {
+                const config = this.sourceColors[source];
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.dataset.source = source;
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${config.color}"></div>
+                    <span class="legend-label">${config.icon} ${config.label}</span>
+                    <span class="legend-count">${nodes.length}</span>
+                `;
+                item.onclick = () => this.toggleSource(source);
+                legend.appendChild(item);
+            });
+        }
+
+        toggleSource(source) {
+            const item = document.querySelector(`.legend-item[data-source="${source}"]`);
+
+            if (this.visibleSources.has(source)) {
+                this.visibleSources.delete(source);
+                item.classList.add('dimmed');
+            } else {
+                this.visibleSources.add(source);
+                item.classList.remove('dimmed');
+            }
+        }
+
+        showDetail(node) {
+            this.selectedNode = node;
+            const panel = document.getElementById('detailPanel');
+            const config = this.sourceColors[node.source];
+
+            document.getElementById('detailTitle').innerHTML = `${config.icon} ${node.title}`;
+            document.getElementById('detailMeta').textContent = `${config.label} • ${new Date(node.timestamp).toLocaleString()}`;
+            document.getElementById('detailContent').textContent = node.content || '[No content]';
+            document.getElementById('detailConnections').textContent = `${node.connections.length} connections`;
+
+            panel.classList.add('visible');
+        }
+
+        closeDetail() {
+            document.getElementById('detailPanel').classList.remove('visible');
+            this.selectedNode = null;
+        }
+
+        openSource() {
+            if (!this.selectedNode) return;
+            const config = this.sourceColors[this.selectedNode.source];
+            if (config.path) {
+                window.location.href = config.path;
+            }
+        }
+
+        showTooltip(node, x, y) {
+            const tooltip = document.getElementById('tooltip');
+            const config = this.sourceColors[node.source];
+
+            document.getElementById('tooltipTitle').textContent = node.title;
+            document.getElementById('tooltipType').textContent = `${config.icon} ${config.label}`;
+
+            tooltip.style.left = (x + 15) + 'px';
+            tooltip.style.top = (y + 15) + 'px';
+            tooltip.classList.add('visible');
+        }
+
+        hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        // ============================================
+        // CONTROLS
+        // ============================================
+
+        toggleAnimation() {
+            this.isAnimating = !this.isAnimating;
+            const btn = document.getElementById('playBtn');
+            btn.textContent = this.isAnimating ? '⏸ Pause' : '▶ Play';
+            btn.classList.toggle('active', this.isAnimating);
+        }
+
+        resetView() {
+            this.rotationX = 0;
+            this.rotationY = 0;
+            this.zoom = 1;
+            document.getElementById('zoomSlider').value = 100;
+        }
+
+        refresh() {
+            this.loadData();
+        }
+
+        exportGraph() {
+            const data = {
+                exported: new Date().toISOString(),
+                nodes: this.nodes.map(n => ({
+                    id: n.id,
+                    source: n.source,
+                    title: n.title,
+                    timestamp: n.timestamp,
+                    connections: n.connections.length
+                })),
+                edges: this.edges.map(e => ({
+                    from: this.nodes[e.from].id,
+                    to: this.nodes[e.to].id,
+                    strength: e.strength
+                })),
+                stats: {
+                    nodes: this.nodes.length,
+                    edges: this.edges.length,
+                    sources: Object.keys(this.sources)
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `hypergraph-${Date.now()}.json`;
+            a.click();
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        setupEventListeners() {
+            window.addEventListener('resize', () => this.resize());
+
+            // Mouse move
+            this.canvas.addEventListener('mousemove', (e) => {
+                this.mouseX = e.clientX;
+                this.mouseY = e.clientY;
+
+                // Find hovered node
+                let closest = null;
+                let minDist = Infinity;
+
+                this.nodes.forEach(node => {
+                    if (!this.visibleSources.has(node.source)) return;
+
+                    const proj = this.project(node);
+                    const dist = Math.hypot(this.mouseX - proj.x, this.mouseY - proj.y);
+
+                    if (dist < 25 && dist < minDist) {
+                        minDist = dist;
+                        closest = node;
+                    }
+                });
+
+                this.hoveredNode = closest;
+
+                if (closest) {
+                    this.showTooltip(closest, this.mouseX, this.mouseY);
+                    this.canvas.style.cursor = 'pointer';
+                } else {
+                    this.hideTooltip();
+                    this.canvas.style.cursor = 'default';
+                }
+            });
+
+            // Click
+            this.canvas.addEventListener('click', () => {
+                if (this.hoveredNode) {
+                    this.showDetail(this.hoveredNode);
+                }
+            });
+
+            // Mouse wheel zoom
+            this.canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                this.zoom += e.deltaY * -0.001;
+                this.zoom = Math.max(0.3, Math.min(2, this.zoom));
+                document.getElementById('zoomSlider').value = this.zoom * 100;
+            });
+
+            // Speed slider
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                this.rotationSpeed = e.target.value / 10000;
+            });
+
+            // Zoom slider
+            document.getElementById('zoomSlider').addEventListener('input', (e) => {
+                this.zoom = e.target.value / 100;
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+
+                this.nodes.forEach(node => {
+                    const matches = node.title.toLowerCase().includes(query) ||
+                                    node.content.toLowerCase().includes(query);
+                    node.radius = matches || !query ? (4 + Math.min(node.content.length / 100, 6)) : 2;
+                });
+            });
+        }
+    }
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+
+    const app = new Hypergraph();
+    window.app = app;
+
+    console.log('🕸️ Hypergraph initialized - Consciousness Map Active');
+    </script>
+</body>
+</html>
