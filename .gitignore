@@ -1,3 +1,5 @@
 node_modules/
 portal-hub.html
 hub-inventory.json
+.DS_Store
+tools/raid-archaeology/vault0_catalog.json
