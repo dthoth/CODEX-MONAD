@@ -1,0 +1,778 @@
+/Users/0eaglex/Codex
+├── CODEX-MONAD
+│   ├── apps
+│   │   ├── bureaucratic_universe
+│   │   │   ├── app.json
+│   │   │   ├── index.html
+│   │   │   └── kit
+│   │   ├── codex_capture
+│   │   │   ├── app.json
+│   │   │   ├── capture_mac.py
+│   │   │   ├── capture.py
+│   │   │   ├── config.json
+│   │   │   ├── config.local.json
+│   │   │   ├── index.html
+│   │   │   ├── requirements.txt
+│   │   │   └── start_capture.bat
+│   │   ├── codex_monad
+│   │   │   ├── app.json
+│   │   │   ├── Assets
+│   │   │   ├── codex-monad-seedline-v0.1
+│   │   │   ├── Core
+│   │   │   ├── Docs
+│   │   │   ├── Forms
+│   │   │   ├── INSTALLATION.md
+│   │   │   ├── Philosophy
+│   │   │   ├── README.txt
+│   │   │   ├── SHA256SUMS.txt
+│   │   │   ├── START_HERE.html
+│   │   │   └── Tools
+│   │   ├── din_portal
+│   │   │   ├── app.json
+│   │   │   ├── assets
+│   │   │   ├── din_portal
+│   │   │   └── index.html
+│   │   ├── polywrite
+│   │   │   ├── app.json
+│   │   │   ├── index.html
+│   │   │   └── New Polywrite Phoenix Version
+│   │   ├── pranayama
+│   │   │   ├── app.json
+│   │   │   └── index.html
+│   │   ├── samson_recursive
+│   │   │   ├── app.json
+│   │   │   └── index.html
+│   │   └── word_salad
+│   │       └── Word Salad 5.0
+│   ├── bureaucratic-universe.html
+│   ├── CHANGELOG_v1.1.1.md
+│   ├── CHANGELOG_v1.1.md
+│   ├── CHANGELOG.md
+│   ├── CODEX_FINAL
+│   │   ├── apps
+│   │   │   ├── bureaucratic_universe
+│   │   │   ├── codex_monad
+│   │   │   ├── din_portal
+│   │   │   ├── polywrite
+│   │   │   ├── pranayama
+│   │   │   └── samson_recursive
+│   │   ├── CHANGELOG.md
+│   │   ├── entitlements.mac.plist
+│   │   ├── index.html
+│   │   ├── LICENSE
+│   │   ├── main.js
+│   │   ├── package.json
+│   │   ├── preload-webview.js
+│   │   ├── preload.js
+│   │   ├── README.html
+│   │   ├── README.md
+│   │   ├── renderer.js
+│   │   ├── scripts
+│   │   │   ├── doctor.js
+│   │   │   └── smoke.js
+│   │   ├── START_MAC_LINUX_NOGPU.sh
+│   │   ├── START_MAC_LINUX.sh
+│   │   ├── START_WINDOWS_NOGPU.bat
+│   │   ├── START_WINDOWS.bat
+│   │   ├── styles.css
+│   │   ├── TEST_CHECKLIST.md
+│   │   └── THIRD_PARTY_NOTICES.md
+│   ├── data
+│   │   ├── _write_test
+│   │   └── capture
+│   │       ├── daily
+│   │       └── README.md
+│   ├── DATA_FLOW.md
+│   ├── din-files.html
+│   ├── DOCTOR.md
+│   ├── entitlements.mac.plist
+│   ├── grok-integration-demo.html
+│   ├── hypergraph.html
+│   ├── index.html
+│   ├── lib
+│   │   ├── codex-portal-enhanced.js
+│   │   ├── lib_clippy-helper.js
+│   │   ├── lib_consciousness-bridge.js
+│   │   ├── lib_exo-utils.js
+│   │   ├── lib_monad-share.js
+│   │   ├── lib_polywrite-utils.js
+│   │   ├── lib_qr-tiny.js
+│   │   ├── lib_qr-whisper-enhanced.js
+│   │   ├── lib_self-watching-serpent.js
+│   │   └── lib_wasm-chakra-mandala.js
+│   ├── lib_sacred-compression.js
+│   ├── lib_self-shrinking.js
+│   ├── lib_wasm-consciousness.js
+│   ├── LICENSE
+│   ├── main.js
+│   ├── oracle.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── PHILOSOPHY_v1.0.md
+│   ├── polywrite-advanced.html
+│   ├── polywrite.html
+│   ├── pranayama.html
+│   ├── preload-webview.js
+│   ├── preload.js
+│   ├── README_v1.1.md
+│   ├── README.html
+│   ├── README.md
+│   ├── renderer.js
+│   ├── samson-recursive.html
+│   ├── scripts
+│   │   ├── doctor.js
+│   │   └── smoke.js
+│   ├── scripts_README.md
+│   ├── START_MAC_LINUX_NOGPU.sh
+│   ├── START_MAC_LINUX.sh
+│   ├── START_WINDOWS_NOGPU.bat
+│   ├── START_WINDOWS.bat
+│   ├── styles.css
+│   ├── TEST_CHECKLIST.md
+│   ├── THIRD_PARTY_NOTICES.md
+│   └── UPDATE_GITHUB.md
+└── Logs
+    └── Terminal_Launches.log
+
+39 directories, 96 files
+/Users/0eaglex/Documents
+├── 2025-05-30 22-07.pdf
+├── Adobe
+│   └── Photoshop Cloud Associates
+├── All Entries (6-3-25).zip
+├── Codex 0
+│   ├── _merged_notes
+│   │   ├── _merged_notes.md
+│   │   ├── 20250428T004205
+│   │   └── 20250501T235725
+│   ├── )(--=URGENT=-- () Tasking.md
+│   ├── 2025-05-18.md
+│   ├── 2025-06-05.md
+│   ├── 2025-07-01.md
+│   ├── 2025-07-10.md
+│   ├── 2025-07-18.md
+│   ├── 2025-08-09.md
+│   ├── 2025-08-17.md
+│   ├── 2025-08-22.md
+│   ├── 2025-08-26.md
+│   ├── 2025-08-28.md
+│   ├── 2025-08-29.md
+│   ├── 2025-08-31.md
+│   ├── 2025-09-05.md
+│   ├── ALGAE
+│   ├── CODEX 0
+│   │   ├── Imagery
+│   │   ├── Index - 0.md
+│   │   ├── Kernel
+│   │   ├── Public Service Announcements
+│   │   ├── Religion and Power
+│   │   ├── Ritual Design Systems
+│   │   ├── Symbolic
+│   │   ├── Symbolic 1
+│   │   ├── Symbolic Drift Logger Ai
+│   │   ├── The Is
+│   │   └── Understanding
+│   ├── Current Papers
+│   │   ├── 📜 I. History & Cultural Context of Alaskan Sea Songs.md
+│   │   ├── 🗾 Pre-1900 Japanese Nautical Song Corpus.md
+│   │   ├── Current Papers.md
+│   │   └── Nietzsche's Philosophical Exegesis.md
+│   ├── iNBOX
+│   │   ├── 🛠️ 📟 Advanced Codex Operational Calculator (Keeper Edition).md
+│   │   ├── 🏛 Codex 0 · Symbolic Root Field — King of the Kingdom of Hipsters.md
+│   │   ├── ΣῬἘΨ Unified Field Sheet v 1.0.md
+│   │   ├── 2025-05-10.md
+│   │   ├── 2025-05-18.md
+│   │   ├── 2025-05-20.md
+│   │   ├── 2025-05-28.md
+│   │   ├── Counter-Meta Weapon 1.md
+│   │   ├── Dinosaur Plant Glyph Cluster.md
+│   │   ├── DRIFT ENTRY JUNE 2014 — PERTHRO SEEDING - KING GARDENER FORESHADOW.md
+│   │   ├── Holy shit 1.md
+│   │   ├── Holy shit.md
+│   │   ├── iNBOX.md
+│   │   ├── Integrated-Information Geometry as a Full-Spectrum Response to Geometric Unity.md
+│   │   ├── Internal alchemy.md
+│   │   ├── Kallisti
+│   │   ├── Kingdom of the King of the Hipsters
+│   │   ├── Live drift-cast.md
+│   │   ├── Pontificate of Leo XIV — First-100-Day Outlook.md
+│   │   ├── Quick Codex Stub — “Spice, Seizures & Wedding Punch” (session 2025-04-28).md
+│   │   ├── Royal Echo -- In Vault Dispatch.md
+│   │   ├── Spear Codex - massive symbol drift.md
+│   │   ├── The gardener king.md
+│   │   ├── The Royal Codex of Recursive Breath.md
+│   │   └── Untitled.md
+│   ├── index.md
+│   ├── Musical History
+│   │   └── Musical History.md
+│   ├── output
+│   │   └── output.md
+│   ├── Recent Projects
+│   │   ├── index.md
+│   │   └── Untitled.md
+│   ├── Untitled 1.md
+│   ├── Untitled.md
+│   └── Untitles.md
+├── Computing
+│   ├── Data Plan - Turbo-charging 16 TB Overflow Vault.md
+│   ├── iCloud Drive - Drain and Archive Guide.md
+│   ├── Tech Strategic Tactical Plan Detail.md
+│   └── Welcome.md
+├── GitHub
+│   ├── HINENI
+│   │   ├── מסכת חֶבְלִים.docx
+│   │   ├── __init__.py
+│   │   ├── config
+│   │   ├── data
+│   │   ├── davar_lang
+│   │   ├── docs
+│   │   ├── domain
+│   │   ├── HINENI_BACKUP
+│   │   ├── hineni_cli.py
+│   │   ├── infra
+│   │   ├── LICENSE
+│   │   ├── oracle
+│   │   ├── persistence
+│   │   ├── README.md
+│   │   └── verify_witness.py
+│   └── polywrite
+│       ├── LICENSE
+│       ├── Polywrite.html
+│       ├── polywrite2_pro.html
+│       ├── Polywrite2.html
+│       └── README.md
+├── LC-Vol-0
+│   ├── _FileOrganizer2000
+│   │   ├── Backups
+│   │   ├── Fabric
+│   │   ├── Inbox
+│   │   ├── Logs
+│   │   ├── Processed
+│   │   └── Templates
+│   ├── 001-Planning.canvas
+│   ├── 2024-01-26 Work Pad.md
+│   ├── 2024-02-06.md
+│   ├── 2024-02-12.md
+│   ├── 2024-02-13.md
+│   ├── 2025-04-13.md
+│   ├── 22 Paths.md
+│   ├── Academia
+│   │   ├── (DOC) “Evrensel Bir Tıp ve Felsefe Tarihi- Uyûnu'l-Enbâ fî Tabakâti'l-Etıbbâ [A Universal History of Medicine and Philosophy- Uyūn al-anbā fī tabaqāt al-atibbā]”, Felsefe, Tıp ve Tarih- Tabakât Literatürü Üzerin.md
+│   │   ├── (PDF) 'The Beauty of Anatomy- Visual Displays and Surgical Education in Early Nineteenth-Century London.' Bulletin of the History of Medicine . 85-2 (Summer, 2011)- 248-71. - Carin Berkowitz - Academia.edu-1.md
+│   │   ├── (PDF) 'The Beauty of Anatomy- Visual Displays and Surgical Education in Early Nineteenth-Century London.' Bulletin of the History of Medicine . 85-2 (Summer, 2011)- 248-71. - Carin Berkowitz - Academia.edu.md
+│   │   ├── (PDF) Book Review- Lennart Lehmhaus and Matteo Martelli (ed.), Collecting Recipes- Byzantine and Jewish Pharmacology in Dialogue, (2019), 'Bulletin of the History of Medicine' 93- 272-274 - Petros Bouras-Vallianatos - Academia.edu-1.md
+│   │   ├── (PDF) Book Review- Lennart Lehmhaus and Matteo Martelli (ed.), Collecting Recipes- Byzantine and Jewish Pharmacology in Dialogue, (2019), 'Bulletin of the History of Medicine' 93- 272-274 - Petros Bouras-Vallianatos - Academia.edu.md
+│   │   ├── (PDF) Book Review- Patricia Ann Clark, A Cretan Healer’s Handbook in the Byzantine Tradition- Text, Translation and Commentary, (2013), 'Social History of Medicine' 26- 809-811 - Petros Bouras-Vallianatos - Academia.edu-1.md
+│   │   ├── (PDF) Book Review- Patricia Ann Clark, A Cretan Healer’s Handbook in the Byzantine Tradition- Text, Translation and Commentary, (2013), 'Social History of Medicine' 26- 809-811 - Petros Bouras-Vallianatos - Academia.edu.md
+│   │   ├── (PDF) Monica H. Green, 'Situating Ebola Within Global History of Health Narratives,' paper presented at the 2015 American Association for the History of Medicine meeting New Haven, CT, 30 April – 3 May 2015 - Monica H. Green - Academia.edu-1.md
+│   │   ├── (PDF) Monica H. Green, 'Situating Ebola Within Global History of Health Narratives,' paper presented at the 2015 American Association for the History of Medicine meeting New Haven, CT, 30 April – 3 May 2015 - Monica H. Green - Academia.edu.md
+│   │   ├── (PDF) New Book Series- Global Histories of Premodern Health and Healing (Edinburgh University Press) - Petros Bouras-Vallianatos, Carmen Caballero Navas, and Monica H. Green - Academia.edu-1.md
+│   │   ├── (PDF) New Book Series- Global Histories of Premodern Health and Healing (Edinburgh University Press) - Petros Bouras-Vallianatos, Carmen Caballero Navas, and Monica H. Green - Academia.edu.md
+│   │   ├── (PDF) Review of Anne Kirkham and Cordelia Warr, eds. Wounds in the Middle Ages. Series- The History of Medicine in Context (Farnham, Surrey- Ashgate, 2014) - Winston E Black - Academia.edu-1.md
+│   │   ├── (PDF) Review of Anne Kirkham and Cordelia Warr, eds. Wounds in the Middle Ages. Series- The History of Medicine in Context (Farnham, Surrey- Ashgate, 2014) - Winston E Black - Academia.edu.md
+│   │   ├── (PDF) Review of Lucia Dacome, Malleable Anatomies- Models, Makers, and Material Culture in Eighteenth-Century Italy, Oxford- Oxford University Press, 2017. - Paolo Savoia - Academia.edu-1.md
+│   │   ├── (PDF) Review of Lucia Dacome, Malleable Anatomies- Models, Makers, and Material Culture in Eighteenth-Century Italy, Oxford- Oxford University Press, 2017. - Paolo Savoia - Academia.edu.md
+│   │   ├── (PDF) SdM eng - Alessandro L Riva - Academia.edu-1.md
+│   │   ├── 2016_The_weaponry_of_the_Middle_Assyrian.rtfd
+│   │   ├── 46 merged documents.rtfd
+│   │   ├── A_Reassessment_of_Asherah_With_Further_C.rtfd
+│   │   ├── Academics in History of Medicine - Academia.edu-10.md
+│   │   ├── Academics in History of Medicine - Academia.edu-11.md
+│   │   ├── Academics in History of Medicine - Academia.edu-12.md
+│   │   ├── Academics in History of Medicine - Academia.edu-13.md
+│   │   ├── Academics in History of Medicine - Academia.edu-14.md
+│   │   ├── Academics in History of Medicine - Academia.edu-4.md
+│   │   ├── Academics in History of Medicine - Academia.edu-5.md
+│   │   ├── Academics in History of Medicine - Academia.edu-6.md
+│   │   ├── Academics in History of Medicine - Academia.edu-7.md
+│   │   ├── Academics in History of Medicine - Academia.edu-8.md
+│   │   ├── Academics in History of Medicine - Academia.edu-9.md
+│   │   ├── Academics in History of Medicine and the Body - Academia.edu-5.md
+│   │   ├── Academics in History of Medicine and the Body - Academia.edu-6.md
+│   │   ├── Academics in History of Medicine and the Body - Academia.edu-7.md
+│   │   ├── Academics in History of Medicine and the Body - Academia.edu-8.md
+│   │   ├── Academics in History of Medicine and the Body - Academia.edu-9.md
+│   │   ├── Academics in History of Medicine in Islam - Academia.edu-5.md
+│   │   ├── Academics in History of Medicine in Islam - Academia.edu-6.md
+│   │   ├── Academics in History of Medicine in Islam - Academia.edu-7.md
+│   │   ├── Academics in History of Medicine in Islam - Academia.edu-8.md
+│   │   ├── Academics in History of Medicine in Islam - Academia.edu-9.md
+│   │   ├── Academics in History of Medicine in Medieval and Early Modern Europe - Academia.edu-1.md
+│   │   ├── Academics in History of Medicine, East Asia - Academia.edu-1.md
+│   │   ├── Academics in History of Medicine, History of Hospitals - Academia.edu.md
+│   │   ├── Academics in Social and Cultural History of Medicine - Academia.edu-1.md
+│   │   ├── Academics in Social History of Medicine - Academia.edu-5.md
+│   │   ├── Academics in Social History of Medicine - Academia.edu-6.md
+│   │   ├── Academics in Social History of Medicine - Academia.edu-7.md
+│   │   ├── Academics in Social History of Medicine - Academia.edu-8.md
+│   │   ├── Academics in Social History of Medicine - Academia.edu-9.md
+│   │   ├── Astarte_David_Further_Considerations_Mo.rtfd
+│   │   ├── Christine Ruggere - Johns Hopkins University - Academia.edu-1.md
+│   │   ├── Davide_Nadali_2010_Assyrian_Open_Field_B 2.rtfd
+│   │   ├── Davide_Nadali_2010_Assyrian_Open_Field_B.rtfd
+│   │   ├── Dictionary_of_Deities_and_Demons_in_the.rtfd
+│   │   ├── El_Elohe_Israel_An_Inquiry_into_the_Alle.rtfd
+│   │   ├── Elizabeth O'Brien - Johns Hopkins University - Academia.edu-1.md
+│   │   ├── Elizabeth O'Brien - Johns Hopkins University - Academia.edu-2.md
+│   │   ├── Elizabeth O'Brien - Johns Hopkins University - Academia.edu-3.md
+│   │   ├── Heliolatry_in_the_Hebrew_Bible_An_Invest.rtfd
+│   │   ├── History of Medicine and the Body Research Papers - Academia.edu-1.md
+│   │   ├── History of Medicine in China Research Papers - Academia.edu.md
+│   │   ├── History of Medicine in Islam Research Papers - Academia.edu-1.md
+│   │   ├── History of Medicine in Islam Research Papers - Academia.edu.md
+│   │   ├── History Of Medicine In South Asia Research Papers - Academia.edu.md
+│   │   ├── History of Medicine in Southeast Asia Research Papers - Academia.edu-1.md
+│   │   ├── History of Medicine in Southeast Asia Research Papers - Academia.edu.md
+│   │   ├── History of Medicine Research Papers - Academia.edu-1.md
+│   │   ├── History of Medicine Research Papers - Academia.edu-3.md
+│   │   ├── History of Medicine Research Papers - Academia.edu.md
+│   │   ├── History of Medicine, East Asia Research Papers - Academia.edu-1.md
+│   │   ├── History of Medicine, East Asia Research Papers - Academia.edu-3.md
+│   │   ├── History of Medicine, East Asia Research Papers - Academia.edu.md
+│   │   ├── History of Medicine, History of Hospitals Research Papers - Academia.edu-2.md
+│   │   ├── History of Medicine, History of Hospitals Research Papers - Academia.edu.md
+│   │   ├── Homeopathy; History of Science; History of Medicine Research Papers - Academia.edu.md
+│   │   ├── Johns Hopkins University - Academia.edu-1.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-1.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-10.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-12.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-13.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-14.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-15.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-16.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-2.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-20.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-21.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-23.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-25.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-5.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu-9.md
+│   │   ├── Johns Hopkins University - History of Medicine - Academia.edu.md
+│   │   ├── Joris Vandendriessche - KU Leuven - Academia.edu-1.md
+│   │   ├── Ludmilla Jordanova - Durham University - Academia.edu-1.md
+│   │   ├── Mary Fissell - Johns Hopkins University - Academia.edu-1.md
+│   │   ├── MATTHEWS_MESSAGES_THROUGH_JESUS_INAUGURA.rtfd
+│   │   ├── Mythological_Apocalypses_Eschatological.rtfd
+│   │   ├── Ori Ben-Shalom - Harvard University - Academia.edu-1.md
+│   │   ├── Ori Ben-Shalom - Harvard University - Academia.edu.md
+│   │   ├── Portent_Dreams_in_Hittite_Anatolia.rtfd
+│   │   ├── Remembering George A. Miller – Association for Psychological Science – APS.md
+│   │   ├── Social and Cultural History of Medicine Research Papers - Academia.edu-1.md
+│   │   ├── Social and Cultural History of Medicine Research Papers - Academia.edu-2.md
+│   │   ├── Social and Cultural History of Medicine Research Papers - Academia.edu.md
+│   │   ├── Social History of Medicine Research Papers - Academia.edu-1.md
+│   │   ├── Social History of Medicine Research Papers - Academia.edu-2.md
+│   │   ├── Social History of Medicine Research Papers - Academia.edu-4.md
+│   │   ├── The_Ancient_Goddess_the_Biblical_Scholar.rtfd
+│   │   ├── The_Assyrian_Army_I_The_Structure_of_the.rtfd
+│   │   └── The_Rania_Plain_in_the_Neo_Assyrian_Peri.rtfd
+│   ├── ACTIVE
+│   │   ├── Duties of the Heart Manly Hall.md
+│   │   ├── Encabulator
+│   │   └── This is the good one.md
+│   ├── Arc's Chapters
+│   │   └── First Chapters
+│   ├── Binah.md
+│   ├── Broken Links
+│   ├── Chesed.md
+│   ├── China.md
+│   ├── Computers
+│   ├── create a link.md
+│   ├── Daily Notes
+│   │   ├── 2025-04-07.md
+│   │   ├── 2025-04-08.md
+│   │   ├── 2025-04-09.md
+│   │   ├── 2025-04-10.md
+│   │   ├── 2025-04-11.md
+│   │   └── 2025-04-12.md
+│   ├── Daily Planning
+│   │   ├── 2024-02-12 1.md
+│   │   ├── 2024-02-12.md
+│   │   ├── 2024-02-13.md
+│   │   └── Notes
+│   ├── Daniel's Daily Vault
+│   │   ├── 2024-01-26 Work Pad.md
+│   │   ├── Daily Diary
+│   │   ├── Daily Notes
+│   │   ├── Day Planners
+│   │   ├── Jokes Inbox
+│   │   ├── To File
+│   │   └── Work
+│   ├── Events
+│   │   ├── Personal
+│   │   └── Work
+│   ├── Files Without Tags
+│   ├── Finding the Sacred in the Ordinary.md
+│   ├── Foreshortening.md
+│   ├── Gevurah.md
+│   ├── Hod.md
+│   ├── Images
+│   ├── Inbox
+│   │   ├── [[create a link.md
+│   │   ├── 1-12-24.md
+│   │   ├── 1.md
+│   │   ├── 2.md
+│   │   ├── 2024-01-11.md
+│   │   ├── 2024-01-12.md
+│   │   ├── 2024-01-17.md
+│   │   ├── 2024-01-17Untitled.md
+│   │   ├── 2024-01-18.md
+│   │   ├── 2024-01-19.md
+│   │   ├── 2024-01-21.md
+│   │   ├── 2024-01-22.md
+│   │   ├── 2024-01-30 Notes.md
+│   │   ├── 2024-1-10 My Daily Planner.md
+│   │   ├── 2024-2-2.md
+│   │   ├── 24.md
+│   │   ├── 9.md
+│   │   ├── Accomplishments.md
+│   │   ├── Adam Hirsch.md
+│   │   ├── Additional Considerations.md
+│   │   ├── Administrative Tasks.md
+│   │   ├── Al Jazeera.md
+│   │   ├── Alchem.md
+│   │   ├── Alex Thompson.md
+│   │   ├── Andrew Solender.md
+│   │   ├── Apple Books Highlights
+│   │   ├── Barak Ravid.md
+│   │   ├── bedroom.md
+│   │   ├── Bethany Allen-Ebrahimian.md
+│   │   ├── bird.md
+│   │   ├── Black Cardamom.md
+│   │   ├── bread.md
+│   │   ├── Carly Mallenbaum.md
+│   │   ├── catalogue.md
+│   │   ├── create a link.md
+│   │   ├── Daily Habits.md
+│   │   ├── DALL·E 2024-01-13 16.37.51 - As the story continues, the pirates on the beach, now armed with cosmic wisdom from their comrades in space, face an unexpected turn. A mysterious fog.png
+│   │   ├── DALL·E 2024-01-14 14.58.51 - A photorealistic image depicting a grandiose and metaphorical critique of the media, specifically targeting the concept of limited journalistic depth.png
+│   │   ├── DALL·E 2024-01-18 15.18.53 - An image representing the dance of Yin and Yang in the universe. A gracefully balanced yin-yang symbol set against a cosmic backdrop, illustrating the.png
+│   │   ├── David and Katherine Bradley.md
+│   │   ├── DT1.md
+│   │   ├── DT2.md
+│   │   ├── DT3.md
+│   │   ├── Ebonie Gibbs.md
+│   │   ├── Emergency & CERT Docs.md
+│   │   ├── End of Day Review.md
+│   │   ├── Erica Pandey.md
+│   │   ├── Extended Notes Jan 18 24-20240118152039223.webp
+│   │   ├── Fairgrounds.md
+│   │   ├── Felix Salmon.md
+│   │   ├── Giants.md
+│   │   ├── Glade Brook Capital Partners.md
+│   │   ├── Gratitude.md
+│   │   ├── Greycroft.md
+│   │   ├── images.md
+│   │   ├── Inbox To Do 1
+│   │   ├── January 14, 2024 – Kabbalistic and Numerical Significance - 21 Tevet 5784-20240114233828736.webp
+│   │   ├── Javier E David.md
+│   │   ├── Justin Green.md
+│   │   ├── Laurene Powell Jobs.md
+│   │   ├── leg.md
+│   │   ├── Lerer Hippeau Ventures.md
+│   │   ├── Lessons Learned.md
+│   │   ├── Light.md
+│   │   ├── Linguistics.md
+│   │   ├── lives.md
+│   │   ├── M.md
+│   │   ├── Misc 1
+│   │   ├── monetization strategies 1.md
+│   │   ├── MST3k 1.md
+│   │   ├── Mystery Science Theater 3000 1.md
+│   │   ├── NBC 1.md
+│   │   ├── Neil Irwin 1.md
+│   │   ├── null 1.md
+│   │   ├── Octopus 1.md
+│   │   ├── office 1.md
+│   │   ├── Open Points 1.md
+│   │   ├── parrot 1.md
+│   │   ├── Partially Completed Tasks 1.md
+│   │   ├── Personal Development 1.md
+│   │   ├── PHOENIX MYTH 1.md
+│   │   ├── Pictures and Picture Ideas 1.md
+│   │   ├── pirate 1.md
+│   │   ├── Pirate Ship Motif Brand Plan X 1 1.md
+│   │   ├── Pirate Ship Motif Brand Plan X 2.md
+│   │   ├── place 1.md
+│   │   ├── Raisa Zaidi 1.md
+│   │   ├── Random Notes 1.md
+│   │   ├── Reflections 1.md
+│   │   ├── Reviews 1.md
+│   │   ├── romantic 1.md
+│   │   ├── Roy Schwartz 1.md
+│   │   ├── Rubi Ali 1.md
+│   │   ├── Russell Contreras 1.md
+│   │   ├── sand 1.md
+│   │   ├── Scratch Pad 1-14-23 1-1.md
+│   │   ├── sermon 1.md
+│   │   ├── Shauneen Miranda 1.md
+│   │   ├── snake 1.md
+│   │   ├── Sophia Cai 1.md
+│   │   ├── swamp 1.md
+│   │   ├── Threads for Tomorrow 1.md
+│   │   ├── Unanswered Questions 1.md
+│   │   ├── Untitled
+│   │   ├── Untitled 1.canvas
+│   │   ├── Untitled 1.md
+│   │   ├── Untitled-20240115023416722 1.webp
+│   │   ├── Untitled.md
+│   │   ├── Word List 1.md
+│   │   └── Work.md
+│   ├── Index of Notes in the Obsidian Vault-1.md
+│   ├── Indices.md
+│   ├── IRM.md
+│   ├── Kabbalah and Meditation.md
+│   ├── Kabbalistic Mysticism.md
+│   ├── Keter.md
+│   ├── Knowledge Bomb
+│   ├── Library Planning
+│   ├── Link-1.md
+│   ├── Links
+│   ├── Malkhut in Environmental Ethics.md
+│   ├── Malkhut.md
+│   ├── Mark Cubin.md
+│   ├── MeetingNotes
+│   ├── Mindfulness in Jewish Ethics.md
+│   ├── Misc
+│   │   └── dote 00x.md
+│   ├── Monthly Notes
+│   │   └── 2024-02.md
+│   ├── My Vault
+│   │   ├── 2024-01-11.md
+│   │   ├── Daniel's Daily Vault
+│   │   ├── Inbox
+│   │   ├── Knowledge Library
+│   │   ├── Omnivore
+│   │   ├── pearl.md
+│   │   └── Seeking Civilization
+│   ├── Netzach.md
+│   ├── New Files
+│   ├── Notes
+│   │   ├── Daily Notes
+│   │   ├── Personal
+│   │   ├── Projects
+│   │   └── Work
+│   ├── Omnivore
+│   │   ├── 2024-01-19
+│   │   ├── 2024-01-23
+│   │   ├── 2024-01-26
+│   │   ├── 2024-02-04
+│   │   ├── 2024-02-14
+│   │   ├── 2024-02-15
+│   │   ├── 2024-02-18
+│   │   ├── 2024-02-20
+│   │   ├── 2024-02-21
+│   │   ├── 2024-02-23
+│   │   ├── 2024-02-24
+│   │   ├── 2024-02-25
+│   │   ├── 2024-02-26
+│   │   ├── 2024-02-28
+│   │   ├── 2024-03-02
+│   │   ├── 2024-03-05
+│   │   ├── 2024-03-07
+│   │   ├── 2024-03-09
+│   │   ├── 2024-04-05
+│   │   ├── 2024-04-15
+│   │   ├── 2024-04-16
+│   │   ├── 2024-04-18
+│   │   ├── 2024-05-14
+│   │   ├── 2024-05-17
+│   │   ├── 2024-05-18
+│   │   ├── 2024-05-21
+│   │   ├── 2024-05-23
+│   │   ├── 2024-05-28
+│   │   ├── 2024-05-29
+│   │   ├── 2024-06-01
+│   │   ├── 2024-06-03
+│   │   ├── 2024-06-04
+│   │   ├── 2024-06-05
+│   │   ├── 2024-06-06
+│   │   ├── 2024-06-07
+│   │   ├── 2024-06-08
+│   │   ├── 2024-06-09
+│   │   ├── 2024-06-10
+│   │   ├── 2024-06-11
+│   │   ├── 2024-06-12
+│   │   ├── 2024-06-13
+│   │   ├── 2024-06-14
+│   │   ├── 2024-06-15
+│   │   ├── 2024-06-16
+│   │   ├── 2024-06-17
+│   │   ├── 2024-06-18
+│   │   ├── 2024-06-19
+│   │   ├── 2024-06-20
+│   │   ├── 2024-06-21
+│   │   ├── 2024-06-22
+│   │   ├── 2024-06-23
+│   │   ├── 2024-06-24
+│   │   ├── 2024-06-25
+│   │   ├── 2024-06-27
+│   │   ├── 2024-06-28
+│   │   ├── 2024-06-29
+│   │   ├── 2024-06-30
+│   │   ├── 2024-07-01
+│   │   ├── 2024-07-03
+│   │   ├── 2024-07-04
+│   │   ├── 2024-07-14
+│   │   ├── 2024-07-16
+│   │   ├── 2024-07-17
+│   │   ├── 2024-07-18
+│   │   ├── 2024-07-20
+│   │   ├── 2024-07-21
+│   │   ├── 2024-07-23
+│   │   ├── 2024-07-24
+│   │   ├── 2024-07-25
+│   │   ├── 2024-07-26
+│   │   ├── 2024-07-27
+│   │   ├── 2024-07-28
+│   │   ├── 2024-07-31
+│   │   ├── 2024-08-01
+│   │   ├── 2024-08-04
+│   │   ├── 2024-08-05
+│   │   ├── 2024-08-06
+│   │   ├── 2024-08-10
+│   │   ├── 2024-08-11
+│   │   ├── 2024-08-13
+│   │   ├── 2024-08-14
+│   │   ├── 2024-08-16
+│   │   ├── 2024-08-17
+│   │   ├── 2024-08-27
+│   │   ├── 2024-08-28
+│   │   ├── 2024-09-03
+│   │   ├── 2024-09-24
+│   │   ├── 2024-09-26
+│   │   ├── 2024-09-27
+│   │   ├── 2024-09-28
+│   │   ├── 2024-09-29
+│   │   ├── 2024-09-30
+│   │   ├── 2024-10-01
+│   │   ├── 2024-10-02
+│   │   ├── 2024-10-03
+│   │   ├── 2024-10-04
+│   │   ├── 2024-10-05
+│   │   ├── 2024-10-06
+│   │   ├── 2024-10-10
+│   │   ├── 2024-10-11
+│   │   ├── 2024-10-12
+│   │   ├── 2024-10-13
+│   │   ├── 2024-10-14
+│   │   ├── 2024-10-15
+│   │   ├── 2024-10-17
+│   │   ├── 2024-10-20
+│   │   ├── 2024-10-21
+│   │   ├── 2024-10-22
+│   │   ├── 2024-10-23
+│   │   ├── 2024-10-24
+│   │   ├── 2024-10-25
+│   │   ├── 2024-10-26
+│   │   ├── 2024-10-27
+│   │   ├── 2024-10-29
+│   │   ├── 2024-10-30
+│   │   ├── 2024-10-31
+│   │   ├── 2024-11-02
+│   │   ├── 2024-11-03
+│   │   ├── 2024-11-04
+│   │   ├── 2024-11-08
+│   │   ├── 2024-11-09
+│   │   ├── 2024-11-10
+│   │   ├── 2024-11-12
+│   │   ├── 2024-11-14
+│   │   ├── 2024-11-16
+│   │   ├── 2024-11-25
+│   │   ├── 2024-11-29
+│   │   ├── 2024-12-02
+│   │   ├── 2024-12-05
+│   │   ├── 2024-12-17
+│   │   ├── 2024-12-28
+│   │   ├── 2024-12-31
+│   │   └── 2025-01-08
+│   ├── Orphaned Files
+│   ├── orphaned files output.md
+│   ├── Parashat Mishpatim.md
+│   ├── Parashat Pekudei.md
+│   ├── Pearlescent Guide to Life
+│   │   ├── My Sidduer.md
+│   │   └── SubGenius Siddur A Daily Guide for Achieving Slack.md
+│   ├── People
+│   │   └── Contacts
+│   ├── Presentation 001
+│   │   ├── Alchemical Encabulatioin - The Human Encabulator.md
+│   │   ├── Alchemy of life.md
+│   │   ├── Encabulators
+│   │   ├── Presentation & Paper.md
+│   │   ├── Presentation 1.scriv
+│   │   └── Slides
+│   ├── Quarterly Notes
+│   │   └── 2024-Q1.md
+│   ├── Recordings
+│   │   ├── Recording 20240808203224.webm
+│   │   └── Untitled.md
+│   ├── Restaurant Notes
+│   │   └── San Pedro Tacos.md
+│   ├── Rev Lux Luther
+│   ├── Seeking Civilization
+│   │   └── Seeking Civilization Inspirational Art.md
+│   ├── Sefirah.md
+│   ├── Sefirot - The Emanations of Divine Energy.md
+│   ├── Sefirot.md
+│   ├── slYR10333217.jpg.webp
+│   ├── smart-chats
+│   │   ├── UNTITLED CHAT 2024-09-01 07 21 17.md
+│   │   ├── UNTITLED CHAT 2024-09-01 08 33 35.md
+│   │   ├── UNTITLED CHAT 2024-09-01 08 34 26.md
+│   │   ├── UNTITLED CHAT 2024-09-03 10 03 31.md
+│   │   └── UNTITLED CHAT 2024-11-10 18 51 43.md
+│   ├── Tasks
+│   │   ├── Personal
+│   │   └── Work
+│   ├── Templates
+│   ├── Text Snippets
+│   ├── The Divine in the Physical.md
+│   ├── The Role of Physicality in Spiritual Practice.md
+│   ├── The Tabernacle as a Symbol.md
+│   ├── Tiferet.md
+│   ├── Tikkun Olam.md
+│   ├── Torah.md
+│   ├── Untitled
+│   ├── Untitled 01.md
+│   ├── Untitled 1.md
+│   ├── Untitled 11.md
+│   ├── Untitled 13.md
+│   ├── Untitled 15.md
+│   ├── Untitled 16.md
+│   ├── Untitled 2.md
+│   ├── Untitled 6.md
+│   ├── Untitled-20240113220720961 1.webp
+│   ├── Untitled.canvas
+│   ├── Weekly Notes
+│   │   └── 2024-W07.md
+│   ├── Welcome.md
+│   ├── Yearly Notes
+│   │   └── 2024.md
+│   └── Yesod.md
+├── Mail Archiver X
+│   └── Standard Template.html
+├── NSFW (6-3-25).zip
+├── README.md
+├── SYNTHS
+├── Thoth Church
+│   ├── Archive
+│   │   └── Day the Fire
+│   ├── Canon
+│   ├── Codex ledger.md
+│   ├── Distilled
+│   ├── Inbox
+│   │   └── Raw clip 001.md
+│   ├── Rituals
+│   ├── Scripts
+│   └── Thoth1.md
+└── UTILKIT_128.dmg
+
+273 directories, 360 files
+/Users/0eaglex/Desktop
+├── hineni-os-v0.1.1-fixed.txt
+├── hineni-os-v0.1.1.zip
+└── Screenshot 2025-12-01 at 11.10.01 AM.png
+
+1 directory, 3 files
