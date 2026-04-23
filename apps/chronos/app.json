@@ -1,0 +1,10 @@
+{
+  "id": "chronos",
+  "name": "Chronos",
+  "kind": "html",
+  "entry": "index.html",
+  "description": "Countdown to upcoming horizons - track events and watch time unfold",
+  "version": "1.0.0",
+  "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting",
+  "icon": "⏳"
+}

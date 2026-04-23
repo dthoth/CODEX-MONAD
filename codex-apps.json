@@ -60,6 +60,18 @@
     "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting"
   },
   {
+    "id": "chronos",
+    "label": "Chronos",
+    "icon": "⏳",
+    "status": "active",
+    "description": "The Count & The Counting - countdown to upcoming horizons",
+    "hubPath": "apps/chronos/index.html",
+    "isLocal": true,
+    "launchType": "html",
+    "version": "1.0.0",
+    "author": "Rev. LL Dan-i-El Thomas / Simbell Trust Consulting"
+  },
+  {
     "id": "conflict_lab",
     "label": "Conflict Lab",
     "icon": "⚡",

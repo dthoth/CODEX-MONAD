@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CODEX // COUNTDOWN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #0a0806;
+    --bg-1: #140f09;
+    --bg-2: #1c160d;
+    --amber: #ffb000;
+    --amber-dim: #a97300;
+    --amber-deep: #5c3f00;
+    --phosphor: #33ff33;
+    --phosphor-dim: #1a8a1a;
+    --urgent: #ff3860;
+    --parchment: #f0e6c8;
+    --ink: #2a1f10;
+    --scanline: rgba(255, 176, 0, 0.03);
+    --mono: 'VT323', ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+    --serif: 'IM Fell English SC', 'Baskerville', 'Garamond', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg-0);
+    color: var(--amber);
+    font-family: var(--mono);
+    overflow-x: hidden;
+  }
+
+  /* CRT scanlines + vignette */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 2px,
+        var(--scanline) 2px,
+        var(--scanline) 3px
+      );
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    position: relative;
+  }
+
+  /* --- HEADER --- */
+  header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--amber-deep);
+    margin-bottom: 2rem;
+  }
+
+  .floppy {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .floppy svg { width: 100%; height: 100%; }
+  .floppy-body { fill: var(--amber-deep); stroke: var(--amber); stroke-width: 1.5; }
+  .floppy-shutter { fill: var(--bg-0); stroke: var(--amber); stroke-width: 1.5; }
+  .floppy-label { fill: var(--parchment); stroke: var(--amber-dim); stroke-width: 0.5; }
+  .floppy-text { fill: var(--ink); font-family: var(--mono); font-size: 6px; }
+  .floppy-notch { fill: var(--bg-0); }
+
+  .masthead h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    color: var(--parchment);
+    text-shadow: 0 0 20px rgba(255, 176, 0, 0.25);
+  }
+  .masthead .sub {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    color: var(--amber-dim);
+    letter-spacing: 0.15em;
+    margin-top: 0.15rem;
+  }
+  .clock-now {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--amber-dim);
+    line-height: 1.3;
+  }
+  .clock-now .t { color: var(--amber); font-size: 1.2rem; }
+
+  /* --- HERO: nearest event --- */
+  .hero {
+    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+    border: 1px solid var(--amber-deep);
+    border-radius: 4px;
+    padding: 2rem 1.75rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow:
+      inset 0 0 60px rgba(255, 176, 0, 0.04),
+      0 0 0 1px rgba(255, 176, 0, 0.08);
+  }
+  .hero::before {
+    content: "◆";
+    position: absolute;
+    top: 0.5rem;
+    left: 0.75rem;
+    color: var(--amber-deep);
+    font-size: 0.8rem;
+  }
+  .hero::after {
+    content: "◆";
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.75rem;
+    color: var(--amber-deep);
+    font-size: 0.8rem;
+  }
+
+  .hero-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--amber-dim);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .hero-label::before,
+  .hero-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber-deep), transparent);
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    color: var(--parchment);
+    text-align: center;
+    font-weight: normal;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    text-shadow: 0 0 30px rgba(255, 176, 0, 0.3);
+  }
+  .hero-when {
+    text-align: center;
+    color: var(--amber-dim);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  .digits {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .cell {
+    text-align: center;
+    padding: 0.75rem 0.25rem;
+    background: rgba(255, 176, 0, 0.04);
+    border: 1px solid var(--amber-deep);
+    border-radius: 3px;
+    position: relative;
+  }
+  .cell .num {
+    font-family: var(--mono);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 1;
+    color: var(--amber);
+    text-shadow:
+      0 0 10px rgba(255, 176, 0, 0.8),
+      0 0 25px rgba(255, 176, 0, 0.4);
+    font-variant-numeric: tabular-nums;
+  }
+  .cell .lbl {
+    font-size: 1rem;
+    color: var(--amber-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  .hero.urgent .cell .num {
+    color: var(--urgent);
+    text-shadow:
+      0 0 10px rgba(255, 56, 96, 0.8),
+      0 0 25px rgba(255, 56, 96, 0.4);
+  }
+  .hero.passed .cell .num { opacity: 0.35; }
+
+  .hero-note {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--amber-dim);
+    font-size: 1rem;
+    font-style: italic;
+    font-family: var(--serif);
+  }
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    background: var(--amber);
+    vertical-align: text-bottom;
+    animation: blink 1s steps(2) infinite;
+    margin-left: 0.15em;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .empty-hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--amber-dim);
+    font-family: var(--serif);
+    font-size: 1.3rem;
+  }
+  .empty-hero .prompt {
+    font-family: var(--mono);
+    color: var(--amber);
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  /* --- LIST --- */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 0 0.25rem;
+  }
+  .section-head h2 {
+    font-family: var(--mono);
+    font-weight: normal;
+    font-size: 1.4rem;
+    color: var(--amber);
+    letter-spacing: 0.2em;
+  }
+  .section-head h2::before {
+    content: "// ";
+    color: var(--amber-deep);
+  }
+  .toggle-btn {
+    background: transparent;
+    border: 1px solid var(--amber-deep);
+    color: var(--amber-dim);
+    padding: 0.35rem 0.8rem;
+    font-family: var(--mono);
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+  .toggle-btn:hover { color: var(--amber); border-color: var(--amber); }
+  .toggle-btn.on { color: var(--amber); border-color: var(--amber); }
+
+  .event-list {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .event-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--bg-1);
+    border: 1px solid var(--amber-deep);
+    border-radius: 3px;
+    transition: border-color 0.15s;
+  }
+  .event-row:hover { border-color: var(--amber-dim); }
+  .event-row.passed { opacity: 0.5; }
+  .event-row.active { border-color: var(--amber); box-shadow: 0 0 12px rgba(255, 176, 0, 0.15); }
+
+  .event-icon {
+    font-size: 1.5rem;
+    width: 2rem;
+    text-align: center;
+    filter: grayscale(0.2);
+  }
+  .event-meta .nm {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    color: var(--parchment);
+    letter-spacing: 0.03em;
+  }
+  .event-meta .when {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--amber-dim);
+    margin-top: 0.15rem;
+    letter-spacing: 0.05em;
+  }
+  .event-count {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    color: var(--amber);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    min-width: 120px;
+  }
+  .event-count.urgent { color: var(--urgent); }
+  .event-count.passed { color: var(--amber-deep); }
+
+  .event-actions { display: flex; gap: 0.35rem; }
+  .icon-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--amber-dim);
+    width: 2rem;
+    height: 2rem;
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-btn:hover { color: var(--amber); border-color: var(--amber-deep); background: var(--bg-2); }
+  .icon-btn.danger:hover { color: var(--urgent); border-color: var(--urgent); }
+
+  .empty-list {
+    padding: 2rem;
+    text-align: center;
+    color: var(--amber-dim);
+    font-family: var(--serif);
+    font-style: italic;
+    border: 1px dashed var(--amber-deep);
+    border-radius: 3px;
+  }
+
+  /* --- FORM --- */
+  .form-card {
+    background: var(--bg-1);
+    border: 1px solid var(--amber-deep);
+    border-radius: 3px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .form-card h3 {
+    font-family: var(--mono);
+    font-weight: normal;
+    font-size: 1.2rem;
+    color: var(--amber);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+  .form-card h3::before { content: "> "; color: var(--amber-dim); }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: end;
+  }
+  @media (max-width: 720px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+
+  .field { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field label {
+    font-size: 1rem;
+    color: var(--amber-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .field input,
+  .field select {
+    background: var(--bg-0);
+    border: 1px solid var(--amber-deep);
+    color: var(--amber);
+    padding: 0.55rem 0.7rem;
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus { border-color: var(--amber); }
+  .field input::placeholder { color: var(--amber-deep); font-style: italic; }
+  .field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) sepia(1) saturate(5) hue-rotate(0deg);
+    cursor: pointer;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 6rem;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    background: var(--amber-deep);
+    border: 1px solid var(--amber);
+    color: var(--parchment);
+    padding: 0.6rem 1.2rem;
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .btn:hover { background: var(--amber); color: var(--ink); }
+  .btn.ghost { background: transparent; color: var(--amber-dim); border-color: var(--amber-deep); }
+  .btn.ghost:hover { color: var(--amber); border-color: var(--amber); background: var(--bg-2); }
+
+  /* --- FOOTER --- */
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--amber-deep);
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--amber-dim);
+  }
+  footer .glyph { color: var(--amber); letter-spacing: 0.3em; }
+  footer .actions { display: flex; gap: 0.5rem; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-0); }
+  ::-webkit-scrollbar-thumb { background: var(--amber-deep); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+
+  /* tick animation */
+  @keyframes tick { 0%,100% { opacity: 1; } 50% { opacity: 0.85; } }
+  .seconds .num { animation: tick 1s infinite; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="floppy" aria-hidden="true">
+      <svg viewBox="0 0 64 64">
+        <!-- body -->
+        <rect class="floppy-body" x="4" y="4" width="56" height="56" rx="2"/>
+        <!-- shutter -->
+        <rect class="floppy-shutter" x="14" y="6" width="36" height="20"/>
+        <rect class="floppy-notch" x="30" y="6" width="4" height="14"/>
+        <!-- label -->
+        <rect class="floppy-label" x="10" y="32" width="44" height="24"/>
+        <text class="floppy-text" x="14" y="42">CODEX</text>
+        <text class="floppy-text" x="14" y="50">COUNTDOWN</text>
+        <line x1="14" y1="53" x2="50" y2="53" stroke="var(--amber-dim)" stroke-width="0.3"/>
+      </svg>
+    </div>
+    <div class="masthead">
+      <h1>The Count &amp; The Counting</h1>
+      <div class="sub">// CODEX-MONAD · CHRONOS MODULE</div>
+    </div>
+    <div class="clock-now">
+      <div class="t" id="now-time">--:--:--</div>
+      <div id="now-date">----·--·--</div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero" class="hero">
+    <!-- populated by JS -->
+  </section>
+
+  <!-- FORM -->
+  <section class="form-card">
+    <h3>Inscribe an Event</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label for="ev-name">Name</label>
+        <div class="row-2">
+          <input type="text" id="ev-name" placeholder="e.g. Summer of the Floppy" maxlength="80"/>
+          <input type="text" id="ev-icon" placeholder="💾" maxlength="4"/>
+        </div>
+      </div>
+      <div class="field">
+        <label for="ev-date">When</label>
+        <input type="datetime-local" id="ev-date"/>
+      </div>
+      <button class="btn" id="btn-add">+ Add</button>
+    </div>
+  </section>
+
+  <!-- LIST -->
+  <div class="section-head">
+    <h2>All Events</h2>
+    <button class="toggle-btn" id="btn-show-passed">Show Past</button>
+  </div>
+  <section id="list" class="event-list">
+    <!-- populated by JS -->
+  </section>
+
+  <footer>
+    <div class="glyph">◆ · ◇ · ◆</div>
+    <div class="actions">
+      <button class="btn ghost" id="btn-export">Export JSON</button>
+      <button class="btn ghost" id="btn-import">Import JSON</button>
+      <input type="file" id="file-import" accept="application/json,.json" style="display:none"/>
+    </div>
+    <div>Rev. LL Dan-i-El Thomas</div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'codex.countdown.events.v1';
+  const SHOW_PASSED_KEY = 'codex.countdown.showPassed';
+
+  // ----- DEFAULT SEED (first run only) -----
+  const DEFAULTS = [
+    { id: cryptoId(), name: 'Summer of the Floppy', icon: '💾', date: '2026-06-21T00:00' }
+  ];
+
+  // ----- STATE -----
+  let events = load();
+  let showPassed = localStorage.getItem(SHOW_PASSED_KEY) === '1';
+
+  // ----- ELEMENTS -----
+  const heroEl = document.getElementById('hero');
+  const listEl = document.getElementById('list');
+  const nowTimeEl = document.getElementById('now-time');
+  const nowDateEl = document.getElementById('now-date');
+  const nameEl = document.getElementById('ev-name');
+  const iconEl = document.getElementById('ev-icon');
+  const dateEl = document.getElementById('ev-date');
+  const addBtn = document.getElementById('btn-add');
+  const passedBtn = document.getElementById('btn-show-passed');
+  const exportBtn = document.getElementById('btn-export');
+  const importBtn = document.getElementById('btn-import');
+  const fileInput = document.getElementById('file-import');
+
+  // ----- INIT -----
+  if (showPassed) passedBtn.classList.add('on');
+  passedBtn.textContent = showPassed ? 'Hide Past' : 'Show Past';
+
+  addBtn.addEventListener('click', onAdd);
+  nameEl.addEventListener('keydown', e => { if (e.key === 'Enter') onAdd(); });
+  iconEl.addEventListener('keydown', e => { if (e.key === 'Enter') onAdd(); });
+  dateEl.addEventListener('keydown', e => { if (e.key === 'Enter') onAdd(); });
+  passedBtn.addEventListener('click', () => {
+    showPassed = !showPassed;
+    localStorage.setItem(SHOW_PASSED_KEY, showPassed ? '1' : '0');
+    passedBtn.classList.toggle('on', showPassed);
+    passedBtn.textContent = showPassed ? 'Hide Past' : 'Show Past';
+    render();
+  });
+  exportBtn.addEventListener('click', onExport);
+  importBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', onImport);
+
+  tick();
+  setInterval(tick, 1000);
+
+  // ===== FUNCTIONS =====
+  function cryptoId() {
+    if (window.crypto && crypto.getRandomValues) {
+      const a = new Uint8Array(8);
+      crypto.getRandomValues(a);
+      return Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
+    }
+    return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULTS));
+        return [...DEFAULTS];
+      }
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [...DEFAULTS];
+      return parsed.filter(e => e && e.name && e.date).map(e => ({
+        id: e.id || cryptoId(),
+        name: String(e.name).slice(0, 120),
+        icon: String(e.icon || '◆').slice(0, 4),
+        date: String(e.date)
+      }));
+    } catch (err) {
+      return [...DEFAULTS];
+    }
+  }
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+  }
+
+  function onAdd() {
+    const name = nameEl.value.trim();
+    const date = dateEl.value;
+    const icon = iconEl.value.trim() || '◆';
+    if (!name) { nameEl.focus(); return; }
+    if (!date) { dateEl.focus(); return; }
+    events.push({ id: cryptoId(), name, icon, date });
+    save();
+    nameEl.value = '';
+    iconEl.value = '';
+    dateEl.value = '';
+    render();
+    nameEl.focus();
+  }
+
+  function removeEvent(id) {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    if (!confirm(`Delete "${ev.name}"?`)) return;
+    events = events.filter(e => e.id !== id);
+    save();
+    render();
+  }
+
+  function editEvent(id) {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    const newName = prompt('Event name:', ev.name);
+    if (newName === null) return;
+    const newIcon = prompt('Icon / emoji:', ev.icon);
+    if (newIcon === null) return;
+    const newDate = prompt('Date (YYYY-MM-DDTHH:MM):', ev.date);
+    if (newDate === null) return;
+    if (!newName.trim() || !newDate.trim()) return;
+    ev.name = newName.trim();
+    ev.icon = newIcon.trim() || '◆';
+    ev.date = newDate.trim();
+    save();
+    render();
+  }
+
+  function onExport() {
+    const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `codex-countdown-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function onImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!Array.isArray(data)) throw new Error('Expected array');
+        const valid = data.filter(d => d && d.name && d.date).map(d => ({
+          id: d.id || cryptoId(),
+          name: String(d.name).slice(0, 120),
+          icon: String(d.icon || '◆').slice(0, 4),
+          date: String(d.date)
+        }));
+        if (!valid.length) { alert('No valid events found.'); return; }
+        const mode = confirm(`Import ${valid.length} event(s)?\n\n[OK] Merge with existing\n[Cancel] Replace all`) ? 'merge' : 'replace';
+        if (mode === 'replace') {
+          events = valid;
+        } else {
+          const existingIds = new Set(events.map(e => e.id));
+          valid.forEach(v => { if (!existingIds.has(v.id)) events.push(v); });
+        }
+        save();
+        render();
+      } catch (err) {
+        alert('Import failed: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    fileInput.value = '';
+  }
+
+  // ----- RENDER -----
+  function tick() {
+    const now = new Date();
+    nowTimeEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+    nowDateEl.textContent = now.getFullYear() + '·' + pad(now.getMonth() + 1) + '·' + pad(now.getDate());
+    render();
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function diff(target, now) {
+    const ms = target.getTime() - now.getTime();
+    const past = ms < 0;
+    const abs = Math.abs(ms);
+    const days = Math.floor(abs / 86400000);
+    const hours = Math.floor((abs % 86400000) / 3600000);
+    const mins = Math.floor((abs % 3600000) / 60000);
+    const secs = Math.floor((abs % 60000) / 1000);
+    return { past, ms, days, hours, mins, secs };
+  }
+
+  function sortedEvents() {
+    const now = new Date();
+    return [...events].sort((a, b) => {
+      const da = new Date(a.date) - now;
+      const db = new Date(b.date) - now;
+      // Upcoming first, then past (ordered by most-recent-past first)
+      if (da >= 0 && db < 0) return -1;
+      if (da < 0 && db >= 0) return 1;
+      if (da >= 0 && db >= 0) return da - db;
+      return db - da;
+    });
+  }
+
+  function formatWhen(d) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} · ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function render() {
+    const now = new Date();
+    const sorted = sortedEvents();
+    const upcoming = sorted.filter(e => new Date(e.date) >= now);
+    const past = sorted.filter(e => new Date(e.date) < now);
+
+    // HERO: nearest upcoming
+    if (upcoming.length) {
+      const ev = upcoming[0];
+      const target = new Date(ev.date);
+      const d = diff(target, now);
+      const urgent = d.days < 1;
+      heroEl.className = 'hero' + (urgent ? ' urgent' : '');
+      heroEl.innerHTML = `
+        <div class="hero-label">Next Horizon</div>
+        <div class="hero-name">${escapeHtml(ev.icon)} &nbsp; ${escapeHtml(ev.name)}</div>
+        <div class="hero-when">${formatWhen(target)}</div>
+        <div class="digits">
+          <div class="cell"><div class="num">${pad(d.days)}</div><div class="lbl">Days</div></div>
+          <div class="cell"><div class="num">${pad(d.hours)}</div><div class="lbl">Hours</div></div>
+          <div class="cell"><div class="num">${pad(d.mins)}</div><div class="lbl">Min</div></div>
+          <div class="cell seconds"><div class="num">${pad(d.secs)}</div><div class="lbl">Sec</div></div>
+        </div>
+        <div class="hero-note">and the counting continues<span class="cursor"></span></div>
+      `;
+    } else if (events.length) {
+      heroEl.className = 'hero passed';
+      heroEl.innerHTML = `
+        <div class="hero-label">Archive</div>
+        <div class="hero-name">All horizons crossed.</div>
+        <div class="hero-when">Inscribe the next one below.</div>
+      `;
+    } else {
+      heroEl.className = 'hero';
+      heroEl.innerHTML = `
+        <div class="empty-hero">
+          No events yet inscribed.
+          <div class="prompt">&gt; awaiting input<span class="cursor"></span></div>
+        </div>
+      `;
+    }
+
+    // LIST
+    const toShow = showPassed ? sorted : upcoming;
+    if (!toShow.length) {
+      listEl.innerHTML = `<div class="empty-list">${showPassed ? 'No events.' : 'No upcoming events — toggle "Show Past" to view archive.'}</div>`;
+    } else {
+      listEl.innerHTML = toShow.map(ev => {
+        const target = new Date(ev.date);
+        const d = diff(target, now);
+        const isNext = upcoming.length && upcoming[0].id === ev.id;
+        let countText;
+        let countClass = '';
+        if (d.past) {
+          countClass = 'passed';
+          if (d.days > 0) countText = `${d.days}d ago`;
+          else if (d.hours > 0) countText = `${d.hours}h ago`;
+          else countText = `${d.mins}m ago`;
+        } else {
+          if (d.days < 1) countClass = 'urgent';
+          if (d.days > 0) countText = `${d.days}d ${pad(d.hours)}h ${pad(d.mins)}m`;
+          else countText = `${pad(d.hours)}:${pad(d.mins)}:${pad(d.secs)}`;
+        }
+        return `
+          <div class="event-row ${d.past ? 'passed' : ''} ${isNext ? 'active' : ''}">
+            <div class="event-icon">${escapeHtml(ev.icon)}</div>
+            <div class="event-meta">
+              <div class="nm">${escapeHtml(ev.name)}</div>
+              <div class="when">${formatWhen(target)}</div>
+            </div>
+            <div class="event-count ${countClass}">${countText}</div>
+            <div class="event-actions">
+              <button class="icon-btn" data-edit="${ev.id}" title="Edit">✎</button>
+              <button class="icon-btn danger" data-del="${ev.id}" title="Delete">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      // bind actions
+      listEl.querySelectorAll('[data-edit]').forEach(b =>
+        b.addEventListener('click', () => editEvent(b.dataset.edit))
+      );
+      listEl.querySelectorAll('[data-del]').forEach(b =>
+        b.addEventListener('click', () => removeEvent(b.dataset.del))
+      );
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+})();
+</script>
+</body>
+</html>

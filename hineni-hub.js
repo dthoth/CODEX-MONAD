@@ -333,6 +333,16 @@
                     hubPath: 'apps/conflict_lab/index.html',
                     launchType: 'html',
                     isLocal: true
+                },
+                {
+                    id: 'chronos',
+                    label: 'Chronos',
+                    icon: '⏳',
+                    status: 'active',
+                    description: 'The Count & The Counting - countdown to upcoming horizons',
+                    hubPath: 'apps/chronos/index.html',
+                    launchType: 'html',
+                    isLocal: true
                 }
             ]
         },
