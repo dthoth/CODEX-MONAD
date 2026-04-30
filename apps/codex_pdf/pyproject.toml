@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codex-pdf"
+version = "0.2.0"
+description = "A Daniel-corpus PDF system — classify, extract, route."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Rev. LL Dan-i-El Thomas" },
+]
+license = { text = "Proprietary" }
+dependencies = [
+    "pdfplumber>=0.11.0",
+    "pypdf>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "reportlab>=4.0",  # used by tests to generate fixtures
+]
+ocr = [
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0",
+    "pdf2image>=1.17",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["codex_pdf*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
